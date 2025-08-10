@@ -1,11 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import { forwardRef, useEffect, useState } from 'react';
-import { AccessibilityManager } from '@/lib/accessibility';
-import { cn } from '@/lib/utils';
 import { ANIMATION_DURATIONS } from '@/constants/performance-constants';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { AccessibilityManager } from '@/lib/accessibility';
+import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 /**
  * 缓动函数类型
@@ -152,7 +152,7 @@ export const AnimatedCounter = forwardRef<
         } else if (ref) {
           ref.current = node;
         }
-        observerRef.current = node as HTMLElement;
+        observerRef(node as HTMLElement);
       },
       [ref, observerRef],
     );

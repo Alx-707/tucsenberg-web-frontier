@@ -259,7 +259,7 @@ describe('useIntersectionObserver', () => {
               ),
               time: Date.now(),
             } as IntersectionObserverEntry,
-          ], mockObserverInstance);
+          ]);
         }
       });
 

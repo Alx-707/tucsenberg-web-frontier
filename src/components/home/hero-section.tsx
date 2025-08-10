@@ -1,11 +1,10 @@
 'use client';
 
-import type React from 'react';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // Hero Badge Component
 function HeroBadge({
@@ -13,7 +12,7 @@ function HeroBadge({
   badgeVisible,
   version,
 }: {
-  badgeRef: React.RefObject<HTMLDivElement | null>;
+  badgeRef: (node: HTMLDivElement | null) => void;
   badgeVisible: boolean;
   version: string;
 }) {
@@ -42,7 +41,7 @@ function HeroTitle({
   line1,
   line2,
 }: {
-  titleRef: React.RefObject<HTMLHeadingElement | null>;
+  titleRef: (node: HTMLHeadingElement | null) => void;
   titleVisible: boolean;
   line1: string;
   line2: string;
@@ -94,7 +93,7 @@ function HeroActionButtons({
   buttonsVisible,
   t,
 }: {
-  buttonsRef: React.RefObject<HTMLDivElement | null>;
+  buttonsRef: (node: HTMLDivElement | null) => void;
   buttonsVisible: boolean;
   t: (_key: string) => string;
 }) {
