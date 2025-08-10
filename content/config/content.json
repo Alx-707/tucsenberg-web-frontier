@@ -1,0 +1,56 @@
+{
+  "defaultLocale": "en",
+  "supportedLocales": ["en", "zh"],
+  "postsPerPage": 12,
+  "enableDrafts": true,
+  "enableSearch": true,
+  "autoGenerateExcerpt": true,
+  "excerptLength": 160,
+  "dateFormat": "YYYY-MM-DD",
+  "timeZone": "UTC",
+  "seo": {
+    "defaultTitle": "Tucsenberg Web Frontier",
+    "titleTemplate": "%s | Tucsenberg",
+    "defaultDescription": "Modern B2B enterprise website template with Next.js 15, React 19, TypeScript, and Tailwind CSS",
+    "defaultKeywords": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "B2B",
+      "Enterprise"
+    ],
+    "defaultOgImage": "/images/og-default.jpg"
+  },
+  "content": {
+    "posts": {
+      "enableComments": false,
+      "enableRelatedPosts": true,
+      "maxRelatedPosts": 3,
+      "enableReadingTime": true,
+      "enableToc": true,
+      "enableSocialShare": true
+    },
+    "pages": {
+      "enableToc": true,
+      "enableLastModified": true,
+      "enableBreadcrumbs": true
+    }
+  },
+  "validation": {
+    "strictMode": false,
+    "requireAuthor": true,
+    "requireDescription": true,
+    "requireTags": false,
+    "requireCategories": false,
+    "maxTitleLength": 100,
+    "maxDescriptionLength": 200,
+    "maxExcerptLength": 300
+  },
+  "performance": {
+    "enableCache": true,
+    "cacheMaxAge": 3600,
+    "enableCompression": true,
+    "enableLazyLoading": true
+  }
+}

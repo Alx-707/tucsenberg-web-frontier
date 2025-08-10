@@ -1,0 +1,267 @@
+{
+  "monitoring": {
+    "name": "持续质量监控与报告体系",
+    "version": "1.0.0",
+    "description": "企业级B2B网站质量监控配置"
+  },
+  "thresholds": {
+    "coverage": {
+      "lines": 85,
+      "functions": 85,
+      "branches": 80,
+      "statements": 85,
+      "critical_files": {
+        "src/lib/content-parser.ts": {
+          "lines": 95,
+          "functions": 95,
+          "branches": 90,
+          "statements": 95
+        },
+        "src/lib/content-validation.ts": {
+          "lines": 95,
+          "functions": 95,
+          "branches": 90,
+          "statements": 95
+        },
+        "src/lib/accessibility.ts": {
+          "lines": 98,
+          "functions": 98,
+          "branches": 95,
+          "statements": 98
+        }
+      }
+    },
+    "performance": {
+      "build_time_ms": 120000,
+      "test_time_ms": 180000,
+      "type_check_ms": 30000,
+      "lint_time_ms": 20000,
+      "bundle_size_kb": 50,
+      "regression_threshold": 1.2
+    },
+    "quality": {
+      "eslint_errors": 0,
+      "eslint_warnings": 10,
+      "typescript_errors": 0,
+      "duplication_percentage": 5,
+      "complexity_max": 15,
+      "function_length_max": 120
+    },
+    "security": {
+      "vulnerabilities": 0,
+      "high_severity": 0,
+      "critical_severity": 0,
+      "audit_level": "moderate"
+    }
+  },
+  "alerts": {
+    "coverage": {
+      "decline_threshold": -5,
+      "critical_level": 70,
+      "notification_channels": ["console", "github"]
+    },
+    "performance": {
+      "regression_threshold": 1.3,
+      "critical_threshold": 1.5,
+      "notification_channels": ["console", "github"]
+    },
+    "quality": {
+      "blocking_errors": true,
+      "warning_threshold": 15,
+      "notification_channels": ["console", "github"]
+    },
+    "security": {
+      "blocking": true,
+      "immediate_notification": true,
+      "notification_channels": ["console", "github", "email"]
+    }
+  },
+  "reporting": {
+    "schedule": {
+      "daily": true,
+      "weekly": true,
+      "on_pr": true,
+      "on_merge": true
+    },
+    "formats": ["json", "html", "markdown"],
+    "retention_days": 30,
+    "archive_after_days": 90
+  },
+  "dashboard": {
+    "enabled": true,
+    "auto_refresh": true,
+    "refresh_interval_minutes": 5,
+    "metrics": [
+      "coverage_trends",
+      "performance_benchmarks",
+      "quality_gates",
+      "security_status"
+    ],
+    "charts": {
+      "coverage_trend": {
+        "type": "line",
+        "timespan_days": 30,
+        "metrics": ["lines", "functions", "branches", "statements"]
+      },
+      "performance_trend": {
+        "type": "line",
+        "timespan_days": 30,
+        "metrics": ["build_time", "test_time", "bundle_size"]
+      },
+      "quality_distribution": {
+        "type": "pie",
+        "metrics": ["passed", "failed", "warnings"]
+      }
+    }
+  },
+  "integrations": {
+    "github": {
+      "enabled": true,
+      "pr_comments": true,
+      "status_checks": true,
+      "annotations": true
+    },
+    "codecov": {
+      "enabled": true,
+      "upload_coverage": true,
+      "fail_ci_if_error": false
+    },
+    "sonarqube": {
+      "enabled": false,
+      "server_url": "",
+      "project_key": ""
+    },
+    "slack": {
+      "enabled": false,
+      "webhook_url": "",
+      "channels": ["#quality", "#alerts"]
+    }
+  },
+  "environments": {
+    "development": {
+      "strict_mode": false,
+      "coverage_required": false,
+      "performance_monitoring": true
+    },
+    "staging": {
+      "strict_mode": true,
+      "coverage_required": true,
+      "performance_monitoring": true,
+      "security_scanning": true
+    },
+    "production": {
+      "strict_mode": true,
+      "coverage_required": true,
+      "performance_monitoring": true,
+      "security_scanning": true,
+      "blocking_deployment": true
+    }
+  },
+  "quality_gates": {
+    "pre_commit": {
+      "enabled": true,
+      "checks": ["lint", "type_check", "format_check"],
+      "blocking": true
+    },
+    "pre_push": {
+      "enabled": true,
+      "checks": ["test", "coverage_check"],
+      "blocking": true
+    },
+    "pr_validation": {
+      "enabled": true,
+      "checks": [
+        "lint",
+        "type_check",
+        "test",
+        "coverage",
+        "security_scan",
+        "performance_check"
+      ],
+      "blocking": true
+    },
+    "deployment": {
+      "enabled": true,
+      "checks": [
+        "all_tests_pass",
+        "coverage_threshold",
+        "security_clear",
+        "performance_acceptable"
+      ],
+      "blocking": true
+    }
+  },
+  "automation": {
+    "auto_fix": {
+      "enabled": true,
+      "scope": ["formatting", "import_sorting", "simple_lint_issues"],
+      "create_pr": true
+    },
+    "dependency_updates": {
+      "enabled": true,
+      "schedule": "weekly",
+      "auto_merge_patch": true,
+      "security_updates_immediate": true
+    },
+    "performance_optimization": {
+      "enabled": true,
+      "bundle_analysis": true,
+      "suggestions": true
+    }
+  },
+  "trends": {
+    "tracking_period_days": 90,
+    "comparison_periods": [7, 30, 90],
+    "trend_analysis": {
+      "coverage": {
+        "target_improvement": 1,
+        "acceptable_decline": -2
+      },
+      "performance": {
+        "target_improvement": -10,
+        "acceptable_decline": 20
+      },
+      "quality": {
+        "target_improvement": -5,
+        "acceptable_decline": 10
+      }
+    }
+  },
+  "notifications": {
+    "channels": {
+      "console": {
+        "enabled": true,
+        "level": "info"
+      },
+      "github": {
+        "enabled": true,
+        "pr_comments": true,
+        "check_annotations": true
+      },
+      "email": {
+        "enabled": false,
+        "recipients": [],
+        "level": "critical"
+      },
+      "webhook": {
+        "enabled": false,
+        "url": "",
+        "level": "warning"
+      }
+    },
+    "templates": {
+      "coverage_decline": "覆盖率下降警报: {metric} 从 {previous}% 下降到 {current}%",
+      "performance_regression": "性能回归警报: {metric} 增长 {percentage}%",
+      "quality_gate_failed": "质量门禁失败: {gate} - {reason}",
+      "security_vulnerability": "安全漏洞发现: {severity} 级别漏洞 {count} 个"
+    }
+  },
+  "metadata": {
+    "created_at": "2025-01-09T13:34:00Z",
+    "updated_at": "2025-01-09T13:34:00Z",
+    "version": "1.0.0",
+    "schema_version": "1.0",
+    "maintainer": "Quality Engineering Team",
+    "documentation": "docs/quality-monitoring.md"
+  }
+}

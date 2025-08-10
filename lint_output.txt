@@ -1,0 +1,263 @@
+
+> tucsenberg-web-frontier@0.1.0 lint /Users/Data/Warehouse/Focus/tucsenberg-web-frontier
+> next lint
+
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+
+./src/app/[locale]/diagnostics/page.tsx
+377:16  Error: Function 'DiagnosticsPage' has too many lines (127). Maximum allowed is 120.  max-lines-per-function
+501:1  Error: File has too many lines (503). Maximum allowed is 500.  max-lines
+
+./src/app/[locale]/layout.tsx
+67:16  Error: Async function 'LocaleLayout' has too many lines (131). Maximum allowed is 120.  max-lines-per-function
+
+./src/app/admin/page.tsx
+6:16  Error: Function 'AdminPage' has too many lines (272). Maximum allowed is 120.  max-lines-per-function
+
+./src/components/__tests__/theme-toggle.test.tsx
+206:35  Error: Arrow function has too many lines (1092). Maximum allowed is 1000.  max-lines-per-function
+1001:1  Error: File has too many lines (1297). Maximum allowed is 1000.  max-lines
+
+./src/components/layout/__tests__/language-switcher.test.tsx
+1001:1  Error: File has too many lines (1071). Maximum allowed is 1000.  max-lines
+
+./src/components/responsive-layout.tsx
+27:8  Error: Function 'ResponsiveLayout' has a complexity of 22. Maximum allowed is 15.  complexity
+49:3  Warning: Unused eslint-disable directive (no problems were reported from 'react-you-might-not-need-an-effect/no-initialize-state').
+51:5  Error: Avoid initializing state in an effect. Instead, pass "mounted"'s initial value to its `useState`.  react-you-might-not-need-an-effect/no-initialize-state
+
+./src/components/ui/__tests__/animated-counter.test.tsx
+158:60  Warning: Async arrow function has no 'await' expression.  require-await
+
+./src/components/ui/__tests__/dropdown-menu.test.tsx
+35:86  Warning: Elements with the ARIA role "menuitemradio" must have the following attributes defined: aria-checked  jsx-a11y/role-has-required-aria-props
+
+./src/constants/test-constants.ts
+501:1  Error: File has too many lines (521). Maximum allowed is 500.  max-lines
+
+./src/hooks/__tests__/use-web-vitals-diagnostics.test.ts
+281:52  Error: No magic number: 50.  no-magic-numbers
+
+./src/hooks/use-breakpoint.ts
+37:3  Warning: Unused eslint-disable directive (no problems were reported from 'react-you-might-not-need-an-effect/no-initialize-state').
+41:7  Error: Avoid initializing state in an effect. Instead, pass "width"'s initial value to its `useState`.  react-you-might-not-need-an-effect/no-initialize-state
+
+./src/hooks/use-intersection-observer.ts
+107:7  Warning: Unused eslint-disable directive (no problems were reported from 'react-you-might-not-need-an-effect/no-event-handler').
+117:15  Error: Avoid using state and effects as an event handler. Instead, call the event handling code directly when the event occurs.  react-you-might-not-need-an-effect/no-event-handler
+
+./src/hooks/use-keyboard-navigation.ts
+43:71  Error: Arrow function has a complexity of 18. Maximum allowed is 15.  complexity
+107:9  Warning: The 'config' object makes the dependencies of useCallback Hook (at line 133) change on every render. To fix this, wrap the initialization of 'config' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+168:25  Warning: React Hook useCallback received a function whose dependencies are unknown. Pass an inline function instead.  react-hooks/exhaustive-deps
+
+./src/hooks/use-performance-monitor.ts
+177:8  Error: Function 'usePerformanceMonitor' has too many lines (122). Maximum allowed is 120.  max-lines-per-function
+
+./src/hooks/use-reduced-motion.ts
+12:3  Warning: Unused eslint-disable directive (no problems were reported from 'react-you-might-not-need-an-effect/no-initialize-state').
+23:5  Error: Avoid initializing state in an effect. Instead, pass "prefersReducedMotion"'s initial value to its `useState`.  react-you-might-not-need-an-effect/no-initialize-state
+
+./src/hooks/use-web-vitals-diagnostics.ts
+168:3  Warning: Unused eslint-disable directive (no problems were reported from 'react-you-might-not-need-an-effect/no-pass-data-to-parent').
+172:5  Error: Avoid passing data to parents in an effect. Instead, let the parent fetch the data itself and pass it down to the child as a prop.  react-you-might-not-need-an-effect/no-pass-data-to-parent
+180:8  Error: No magic number: 2000.  no-magic-numbers
+291:59  Error: No magic number: 20.  no-magic-numbers
+297:57  Error: No magic number: 2.  no-magic-numbers
+324:36  Error: No magic number: 3.  no-magic-numbers
+
+./src/lib/__tests__/content-validation.test.ts
+56:44  Error: No magic number: 2.  no-magic-numbers
+226:31  Error: No magic number: 61.  no-magic-numbers
+244:37  Error: No magic number: 161.  no-magic-numbers
+335:31  Error: No magic number: 70.  no-magic-numbers
+343:44  Error: No magic number: 3.  no-magic-numbers
+344:46  Error: No magic number: 4.  no-magic-numbers
+
+./src/lib/__tests__/enhanced-web-vitals.test.ts
+153:62  Error: No magic number: 10.  no-magic-numbers
+154:52  Error: No magic number: 0.1.  no-magic-numbers
+155:65  Error: No magic number: 0.25.  no-magic-numbers
+156:52  Error: No magic number: 2500.  no-magic-numbers
+157:65  Error: No magic number: 4000.  no-magic-numbers
+159:65  Error: No magic number: 300.  no-magic-numbers
+160:52  Error: No magic number: 1800.  no-magic-numbers
+161:53  Error: No magic number: 800.  no-magic-numbers
+162:66  Error: No magic number: 1800.  no-magic-numbers
+169:32  Error: No magic number: 0.25.  no-magic-numbers
+170:32  Error: No magic number: 0.25.  no-magic-numbers
+171:32  Error: No magic number: 0.25.  no-magic-numbers
+172:32  Error: No magic number: 0.25.  no-magic-numbers
+183:37  Error: No magic number: 30.  no-magic-numbers
+184:50  Error: No magic number: 15.  no-magic-numbers
+185:37  Error: No magic number: 5.  no-magic-numbers
+440:30  Error: No magic number: 10000.  no-magic-numbers
+
+./src/lib/__tests__/footer-config.test.ts
+223:27  Error: No magic number: 2024.  no-magic-numbers
+231:27  Error: No magic number: 2025.  no-magic-numbers
+
+./src/lib/__tests__/i18n-cache.test.ts
+208:43  Error: No magic number: 2.  no-magic-numbers
+220:41  Error: No magic number: 0.5.  no-magic-numbers
+249:31  Error: No magic number: 2.  no-magic-numbers
+300:7  Warning: Do not use 'new' for side effects.  no-new
+310:9  Warning: Do not use 'new' for side effects.  no-new
+318:9  Warning: Do not use 'new' for side effects.  no-new
+
+./src/lib/__tests__/locale-detection.test.ts
+313:49  Error: No magic number: 0.7.  no-magic-numbers
+338:49  Error: No magic number: 0.8.  no-magic-numbers
+360:46  Error: No magic number: 0.8.  no-magic-numbers
+
+./src/lib/__tests__/locale-storage.test.ts
+12:21  Error: No magic number: 30.  no-magic-numbers
+12:26  Error: No magic number: 24.  no-magic-numbers
+12:31  Error: No magic number: 60.  no-magic-numbers
+12:36  Error: No magic number: 60.  no-magic-numbers
+
+./src/lib/__tests__/navigation.test.ts
+172:50  Error: No magic number: 768.  no-magic-numbers
+173:50  Error: No magic number: 1024.  no-magic-numbers
+174:51  Error: No magic number: 1280.  no-magic-numbers
+193:55  Error: No magic number: 150.  no-magic-numbers
+224:46  Error: No magic number: 5.  no-magic-numbers
+
+./src/lib/__tests__/performance-analytics.test.ts
+115:70  Error: No magic number: 86400000.  no-magic-numbers
+238:29  Error: No magic number: 86400000.  no-magic-numbers
+302:49  Error: No magic number: 50.  no-magic-numbers
+535:36  Error: No magic number: 2.  no-magic-numbers
+542:27  Error: No magic number: 150.  no-magic-numbers
+
+./src/lib/__tests__/site-config.test.ts
+14:62  Error: No magic number: 22.  no-magic-numbers
+15:55  Error: No magic number: 14.  no-magic-numbers
+23:56  Error: No magic number: 2.  no-magic-numbers
+30:61  Error: No magic number: 42.  no-magic-numbers
+143:59  Error: No magic number: 4.  no-magic-numbers
+155:60  Error: No magic number: 0.2.  no-magic-numbers
+162:58  Error: No magic number: 700.  no-magic-numbers
+172:66  Error: No magic number: 2000.  no-magic-numbers
+
+./src/lib/__tests__/structured-data.test.ts
+369:33  Error: No magic number: 2.  no-magic-numbers
+382:33  Error: No magic number: 3.  no-magic-numbers
+397:33  Error: No magic number: 3.  no-magic-numbers
+404:33  Error: No magic number: 2.  no-magic-numbers
+
+./src/lib/__tests__/tech-stack-data.test.ts
+251:57  Error: No magic number: 2.  no-magic-numbers
+252:55  Error: No magic number: 2.  no-magic-numbers
+253:58  Error: No magic number: 2.  no-magic-numbers
+
+./src/lib/__tests__/theme-analytics.test.ts
+37:28  Error: Arrow function has too many lines (1137). Maximum allowed is 1000.  max-lines-per-function
+882:42  Error: No magic number: 2.  no-magic-numbers
+887:27  Error: No magic number: 5.  no-magic-numbers
+892:22  Error: No magic number: 80.  no-magic-numbers
+897:27  Error: No magic number: 5.  no-magic-numbers
+901:16  Error: No magic number: 5.  no-magic-numbers
+902:16  Error: No magic number: 5.  no-magic-numbers
+902:28  Error: No magic number: 120.  no-magic-numbers
+909:42  Error: No magic number: 10.  no-magic-numbers
+910:49  Error: No magic number: 5.  no-magic-numbers
+949:15  Error: No magic number: 2.  no-magic-numbers
+950:15  Error: No magic number: 2.  no-magic-numbers
+952:21  Error: No magic number: 50.  no-magic-numbers
+973:21  Error: No magic number: 50.  no-magic-numbers
+982:49  Error: No magic number: 50.  no-magic-numbers
+1001:1  Error: File has too many lines (1173). Maximum allowed is 1000.  max-lines
+1001:26  Error: No magic number: 50.  no-magic-numbers
+1004:72  Error: No magic number: 0xFFFFFFFF.  no-magic-numbers
+1004:85  Error: No magic number: 10.  no-magic-numbers
+1007:27  Error: No magic number: 10.  no-magic-numbers
+1013:44  Error: No magic number: 10.  no-magic-numbers
+1064:42  Error: No magic number: 3.  no-magic-numbers
+1142:23  Error: No magic number: 50.  no-magic-numbers
+1142:36  Error: No magic number: 10.  no-magic-numbers
+1148:42  Error: No magic number: 4.  no-magic-numbers
+1149:42  Error: No magic number: 65.  no-magic-numbers
+1150:42  Error: No magic number: 50.  no-magic-numbers
+1151:42  Error: No magic number: 80.  no-magic-numbers
+
+./src/lib/__tests__/translation-manager.test.ts
+308:57  Error: No magic number: 7.  no-magic-numbers
+
+./src/lib/__tests__/web-vitals-collector.test.ts
+114:7  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+127:9  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+222:55  Error: No magic number: 8.  no-magic-numbers
+223:54  Error: No magic number: 4.  no-magic-numbers
+233:49  Error: No magic number: 10.  no-magic-numbers
+324:43  Error: No magic number: 1500.  no-magic-numbers
+344:73  Error: No magic number: 10.  no-magic-numbers
+413:50  Error: No magic number: 50.  no-magic-numbers
+452:53  Error: No magic number: 80.  no-magic-numbers
+464:9  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+475:9  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+501:9  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
+
+./src/lib/enhanced-web-vitals.ts
+443:34  Error: Method 'generateDiagnosticReport' has too many statements (37). Maximum allowed is 30.  max-statements
+501:1  Error: File has too many lines (1453). Maximum allowed is 500.  max-lines
+539:43  Error: No magic number: 50.  no-magic-numbers
+641:61  Error: No magic number: 36.  no-magic-numbers
+641:72  Error: No magic number: 2.  no-magic-numbers
+641:75  Error: No magic number: 9.  no-magic-numbers
+655:40  Error: No magic number: 30.  no-magic-numbers
+655:45  Error: No magic number: 24.  no-magic-numbers
+655:50  Error: No magic number: 60.  no-magic-numbers
+655:55  Error: No magic number: 60.  no-magic-numbers
+728:54  Error: No magic number: 5.  no-magic-numbers
+785:26  Error: No magic number: 5.  no-magic-numbers
+800:55  Error: No magic number: 2.  no-magic-numbers
+818:27  Error: No magic number: 40.  no-magic-numbers
+829:42  Error: No magic number: 2.  no-magic-numbers
+829:77  Error: No magic number: 2.  no-magic-numbers
+840:43  Error: No magic number: 2.  no-magic-numbers
+840:79  Error: No magic number: 2.  no-magic-numbers
+1135:30  Error: No magic number: 3.  no-magic-numbers
+1199:3  Error: Async method 'performFullMonitoring' has no 'await' expression.  require-await
+1246:30  Error: Method 'generateComprehensiveReport' has too many statements (36). Maximum allowed is 30.  max-statements
+1254:27  Error: No magic number: 50.  no-magic-numbers
+1262:46  Error: No magic number: 3.  no-magic-numbers
+1300:53  Error: No magic number: 5.  no-magic-numbers
+1325:26  Error: Method 'getMetricStatus' has a complexity of 16. Maximum allowed is 15.  complexity
+1377:76  Error: No magic number: 60.  no-magic-numbers
+1377:81  Error: No magic number: 60.  no-magic-numbers
+1378:33  Error: No magic number: 24.  no-magic-numbers
+1432:18  Error: No magic number: 90.  no-magic-numbers
+1433:18  Error: No magic number: 80.  no-magic-numbers
+1434:18  Error: No magic number: 70.  no-magic-numbers
+1435:18  Error: No magic number: 60.  no-magic-numbers
+
+./src/lib/locale-detection.ts
+501:1  Error: File has too many lines (543). Maximum allowed is 500.  max-lines
+
+./src/lib/structured-data.ts
+501:1  Error: File has too many lines (532). Maximum allowed is 500.  max-lines
+
+./src/lib/translation-manager.ts
+501:1  Error: File has too many lines (665). Maximum allowed is 500.  max-lines
+
+./src/scripts/test-web-vitals.ts
+11:8  Error: Function 'testWebVitalsCollection' has too many statements (37). Maximum allowed is 30.  max-statements
+20:52  Error: No magic number: 3.  no-magic-numbers
+59:78  Error: No magic number: 1024.  no-magic-numbers
+109:28  Error: No magic number: 0.25.  no-magic-numbers
+111:35  Error: No magic number: 0.1.  no-magic-numbers
+118:28  Error: No magic number: 4000.  no-magic-numbers
+120:35  Error: No magic number: 2500.  no-magic-numbers
+127:28  Error: No magic number: 300.  no-magic-numbers
+136:32  Error: No magic number: 90.  no-magic-numbers
+138:39  Error: No magic number: 80.  no-magic-numbers
+140:39  Error: No magic number: 60.  no-magic-numbers
+156:67  Error: No magic number: 49.  no-magic-numbers
+
+./src/test/utils.tsx
+194:35  Error: No magic number: 300.  no-magic-numbers
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+ ELIFECYCLE  Command failed with exit code 1.

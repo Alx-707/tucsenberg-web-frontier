@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-08-07T03:02:31.630Z",
+  "checks": [
+    {
+      "name": "文件存在性检查: 性能分析器脚本",
+      "passed": true,
+      "message": "文件存在",
+      "details": "scripts/performance-analyzer.js"
+    },
+    {
+      "name": "JavaScript语法检查: 性能分析器脚本",
+      "passed": true,
+      "message": "JavaScript语法正确",
+      "details": null
+    },
+    {
+      "name": "内容检查: 性能分析器必需功能",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "性能分析器帮助命令",
+      "passed": true,
+      "message": "帮助命令正常工作",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: Enhanced Web Vitals文件",
+      "passed": true,
+      "message": "文件存在",
+      "details": "src/lib/enhanced-web-vitals.ts"
+    },
+    {
+      "name": "TypeScript语法检查: Enhanced Web Vitals文件",
+      "passed": true,
+      "message": "TypeScript语法正确",
+      "details": null
+    },
+    {
+      "name": "内容检查: Enhanced Web Vitals核心组件",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "内容检查: Enhanced Web Vitals关键方法",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: 性能监控使用指南",
+      "passed": true,
+      "message": "文件存在",
+      "details": "docs/performance/performance-monitoring-guide.md"
+    },
+    {
+      "name": "内容检查: 性能监控指南必需章节",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: CI/CD性能检查工作流",
+      "passed": true,
+      "message": "文件存在",
+      "details": ".github/workflows/performance-check.yml"
+    },
+    {
+      "name": "内容检查: CI/CD工作流必需元素",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: package.json文件",
+      "passed": true,
+      "message": "文件存在",
+      "details": "package.json"
+    },
+    {
+      "name": "package.json脚本检查",
+      "passed": true,
+      "message": "包含所有必需脚本",
+      "details": null
+    },
+    {
+      "name": "性能相关依赖检查",
+      "passed": true,
+      "message": "包含所有必需依赖",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: size-limit配置文件",
+      "passed": true,
+      "message": "文件存在",
+      "details": ".size-limit.js"
+    },
+    {
+      "name": "内容检查: size-limit配置内容",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    },
+    {
+      "name": "文件存在性检查: Next.js配置文件",
+      "passed": true,
+      "message": "文件存在",
+      "details": "next.config.ts"
+    },
+    {
+      "name": "内容检查: Next.js bundle分析器配置",
+      "passed": true,
+      "message": "包含所有必需内容",
+      "details": null
+    }
+  ],
+  "passed": 19,
+  "failed": 0,
+  "total": 19
+}

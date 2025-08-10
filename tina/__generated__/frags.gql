@@ -1,0 +1,48 @@
+fragment PostsParts on Posts {
+  __typename
+  locale
+  title
+  description
+  slug
+  publishedAt
+  updatedAt
+  author
+  tags
+  categories
+  featured
+  draft
+  excerpt
+  readingTime
+  coverImage
+  seo {
+    __typename
+    title
+    description
+    keywords
+    ogImage
+  }
+  body
+}
+
+fragment PagesParts on Pages {
+  __typename
+  locale
+  title
+  description
+  slug
+  publishedAt
+  updatedAt
+  author
+  layout
+  showToc
+  lastReviewed
+  draft
+  seo {
+    __typename
+    title
+    description
+    keywords
+    ogImage
+  }
+  body
+}

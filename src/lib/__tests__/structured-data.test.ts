@@ -1,0 +1,420 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// Import after mocks
+import {
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  generateFAQSchema,
+  generateLocalBusinessSchema,
+  generateLocalizedStructuredData,
+  generateProductSchema,
+  generateStructuredData,
+} from '../structured-data';
+
+// 测试常量定义
+const TEST_COUNTS = {
+  HOME_STRUCTURED_DATA: 2, // Organization + Website
+  BLOG_STRUCTURED_DATA: 3, // Organization + Website + Article
+  PRODUCTS_STRUCTURED_DATA: 3, // Organization + Website + Product
+  FALLBACK_STRUCTURED_DATA: 2, // Organization + Website (fallback)
+} as const;
+
+// Use vi.hoisted to ensure proper mock setup
+const { mockGetTranslations, mockGenerateCanonicalURL } = vi.hoisted(() => ({
+  mockGetTranslations: vi.fn(),
+  mockGenerateCanonicalURL: vi.fn(),
+}));
+
+vi.mock('next-intl/server', () => ({
+  getTranslations: mockGetTranslations,
+}));
+
+vi.mock('@/services/url-generator', () => ({
+  generateCanonicalURL: mockGenerateCanonicalURL,
+}));
+
+vi.mock('@/lib/i18n-performance', () => ({
+  I18nPerformanceMonitor: {
+    getInstance: () => ({
+      trackTranslationUsage: vi.fn(),
+    }),
+  },
+}));
+
+vi.mock('@/i18n/routing', () => ({
+  routing: {
+    locales: ['en', 'zh'],
+    defaultLocale: 'en',
+  },
+}));
+
+vi.mock('@/config/paths', () => ({
+  SITE_CONFIG: {
+    name: 'Tucsenberg',
+    description: 'Modern Enterprise Platform',
+    baseUrl: 'https://tucsenberg.com',
+    author: 'Tucsenberg Team',
+    social: {
+      twitter: '@tucsenberg',
+      linkedin: 'company/tucsenberg',
+    },
+  },
+}));
+
+describe('Structured Data Generation', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    // Mock translation function
+    const mockT = vi.fn((key: string, options?: { defaultValue?: string }) => {
+      const translations: Record<string, string> = {
+        'organization.name': 'Tucsenberg',
+        'organization.description': 'Modern Enterprise Platform',
+        'website.name': 'Tucsenberg',
+        'website.description': 'Enterprise Solutions',
+        'breadcrumb.home': 'Home',
+        'breadcrumb.about': 'About',
+        'breadcrumb.contact': 'Contact',
+        'article.author': 'Tucsenberg Team',
+        'product.brand': 'Tucsenberg',
+        'faq.question1': 'What is Tucsenberg?',
+        'faq.answer1': 'A modern enterprise platform',
+        'business.name': 'Tucsenberg Inc.',
+        'business.address': '123 Business St, City, Country',
+        'business.phone': '+1-234-567-8900',
+      };
+      const safeTranslations = new Map(Object.entries(translations));
+      return safeTranslations.get(key) || options?.defaultValue || key;
+    });
+
+    mockGetTranslations.mockResolvedValue(mockT);
+    mockGenerateCanonicalURL.mockReturnValue('https://tucsenberg.com/test');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('generateLocalizedStructuredData - Organization', () => {
+    it('should generate valid organization schema', async () => {
+      const schema = await generateLocalizedStructuredData(
+        'en',
+        'Organization',
+        {},
+      );
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'Tucsenberg',
+        'description': 'Modern Enterprise Platform',
+        'url': 'https://tucsenberg.com',
+        'logo': 'https://tucsenberg.com/logo.png',
+        'contactPoint': {
+          '@type': 'ContactPoint',
+          'telephone': '+1-555-0123',
+          'contactType': 'customer service',
+          'availableLanguage': ['en', 'zh'],
+        },
+        'sameAs': [
+          'https://twitter.com/tucsenberg',
+          'https://linkedin.com/company/tucsenberg',
+          'https://github.com/tucsenberg',
+        ],
+      });
+    });
+
+    it('should handle different locales', async () => {
+      await generateLocalizedStructuredData('zh', 'Organization', {});
+
+      expect(mockGetTranslations).toHaveBeenCalledWith({
+        locale: 'zh',
+        namespace: 'structured-data',
+      });
+    });
+  });
+
+  describe('generateLocalizedStructuredData - WebSite', () => {
+    it('should generate valid website schema', async () => {
+      const schema = await generateLocalizedStructuredData('en', 'WebSite', {});
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'name': 'Tucsenberg',
+        'description': 'Enterprise Solutions',
+        'url': 'https://tucsenberg.com',
+        'potentialAction': {
+          '@type': 'SearchAction',
+          'target': 'https://tucsenberg.com/search?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
+        'inLanguage': ['en', 'zh'],
+      });
+    });
+  });
+
+  describe('generateBreadcrumbSchema', () => {
+    it('should generate breadcrumb schema for nested pages', async () => {
+      const breadcrumbs = [
+        { name: 'Home', url: 'https://tucsenberg.com/' },
+        { name: 'About', url: 'https://tucsenberg.com/about' },
+        { name: 'Contact', url: 'https://tucsenberg.com/contact' },
+      ];
+
+      const schema = await generateBreadcrumbSchema(breadcrumbs, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+          {
+            '@type': 'ListItem',
+            'position': 1,
+            'name': 'Home',
+            'item': 'https://tucsenberg.com/',
+          },
+          {
+            '@type': 'ListItem',
+            'position': 2,
+            'name': 'About',
+            'item': 'https://tucsenberg.com/about',
+          },
+          {
+            '@type': 'ListItem',
+            'position': 3,
+            'name': 'Contact',
+            'item': 'https://tucsenberg.com/contact',
+          },
+        ],
+      });
+    });
+
+    it('should handle empty breadcrumbs', async () => {
+      const schema = await generateBreadcrumbSchema([], 'en');
+
+      expect(schema.itemListElement).toEqual([]);
+    });
+  });
+
+  describe('generateArticleSchema', () => {
+    it('should generate valid article schema', async () => {
+      const articleData = {
+        title: 'Test Article',
+        description: 'Test Description',
+        author: 'John Doe',
+        publishedTime: '2023-01-01T00:00:00Z',
+        modifiedTime: '2023-01-02T00:00:00Z',
+        image: '/test-image.jpg',
+        section: 'Technology',
+      };
+
+      const schema = await generateArticleSchema(articleData, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': 'Test Article',
+        'description': 'Test Description',
+        'author': {
+          '@type': 'Person',
+          'name': 'John Doe',
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Tucsenberg',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': 'https://tucsenberg.com/logo.png',
+          },
+        },
+        'datePublished': '2023-01-01T00:00:00Z',
+        'dateModified': '2023-01-02T00:00:00Z',
+        'image': {
+          '@type': 'ImageObject',
+          'url': '/test-image.jpg',
+        },
+        'section': 'Technology',
+        'inLanguage': 'en',
+        'mainEntityOfPage': {
+          '@type': 'WebPage',
+          '@id': 'https://tucsenberg.com/test',
+        },
+      });
+    });
+
+    it('should handle missing optional fields', async () => {
+      const articleData = {
+        title: 'Test Article',
+        description: 'Test Description',
+      };
+
+      const schema = await generateArticleSchema(articleData, 'en');
+
+      expect(schema.author).toEqual({
+        '@type': 'Person',
+        'name': 'Tucsenberg Team',
+      });
+      expect(schema.datePublished).toBeDefined();
+      expect(schema.dateModified).toBeDefined();
+    });
+  });
+
+  describe('generateProductSchema', () => {
+    it('should generate valid product schema', async () => {
+      const productData = {
+        name: 'Enterprise Solution',
+        description: 'Advanced business platform',
+        image: '/product-image.jpg',
+        price: '999.00',
+        currency: 'USD',
+        availability: 'InStock' as const,
+        brand: 'Tucsenberg',
+        sku: 'ENT-001',
+      };
+
+      const schema = await generateProductSchema(productData, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        'name': 'Enterprise Solution',
+        'description': 'Advanced business platform',
+        'image': [
+          '/product-image.jpg',
+        ],
+        'manufacturer': {
+          '@type': 'Organization',
+          'name': 'Tucsenberg',
+        },
+        'brand': {
+          '@type': 'Brand',
+          'name': 'Tucsenberg',
+        },
+        'sku': 'ENT-001',
+        'offers': {
+          '@type': 'Offer',
+          'price': 999,
+          'priceCurrency': 'USD',
+          'availability': 'InStock',
+        },
+      });
+    });
+  });
+
+  describe('generateFAQSchema', () => {
+    it('should generate valid FAQ schema', async () => {
+      const faqData = [
+        {
+          question: 'What is Tucsenberg?',
+          answer: 'A modern enterprise platform',
+        },
+        {
+          question: 'How does it work?',
+          answer: 'Through advanced technology',
+        },
+      ];
+
+      const schema = await generateFAQSchema(faqData, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'What is Tucsenberg?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'A modern enterprise platform',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How does it work?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': 'Through advanced technology',
+            },
+          },
+        ],
+      });
+    });
+  });
+
+  describe('generateLocalBusinessSchema', () => {
+    it('should generate valid local business schema', async () => {
+      const businessData = {
+        name: 'Tucsenberg Office',
+        address: '123 Business St, City, Country',
+        phone: '+1-234-567-8900',
+        email: 'contact@tucsenberg.com',
+        openingHours: ['Mo-Fr 09:00-17:00'],
+        priceRange: '$$$',
+      };
+
+      const schema = await generateLocalBusinessSchema(businessData, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        'name': 'Tucsenberg Office',
+        'address': {
+          '@type': 'PostalAddress',
+          'streetAddress': '123 Business St, City, Country',
+        },
+        'telephone': '+1-234-567-8900',
+        'email': 'contact@tucsenberg.com',
+        'openingHours': ['Mo-Fr 09:00-17:00'],
+        'priceRange': '$$$',
+        'url': 'https://tucsenberg.com',
+      });
+    });
+  });
+
+  describe('generateStructuredData', () => {
+    it('should generate structured data for home page', async () => {
+      const data = await generateStructuredData('home', 'en');
+
+      expect(data).toHaveLength(TEST_COUNTS.HOME_STRUCTURED_DATA); // Organization + Website
+      expect(data[0]['@type']).toBe('Organization');
+      expect(data[1]['@type']).toBe('WebSite');
+    });
+
+    it('should generate structured data for blog page', async () => {
+      const articleData = {
+        title: 'Blog Post',
+        description: 'Blog Description',
+      };
+
+      const data = await generateStructuredData('blog', 'en', {
+        article: articleData,
+      });
+
+      expect(data).toHaveLength(TEST_COUNTS.BLOG_STRUCTURED_DATA); // Organization + Website + Article
+      expect(data[2]['@type']).toBe('Article');
+    });
+
+    it('should generate structured data for products page', async () => {
+      const productData = {
+        name: 'Product',
+        description: 'Product Description',
+        price: '100.00',
+        currency: 'USD',
+        availability: 'InStock' as const,
+      };
+
+      const data = await generateStructuredData('products', 'en', {
+        product: productData,
+      });
+
+      expect(data).toHaveLength(TEST_COUNTS.PRODUCTS_STRUCTURED_DATA); // Organization + Website + Product
+      expect(data[2]['@type']).toBe('Product');
+    });
+
+    it('should handle unknown page types', async () => {
+      const data = await generateStructuredData('home', 'en');
+
+      expect(data).toHaveLength(TEST_COUNTS.FALLBACK_STRUCTURED_DATA); // Organization + Website (fallback)
+    });
+  });
+});

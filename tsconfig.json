@@ -1,10 +1,37 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["vitest/globals", "node"],
     "allowJs": true,
     "skipLibCheck": true,
+
+    // 最严格的类型检查
     "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "alwaysStrict": true,
+
+    // 最严格的代码质量检查
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": false, // Allow dot notation for better DX (changed from true)
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    // 完全禁止any类型 - 零容忍策略
+    // noImplicitAny已在strict模式中启用，这里注释说明策略
+
+    // 模块解析
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -13,14 +40,19 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+
+    // 路径映射 - 统一使用单一别名符合规则要求
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    // Next.js插件
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

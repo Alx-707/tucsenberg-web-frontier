@@ -1,0 +1,57 @@
+{
+  "qualityAssurance": {
+    "automatedChecks": {
+      "tools": [
+        "pnpm type-check:strict",
+        "pnpm lint:strict",
+        "pnpm format:check",
+        "pnpm build",
+        "pnpm test",
+        "pnpm arch:validate",
+        "pnpm security:check",
+        "pnpm duplication:check",
+        "pnpm size:check"
+      ],
+      "executionMode": "sequential",
+      "failFast": true,
+      "scope": [
+        "代码质量验证",
+        "安全性检查",
+        "架构一致性验证",
+        "性能预算控制",
+        "代码重复度检查"
+      ],
+      "threshold": "100%通过率",
+      "estimatedTime": "90-120秒"
+    },
+    "aiTechnicalReview": {
+      "scope": ["技术实现质量", "最佳实践遵循", "企业级标准"],
+      "threshold": "≥90分",
+      "evaluationMethod": "基于自动化检查结果进行技术分析",
+      "scoringCriteria": {
+        "技术实现质量": "30分 - 代码正确性、架构合理性",
+        "最佳实践遵循": "30分 - Next.js 15、React 19、TypeScript最佳实践",
+        "企业级标准": "25分 - 安全性、性能、可维护性",
+        "项目整体影响": "15分 - 对后续任务的影响、架构一致性"
+      },
+      "focusAreas": [
+        "代码质量和架构",
+        "安全性和性能",
+        "最佳实践遵循",
+        "企业级标准"
+      ]
+    },
+    "humanConfirmation": {
+      "timeLimit": "≤6分钟",
+      "method": "完整质量验证",
+      "items": [
+        "运行 `pnpm quality:check:strict` 显示所有检查通过",
+        "运行 `pnpm arch:validate` 确认架构一致性",
+        "运行 `pnpm security:check` 确认安全检查通过",
+        "运行 `pnpm duplication:check` 确认代码重复度<3%",
+        "运行 `pnpm size:check` 确认性能预算达标"
+      ],
+      "prerequisite": "自动化检查100%通过 + AI审查≥90分"
+    }
+  }
+}

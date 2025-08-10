@@ -1,0 +1,121 @@
+name: Translation Quality Check
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**/*.{ts,tsx,js,jsx}'
+      - 'messages/**/*.json'
+      - 'scripts/translation-*.js'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**/*.{ts,tsx,js,jsx}'
+      - 'messages/**/*.json'
+      - 'scripts/translation-*.js'
+
+jobs:
+  translation-quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create reports directory
+        run: mkdir -p reports
+
+      - name: Run translation key scan
+        run: pnpm scan:translations
+        continue-on-error: true
+
+      - name: Run translation sync check
+        run: pnpm sync:translations:enhanced
+
+      - name: Run translation validation
+        run: pnpm validate:translations:enhanced
+
+      - name: Upload translation reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: translation-reports
+          path: reports/translation-*.json
+          retention-days: 30
+
+      - name: Comment PR with translation status
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            try {
+              // Read translation reports
+              const scanReport = JSON.parse(fs.readFileSync('reports/translation-scan-report.json', 'utf8'));
+              const validationReport = JSON.parse(fs.readFileSync('reports/translation-validation-report.json', 'utf8'));
+              
+              // Generate comment
+              const comment = `## 🌐 Translation Quality Report
+              
+              ### 📊 Scan Results
+              - **Files Scanned**: ${scanReport.summary.scannedFiles}/${scanReport.summary.totalFiles}
+              - **Translation Keys Found**: ${scanReport.summary.uniqueKeys}
+              - **Missing Keys**: ${scanReport.summary.missingKeys.length}
+              - **Unused Keys**: ${scanReport.summary.unusedKeys.length}
+              
+              ### ✅ Validation Results
+              - **Total Keys**: ${validationReport.summary.totalKeys}
+              - **Issues Found**: ${validationReport.summary.issueCount}
+              - **Errors**: ${validationReport.summary.errorCount}
+              - **Warnings**: ${validationReport.summary.warningCount}
+              
+              ### 📈 Coverage
+              ${Object.entries(validationReport.statistics.coverage || {}).map(([locale, stats]) => 
+                `- **${locale.toUpperCase()}**: ${stats.percentage}% (${stats.translated}/${stats.total})`
+              ).join('\n')}
+              
+              ${scanReport.summary.missingKeys.length > 0 ? `
+              ### ⚠️ Missing Translation Keys
+              ${scanReport.summary.missingKeys.slice(0, 5).map(key => `- \`${key}\``).join('\n')}
+              ${scanReport.summary.missingKeys.length > 5 ? `\n... and ${scanReport.summary.missingKeys.length - 5} more` : ''}
+              ` : ''}
+              
+              ${validationReport.summary.errorCount > 0 ? '❌ Translation validation failed' : '✅ Translation validation passed'}
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } catch (error) {
+              console.log('Could not read translation reports:', error.message);
+            }
+
+      - name: Fail if critical translation issues
+        run: |
+          if [ -f "reports/translation-validation-report.json" ]; then
+            ERROR_COUNT=$(cat reports/translation-validation-report.json | jq '.summary.errorCount')
+            if [ "$ERROR_COUNT" -gt 0 ]; then
+              echo "❌ Translation validation failed with $ERROR_COUNT errors"
+              exit 1
+            fi
+          fi
+          echo "✅ Translation quality check passed"

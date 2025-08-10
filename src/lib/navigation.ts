@@ -1,0 +1,119 @@
+/**
+ * Navigation Configuration and Utilities
+ *
+ * This module provides navigation configuration, route definitions,
+ * and utility functions for the responsive navigation system.
+ */
+import type { Locale } from '@/types/i18n';
+import { LOCALES_CONFIG } from '@/config/paths';
+
+// Navigation item interface
+export interface NavigationItem {
+  key: string;
+  href: string;
+  translationKey: string;
+  icon?: string;
+  external?: boolean;
+  children?: NavigationItem[];
+}
+
+// Main navigation configuration
+export const mainNavigation: NavigationItem[] = [
+  {
+    key: 'home',
+    href: '/',
+    translationKey: 'navigation.home',
+  },
+  {
+    key: 'about',
+    href: '/about',
+    translationKey: 'navigation.about',
+  },
+  {
+    key: 'services',
+    href: '/services',
+    translationKey: 'navigation.services',
+  },
+  {
+    key: 'products',
+    href: '/products',
+    translationKey: 'navigation.products',
+  },
+  {
+    key: 'blog',
+    href: '/blog',
+    translationKey: 'navigation.blog',
+  },
+  {
+    key: 'diagnostics',
+    href: '/diagnostics',
+    translationKey: 'navigation.diagnostics',
+  },
+  // Note: contact page is accessible via direct URL but not shown in navigation
+];
+
+// Mobile navigation configuration (can be different from main nav)
+export const mobileNavigation: NavigationItem[] = mainNavigation;
+
+// Utility function to check if a path is active
+export function isActivePath(currentPath: string, itemPath: string): boolean {
+  // Remove locale prefix for comparison using safe string matching
+  let cleanCurrentPath = currentPath;
+  for (const locale of LOCALES_CONFIG.locales) {
+    const localePrefix = `/${locale}`;
+    if (cleanCurrentPath.startsWith(localePrefix)) {
+      cleanCurrentPath = cleanCurrentPath.slice(localePrefix.length) || '/';
+      break;
+    }
+  }
+  const cleanItemPath = itemPath === '/' ? '/' : itemPath;
+
+  if (cleanItemPath === '/') {
+    return cleanCurrentPath === '/';
+  }
+
+  return cleanCurrentPath.startsWith(cleanItemPath);
+}
+
+// Utility function to get localized href
+export function getLocalizedHref(href: string, locale: Locale): string {
+  if (
+    href.startsWith('http') ||
+    href.startsWith('mailto:') ||
+    href.startsWith('tel:')
+  ) {
+    return href;
+  }
+
+  // For root path, return just the locale
+  if (href === '/') {
+    return `/${locale}`;
+  }
+
+  // For other paths, prepend locale
+  return `/${locale}${href}`;
+}
+
+// Navigation breakpoints
+export const NAVIGATION_BREAKPOINTS = {
+  mobile: 768,
+  tablet: 1024,
+  desktop: 1280,
+} as const;
+
+// Animation durations
+export const NAVIGATION_ANIMATIONS = {
+  mobileMenuToggle: 200,
+  dropdownFade: 150,
+  hoverTransition: 100,
+} as const;
+
+// ARIA labels and accessibility
+export const NAVIGATION_ARIA = {
+  mainNav: 'Main navigation',
+  mobileMenuButton: 'Toggle mobile menu',
+  mobileMenu: 'Mobile navigation menu',
+  languageSelector: 'Language selector',
+  themeSelector: 'Theme selector',
+  skipToContent: 'Skip to main content',
+} as const;

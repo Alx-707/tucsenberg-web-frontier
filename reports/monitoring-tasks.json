@@ -1,0 +1,25 @@
+{
+  "daily": {
+    "enabled": true,
+    "schedule": "0 9 * * *",
+    "tasks": [
+      "quality:dashboard",
+      "coverage:trend",
+      "performance:benchmark"
+    ]
+  },
+  "weekly": {
+    "enabled": true,
+    "schedule": "0 9 * * 1",
+    "tasks": [
+      "report:automated",
+      "quality:comprehensive"
+    ]
+  },
+  "onCommit": {
+    "enabled": true,
+    "tasks": [
+      "quality:gate"
+    ]
+  }
+}

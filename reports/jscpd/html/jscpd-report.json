@@ -1,0 +1,2250 @@
+{
+  "statistics": {
+    "detectionDate": "2025-08-09T14:04:31.648Z",
+    "formats": {
+      "typescript": {
+        "sources": {
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/demo/page.tsx": {
+            "lines": 275,
+            "tokens": 2428,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 19,
+            "duplicatedTokens": 223,
+            "percentage": 6.91,
+            "percentageTokens": 9.18,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/__tests__/test-utils.ts": {
+            "lines": 60,
+            "tokens": 397,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/theme-showcase.tsx": {
+            "lines": 61,
+            "tokens": 532,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/responsive-showcase.tsx": {
+            "lines": 53,
+            "tokens": 421,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/interactive-showcase.tsx": {
+            "lines": 72,
+            "tokens": 501,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/index.ts": {
+            "lines": 5,
+            "tokens": 76,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/form-showcase.tsx": {
+            "lines": 42,
+            "tokens": 328,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/button-showcase.tsx": {
+            "lines": 37,
+            "tokens": 327,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/badge-showcase.tsx": {
+            "lines": 41,
+            "tokens": 335,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/api/test-content/route.ts": {
+            "lines": 95,
+            "tokens": 874,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 18,
+            "duplicatedTokens": 196,
+            "percentage": 18.95,
+            "percentageTokens": 22.43,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/test-footer/page.tsx": {
+            "lines": 65,
+            "tokens": 672,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/products/page.tsx": {
+            "lines": 34,
+            "tokens": 228,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/page.tsx": {
+            "lines": 425,
+            "tokens": 3820,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 14,
+            "duplicatedTokens": 159,
+            "percentage": 3.29,
+            "percentageTokens": 4.16,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/contact/page.tsx": {
+            "lines": 143,
+            "tokens": 993,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/blog/page.tsx": {
+            "lines": 34,
+            "tokens": 228,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/about/page.tsx": {
+            "lines": 34,
+            "tokens": 228,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/testing/utils/theme-test-utilities.ts": {
+            "lines": 357,
+            "tokens": 2254,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/testing/templates/component-test-template.ts": {
+            "lines": 304,
+            "tokens": 1356,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/features/dashboard/index.ts": {
+            "lines": 8,
+            "tokens": 54,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/features/auth/index.ts": {
+            "lines": 8,
+            "tokens": 59,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/tabs.tsx": {
+            "lines": 64,
+            "tokens": 388,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/social-icons.tsx": {
+            "lines": 144,
+            "tokens": 952,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 28,
+            "duplicatedTokens": 224,
+            "percentage": 19.44,
+            "percentageTokens": 23.53,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/sheet.tsx": {
+            "lines": 157,
+            "tokens": 975,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/separator.tsx": {
+            "lines": 24,
+            "tokens": 185,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/navigation-menu.tsx": {
+            "lines": 166,
+            "tokens": 946,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/label.tsx": {
+            "lines": 22,
+            "tokens": 136,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/input.tsx": {
+            "lines": 19,
+            "tokens": 129,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/dropdown-menu.tsx": {
+            "lines": 273,
+            "tokens": 1560,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/card.tsx": {
+            "lines": 90,
+            "tokens": 575,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/button.tsx": {
+            "lines": 57,
+            "tokens": 364,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/badge.tsx": {
+            "lines": 37,
+            "tokens": 245,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter.tsx": {
+            "lines": 219,
+            "tokens": 1498,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-toggle-button.tsx": {
+            "lines": 58,
+            "tokens": 375,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-performance-monitor.tsx": {
+            "lines": 90,
+            "tokens": 566,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-menu-item.tsx": {
+            "lines": 62,
+            "tokens": 403,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/under-construction.tsx": {
+            "lines": 115,
+            "tokens": 783,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/progress-indicator.tsx": {
+            "lines": 133,
+            "tokens": 930,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/dynamic-imports.tsx": {
+            "lines": 219,
+            "tokens": 1269,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/animated-icon.tsx": {
+            "lines": 105,
+            "tokens": 763,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 26,
+            "duplicatedTokens": 202,
+            "percentage": 24.76,
+            "percentageTokens": 26.47,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/performance/web-vitals-indicator.tsx": {
+            "lines": 247,
+            "tokens": 1721,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 64,
+            "duplicatedTokens": 438,
+            "percentage": 25.91,
+            "percentageTokens": 25.45,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/mobile-navigation.tsx": {
+            "lines": 157,
+            "tokens": 998,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/main-navigation.tsx": {
+            "lines": 124,
+            "tokens": 780,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/logo.tsx": {
+            "lines": 119,
+            "tokens": 702,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/language-switcher.tsx": {
+            "lines": 233,
+            "tokens": 1683,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/index.ts": {
+            "lines": 21,
+            "tokens": 115,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/header.tsx": {
+            "lines": 92,
+            "tokens": 568,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/footer.tsx": {
+            "lines": 173,
+            "tokens": 1136,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-preloader.tsx": {
+            "lines": 256,
+            "tokens": 1644,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-fallback.tsx": {
+            "lines": 196,
+            "tokens": 1383,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/performance-dashboard.tsx": {
+            "lines": 218,
+            "tokens": 1537,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/locale-detection-demo.tsx": {
+            "lines": 233,
+            "tokens": 1865,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/format-helpers.tsx": {
+            "lines": 215,
+            "tokens": 1884,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/enhanced-locale-switcher.tsx": {
+            "lines": 332,
+            "tokens": 2294,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/tech-stack-section.tsx": {
+            "lines": 262,
+            "tokens": 1798,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx": {
+            "lines": 287,
+            "tokens": 2034,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 50,
+            "duplicatedTokens": 307,
+            "percentage": 17.42,
+            "percentageTokens": 15.09,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/hero-section.tsx": {
+            "lines": 235,
+            "tokens": 1485,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/component-showcase.tsx": {
+            "lines": 95,
+            "tokens": 690,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 18,
+            "duplicatedTokens": 113,
+            "percentage": 18.95,
+            "percentageTokens": 16.38,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/call-to-action.tsx": {
+            "lines": 293,
+            "tokens": 1875,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/contact/contact-form.tsx": {
+            "lines": 218,
+            "tokens": 1863,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/error-test/page.tsx": {
+            "lines": 233,
+            "tokens": 1635,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/admin/page.tsx": {
+            "lines": 281,
+            "tokens": 2130,
+            "sources": 1,
+            "clones": 2,
+            "duplicatedLines": 24,
+            "duplicatedTokens": 194,
+            "percentage": 8.54,
+            "percentageTokens": 9.11,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/page.tsx": {
+            "lines": 16,
+            "tokens": 137,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/layout.tsx": {
+            "lines": 196,
+            "tokens": 1176,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/translation-manager.ts": {
+            "lines": 98,
+            "tokens": 558,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/test-types.ts": {
+            "lines": 397,
+            "tokens": 1868,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/index.ts": {
+            "lines": 15,
+            "tokens": 35,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/i18n.ts": {
+            "lines": 310,
+            "tokens": 2052,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/i18n-enhanced.ts": {
+            "lines": 294,
+            "tokens": 1746,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/global.ts": {
+            "lines": 154,
+            "tokens": 717,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/types/content.ts": {
+            "lines": 171,
+            "tokens": 1092,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/utils.tsx": {
+            "lines": 266,
+            "tokens": 2268,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 29,
+            "duplicatedTokens": 267,
+            "percentage": 10.9,
+            "percentageTokens": 11.77,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/setup.ts": {
+            "lines": 269,
+            "tokens": 2352,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 11,
+            "duplicatedTokens": 109,
+            "percentage": 4.09,
+            "percentageTokens": 4.63,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/shared/utils.ts": {
+            "lines": 34,
+            "tokens": 84,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/services/url-generator.ts": {
+            "lines": 301,
+            "tokens": 2018,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/scripts/test-web-vitals.ts": {
+            "lines": 151,
+            "tokens": 1441,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/web-vitals-monitor.ts": {
+            "lines": 341,
+            "tokens": 2632,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/utils.ts": {
+            "lines": 5,
+            "tokens": 61,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-validators.ts": {
+            "lines": 230,
+            "tokens": 1721,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-quality.ts": {
+            "lines": 246,
+            "tokens": 1610,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-quality-types.ts": {
+            "lines": 56,
+            "tokens": 325,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-benchmarks.ts": {
+            "lines": 144,
+            "tokens": 836,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/theme-analytics.ts": {
+            "lines": 412,
+            "tokens": 2754,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/tech-stack-data.ts": {
+            "lines": 210,
+            "tokens": 1182,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/site-config.ts": {
+            "lines": 103,
+            "tokens": 620,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/seo-metadata.ts": {
+            "lines": 166,
+            "tokens": 1252,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/navigation.ts": {
+            "lines": 116,
+            "tokens": 738,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/logger.ts": {
+            "lines": 240,
+            "tokens": 1622,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/locale-storage.ts": {
+            "lines": 340,
+            "tokens": 2315,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/index.ts": {
+            "lines": 12,
+            "tokens": 23,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/i18n-validation.ts": {
+            "lines": 346,
+            "tokens": 2666,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/i18n-performance.ts": {
+            "lines": 245,
+            "tokens": 1943,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/i18n-monitoring.ts": {
+            "lines": 450,
+            "tokens": 3405,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/i18n-cache.ts": {
+            "lines": 364,
+            "tokens": 2877,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/footer-config.ts": {
+            "lines": 205,
+            "tokens": 1146,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/content.ts": {
+            "lines": 32,
+            "tokens": 115,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/content-validation.ts": {
+            "lines": 134,
+            "tokens": 865,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/content-utils.ts": {
+            "lines": 112,
+            "tokens": 759,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/content-query.ts": {
+            "lines": 307,
+            "tokens": 2144,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/content-parser.ts": {
+            "lines": 111,
+            "tokens": 802,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/colors.ts": {
+            "lines": 328,
+            "tokens": 2947,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/accessibility.ts": {
+            "lines": 454,
+            "tokens": 3274,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/routing.ts": {
+            "lines": 39,
+            "tokens": 223,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/request.ts": {
+            "lines": 156,
+            "tokens": 1183,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 65,
+            "duplicatedTokens": 481,
+            "percentage": 41.67,
+            "percentageTokens": 40.66,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/enhanced-request.ts": {
+            "lines": 114,
+            "tokens": 889,
+            "sources": 1,
+            "clones": 3,
+            "duplicatedLines": 65,
+            "duplicatedTokens": 481,
+            "percentage": 57.02,
+            "percentageTokens": 54.11,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-web-vitals-diagnostics.ts": {
+            "lines": 282,
+            "tokens": 2901,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 5,
+            "duplicatedTokens": 64,
+            "percentage": 1.77,
+            "percentageTokens": 2.21,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-theme-toggle.ts": {
+            "lines": 130,
+            "tokens": 770,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-reduced-motion.ts": {
+            "lines": 38,
+            "tokens": 220,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-performance-monitor.ts": {
+            "lines": 192,
+            "tokens": 1747,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-keyboard-navigation.ts": {
+            "lines": 163,
+            "tokens": 1501,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-intersection-observer.ts": {
+            "lines": 204,
+            "tokens": 1103,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-translations.ts": {
+            "lines": 217,
+            "tokens": 1519,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-theme.ts": {
+            "lines": 202,
+            "tokens": 1534,
+            "sources": 1,
+            "clones": 4,
+            "duplicatedLines": 62,
+            "duplicatedTokens": 458,
+            "percentage": 30.69,
+            "percentageTokens": 29.86,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-breakpoint.ts": {
+            "lines": 93,
+            "tokens": 813,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/test-constants.ts": {
+            "lines": 254,
+            "tokens": 1165,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/security-constants.ts": {
+            "lines": 245,
+            "tokens": 1101,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/index.ts": {
+            "lines": 20,
+            "tokens": 90,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/i18n-constants.ts": {
+            "lines": 251,
+            "tokens": 1261,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 21,
+            "duplicatedTokens": 101,
+            "percentage": 8.37,
+            "percentageTokens": 8.01,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/app-constants.ts": {
+            "lines": 261,
+            "tokens": 1237,
+            "sources": 1,
+            "clones": 1,
+            "duplicatedLines": 21,
+            "duplicatedTokens": 101,
+            "percentage": 8.05,
+            "percentageTokens": 8.16,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/config/paths.ts": {
+            "lines": 291,
+            "tokens": 1881,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme-toggle.tsx": {
+            "lines": 84,
+            "tokens": 646,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme-provider.tsx": {
+            "lines": 32,
+            "tokens": 206,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/responsive-layout.tsx": {
+            "lines": 101,
+            "tokens": 796,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/loading-spinner.tsx": {
+            "lines": 48,
+            "tokens": 330,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/language-toggle.tsx": {
+            "lines": 111,
+            "tokens": 874,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/error-boundary.tsx": {
+            "lines": 95,
+            "tokens": 669,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/page.tsx": {
+            "lines": 5,
+            "tokens": 36,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/layout.tsx": {
+            "lines": 17,
+            "tokens": 97,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          },
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/global-error.tsx": {
+            "lines": 63,
+            "tokens": 478,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 20816,
+          "tokens": 144421,
+          "sources": 128,
+          "clones": 18,
+          "duplicatedLines": 270,
+          "duplicatedTokens": 2059,
+          "percentage": 1.3,
+          "percentageTokens": 1.43,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      },
+      "javascript": {
+        "sources": {
+          "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/services/url-generator-cjs.js": {
+            "lines": 139,
+            "tokens": 971,
+            "sources": 1,
+            "clones": 0,
+            "duplicatedLines": 0,
+            "duplicatedTokens": 0,
+            "percentage": 0,
+            "percentageTokens": 0,
+            "newDuplicatedLines": 0,
+            "newClones": 0
+          }
+        },
+        "total": {
+          "lines": 139,
+          "tokens": 971,
+          "sources": 1,
+          "clones": 0,
+          "duplicatedLines": 0,
+          "duplicatedTokens": 0,
+          "percentage": 0,
+          "percentageTokens": 0,
+          "newDuplicatedLines": 0,
+          "newClones": 0
+        }
+      }
+    },
+    "total": {
+      "lines": 20955,
+      "tokens": 145392,
+      "sources": 129,
+      "clones": 18,
+      "duplicatedLines": 270,
+      "duplicatedTokens": 2059,
+      "percentage": 1.29,
+      "percentageTokens": 1.42,
+      "newDuplicatedLines": 0,
+      "newClones": 0
+    }
+  },
+  "duplicates": [
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": ": string } | null {\n  if (items.length === 0) return null;\n\n  const [item] = items;\n  if (!item?.metadata) return null;\n\n  return {\n    title: item.metadata.title ?? 'Untitled',\n    slug: item.metadata.slug ?? '',\n  }",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/api/test-content/route.ts",
+        "start": 26,
+        "end": 35,
+        "startLoc": {
+          "line": 26,
+          "column": 5,
+          "position": 297
+        },
+        "endLoc": {
+          "line": 35,
+          "column": 2,
+          "position": 395
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/api/test-content/route.ts",
+        "start": 10,
+        "end": 19,
+        "startLoc": {
+          "line": 10,
+          "column": 2,
+          "position": 120
+        },
+        "endLoc": {
+          "line": 19,
+          "column": 12,
+          "position": 218
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 8,
+      "fragment": ",\n    };\n\n    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });\n    const url = URL.createObjectURL(blob);\n    const a = document.createElement('a');\n    a.href = url;\n    a.download = `web-vitals-",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/page.tsx",
+        "start": 101,
+        "end": 108,
+        "startLoc": {
+          "line": 101,
+          "column": 2,
+          "position": 929
+        },
+        "endLoc": {
+          "line": 108,
+          "column": 13,
+          "position": 1021
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/demo/page.tsx",
+        "start": 87,
+        "end": 94,
+        "startLoc": {
+          "line": 87,
+          "column": 5,
+          "position": 771
+        },
+        "endLoc": {
+          "line": 94,
+          "column": 18,
+          "position": 864
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 8,
+      "fragment": "${new Date().toISOString().split('T')[0]}.json`;\n    document.body.appendChild(a);\n    a.click();\n    document.body.removeChild(a);\n    URL.revokeObjectURL(url);\n  };\n\n  // 获取指标状态",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/page.tsx",
+        "start": 108,
+        "end": 115,
+        "startLoc": {
+          "line": 108,
+          "column": 13,
+          "position": 1022
+        },
+        "endLoc": {
+          "line": 115,
+          "column": 10,
+          "position": 1089
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/demo/page.tsx",
+        "start": 94,
+        "end": 101,
+        "startLoc": {
+          "line": 94,
+          "column": 18,
+          "position": 865
+        },
+        "endLoc": {
+          "line": 101,
+          "column": 10,
+          "position": 932
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 15,
+      "fragment": ": FC<SocialIconProps> = ({\n  className = '',\n  size = 20,\n  'data-testid': dataTestId,\n}) => (\n  <svg\n    width={size}\n    height={size}\n    viewBox='0 0 24 24'\n    fill='currentColor'\n    className={className}\n    aria-hidden='true'\n    {...(dataTestId && { 'data-testid': dataTestId })}\n  >\n    <path d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/social-icons.tsx",
+        "start": 36,
+        "end": 50,
+        "startLoc": {
+          "line": 36,
+          "column": 13,
+          "position": 193
+        },
+        "endLoc": {
+          "line": 50,
+          "column": 501,
+          "position": 305
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/social-icons.tsx",
+        "start": 17,
+        "end": 31,
+        "startLoc": {
+          "line": 17,
+          "column": 12,
+          "position": 59
+        },
+        "endLoc": {
+          "line": 31,
+          "column": 158,
+          "position": 171
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 14,
+      "fragment": ") {\n    return (\n      <div className={cn('relative', getSizeClass(size), className)}>\n        <div className={cn('absolute inset-0', prefersReducedMotion ? '' : 'animate-spin')}>\n          <svg\n            viewBox='0 0 24 24'\n            fill='none'\n            stroke='currentColor'\n            strokeWidth='2'\n            strokeLinecap='round'\n            strokeLinejoin='round'\n            className='text-primary h-full w-full'\n          >\n            <circle",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/animated-icon.tsx",
+        "start": 78,
+        "end": 91,
+        "startLoc": {
+          "line": 78,
+          "column": 7,
+          "position": 580
+        },
+        "endLoc": {
+          "line": 91,
+          "column": 7,
+          "position": 681
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/animated-icon.tsx",
+        "start": 58,
+        "end": 71,
+        "startLoc": {
+          "line": 58,
+          "column": 10,
+          "position": 435
+        },
+        "endLoc": {
+          "line": 71,
+          "column": 5,
+          "position": 536
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 33,
+      "fragment": "// 定期发送性能报告（每5分钟）\n    const minutesInterval = 5;\n    const secondsInMinute = 60;\n    const millisecondsInSecond = 1000;\n    const reportIntervalMs =\n      minutesInterval * secondsInMinute * millisecondsInSecond;\n\n    const reportInterval = setInterval(() => {\n      webVitalsMonitor.sendReport();\n    }, reportIntervalMs);\n\n    // 页面可见性变化时发送报告\n    const handleVisibilityChange = () => {\n      if (document.visibilityState === 'hidden') {\n        webVitalsMonitor.sendReport();\n      }\n    };\n\n    // 页面卸载前发送最终报告\n    const handleBeforeUnload = () => {\n      webVitalsMonitor.sendReport();\n    };\n\n    // 添加事件监听器\n    document.addEventListener('visibilitychange', handleVisibilityChange);\n    window.addEventListener('beforeunload', handleBeforeUnload);\n\n    // 组件挂载时发送初始报告\n    webVitalsMonitor.sendReport();\n\n    // 清理函数\n    return () => {\n      clearInterval(reportInterval",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/performance/web-vitals-indicator.tsx",
+        "start": 205,
+        "end": 237,
+        "startLoc": {
+          "line": 205,
+          "column": 5,
+          "position": 1439
+        },
+        "endLoc": {
+          "line": 237,
+          "column": 15,
+          "position": 1658
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/performance/web-vitals-indicator.tsx",
+        "start": 37,
+        "end": 69,
+        "startLoc": {
+          "line": 37,
+          "column": 5,
+          "position": 292
+        },
+        "endLoc": {
+          "line": 69,
+          "column": 15,
+          "position": 511
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 17,
+      "fragment": ".technologies.map((tech) => (\n                <Badge\n                  key={tech}\n                  variant='outline'\n                  className='text-xs'\n                >\n                  {tech}\n                </Badge>\n              ))}\n            </div>\n          </CardContent>\n        </Card>\n\n        <Card>\n          <CardHeader>\n            <CardTitle className='flex items-center gap-2'>\n              <div className='h-3 w-3 rounded-full bg-purple-500'",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx",
+        "start": 172,
+        "end": 188,
+        "startLoc": {
+          "line": 172,
+          "column": 3,
+          "position": 1282
+        },
+        "endLoc": {
+          "line": 188,
+          "column": 37,
+          "position": 1379
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx",
+        "start": 147,
+        "end": 163,
+        "startLoc": {
+          "line": 147,
+          "column": 9,
+          "position": 1112
+        },
+        "endLoc": {
+          "line": 163,
+          "column": 36,
+          "position": 1209
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 19,
+      "fragment": ">\n      <div className='container mx-auto px-4'>\n        <div\n          ref={ref}\n          className={`mx-auto max-w-6xl transition-all duration-700 ease-out ${\n            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'\n          }`}\n        >\n          {/* 标题 */}\n          <div className='mb-12 text-center'>\n            <h2 className='mb-4 text-3xl font-bold tracking-tight sm:text-4xl'>\n              {t('title')}\n            </h2>\n            <p className='text-muted-foreground mx-auto max-w-2xl text-lg'>\n              {t('subtitle')}\n            </p>\n          </div>\n\n          <Tabs",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/component-showcase.tsx",
+        "start": 39,
+        "end": 57,
+        "startLoc": {
+          "line": 39,
+          "column": 5,
+          "position": 308
+        },
+        "endLoc": {
+          "line": 57,
+          "column": 5,
+          "position": 421
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx",
+        "start": 224,
+        "end": 242,
+        "startLoc": {
+          "line": 224,
+          "column": 8,
+          "position": 1622
+        },
+        "endLoc": {
+          "line": 242,
+          "column": 12,
+          "position": 1735
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 13,
+      "fragment": "return (\n    <div className=\"min-h-screen bg-gray-50\">\n      <div className=\"container mx-auto px-4 py-8\">\n        <div className=\"text-center\">\n          <h1 className=\"text-3xl font-bold text-gray-900 mb-4\">\n            TinaCMS Admin\n          </h1>\n          <p className=\"text-gray-600 mb-8\">\n            Content management interface for Tucsenberg Web Frontier\n          </p>\n\n          <div className=\"bg-white rounded-lg shadow-md p-6 max-w-2xl mx-auto\">\n            <div className=\"bg-green-50 border border-green-200 rounded-md p-4 mb-6\"",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/admin/page.tsx",
+        "start": 143,
+        "end": 155,
+        "startLoc": {
+          "line": 143,
+          "column": 3,
+          "position": 1145
+        },
+        "endLoc": {
+          "line": 155,
+          "column": 58,
+          "position": 1242
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/admin/page.tsx",
+        "start": 31,
+        "end": 43,
+        "startLoc": {
+          "line": 31,
+          "column": 5,
+          "position": 253
+        },
+        "endLoc": {
+          "line": 43,
+          "column": 60,
+          "position": 350
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 10,
+      "fragment": "),\n      media: query,\n      onchange: null,\n      addListener: vi.fn(),\n      removeListener: vi.fn(),\n      addEventListener: vi.fn(),\n      removeEventListener: vi.fn(),\n      dispatchEvent: vi.fn(),\n    })),\n  }",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/utils.tsx",
+        "start": 163,
+        "end": 172,
+        "startLoc": {
+          "line": 163,
+          "column": 33,
+          "position": 1339
+        },
+        "endLoc": {
+          "line": 172,
+          "column": 2,
+          "position": 1418
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/utils.tsx",
+        "start": 151,
+        "end": 161,
+        "startLoc": {
+          "line": 151,
+          "column": 25,
+          "position": 1224
+        },
+        "endLoc": {
+          "line": 161,
+          "column": 8,
+          "position": 1304
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 12,
+      "fragment": ": vi.fn(),\n    reload: vi.fn(),\n    back: vi.fn(),\n    prefetch: vi.fn().mockResolvedValue(undefined),\n    beforePopState: vi.fn(),\n    events: {\n      on: vi.fn(),\n      off: vi.fn(),\n      emit: vi.fn(),\n    },\n    isFallback: false,\n  }",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/setup.ts",
+        "start": 25,
+        "end": 36,
+        "startLoc": {
+          "line": 25,
+          "column": 4,
+          "position": 175
+        },
+        "endLoc": {
+          "line": 36,
+          "column": 2,
+          "position": 284
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/utils.tsx",
+        "start": 114,
+        "end": 125,
+        "startLoc": {
+          "line": 114,
+          "column": 8,
+          "position": 894
+        },
+        "endLoc": {
+          "line": 125,
+          "column": 4,
+          "position": 1003
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 38,
+      "fragment": "(locale: string) {\n  return {\n    dateTime: {\n      short: {\n        day: 'numeric' as const,\n        month: 'short' as const,\n        year: 'numeric' as const,\n      },\n      long: {\n        day: 'numeric' as const,\n        month: 'long' as const,\n        year: 'numeric' as const,\n        weekday: 'long' as const,\n      },\n    },\n    number: {\n      precise: {\n        maximumFractionDigits: 5,\n      },\n      currency: {\n        style: 'currency' as const,\n        currency: locale === 'zh' ? 'CNY' : 'USD',\n      },\n      percentage: {\n        style: 'percent' as const,\n        minimumFractionDigits: 1,\n      },\n    },\n    list: {\n      enumeration: {\n        style: 'long' as const,\n        type: 'conjunction' as const,\n      },\n    },\n  };\n}\n\nfunction",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/enhanced-request.ts",
+        "start": 10,
+        "end": 47,
+        "startLoc": {
+          "line": 10,
+          "column": 19,
+          "position": 55
+        },
+        "endLoc": {
+          "line": 47,
+          "column": 9,
+          "position": 320
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/request.ts",
+        "start": 11,
+        "end": 48,
+        "startLoc": {
+          "line": 11,
+          "column": 11,
+          "position": 68
+        },
+        "endLoc": {
+          "line": 48,
+          "column": 17,
+          "position": 333
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 15,
+      "fragment": "(locale: string, loadTime: number) {\n  I18nPerformanceMonitor.recordLoadTime(loadTime);\n\n  const cache = TranslationCache.getInstance();\n  const cached = cache.get(`messages-${locale}`);\n  if (cached) {\n    I18nPerformanceMonitor.recordCacheHit();\n  } else {\n    I18nPerformanceMonitor.recordCacheMiss();\n  }\n\n  return Boolean(cached);\n}\n\nfunction",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/enhanced-request.ts",
+        "start": 47,
+        "end": 61,
+        "startLoc": {
+          "line": 47,
+          "column": 27,
+          "position": 323
+        },
+        "endLoc": {
+          "line": 61,
+          "column": 9,
+          "position": 429
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/request.ts",
+        "start": 49,
+        "end": 63,
+        "startLoc": {
+          "line": 49,
+          "column": 19,
+          "position": 338
+        },
+        "endLoc": {
+          "line": 63,
+          "column": 15,
+          "position": 444
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 15,
+      "fragment": "(locale),\n    metadata: {\n      loadTime: performance.now() - startTime,\n      cacheUsed: false,\n      error: true,\n      timestamp: Date.now(),\n    },\n  };\n}\n\nexport default getRequestConfig(async ({ requestLocale }) => {\n  const startTime = performance.now();\n  let locale = await requestLocale;\n\n  if",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/enhanced-request.ts",
+        "start": 87,
+        "end": 101,
+        "startLoc": {
+          "line": 87,
+          "column": 19,
+          "position": 631
+        },
+        "endLoc": {
+          "line": 101,
+          "column": 3,
+          "position": 741
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/i18n/request.ts",
+        "start": 92,
+        "end": 106,
+        "startLoc": {
+          "line": 92,
+          "column": 11,
+          "position": 671
+        },
+        "endLoc": {
+          "line": 106,
+          "column": 12,
+          "position": 781
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 6,
+      "fragment": "${new Date().toISOString().split('T')[0]}.json`;\n      document.body.appendChild(a);\n      a.click();\n      document.body.removeChild(a);\n      URL.revokeObjectURL(url);\n    } else",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-web-vitals-diagnostics.ts",
+        "start": 200,
+        "end": 205,
+        "startLoc": {
+          "line": 200,
+          "column": 25,
+          "position": 2185
+        },
+        "endLoc": {
+          "line": 205,
+          "column": 5,
+          "position": 2249
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/app/[locale]/diagnostics/demo/page.tsx",
+        "start": 94,
+        "end": 99,
+        "startLoc": {
+          "line": 94,
+          "column": 18,
+          "position": 865
+        },
+        "endLoc": {
+          "line": 99,
+          "column": 2,
+          "position": 928
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 14,
+      "fragment": ",\n) {\n  const startTime = performance.now();\n  const fromTheme = currentTheme || 'unknown';\n\n  if (!supportsViewTransitions()) {\n    originalSetTheme(newTheme);\n    const endTime = performance.now();\n    recordThemeSwitch(fromTheme, newTheme, startTime, endTime, false);\n    recordThemePreference(newTheme);\n    return;\n  }\n\n  const {",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-theme.ts",
+        "start": 93,
+        "end": 106,
+        "startLoc": {
+          "line": 93,
+          "column": 2,
+          "position": 720
+        },
+        "endLoc": {
+          "line": 106,
+          "column": 2,
+          "position": 825
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-theme.ts",
+        "start": 52,
+        "end": 65,
+        "startLoc": {
+          "line": 52,
+          "column": 7,
+          "position": 366
+        },
+        "endLoc": {
+          "line": 65,
+          "column": 23,
+          "position": 471
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 19,
+      "fragment": "});\n\n  transition.finished\n    .then(() => {\n      const endTime = performance.now();\n      recordThemeSwitch(fromTheme, newTheme, startTime, endTime, true);\n      recordThemePreference(newTheme);\n    })\n    .catch(() => {\n      const endTime = performance.now();\n      recordThemeSwitch(fromTheme, newTheme, startTime, endTime, true);\n      recordThemePreference(newTheme);\n    });\n}\n\n/**\n * 增强的主题切换hook，集成View Transitions API\n * 提供丝滑的主题切换动画效果，同时保持向后兼容\n */",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-theme.ts",
+        "start": 140,
+        "end": 158,
+        "startLoc": {
+          "line": 140,
+          "column": 5,
+          "position": 1092
+        },
+        "endLoc": {
+          "line": 158,
+          "column": 4,
+          "position": 1216
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-enhanced-theme.ts",
+        "start": 71,
+        "end": 88,
+        "startLoc": {
+          "line": 71,
+          "column": 3,
+          "position": 547
+        },
+        "endLoc": {
+          "line": 88,
+          "column": 4,
+          "position": 671
+        }
+      }
+    },
+    {
+      "format": "typescript",
+      "lines": 22,
+      "fragment": "= {\n  /** 1秒 = 1000毫秒 */\n  SECOND: BASE_NUMBERS.MILLISECONDS_PER_SECOND,\n\n  /** 1分钟 = 60秒 */\n  MINUTE:\n    BASE_NUMBERS.SECONDS_PER_MINUTE * BASE_NUMBERS.MILLISECONDS_PER_SECOND,\n\n  /** 1小时 = 60分钟 */\n  HOUR:\n    BASE_NUMBERS.MINUTES_PER_HOUR *\n    BASE_NUMBERS.SECONDS_PER_MINUTE *\n    BASE_NUMBERS.MILLISECONDS_PER_SECOND,\n\n  /** 1天 = 24小时 */\n  DAY:\n    BASE_NUMBERS.HOURS_PER_DAY *\n    BASE_NUMBERS.MINUTES_PER_HOUR *\n    BASE_NUMBERS.SECONDS_PER_MINUTE *\n    BASE_NUMBERS.MILLISECONDS_PER_SECOND,\n\n  /** 25小时 = 25 * 60 * 60 * 1000毫秒 */",
+      "tokens": 0,
+      "firstFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/app-constants.ts",
+        "start": 37,
+        "end": 58,
+        "startLoc": {
+          "line": 37,
+          "column": 2,
+          "position": 138
+        },
+        "endLoc": {
+          "line": 58,
+          "column": 36,
+          "position": 239
+        }
+      },
+      "secondFile": {
+        "name": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/i18n-constants.ts",
+        "start": 35,
+        "end": 52,
+        "startLoc": {
+          "line": 35,
+          "column": 2,
+          "position": 141
+        },
+        "endLoc": {
+          "line": 52,
+          "column": 17,
+          "position": 238
+        }
+      }
+    }
+  ],
+  "filename": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/node_modules/.pnpm/@jscpd+html-reporter@4.0.1/node_modules/@jscpd/html-reporter/dist/templates/main.pug"
+}

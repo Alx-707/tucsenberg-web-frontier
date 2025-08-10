@@ -1,0 +1,58 @@
+# Git Hooks管理配置
+# 自动化质量门禁系统 - 确保代码质量和安全性
+pre-commit:
+  parallel: true
+  commands:
+    # 代码格式检查 (Prettier)
+    format-check:
+      run: pnpm format:check
+      fail_text: '代码格式检查失败 - 请运行 pnpm format:write 修复格式问题'
+      stage_fixed: true
+
+    # TypeScript类型检查
+    type-check:
+      run: pnpm type-check
+      fail_text: 'TypeScript类型检查失败 - 请修复类型错误后重新提交'
+      stage_fixed: true
+
+    # 代码质量检查 (ESLint) - 使用增量检查避免历史问题阻塞
+    quality-check:
+      run: pnpm quality:quick:staged
+      fail_text: '代码质量检查失败 - 发现新的质量问题，请修复后重新提交'
+      stage_fixed: true
+
+    # 包大小检查 - 防止Sentry等依赖导致的包大小回归
+    bundle-size-check:
+      run: pnpm size:check
+      fail_text: '包大小检查失败 - 包大小超出预算限制，请检查依赖变更'
+      stage_fixed: false
+
+commit-msg:
+  commands:
+    commitlint:
+      run: pnpm commitlint --edit {1}
+      fail_text:
+        '提交信息不符合规范 - 请使用约定式提交格式：type(scope): description'
+
+pre-push:
+  parallel: true
+  commands:
+    # 构建成功验证
+    build-check:
+      run: pnpm build:check
+      fail_text: '构建验证失败 - 请修复构建错误后再推送'
+
+    # 集成测试
+    integration-test:
+      run: pnpm test
+      fail_text: '集成测试失败 - 请确保所有测试通过后再推送'
+
+    # 性能测试
+    performance-test:
+      run: pnpm perf:check
+      fail_text: '性能测试失败 - 包大小或性能指标超出限制'
+
+    # 安全检查
+    security-check:
+      run: pnpm security:audit
+      fail_text: '安全检查失败 - 发现安全漏洞，请修复后推送'

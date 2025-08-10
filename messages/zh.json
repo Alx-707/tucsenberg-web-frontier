@@ -1,0 +1,497 @@
+{
+  "common": {
+    "loading": "加载中…",
+    "error": "发生错误",
+    "success": "成功",
+    "cancel": "取消",
+    "confirm": "确认",
+    "save": "保存",
+    "edit": "编辑",
+    "delete": "删除",
+    "search": "搜索",
+    "filter": "筛选",
+    "sort": "排序",
+    "next": "下一页",
+    "previous": "上一页",
+    "close": "关闭",
+    "open": "打开"
+  },
+  "navigation": {
+    "home": "首页",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "services": "服务",
+    "products": "产品",
+    "blog": "博客",
+    "diagnostics": "性能诊断",
+    "login": "登录",
+    "logout": "退出",
+    "profile": "个人资料",
+    "settings": "设置"
+  },
+  "theme": {
+    "toggle": "切换主题",
+    "light": "明亮模式",
+    "dark": "暗黑模式",
+    "system": "系统模式"
+  },
+  "language": {
+    "toggle": "切换语言",
+    "selectLanguage": "选择语言",
+    "english": "英语",
+    "chinese": "中文",
+    "switching": "正在切换语言…",
+    "switchSuccess": "语言切换成功",
+    "switchError": "语言切换失败",
+    "fallbackWarning": "部分内容可能无法以您选择的语言显示",
+    "detectionInfo": "检测信息",
+    "source": "来源",
+    "confidence": "置信度",
+    "userPreference": "用户偏好已保存"
+  },
+  "home": {
+    "title": "Tucsenberg Web Frontier",
+    "subtitle": "现代化B2B企业级Web平台",
+    "description": "基于Next.js 15、React 19和TypeScript构建的现代化B2B企业级Web平台。",
+    "getStarted": "开始使用",
+    "learnMore": "了解更多",
+    "hero": {
+      "version": "v1.0.0 - 生产就绪",
+      "title": {
+        "line1": "现代化B2B企业级",
+        "line2": "Web平台"
+      },
+      "subtitle": "基于Next.js 15、React 19、TypeScript 5.8和Tailwind CSS 4构建。具备企业级安全性、国际化和性能优化特性。",
+      "cta": {
+        "demo": "查看演示",
+        "github": "在GitHub上查看"
+      },
+      "stats": {
+        "technologies": "项技术",
+        "typescript": "TypeScript",
+        "performance": "性能评级",
+        "languages": "种语言"
+      }
+    },
+    "techStack": {
+      "title": "技术栈",
+      "subtitle": "采用前沿技术构建，确保企业级性能和可扩展性。",
+      "learnMore": "了解更多",
+      "stats": {
+        "totalTech": "技术总数",
+        "categories": "技术分类",
+        "modern": "现代化技术栈",
+        "quality": "质量评分"
+      }
+    },
+    "showcase": {
+      "title": "组件展示",
+      "subtitle": "探索我们全面的UI组件库，包含实时示例和交互演示。",
+      "tabs": {
+        "components": "组件",
+        "themes": "主题",
+        "responsive": "响应式"
+      },
+      "components": {
+        "buttons": {
+          "title": "按钮组件",
+          "description": "适用于不同场景的各种按钮样式和尺寸。",
+          "primary": "主要",
+          "secondary": "次要",
+          "outline": "轮廓",
+          "ghost": "幽灵",
+          "small": "小号",
+          "default": "默认",
+          "large": "大号"
+        },
+        "forms": {
+          "title": "表单组件",
+          "description": "支持验证的输入字段和表单控件。",
+          "name": "姓名",
+          "namePlaceholder": "请输入您的姓名",
+          "email": "邮箱地址",
+          "emailPlaceholder": "请输入您的邮箱",
+          "submit": "提交表单"
+        },
+        "interactive": {
+          "title": "交互元素",
+          "description": "具有动态行为和状态管理的按钮和控件。",
+          "likes": "点赞",
+          "star": "收藏",
+          "download": "下载",
+          "share": "分享"
+        },
+        "badges": {
+          "title": "徽章组件",
+          "description": "用于各种内容类型的状态指示器和标签。",
+          "default": "默认",
+          "secondary": "次要",
+          "outline": "轮廓",
+          "destructive": "错误",
+          "success": "成功",
+          "warning": "警告",
+          "info": "信息"
+        }
+      },
+      "themes": {
+        "title": "主题系统",
+        "description": "支持亮色和暗色模式的动态主题切换。",
+        "toggle": "主题切换",
+        "language": "语言切换",
+        "colors": {
+          "title": "色彩调色板"
+        },
+        "typography": {
+          "title": "字体排版",
+          "bold": "粗体文本",
+          "medium": "中等文本",
+          "normal": "普通文本",
+          "muted": "弱化文本"
+        }
+      },
+      "responsive": {
+        "title": "响应式设计",
+        "description": "针对所有设备尺寸和屏幕分辨率优化的布局。",
+        "mobile": {
+          "title": "移动优先",
+          "description": "针对移动设备优化，提供触控友好的界面。"
+        },
+        "tablet": {
+          "title": "平板适配",
+          "description": "完美适配平板屏幕和各种方向。"
+        },
+        "desktop": {
+          "title": "桌面增强",
+          "description": "功能完整的桌面体验，支持高级交互。"
+        }
+      }
+    },
+    "overview": {
+      "title": "项目概述",
+      "subtitle": "为现代B2B应用设计的综合企业级Web平台，采用前沿技术栈。",
+      "features": {
+        "performance": {
+          "title": "高性能",
+          "description": "通过SSR、SSG和高级缓存策略优化速度。"
+        },
+        "security": {
+          "title": "企业级安全",
+          "description": "内置安全功能，符合行业标准实践和合规要求。"
+        },
+        "i18n": {
+          "title": "国际化",
+          "description": "全面支持多语言，具备动态内容切换功能。"
+        },
+        "themes": {
+          "title": "主题系统",
+          "description": "支持亮色、暗色和自定义主题的动态切换。"
+        },
+        "typescript": {
+          "title": "类型安全",
+          "description": "100% TypeScript覆盖，提升开发体验和可靠性。"
+        },
+        "deployment": {
+          "title": "便捷部署",
+          "description": "一键部署到Vercel，自动CI/CD流水线。"
+        }
+      },
+      "highlights": {
+        "title": "核心亮点",
+        "subtitle": "让这个平台在竞争中脱颖而出的特色。",
+        "modern": "现代化架构",
+        "scalable": "可扩展设计",
+        "accessible": "无障碍优先",
+        "performant": "高性能",
+        "secure": "安全专注",
+        "maintainable": "易于维护"
+      },
+      "architecture": {
+        "title": "技术架构",
+        "frontend": {
+          "title": "前端层",
+          "description": "基于React的前端，使用Next.js实现最佳性能和SEO。"
+        },
+        "ui": {
+          "title": "UI系统",
+          "description": "全面的设计系统，包含可复用组件和主题。"
+        },
+        "tooling": {
+          "title": "开发工具",
+          "description": "现代化开发工作流，自动化测试和质量检查。"
+        }
+      },
+      "cta": {
+        "title": "准备开始了吗？",
+        "description": "加入数千名开发者，使用我们的平台构建出色的B2B应用。",
+        "getStarted": "立即开始",
+        "viewSource": "查看源代码"
+      }
+    },
+    "cta": {
+      "badge": "开源项目",
+      "title": "今天就开始构建",
+      "subtitle": "使用我们的现代化B2B企业平台，加速您的开发流程。",
+      "primary": {
+        "github": "在GitHub上加星",
+        "demo": "在线演示"
+      },
+      "actions": {
+        "github": {
+          "title": "GitHub仓库",
+          "description": "探索源代码并为项目做出贡献。"
+        },
+        "download": {
+          "title": "下载模板",
+          "description": "获取完整模板，立即开始构建。"
+        },
+        "docs": {
+          "title": "文档",
+          "description": "全面的指南和API文档。"
+        }
+      },
+      "buttons": {
+        "getStarted": "开始使用",
+        "learnMore": "了解更多"
+      },
+      "stats": {
+        "technologies": "项技术",
+        "typescript": "TypeScript",
+        "performance": "性能评级",
+        "languages": "种语言"
+      },
+      "community": {
+        "title": "加入我们的社区",
+        "description": "与其他开发者联系，获得社区支持。",
+        "discussions": "GitHub讨论",
+        "issues": "报告问题"
+      }
+    },
+    "features": {
+      "title": "特性",
+      "performance": {
+        "title": "高性能",
+        "description": "采用现代Web技术优化速度和效率"
+      },
+      "scalable": {
+        "title": "可扩展架构",
+        "description": "随着您的业务需求和要求而增长"
+      },
+      "secure": {
+        "title": "企业级安全",
+        "description": "行业标准的安全实践和合规性"
+      }
+    }
+  },
+  "themeDemo": {
+    "title": "主题系统演示",
+    "description": "测试主题切换和中英文字体混排效果",
+    "chineseTest": "中文字体测试",
+    "englishTest": "英文字体测试",
+    "chineseDescription": "这是中文字体测试内容，使用了PingFang SC字体回退策略。现代化B2B企业级设计风格展示。",
+    "englishDescription": "这是英文字体测试内容，使用Geist Sans字体。现代化B2B企业级设计风格展示。",
+    "chineseInput": "中文输入框",
+    "englishInput": "英文输入框",
+    "chinesePlaceholder": "请输入中文内容",
+    "englishPlaceholder": "请输入英文内容",
+    "primaryButton": "主要按钮",
+    "secondaryButton": "次要按钮",
+    "outlineButton": "轮廓按钮"
+  },
+  "instructions": {
+    "getStarted": "开始编辑",
+    "saveChanges": "保存并立即查看您的更改"
+  },
+  "actions": {
+    "deployNow": "立即部署",
+    "readDocs": "阅读文档"
+  },
+  "contact": {
+    "form": {
+      "title": "发送消息",
+      "firstName": "名字",
+      "lastName": "姓氏",
+      "email": "邮箱地址",
+      "company": "公司名称",
+      "message": "消息内容",
+      "firstNamePlaceholder": "请输入您的名字",
+      "lastNamePlaceholder": "请输入您的姓氏",
+      "emailPlaceholder": "your@email.com",
+      "companyPlaceholder": "您的公司名称",
+      "messagePlaceholder": "请描述您的需求或问题...",
+      "submit": "发送消息",
+      "submitting": "发送中...",
+      "success": "谢谢！您的消息已成功发送。我们会尽快回复您。",
+      "error": "抱歉，发送消息时出现错误。请稍后重试。",
+      "validation": {
+        "firstNameRequired": "名字为必填项",
+        "firstNameTooShort": "名字至少需要2个字符",
+        "lastNameRequired": "姓氏为必填项",
+        "lastNameTooShort": "姓氏至少需要2个字符",
+        "emailRequired": "邮箱地址为必填项",
+        "emailInvalid": "请输入有效的邮箱地址",
+        "messageRequired": "消息内容为必填项",
+        "messageTooShort": "消息内容至少需要10个字符"
+      }
+    }
+  },
+  "footer": {
+    "learn": "学习",
+    "examples": "示例",
+    "goToNextjs": "访问nextjs.org",
+    "copyright": "© {year} Tucsenberg。保留所有权利。",
+    "description": "现代B2B企业级网络解决方案，采用前沿技术。",
+    "sections": {
+      "product": {
+        "title": "产品",
+        "home": "首页",
+        "enterprise": "企业版",
+        "pricing": "定价"
+      },
+      "company": {
+        "title": "公司",
+        "terms": "条款",
+        "aiPolicy": "AI政策",
+        "privacy": "隐私"
+      },
+      "resources": {
+        "title": "资源",
+        "faqs": "常见问题",
+        "docs": "文档",
+        "ambassadors": "大使",
+        "community": "Vercel社区",
+        "vercel": "Vercel"
+      },
+      "social": {
+        "title": "社交"
+      }
+    }
+  },
+  "formatting": {
+    "date": {
+      "today": "今天",
+      "yesterday": "昨天",
+      "tomorrow": "明天",
+      "lastUpdated": "最后更新于 {date}",
+      "publishedOn": "发布于 {date}"
+    },
+    "number": {
+      "currency": "¥{amount}",
+      "percentage": "{value}％",
+      "fileSize": "{size}{unit}"
+    },
+    "plurals": {
+      "items": {
+        "zero": "暂无项目",
+        "one": "1个项目",
+        "other": "{count}个项目"
+      },
+      "users": {
+        "zero": "暂无在线用户",
+        "one": "1位用户在线",
+        "other": "{count}位用户在线"
+      },
+      "notifications": {
+        "zero": "暂无新通知",
+        "one": "1条新通知",
+        "other": "{count}条新通知"
+      }
+    }
+  },
+  "errors": {
+    "notFound": "页面未找到",
+    "serverError": "服务器内部错误",
+    "networkError": "网络连接错误",
+    "validationError": "请检查您的输入",
+    "unauthorized": "您无权访问此页面",
+    "forbidden": "禁止访问此资源",
+    "timeout": "请求超时，请重试",
+    "generic": "出现了一些问题，请稍后重试",
+    "translationMissing": "翻译不可用",
+    "loadingFailed": "内容加载失败"
+  },
+  "accessibility": {
+    "skipToContent": "跳转到主要内容",
+    "openMenu": "打开导航菜单",
+    "closeMenu": "关闭导航菜单",
+    "loading": "内容正在加载",
+    "error": "发生了错误",
+    "languageSelector": "选择语言",
+    "themeSelector": "选择主题"
+  },
+  "seo": {
+    "title": "图森堡网络前沿",
+    "description": "基于Next.js 15、React 19和TypeScript的现代化B2B企业级网络平台",
+    "siteName": "图森堡网络前沿",
+    "keywords": "Next.js, React, TypeScript, B2B, 企业级, 网络平台"
+  },
+  "underConstruction": {
+    "title": "建设中",
+    "subtitle": "我们正在努力为您打造精彩内容",
+    "description": "此页面正在开发中。我们正在构建优秀的功能，很快就会准备就绪。",
+    "backToHome": "返回首页",
+    "comingSoon": "即将推出",
+    "expectedCompletion": "预计完成时间：{date}",
+    "stayTuned": "敬请期待更新",
+    "contactUs": "联系我们获取更多信息",
+    "pages": {
+      "products": {
+        "title": "产品展示 - 建设中",
+        "description": "我们的产品展示正在精心制作中。探索将改变您业务的创新解决方案。",
+        "features": "产品功能和规格说明即将推出"
+      },
+      "blog": {
+        "title": "博客 - 建设中",
+        "description": "我们的博客正在准备富有洞察力的内容。敬请期待行业见解和公司动态。",
+        "features": "文章、教程和行业洞察即将推出"
+      },
+      "about": {
+        "title": "关于我们 - 建设中",
+        "description": "了解更多关于我们的故事、使命以及创新解决方案背后的团队。",
+        "features": "公司故事、团队简介和使命宣言即将推出"
+      },
+      "contact": {
+        "title": "联系我们",
+        "description": "联系我们的团队进行咨询、支持或合作机会。",
+        "features": "多种联系方式，获得您需要的支持"
+      }
+    },
+    "progress": {
+      "title": "开发进度",
+      "status": "开发进度",
+      "nearCompletion": "即将完成",
+      "planning": "规划中",
+      "development": "开发中",
+      "testing": "测试中",
+      "launch": "即将发布"
+    },
+    "animation": {
+      "loading": "加载动画",
+      "construction": "建设进行中"
+    }
+  },
+  "structured-data": {
+    "organization": {
+      "name": "图森堡网络前沿",
+      "description": "现代化B2B企业级网络平台",
+      "phone": "+86-400-123-4567",
+      "social": {
+        "twitter": "https://twitter.com/tucsenberg",
+        "linkedin": "https://linkedin.com/company/tucsenberg",
+        "github": "https://github.com/tucsenberg"
+      }
+    },
+    "website": {
+      "name": "图森堡网络前沿",
+      "description": "基于Next.js 15的现代化B2B企业级网络平台"
+    },
+    "article": {
+      "defaultTitle": "文章",
+      "defaultDescription": "文章描述",
+      "defaultAuthor": "图森堡团队"
+    },
+    "product": {
+      "defaultName": "产品",
+      "defaultDescription": "产品描述"
+    }
+  }
+}

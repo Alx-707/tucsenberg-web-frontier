@@ -1,0 +1,58 @@
+export type Locale = 'en' | 'zh';
+
+// 严格的结构化数据接口定义
+export interface OrganizationData {
+  name?: string;
+  description?: string;
+  url?: string;
+  logo?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+}
+
+export interface WebSiteData {
+  name?: string;
+  description?: string;
+  url?: string;
+  searchUrl?: string;
+}
+
+export interface ArticleData {
+  title: string;
+  description: string;
+  author?: string;
+  publishedTime: string;
+  modifiedTime?: string;
+  url: string;
+  image?: string;
+  section?: string;
+}
+
+export interface ProductData {
+  name: string;
+  description: string;
+  brand?: string;
+  manufacturer?: string;
+  image?: string;
+  price?: number;
+  currency?: string;
+  availability?: string;
+  sku?: string;
+}
+
+export interface BreadcrumbData {
+  items: Array<{
+    name: string;
+    url: string;
+    position: number;
+  }>;
+}
+
+// 联合类型定义
+export type StructuredDataType =
+  | OrganizationData
+  | WebSiteData
+  | ArticleData
+  | ProductData
+  | BreadcrumbData;

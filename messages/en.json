@@ -1,0 +1,497 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "open": "Open"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "services": "Services",
+    "products": "Products",
+    "blog": "Blog",
+    "diagnostics": "Performance Diagnostics",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "language": {
+    "toggle": "Toggle language",
+    "selectLanguage": "Select Language",
+    "english": "English",
+    "chinese": "中文",
+    "switching": "Switching language...",
+    "switchSuccess": "Language switched successfully",
+    "switchError": "Failed to switch language",
+    "fallbackWarning": "Some content may not be available in your selected language",
+    "detectionInfo": "Detection Info",
+    "source": "Source",
+    "confidence": "Confidence",
+    "userPreference": "User preference saved"
+  },
+  "home": {
+    "title": "Tucsenberg Web Frontier",
+    "subtitle": "Modern B2B Enterprise Web Platform",
+    "description": "A cutting-edge web platform built with Next.js 15, React 19, and TypeScript for modern B2B enterprises.",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "hero": {
+      "version": "v1.0.0 - Production Ready",
+      "title": {
+        "line1": "Modern B2B Enterprise",
+        "line2": "Web Platform"
+      },
+      "subtitle": "Built with Next.js 15, React 19, TypeScript 5.8, and Tailwind CSS 4. Features enterprise-grade security, internationalization, and performance optimization.",
+      "cta": {
+        "demo": "View Demo",
+        "github": "View on GitHub"
+      },
+      "stats": {
+        "technologies": "Technologies",
+        "typescript": "TypeScript",
+        "performance": "Performance",
+        "languages": "Languages"
+      }
+    },
+    "techStack": {
+      "title": "Technology Stack",
+      "subtitle": "Built with cutting-edge technologies for enterprise-grade performance and scalability.",
+      "learnMore": "Learn More",
+      "stats": {
+        "totalTech": "Total Technologies",
+        "categories": "Categories",
+        "modern": "Modern Stack",
+        "quality": "Quality Score"
+      }
+    },
+    "showcase": {
+      "title": "Component Showcase",
+      "subtitle": "Explore our comprehensive UI component library with live examples and interactive demos.",
+      "tabs": {
+        "components": "Components",
+        "themes": "Themes",
+        "responsive": "Responsive"
+      },
+      "components": {
+        "buttons": {
+          "title": "Button Components",
+          "description": "Various button styles and sizes for different use cases.",
+          "primary": "Primary",
+          "secondary": "Secondary",
+          "outline": "Outline",
+          "ghost": "Ghost",
+          "small": "Small",
+          "default": "Default",
+          "large": "Large"
+        },
+        "forms": {
+          "title": "Form Components",
+          "description": "Input fields and form controls with validation support.",
+          "name": "Full Name",
+          "namePlaceholder": "Enter your full name",
+          "email": "Email Address",
+          "emailPlaceholder": "Enter your email",
+          "submit": "Submit Form"
+        },
+        "interactive": {
+          "title": "Interactive Elements",
+          "description": "Buttons and controls with dynamic behavior and state management.",
+          "likes": "Likes",
+          "star": "Star",
+          "download": "Download",
+          "share": "Share"
+        },
+        "badges": {
+          "title": "Badge Components",
+          "description": "Status indicators and labels for various content types.",
+          "default": "Default",
+          "secondary": "Secondary",
+          "outline": "Outline",
+          "destructive": "Error",
+          "success": "Success",
+          "warning": "Warning",
+          "info": "Info"
+        }
+      },
+      "themes": {
+        "title": "Theme System",
+        "description": "Dynamic theme switching with light and dark mode support.",
+        "toggle": "Theme Toggle",
+        "language": "Language Switch",
+        "colors": {
+          "title": "Color Palette"
+        },
+        "typography": {
+          "title": "Typography",
+          "bold": "Bold Text",
+          "medium": "Medium Text",
+          "normal": "Normal Text",
+          "muted": "Muted Text"
+        }
+      },
+      "responsive": {
+        "title": "Responsive Design",
+        "description": "Optimized layouts for all device sizes and screen resolutions.",
+        "mobile": {
+          "title": "Mobile First",
+          "description": "Optimized for mobile devices with touch-friendly interfaces."
+        },
+        "tablet": {
+          "title": "Tablet Ready",
+          "description": "Perfect layout adaptation for tablet screens and orientations."
+        },
+        "desktop": {
+          "title": "Desktop Enhanced",
+          "description": "Full-featured desktop experience with advanced interactions."
+        }
+      }
+    },
+    "overview": {
+      "title": "Project Overview",
+      "subtitle": "A comprehensive enterprise web platform designed for modern B2B applications with cutting-edge technology stack.",
+      "features": {
+        "performance": {
+          "title": "High Performance",
+          "description": "Optimized for speed with SSR, SSG, and advanced caching strategies."
+        },
+        "security": {
+          "title": "Enterprise Security",
+          "description": "Built-in security features with industry-standard practices and compliance."
+        },
+        "i18n": {
+          "title": "Internationalization",
+          "description": "Full support for multiple languages with dynamic content switching."
+        },
+        "themes": {
+          "title": "Theme System",
+          "description": "Dynamic theme switching with light, dark, and custom theme support."
+        },
+        "typescript": {
+          "title": "Type Safety",
+          "description": "100% TypeScript coverage for enhanced developer experience and reliability."
+        },
+        "deployment": {
+          "title": "Easy Deployment",
+          "description": "One-click deployment to Vercel with automatic CI/CD pipeline."
+        }
+      },
+      "highlights": {
+        "title": "Key Highlights",
+        "subtitle": "What makes this platform stand out from the competition.",
+        "modern": "Modern Architecture",
+        "scalable": "Scalable Design",
+        "accessible": "Accessibility First",
+        "performant": "High Performance",
+        "secure": "Security Focused",
+        "maintainable": "Easy Maintenance"
+      },
+      "architecture": {
+        "title": "Technical Architecture",
+        "frontend": {
+          "title": "Frontend Layer",
+          "description": "React-based frontend with Next.js for optimal performance and SEO."
+        },
+        "ui": {
+          "title": "UI System",
+          "description": "Comprehensive design system with reusable components and themes."
+        },
+        "tooling": {
+          "title": "Development Tools",
+          "description": "Modern development workflow with automated testing and quality checks."
+        }
+      },
+      "cta": {
+        "title": "Ready to Get Started?",
+        "description": "Join thousands of developers building amazing B2B applications with our platform.",
+        "getStarted": "Get Started Now",
+        "viewSource": "View Source Code"
+      }
+    },
+    "cta": {
+      "badge": "Open Source",
+      "title": "Start Building Today",
+      "subtitle": "Get started with our modern B2B enterprise platform and accelerate your development process.",
+      "primary": {
+        "github": "Star on GitHub",
+        "demo": "Live Demo"
+      },
+      "actions": {
+        "github": {
+          "title": "GitHub Repository",
+          "description": "Explore the source code and contribute to the project."
+        },
+        "download": {
+          "title": "Download Template",
+          "description": "Get the complete template and start building immediately."
+        },
+        "docs": {
+          "title": "Documentation",
+          "description": "Comprehensive guides and API documentation."
+        }
+      },
+      "buttons": {
+        "getStarted": "Get Started",
+        "learnMore": "Learn More"
+      },
+      "stats": {
+        "technologies": "Technologies",
+        "typescript": "TypeScript",
+        "performance": "Performance",
+        "languages": "Languages"
+      },
+      "community": {
+        "title": "Join Our Community",
+        "description": "Connect with other developers and get support from our community.",
+        "discussions": "GitHub Discussions",
+        "issues": "Report Issues"
+      }
+    },
+    "features": {
+      "title": "Features",
+      "performance": {
+        "title": "High Performance",
+        "description": "Optimized for speed and efficiency with modern web technologies."
+      },
+      "scalable": {
+        "title": "Scalable Architecture",
+        "description": "Built to grow with your business needs and requirements."
+      },
+      "secure": {
+        "title": "Enterprise Security",
+        "description": "Industry-standard security practices and compliance."
+      }
+    }
+  },
+  "themeDemo": {
+    "title": "Theme System Demo",
+    "description": "Testing theme switching and Chinese-English font mixing",
+    "chineseTest": "Chinese Font Test",
+    "englishTest": "English Font Test",
+    "chineseDescription": "This is Chinese font testing content, using PingFang SC font fallback strategy. Modern B2B enterprise design style showcase.",
+    "englishDescription": "This is English font testing content using Geist Sans font. Modern B2B enterprise design style showcase.",
+    "chineseInput": "Chinese Input",
+    "englishInput": "English Input",
+    "chinesePlaceholder": "Enter Chinese content",
+    "englishPlaceholder": "Enter English content",
+    "primaryButton": "Primary",
+    "secondaryButton": "Secondary",
+    "outlineButton": "Outline"
+  },
+  "instructions": {
+    "getStarted": "Get started by editing",
+    "saveChanges": "Save and see your changes instantly."
+  },
+  "actions": {
+    "deployNow": "Deploy now",
+    "readDocs": "Read our docs"
+  },
+  "contact": {
+    "form": {
+      "title": "Send Message",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "company": "Company Name",
+      "message": "Message",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastNamePlaceholder": "Enter your last name",
+      "emailPlaceholder": "your@email.com",
+      "companyPlaceholder": "Your company name",
+      "messagePlaceholder": "Please describe your needs or questions...",
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "success": "Thank you! Your message has been sent successfully. We will get back to you soon.",
+      "error": "Sorry, there was an error sending your message. Please try again later.",
+      "validation": {
+        "firstNameRequired": "First name is required",
+        "firstNameTooShort": "First name must be at least 2 characters",
+        "lastNameRequired": "Last name is required",
+        "lastNameTooShort": "Last name must be at least 2 characters",
+        "emailRequired": "Email address is required",
+        "emailInvalid": "Please enter a valid email address",
+        "messageRequired": "Message is required",
+        "messageTooShort": "Message must be at least 10 characters"
+      }
+    }
+  },
+  "footer": {
+    "learn": "Learn",
+    "examples": "Examples",
+    "goToNextjs": "Go to nextjs.org",
+    "copyright": "© {year} Tucsenberg. All rights reserved.",
+    "description": "Modern B2B enterprise web solutions with cutting-edge technology.",
+    "sections": {
+      "product": {
+        "title": "Product",
+        "home": "Home",
+        "enterprise": "Enterprise",
+        "pricing": "Pricing"
+      },
+      "company": {
+        "title": "Company",
+        "terms": "Terms",
+        "aiPolicy": "AI Policy",
+        "privacy": "Privacy"
+      },
+      "resources": {
+        "title": "Resources",
+        "faqs": "FAQs",
+        "docs": "Docs",
+        "ambassadors": "Ambassadors",
+        "community": "Vercel Community",
+        "vercel": "Vercel"
+      },
+      "social": {
+        "title": "Social"
+      }
+    }
+  },
+  "formatting": {
+    "date": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "lastUpdated": "Last updated on {date}",
+      "publishedOn": "Published on {date}"
+    },
+    "number": {
+      "currency": "${amount}",
+      "percentage": "{value}%",
+      "fileSize": "{size} {unit}"
+    },
+    "plurals": {
+      "items": {
+        "zero": "No items",
+        "one": "One item",
+        "other": "{count} items"
+      },
+      "users": {
+        "zero": "No users online",
+        "one": "One user online",
+        "other": "{count} users online"
+      },
+      "notifications": {
+        "zero": "No new notifications",
+        "one": "One new notification",
+        "other": "{count} new notifications"
+      }
+    }
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Internal server error",
+    "networkError": "Network connection error",
+    "validationError": "Please check your input",
+    "unauthorized": "You are not authorized to access this page",
+    "forbidden": "Access to this resource is forbidden",
+    "timeout": "Request timeout - please try again",
+    "generic": "Something went wrong. Please try again later.",
+    "translationMissing": "Translation not available",
+    "loadingFailed": "Failed to load content"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "loading": "Content is loading",
+    "error": "An error has occurred",
+    "languageSelector": "Select language",
+    "themeSelector": "Select theme"
+  },
+  "seo": {
+    "title": "Tucsenberg Web Frontier",
+    "description": "Modern B2B Enterprise Web Platform with Next.js 15, React 19, and TypeScript",
+    "siteName": "Tucsenberg Web Frontier",
+    "keywords": "Next.js, React, TypeScript, B2B, Enterprise, Web Platform"
+  },
+  "underConstruction": {
+    "title": "Under Construction",
+    "subtitle": "We're working hard to bring you something amazing",
+    "description": "This page is currently under development. We're building something great and will have it ready soon.",
+    "backToHome": "Back to Home",
+    "comingSoon": "Coming Soon",
+    "expectedCompletion": "Expected completion: {date}",
+    "stayTuned": "Stay tuned for updates",
+    "contactUs": "Contact us for more information",
+    "pages": {
+      "products": {
+        "title": "Products - Under Construction",
+        "description": "Our product showcase is being crafted with care. Discover innovative solutions that will transform your business.",
+        "features": "Product features and specifications coming soon"
+      },
+      "blog": {
+        "title": "Blog - Under Construction",
+        "description": "Our blog is being prepared with insightful content. Stay tuned for industry insights and company updates.",
+        "features": "Articles, tutorials, and industry insights coming soon"
+      },
+      "about": {
+        "title": "About Us - Under Construction",
+        "description": "Learn more about our story, mission, and the team behind our innovative solutions.",
+        "features": "Company story, team profiles, and mission statement coming soon"
+      },
+      "contact": {
+        "title": "Contact Us",
+        "description": "Get in touch with our team for inquiries, support, or partnership opportunities.",
+        "features": "Multiple ways to reach us and get the support you need"
+      }
+    },
+    "progress": {
+      "title": "Development Progress",
+      "status": "Development Progress",
+      "nearCompletion": "Nearly Complete",
+      "planning": "Planning",
+      "development": "Development",
+      "testing": "Testing",
+      "launch": "Launch"
+    },
+    "animation": {
+      "loading": "Loading animation",
+      "construction": "Construction in progress"
+    }
+  },
+  "structured-data": {
+    "organization": {
+      "name": "Tucsenberg Web Frontier",
+      "description": "Modern B2B Enterprise Web Platform",
+      "phone": "+1-555-0123",
+      "social": {
+        "twitter": "https://twitter.com/tucsenberg",
+        "linkedin": "https://linkedin.com/company/tucsenberg",
+        "github": "https://github.com/tucsenberg"
+      }
+    },
+    "website": {
+      "name": "Tucsenberg Web Frontier",
+      "description": "Modern B2B Enterprise Web Platform with Next.js 15"
+    },
+    "article": {
+      "defaultTitle": "Article",
+      "defaultDescription": "Article description",
+      "defaultAuthor": "Tucsenberg Team"
+    },
+    "product": {
+      "defaultName": "Product",
+      "defaultDescription": "Product description"
+    }
+  }
+}

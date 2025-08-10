@@ -27,11 +27,15 @@
 
 - **基础检查**: `["TypeScript", "ESLint (9插件)", "Prettier", "Next.js Build"]`
 - **依赖管理**: `["pnpm", "package.json验证", "依赖安装测试", "安全审计"]`
-- **代码质量**: `["TypeScript", "ESLint (9插件)", "Prettier", "Jest", "Git Hooks"]`
-- **安全检查**: `["eslint-plugin-security", "pnpm audit", "自定义安全脚本(3个)"]`
-- **UI组件**: `["TypeScript", "ESLint", "Prettier", "Jest", "axe-core", "Lighthouse CI"]`
+- **代码质量**:
+  `["TypeScript", "ESLint (9插件)", "Prettier", "Jest", "Git Hooks"]`
+- **安全检查**:
+  `["eslint-plugin-security", "pnpm audit", "自定义安全脚本(3个)"]`
+- **UI组件**:
+  `["TypeScript", "ESLint", "Prettier", "Jest", "axe-core", "Lighthouse CI"]`
 - **工作流验证**: `["lefthook", "commitlint", "npm-run-all"]`
-- **完整工具栈**: `["TypeScript", "ESLint (9插件)", "Prettier", "Next.js Build", "Jest", "axe-core", "Lighthouse CI", "pnpm audit", "eslint-plugin-security", "lefthook", "commitlint"]`
+- **完整工具栈**:
+  `["TypeScript", "ESLint (9插件)", "Prettier", "Next.js Build", "Jest", "axe-core", "Lighthouse CI", "pnpm audit", "eslint-plugin-security", "lefthook", "commitlint"]`
 
 ### 标准命令组合
 
@@ -171,15 +175,12 @@
 ```markdown
 # 🤖 AI代码审查报告
 
-**项目**: {projectName}
-**审查时间**: {timestamp}
-**审查文件**: {fileList}
+**项目**: {projectName} **审查时间**: {timestamp} **审查文件**: {fileList}
 
 ## 🌐 全局项目视角
 
-**当前阶段**: {projectPhase}
-**后续影响**: {architecturalImpact}
-**架构一致性**: {consistencyStatus}
+**当前阶段**: {projectPhase} **后续影响**: {architecturalImpact} **架构一致性**:
+{consistencyStatus}
 
 ## 🔴 关键问题 (必须修复)
 

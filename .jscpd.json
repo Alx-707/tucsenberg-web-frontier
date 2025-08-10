@@ -1,0 +1,32 @@
+{
+  "threshold": 3,
+  "reporters": ["html", "console", "badge"],
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/build/**",
+    "**/dist/**",
+    "**/*.d.ts",
+    "**/coverage/**"
+  ],
+  "gitignore": true,
+  "minLines": 5,
+  "minTokens": 50,
+  "maxLines": 500,
+  "maxSize": "30kb",
+  "formatsExts": {
+    "typescript": ["ts", "tsx"],
+    "javascript": ["js", "jsx"]
+  },
+  "output": "./reports/jscpd",
+  "absolute": true,
+  "blame": false,
+  "cache": true,
+  "noSymlinks": true,
+  "skipEmpty": true,
+  "exitCode": 1
+}

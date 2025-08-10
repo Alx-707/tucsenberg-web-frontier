@@ -1,0 +1,59 @@
+'use client';
+
+import React from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+interface ThemeToggleButtonProps {
+  ariaAttributes: Record<string, string>;
+  prefersHighContrast: boolean;
+  prefersReducedMotion: boolean;
+  onKeyDown: (_e: React.KeyboardEvent) => void;
+  onClick?: (_e: React.MouseEvent) => void;
+}
+
+export const ThemeToggleButton = React.forwardRef<
+  HTMLButtonElement,
+  ThemeToggleButtonProps
+>(
+  (
+    {
+      ariaAttributes,
+      prefersHighContrast,
+      prefersReducedMotion,
+      onKeyDown,
+      onClick,
+      ...props
+    },
+    ref,
+  ) => {
+    return (
+      <Button
+        ref={ref}
+        variant='outline'
+        size='icon'
+        {...ariaAttributes}
+        onKeyDown={onKeyDown}
+        onClick={onClick}
+        className={`focus:ring-ring focus:ring-2 focus:ring-offset-2 ${prefersHighContrast ? 'border-foreground border-2' : ''} ${prefersReducedMotion ? '' : 'transition-all duration-200'} `}
+        {...props}
+      >
+        <Sun
+          className={`h-[1.2rem] w-[1.2rem] scale-100 rotate-0 dark:scale-0 dark:-rotate-90 ${
+            prefersReducedMotion ? '' : 'transition-all'
+          }`}
+          aria-hidden='true'
+        />
+        <Moon
+          className={`absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 dark:scale-100 dark:rotate-0 ${
+            prefersReducedMotion ? '' : 'transition-all'
+          }`}
+          aria-hidden='true'
+        />
+        <span className='sr-only'>主题切换按钮</span>
+      </Button>
+    );
+  },
+);
+
+ThemeToggleButton.displayName = 'ThemeToggleButton';

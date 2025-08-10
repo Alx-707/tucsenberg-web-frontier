@@ -1,0 +1,133 @@
+{
+  "tasks": [
+    {
+      "id": "97a2316d-7fb6-441a-848c-e400c4ce713b",
+      "name": "更新 next-intl 路由配置移除中文路径映射",
+      "description": "更新 src/i18n/routing.ts 文件，移除 pathnames 配置中的中文路径映射，使用标准路径方案。这是第一步，因为它直接影响路由行为。",
+      "notes": "这是关键的第一步，直接影响路由行为。移除中文路径映射后，所有语言都将使用标准路径，避免了 Turbopack 兼容性问题。",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-08-06T08:59:51.231Z",
+      "updatedAt": "2025-08-06T09:01:25.462Z",
+      "relatedFiles": [
+        {
+          "path": "src/i18n/routing.ts",
+          "type": "TO_MODIFY",
+          "description": "主要修改文件，移除中文路径映射",
+          "lineStart": 13,
+          "lineEnd": 27
+        }
+      ],
+      "implementationGuide": "1. 打开 src/i18n/routing.ts 文件\\n2. 在 pathnames 配置中移除所有中文路径映射（zh: '/chanpin', zh: '/boke' 等）\\n3. 保持标准路径配置：\\n   pathnames: {\\n     '/': '/',\\n     '/products': '/products',\\n     '/blog': '/blog',\\n     '/about': '/about',\\n     '/contact': '/contact'\\n   }\\n4. 保持其他配置不变（locales, defaultLocale, localePrefix 等）\\n5. 确保导入和导出语句保持不变",
+      "verificationCriteria": "1. 文件语法正确，无 TypeScript 错误\\n2. 路由配置只包含标准路径\\n3. 开发服务器正常启动\\n4. /zh/products 路径正常工作\\n5. /zh/chanpin 路径返回404（符合预期）",
+      "analysisResult": "清理路径配置文件，确保配置一致性，移除不使用的中文路径映射，统一使用标准路径方案（/zh/products 而非 /zh/chanpin），并验证所有页面功能正常。通过分析发现项目当前实际使用标准路径方案，但配置文件中存在不一致状态，需要协调多个配置文件的更新以保持一致性。",
+      "summary": "成功更新 src/i18n/routing.ts 文件，移除了所有中文路径映射，统一使用标准路径方案。修改后的配置使用 '/products', '/blog', '/about', '/contact' 等标准路径，避免了 Turbopack 兼容性问题。验证结果显示：文件无 TypeScript 错误，开发服务器正常启动，/zh/products 路径正常工作，/zh/chanpin 路径正确返回404，完全符合预期。",
+      "completedAt": "2025-08-06T09:01:25.461Z"
+    },
+    {
+      "id": "a685896f-1d38-49de-9983-537a070c00a2",
+      "name": "简化 paths.ts 配置文件移除复杂路径映射",
+      "description": "清理 src/config/paths.ts 文件，简化 PATHS_CONFIG 配置使用标准路径，移除 getPathnames() 函数中的复杂逻辑，保持配置一致性。",
+      "notes": "保持向后兼容性，核心API接口不变，只清理内部实现。这样未来如果需要恢复中文路径映射，可以轻松修改配置。",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "97a2316d-7fb6-441a-848c-e400c4ce713b"
+        }
+      ],
+      "createdAt": "2025-08-06T08:59:51.232Z",
+      "updatedAt": "2025-08-06T09:09:54.211Z",
+      "relatedFiles": [
+        {
+          "path": "src/config/paths.ts",
+          "type": "TO_MODIFY",
+          "description": "清理路径配置，使用标准路径",
+          "lineStart": 30,
+          "lineEnd": 163
+        }
+      ],
+      "implementationGuide": "1. 更新 PATHS_CONFIG 中的中文路径配置，全部改为标准路径：\\n   - about: { en: '/about', zh: '/about' }\\n   - contact: { en: '/contact', zh: '/contact' }\\n   - blog: { en: '/blog', zh: '/blog' }\\n   - products: { en: '/products', zh: '/products' }\\n   - 其他页面类似处理\\n2. 简化 getPathnames() 函数，直接返回标准路径配置\\n3. 保留核心功能函数：getLocalizedPath(), validatePathsConfig(), getSitemapConfig()\\n4. 保持 SITE_CONFIG 和 LOCALES_CONFIG 不变\\n5. 更新相关注释说明使用标准路径方案",
+      "verificationCriteria": "1. TypeScript 编译无错误\\n2. 所有路径配置使用标准路径\\n3. getLocalizedPath() 函数返回正确的标准路径\\n4. validatePathsConfig() 验证通过\\n5. 配置文件结构保持清晰",
+      "analysisResult": "清理路径配置文件，确保配置一致性，移除不使用的中文路径映射，统一使用标准路径方案（/zh/products 而非 /zh/chanpin），并验证所有页面功能正常。通过分析发现项目当前实际使用标准路径方案，但配置文件中存在不一致状态，需要协调多个配置文件的更新以保持一致性。",
+      "summary": "成功清理 src/config/paths.ts 文件，将所有中文路径配置改为标准路径（如 zh: '/about', zh: '/products' 等），简化了 getPathnames() 函数直接返回标准路径配置。保留了所有核心功能函数（getLocalizedPath, validatePathsConfig, getSitemapConfig），保持了向后兼容性。功能测试显示 /zh/about, /en/about, /zh/products 等页面都正常工作，配置文件结构清晰，符合标准路径方案。",
+      "completedAt": "2025-08-06T09:09:54.210Z"
+    },
+    {
+      "id": "a76a3587-7778-4f9c-89e4-e5627ec255bb",
+      "name": "同步更新 URL 生成服务配置",
+      "description": "更新 src/services/url-generator-cjs.js 文件中的 PATHS_CONFIG 配置，确保与主配置文件保持一致，使用标准路径方案。",
+      "notes": "这个文件是 CommonJS 格式，用于 next-sitemap 配置。必须保持与主配置文件的一致性，确保 sitemap 生成正确。",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "a685896f-1d38-49de-9983-537a070c00a2"
+        }
+      ],
+      "createdAt": "2025-08-06T08:59:51.232Z",
+      "updatedAt": "2025-08-06T09:16:15.483Z",
+      "relatedFiles": [
+        {
+          "path": "src/services/url-generator-cjs.js",
+          "type": "TO_MODIFY",
+          "description": "同步更新路径配置",
+          "lineStart": 23,
+          "lineEnd": 34
+        }
+      ],
+      "implementationGuide": "1. 打开 src/services/url-generator-cjs.js 文件\\n2. 更新 PATHS_CONFIG 对象，将所有中文路径改为标准路径：\\n   - about: { en: '/about', zh: '/about' }\\n   - contact: { en: '/contact', zh: '/contact' }\\n   - blog: { en: '/blog', zh: '/blog' }\\n   - products: { en: '/products', zh: '/products' }\\n   - 其他页面类似处理\\n3. 确保与 src/config/paths.ts 中的配置完全一致\\n4. 验证 getLocalizedPath() 函数逻辑正确\\n5. 测试 URL 生成功能正常",
+      "verificationCriteria": "1. 配置与 src/config/paths.ts 完全一致\\n2. getLocalizedPath() 函数返回正确路径\\n3. sitemap 生成功能正常\\n4. 无 JavaScript 语法错误\\n5. next-sitemap 构建成功",
+      "analysisResult": "清理路径配置文件，确保配置一致性，移除不使用的中文路径映射，统一使用标准路径方案（/zh/products 而非 /zh/chanpin），并验证所有页面功能正常。通过分析发现项目当前实际使用标准路径方案，但配置文件中存在不一致状态，需要协调多个配置文件的更新以保持一致性。",
+      "summary": "成功更新 src/services/url-generator-cjs.js 文件中的 PATHS_CONFIG 配置，将所有中文路径改为标准路径，确保与主配置文件完全一致。验证结果显示：getLocalizedPath() 函数返回正确的标准路径，URL 生成功能正常，next-sitemap 构建成功并生成了使用标准路径的 sitemap 文件，无 JavaScript 语法错误。配置同步完成，保证了 sitemap 生成的正确性。",
+      "completedAt": "2025-08-06T09:16:15.482Z"
+    },
+    {
+      "id": "f8cb8bb2-88cb-4817-b8f9-c014833320c4",
+      "name": "验证所有页面功能正常",
+      "description": "全面测试所有页面在两种语言下的功能，包括路由、导航、元数据生成、SEO配置等，确保配置清理后功能完全正常。",
+      "notes": "这是最重要的验证步骤，确保所有功能在配置清理后仍然正常工作。特别要验证国际化功能和建设中页面的显示。",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "a76a3587-7778-4f9c-89e4-e5627ec255bb"
+        }
+      ],
+      "createdAt": "2025-08-06T08:59:51.232Z",
+      "updatedAt": "2025-08-06T09:36:48.722Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/[locale]/products/page.tsx",
+          "type": "REFERENCE",
+          "description": "产品页面测试",
+          "lineStart": 1,
+          "lineEnd": 32
+        },
+        {
+          "path": "src/app/[locale]/blog/page.tsx",
+          "type": "REFERENCE",
+          "description": "博客页面测试",
+          "lineStart": 1,
+          "lineEnd": 32
+        },
+        {
+          "path": "src/app/[locale]/about/page.tsx",
+          "type": "REFERENCE",
+          "description": "关于页面测试",
+          "lineStart": 1,
+          "lineEnd": 32
+        },
+        {
+          "path": "src/app/[locale]/contact/page.tsx",
+          "type": "REFERENCE",
+          "description": "联系页面测试",
+          "lineStart": 1,
+          "lineEnd": 50
+        }
+      ],
+      "implementationGuide": "1. 启动开发服务器：npm run dev\\n2. 测试英文页面路径：\\n   - /en/ (首页)\\n   - /en/products, /en/blog, /en/about, /en/contact\\n3. 测试中文页面路径：\\n   - /zh/ (首页)\\n   - /zh/products, /zh/blog, /zh/about, /zh/contact\\n4. 验证导航功能：\\n   - 主导航链接正确\\n   - 移动端导航正常\\n   - 活动状态高亮正确\\n5. 检查元数据生成：\\n   - 页面标题和描述正确\\n   - SEO 标签完整\\n6. 验证建设中页面组件正常显示\\n7. 确认中文路径（如 /zh/chanpin）返回404",
+      "verificationCriteria": "1. 所有页面在两种语言下正常访问\\n2. 导航链接功能正确\\n3. 元数据生成正确\\n4. 建设中页面组件正常显示\\n5. 中文路径正确返回404\\n6. 无控制台错误\\n7. 页面加载性能正常",
+      "analysisResult": "清理路径配置文件，确保配置一致性，移除不使用的中文路径映射，统一使用标准路径方案（/zh/products 而非 /zh/chanpin），并验证所有页面功能正常。通过分析发现项目当前实际使用标准路径方案，但配置文件中存在不一致状态，需要协调多个配置文件的更新以保持一致性。",
+      "summary": "成功验证所有页面功能正常。测试结果显示：所有英文和中文页面都正常访问，导航链接功能正确，元数据生成准确（英文/中文标题描述正确），建设中页面组件正常显示（包含进度指示器和动画效果），旧的中文路径（/zh/chanpin, /zh/boke, /zh/guanyu）正确返回404，无控制台错误，页面加载性能良好。配置清理后所有功能完全正常，标准路径方案成功实施。",
+      "completedAt": "2025-08-06T09:36:48.721Z"
+    }
+  ]
+}

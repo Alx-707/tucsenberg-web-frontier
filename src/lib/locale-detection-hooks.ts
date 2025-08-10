@@ -1,0 +1,58 @@
+import { Locale } from '@/types/i18n';
+import { BROWSER_LOCALE_MAP, DEFAULT_LOCALE, SUPPORTED_LOCALES } from './locale-constants';
+import { LocaleDetectionResult } from './locale-detection-types';
+import { LocaleStorageManager } from './locale-storage';
+
+/**
+ * 客户端语言检测 Hook
+ */
+export function useClientLocaleDetection() {
+  const detectClientLocale = (): LocaleDetectionResult => {
+    // 客户端检测逻辑
+    const userOverride = LocaleStorageManager.getUserOverride();
+    if (userOverride) {
+      return {
+        locale: userOverride,
+        source: 'user',
+        confidence: 1.0,
+        details: { userOverride },
+      };
+    }
+
+    // 浏览器语言检测
+    if (typeof navigator !== 'undefined') {
+      const languages = navigator.languages || [navigator.language];
+
+      for (const lang of languages) {
+        const normalizedLang = lang.toLowerCase();
+        // 安全的对象属性访问，避免对象注入
+        const detectedLocale = Object.prototype.hasOwnProperty.call(
+          BROWSER_LOCALE_MAP,
+          normalizedLang,
+        )
+          ? Object.prototype.hasOwnProperty.call(BROWSER_LOCALE_MAP, normalizedLang)
+            ? (BROWSER_LOCALE_MAP as Record<string, Locale>)[normalizedLang as keyof typeof BROWSER_LOCALE_MAP]
+            : undefined
+          : undefined;
+
+        if (detectedLocale && SUPPORTED_LOCALES.includes(detectedLocale)) {
+          return {
+            locale: detectedLocale,
+            source: 'browser',
+            confidence: 0.7,
+            details: { browserLanguages: [...languages] },
+          };
+        }
+      }
+    }
+
+    return {
+      locale: DEFAULT_LOCALE,
+      source: 'default',
+      confidence: 0.5,
+      details: { fallbackUsed: true },
+    };
+  };
+
+  return { detectClientLocale };
+}

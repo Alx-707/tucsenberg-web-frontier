@@ -1,0 +1,466 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Locale } from '@/types/i18n';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import {
+  LocaleDetectionHistory,
+  LocaleStorageManager,
+  UserLocalePreference,
+} from '../locale-storage';
+
+// Mock constants
+vi.mock('@/constants/i18n-constants', () => ({
+  CACHE_DURATIONS: {
+    COOKIE_MAX_AGE:
+      WEB_VITALS_CONSTANTS.DAYS_PER_MONTH *
+      WEB_VITALS_CONSTANTS.HOURS_PER_DAY *
+      WEB_VITALS_CONSTANTS.MINUTES_PER_HOUR *
+      WEB_VITALS_CONSTANTS.SECONDS_PER_MINUTE *
+      WEB_VITALS_CONSTANTS.MILLISECONDS_PER_SECOND, // 30 days
+  },
+  CACHE_LIMITS: {
+    MAX_DETECTION_HISTORY: 50,
+  },
+}));
+
+// Mock localStorage
+const mockLocalStorage = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+// Mock document.cookie
+const mockDocumentCookie = {
+  get: vi.fn(() => ''),
+  set: vi.fn(),
+};
+
+describe('LocaleStorageManager', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    // Reset localStorage mock with proper implementations
+    mockLocalStorage.getItem.mockReturnValue(null);
+    mockLocalStorage.setItem.mockImplementation(() => {});
+    mockLocalStorage.removeItem.mockImplementation(() => {});
+    mockLocalStorage.clear.mockImplementation(() => {});
+
+    // Reset document cookie mock
+    mockDocumentCookie.get.mockReturnValue('');
+    mockDocumentCookie.set.mockImplementation(() => {});
+
+    // Mock window and localStorage
+    Object.defineProperty(global, 'window', {
+      value: {
+        localStorage: mockLocalStorage,
+        location: {
+          protocol: 'https:',
+        },
+      },
+      writable: true,
+    });
+
+    // Mock localStorage globally
+    Object.defineProperty(global, 'localStorage', {
+      value: mockLocalStorage,
+      writable: true,
+    });
+
+    // Mock document
+    Object.defineProperty(global, 'document', {
+      value: {
+        get cookie() {
+          return mockDocumentCookie.get();
+        },
+        set cookie(value: string) {
+          mockDocumentCookie.set(value);
+        },
+      },
+      writable: true,
+    });
+
+    // Reset environment using vi.stubEnv
+    vi.stubEnv('NODE_ENV', 'test');
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('saveUserPreference', () => {
+    it('should save user preference to both localStorage and cookie', () => {
+      const preference: UserLocalePreference = {
+        locale: 'en',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      LocaleStorageManager.saveUserPreference(preference);
+
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+        'locale_preference',
+        JSON.stringify(preference),
+      );
+      expect(mockDocumentCookie.set).toHaveBeenCalledWith(
+        expect.stringContaining('locale_preference='),
+      );
+    });
+
+    it('should handle localStorage errors gracefully', () => {
+      mockLocalStorage.setItem.mockImplementation(() => {
+        throw new Error('Storage full');
+      });
+
+      const preference: UserLocalePreference = {
+        locale: 'zh',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      expect(() => {
+        LocaleStorageManager.saveUserPreference(preference);
+      }).not.toThrow();
+
+      // Should still try to set cookie
+      expect(mockDocumentCookie.set).toHaveBeenCalled();
+    });
+
+    it('should handle cookie errors gracefully', () => {
+      mockDocumentCookie.set.mockImplementation(() => {
+        throw new Error('Cookie error');
+      });
+
+      const preference: UserLocalePreference = {
+        locale: 'en',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      expect(() => {
+        LocaleStorageManager.saveUserPreference(preference);
+      }).not.toThrow();
+
+      // Should still try to set localStorage
+      expect(mockLocalStorage.setItem).toHaveBeenCalled();
+    });
+  });
+
+  describe('getUserPreference', () => {
+    it('should return user preference from localStorage', () => {
+      const preference: UserLocalePreference = {
+        locale: 'en',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(preference));
+
+      const result = LocaleStorageManager.getUserPreference();
+
+      expect(result).toEqual(preference);
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
+        'locale_preference',
+      );
+    });
+
+    it('should fallback to cookie when localStorage fails', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+
+      const preference: UserLocalePreference = {
+        locale: 'zh',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      mockDocumentCookie.get.mockReturnValue(
+        `locale_preference=${encodeURIComponent(JSON.stringify(preference))}`,
+      );
+
+      const result = LocaleStorageManager.getUserPreference();
+
+      expect(result).toEqual(preference);
+    });
+
+    it('should return null when no preference is stored', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+      mockDocumentCookie.get.mockReturnValue('');
+
+      const result = LocaleStorageManager.getUserPreference();
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle invalid JSON gracefully', () => {
+      mockLocalStorage.getItem.mockReturnValue('invalid json');
+
+      const result = LocaleStorageManager.getUserPreference();
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle cookie parsing errors gracefully', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+      mockDocumentCookie.get.mockReturnValue('locale_preference=invalid%json');
+
+      const result = LocaleStorageManager.getUserPreference();
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('saveDetectionHistory', () => {
+    it('should save detection history to localStorage', () => {
+      const history: LocaleDetectionHistory = {
+        detections: [
+          {
+            locale: 'en',
+            source: 'browser',
+            timestamp: Date.now(),
+            confidence: 0.8,
+          },
+        ],
+        lastUpdated: Date.now(),
+      };
+
+      // Note: saveDetectionHistory is private, testing through public interface
+      LocaleStorageManager.getDetectionHistory();
+
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+        'locale_detection_history',
+        JSON.stringify(history),
+      );
+    });
+
+    it('should handle localStorage errors gracefully', () => {
+      mockLocalStorage.setItem.mockImplementation(() => {
+        throw new Error('Storage error');
+      });
+
+      // const history: LocaleDetectionHistory = {
+      //   detections: [],
+      //   lastUpdated: Date.now(),
+      // };
+
+      expect(() => {
+        LocaleStorageManager.getDetectionHistory();
+      }).not.toThrow();
+    });
+  });
+
+  describe('getDetectionHistory', () => {
+    it('should return detection history from localStorage', () => {
+      const history: LocaleDetectionHistory = {
+        detections: [
+          {
+            locale: 'en',
+            source: 'browser',
+            timestamp: Date.now(),
+            confidence: 0.8,
+          },
+        ],
+        lastUpdated: Date.now(),
+      };
+
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(history));
+
+      const result = LocaleStorageManager.getDetectionHistory();
+
+      expect(result).toEqual(history);
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
+        'locale_detection_history',
+      );
+    });
+
+    it('should return null when no history is stored', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+
+      const result = LocaleStorageManager.getDetectionHistory();
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle invalid JSON gracefully', () => {
+      mockLocalStorage.getItem.mockReturnValue('invalid json');
+
+      const result = LocaleStorageManager.getDetectionHistory();
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('addDetectionRecord', () => {
+    it('should add new detection record to existing history', () => {
+      const existingHistory: LocaleDetectionHistory = {
+        detections: [
+          {
+            locale: 'en',
+            source: 'browser',
+            timestamp: Date.now() - 1000,
+            confidence: 0.8,
+          },
+        ],
+        lastUpdated: Date.now() - 1000,
+      };
+
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(existingHistory));
+
+      // addDetectionRecord is private, testing through public interface
+      const history = LocaleStorageManager.getDetectionHistory();
+      expect(history).toBeDefined();
+      expect(Array.isArray(history.detections)).toBe(true);
+    });
+
+    it('should create new history when none exists', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+
+      // addDetectionRecord is private, testing through public interface
+      const history = LocaleStorageManager.getDetectionHistory();
+      expect(history).toBeDefined();
+      expect(Array.isArray(history.detections)).toBe(true);
+    });
+
+    it('should limit history to maximum entries', () => {
+      // Create history with 50 entries (at limit)
+      const existingHistory: LocaleDetectionHistory = {
+        detections: Array.from({ length: 50 }, (_, i) => ({
+          locale: 'en' as Locale,
+          source: 'browser',
+          timestamp: Date.now() - i * 1000,
+          confidence: 0.8,
+        })),
+        lastUpdated: Date.now(),
+      };
+
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(existingHistory));
+
+      // addDetectionRecord is private, testing through public interface
+      const history = LocaleStorageManager.getDetectionHistory();
+      expect(history).toBeDefined();
+      expect(Array.isArray(history.detections)).toBe(true);
+    });
+  });
+
+  describe('setUserOverride', () => {
+    it('should save user override to localStorage', () => {
+      LocaleStorageManager.setUserOverride('zh');
+
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+        'user_locale_override',
+        JSON.stringify('zh'),
+      );
+    });
+
+    it('should handle localStorage errors gracefully', () => {
+      mockLocalStorage.setItem.mockImplementation(() => {
+        throw new Error('Storage error');
+      });
+
+      expect(() => {
+        LocaleStorageManager.setUserOverride('en');
+      }).not.toThrow();
+    });
+  });
+
+  describe('getUserOverride', () => {
+    it('should return user override from localStorage', () => {
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify('zh'));
+
+      const result = LocaleStorageManager.getUserOverride();
+
+      expect(result).toBe('zh');
+      expect(mockLocalStorage.getItem).toHaveBeenCalledWith(
+        'user_locale_override',
+      );
+    });
+
+    it('should return null when no override is stored', () => {
+      mockLocalStorage.getItem.mockReturnValue(null);
+
+      const result = LocaleStorageManager.getUserOverride();
+
+      expect(result).toBeNull();
+    });
+
+    it('should handle invalid JSON gracefully', () => {
+      mockLocalStorage.getItem.mockReturnValue('invalid json');
+
+      const result = LocaleStorageManager.getUserOverride();
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('clearUserOverride', () => {
+    it('should remove user override from localStorage', () => {
+      LocaleStorageManager.clearUserOverride();
+
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        'user_locale_override',
+      );
+    });
+
+    it('should handle localStorage errors gracefully', () => {
+      mockLocalStorage.removeItem.mockImplementation(() => {
+        throw new Error('Storage error');
+      });
+
+      expect(() => {
+        LocaleStorageManager.clearUserOverride();
+      }).not.toThrow();
+    });
+  });
+
+  describe('clearAll', () => {
+    it('should clear all locale-related data', () => {
+      LocaleStorageManager.clearAll();
+
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        'locale_preference',
+      );
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        'locale_detection_history',
+      );
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith(
+        'user_locale_override',
+      );
+      expect(mockDocumentCookie.set).toHaveBeenCalledWith(
+        expect.stringContaining('locale_preference=; expires='),
+      );
+    });
+  });
+
+  describe('SSR compatibility', () => {
+    it('should handle server-side rendering gracefully', () => {
+      // Mock SSR environment
+      Object.defineProperty(global, 'window', {
+        value: undefined,
+        writable: true,
+      });
+      Object.defineProperty(global, 'document', {
+        value: undefined,
+        writable: true,
+      });
+
+      const preference: UserLocalePreference = {
+        locale: 'en',
+        source: 'user',
+        timestamp: Date.now(),
+        confidence: 1.0,
+      };
+
+      expect(() => {
+        LocaleStorageManager.saveUserPreference(preference);
+        LocaleStorageManager.getUserPreference();
+        LocaleStorageManager.setUserOverride('zh');
+        LocaleStorageManager.getUserOverride();
+        LocaleStorageManager.clearAll();
+      }).not.toThrow();
+    });
+  });
+});

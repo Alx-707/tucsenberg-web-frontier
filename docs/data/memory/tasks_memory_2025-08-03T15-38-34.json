@@ -1,0 +1,178 @@
+{
+  "tasks": [
+    {
+      "id": "08d2455e-a596-4ef7-9139-cf9eb577e1ed",
+      "name": "分析当前安全配置状态",
+      "description": "深入分析现有的 ESLint 安全插件配置，识别 security-node 与 Semgrep 之间的重复规则，评估每条规则的必要性和替代方案。确保对当前安全架构有完整的理解。",
+      "notes": "重点关注规则的功能重叠和检测质量差异，确保优化不会降低安全保护水平",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-08-03T15:14:59.990Z",
+      "updatedAt": "2025-08-03T15:16:34.405Z",
+      "relatedFiles": [
+        {
+          "path": "eslint.config.mjs",
+          "type": "REFERENCE",
+          "description": "当前ESLint安全配置",
+          "lineStart": 73,
+          "lineEnd": 118
+        },
+        {
+          "path": "semgrep.yml",
+          "type": "REFERENCE",
+          "description": "Semgrep安全规则配置",
+          "lineStart": 1,
+          "lineEnd": 147
+        },
+        {
+          "path": "package.json",
+          "type": "REFERENCE",
+          "description": "安全检查脚本配置",
+          "lineStart": 32,
+          "lineEnd": 37
+        }
+      ],
+      "implementationGuide": "1. 检查 eslint.config.mjs 中的 security-node 配置（第73-118行）\\n2. 分析 semgrep.yml 中的安全规则覆盖情况\\n3. 对比识别重复功能：SQL注入、HTML注入、危险重定向\\n4. 评估5条无替代规则的重要性：NoSQL注入、异常处理、事件错误、Cookie安全、SSL配置\\n5. 验证当前安全检查脚本的运行状态",
+      "verificationCriteria": "完成对所有安全规则的分类和重复性分析，明确哪些规则可以禁用，哪些必须保留，形成详细的优化方案",
+      "analysisResult": "基于深入分析，推荐采用阶段性优化策略：禁用 eslint-plugin-security-node 中与 Semgrep 重复的3条规则，保留5条无替代的核心安全规则，维持项目零容忍安全标准的同时简化配置、减少重复检查开销。",
+      "summary": "完成了对当前安全配置的全面分析。识别出 security-node 的8条独有规则中有3条与 Semgrep 规则重复（SQL注入、HTML注入、危险重定向），5条无替代规则需要保留（NoSQL注入、异常处理、事件错误、Cookie安全、SSL配置）。验证了安全检查脚本正常运行，形成了明确的优化方案：禁用3条重复规则，保留5条核心规则，维持整体安全保护水平。",
+      "completedAt": "2025-08-03T15:16:34.405Z"
+    },
+    {
+      "id": "be75f8fe-4115-4bb4-84da-b204594e441d",
+      "name": "优化 ESLint security-node 配置",
+      "description": "修改 eslint.config.mjs 中的 security-node 配置，禁用与 Semgrep 重复的3条规则，保留5条核心规则，更新配置注释说明优化原因。",
+      "notes": "确保配置修改不影响其他ESLint规则，保持配置文件的可读性和维护性",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "08d2455e-a596-4ef7-9139-cf9eb577e1ed"
+        }
+      ],
+      "createdAt": "2025-08-03T15:14:59.990Z",
+      "updatedAt": "2025-08-03T15:19:20.241Z",
+      "relatedFiles": [
+        {
+          "path": "eslint.config.mjs",
+          "type": "TO_MODIFY",
+          "description": "需要修改的ESLint配置文件",
+          "lineStart": 73,
+          "lineEnd": 118
+        }
+      ],
+      "implementationGuide": "1. 修改 eslint.config.mjs 第84、88、90行，将重复规则设置为 'off'\\n2. 添加详细注释说明禁用原因和Semgrep替代方案\\n3. 保留核心规则：detect-nosql-injection、detect-improper-exception-handling、detect-unhandled-event-errors、detect-security-missconfiguration-cookie、disable-ssl-across-node-server\\n4. 更新配置分组注释，明确规则分类逻辑\\n5. 验证配置语法正确性",
+      "verificationCriteria": "ESLint配置修改完成，语法正确，注释清晰，禁用3条重复规则，保留5条核心规则",
+      "analysisResult": "基于深入分析，推荐采用阶段性优化策略：禁用 eslint-plugin-security-node 中与 Semgrep 重复的3条规则，保留5条无替代的核心安全规则，维持项目零容忍安全标准的同时简化配置、减少重复检查开销。",
+      "summary": "成功优化了 ESLint security-node 配置。禁用了3条与 Semgrep 重复的规则（detect-sql-injection、detect-html-injection、detect-dangerous-redirects），保留了5条核心规则（detect-nosql-injection、detect-improper-exception-handling、detect-unhandled-event-errors、detect-security-missconfiguration-cookie、disable-ssl-across-node-server）。更新了配置注释，新增了\"已迁移到 Semgrep 的规则\"分组，清晰说明了禁用原因和替代方案。配置语法正确，ESLint 安全检查运行正常。",
+      "completedAt": "2025-08-03T15:19:20.240Z"
+    },
+    {
+      "id": "6f6e4757-a8c3-43b9-b216-3d89ebb75bdb",
+      "name": "验证安全检查功能完整性",
+      "description": "运行完整的安全检查流程，验证配置优化后的安全保护水平，确保 Semgrep 规则正确覆盖被禁用的 ESLint 规则功能。",
+      "notes": "重点验证SQL注入、HTML注入、危险重定向的检测能力是否由Semgrep完全覆盖",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "be75f8fe-4115-4bb4-84da-b204594e441d"
+        }
+      ],
+      "createdAt": "2025-08-03T15:14:59.990Z",
+      "updatedAt": "2025-08-03T15:22:55.454Z",
+      "relatedFiles": [
+        {
+          "path": "package.json",
+          "type": "REFERENCE",
+          "description": "安全检查脚本",
+          "lineStart": 32,
+          "lineEnd": 37
+        },
+        {
+          "path": "semgrep.yml",
+          "type": "REFERENCE",
+          "description": "验证Semgrep规则覆盖",
+          "lineStart": 102,
+          "lineEnd": 117
+        }
+      ],
+      "implementationGuide": "1. 运行 pnpm security:eslint 验证ESLint安全检查\\n2. 运行 pnpm security:semgrep 验证Semgrep静态分析\\n3. 运行 pnpm security:check 验证组合安全检查\\n4. 运行 pnpm lint:strict 确保无新的警告或错误\\n5. 创建测试用例验证被禁用规则的Semgrep替代检测\\n6. 对比优化前后的安全检查结果",
+      "verificationCriteria": "所有安全检查脚本正常运行，无新的错误或警告，Semgrep规则正确覆盖被禁用的ESLint功能",
+      "analysisResult": "基于深入分析，推荐采用阶段性优化策略：禁用 eslint-plugin-security-node 中与 Semgrep 重复的3条规则，保留5条无替代的核心安全规则，维持项目零容忍安全标准的同时简化配置、减少重复检查开销。",
+      "summary": "成功验证了配置优化后的安全检查功能完整性。所有安全检查脚本（security:eslint、security:semgrep、security:check、lint:strict）均正常运行，无新的错误或警告。通过创建测试用例验证了 Semgrep 规则正确覆盖被禁用的3条 ESLint 规则功能：SQL注入、HTML注入、危险重定向检测。优化后保持了19条ESLint安全规则+10条Semgrep规则的双重保护体系，安全检查结果与优化前一致，确认安全保护水平未降低。",
+      "completedAt": "2025-08-03T15:22:55.453Z"
+    },
+    {
+      "id": "32bce2f8-38a0-41f1-bd0b-650c1bbc99e3",
+      "name": "更新项目安全文档",
+      "description": "同步更新所有相关的安全文档，包括 shrimp-rules.md、security-coding-guidelines.md 和 coding-standards.md，反映配置优化后的安全架构变化。",
+      "notes": "文档更新要准确反映技术变更，提供清晰的使用指南和故障排除信息",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "6f6e4757-a8c3-43b9-b216-3d89ebb75bdb"
+        }
+      ],
+      "createdAt": "2025-08-03T15:14:59.990Z",
+      "updatedAt": "2025-08-03T15:31:04.354Z",
+      "relatedFiles": [
+        {
+          "path": "shrimp-rules.md",
+          "type": "TO_MODIFY",
+          "description": "项目开发规则文档",
+          "lineStart": 566,
+          "lineEnd": 604
+        },
+        {
+          "path": "docs/security/security-coding-guidelines.md",
+          "type": "TO_MODIFY",
+          "description": "安全编码指南",
+          "lineStart": 8,
+          "lineEnd": 29
+        },
+        {
+          "path": ".augment/rules/coding-standards.md",
+          "type": "TO_MODIFY",
+          "description": "代码标准文档",
+          "lineStart": 478,
+          "lineEnd": 496
+        }
+      ],
+      "implementationGuide": "1. 更新 shrimp-rules.md 第566-604行的安全插件配置说明\\n2. 修改安全规则总数：从22条调整为19条ESLint规则\\n3. 更新 docs/security/security-coding-guidelines.md 中的工具说明\\n4. 同步 .augment/rules/coding-standards.md 中的安全插件架构描述\\n5. 添加配置优化的说明和回滚指南\\n6. 确保中英文文档的一致性",
+      "verificationCriteria": "所有安全相关文档已更新，准确反映配置优化后的安全架构，提供清晰的使用指南",
+      "analysisResult": "基于深入分析，推荐采用阶段性优化策略：禁用 eslint-plugin-security-node 中与 Semgrep 重复的3条规则，保留5条无替代的核心安全规则，维持项目零容忍安全标准的同时简化配置、减少重复检查开销。",
+      "summary": "成功更新了所有相关的安全文档，准确反映配置优化后的安全架构变化。更新了 shrimp-rules.md 中的安全插件配置说明，将安全规则总数从22条调整为29条（19条ESLint+10条Semgrep），详细说明了优化策略和规则分类。更新了 docs/security/security-coding-guidelines.md，添加了三层安全检测架构说明、配置优化历史和回滚指南。同步更新了 .augment/rules/coding-standards.md 的英文描述，确保中英文文档一致性。所有文档准确反映了禁用3条重复规则、保留5条核心规则的优化方案。",
+      "completedAt": "2025-08-03T15:31:04.353Z"
+    },
+    {
+      "id": "e0798737-4a46-456d-8176-3a33f4f706b0",
+      "name": "创建配置优化报告",
+      "description": "编写详细的配置优化实施报告，记录优化过程、效果评估、风险控制措施和后续建议，为团队提供完整的变更记录。",
+      "notes": "报告应该全面、客观，为未来的安全配置决策提供参考依据",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "32bce2f8-38a0-41f1-bd0b-650c1bbc99e3"
+        }
+      ],
+      "createdAt": "2025-08-03T15:14:59.990Z",
+      "updatedAt": "2025-08-03T15:33:21.010Z",
+      "relatedFiles": [
+        {
+          "path": "docs/security/eslint-security-optimization-report.md",
+          "type": "CREATE",
+          "description": "新建的配置优化报告文档"
+        },
+        {
+          "path": "docs/security/security-implementation-report.md",
+          "type": "REFERENCE",
+          "description": "参考现有的安全实施报告格式"
+        }
+      ],
+      "implementationGuide": "1. 创建 docs/security/eslint-security-optimization-report.md\\n2. 记录优化前后的配置对比\\n3. 分析性能改进和安全保护水平\\n4. 提供回滚步骤和故障排除指南\\n5. 制定后续监控和评估计划\\n6. 包含验证测试结果和建议",
+      "verificationCriteria": "配置优化报告完整准确，包含所有必要的技术细节、验证结果和后续建议",
+      "analysisResult": "基于深入分析，推荐采用阶段性优化策略：禁用 eslint-plugin-security-node 中与 Semgrep 重复的3条规则，保留5条无替代的核心安全规则，维持项目零容忍安全标准的同时简化配置、减少重复检查开销。",
+      "summary": "成功创建了详细的配置优化实施报告。报告全面记录了整个优化过程，包括：任务概述、实施目标、完成的工作（5个主要阶段）、优化效果评估、技术实施细节、验证测试结果、项目影响分析、后续建议和回滚指南。报告客观分析了性能改进和安全保护水平，提供了具体的配置对比表格、技术细节说明、验证测试结果，以及完整的回滚步骤。为团队提供了权威的变更记录和未来安全配置决策的参考依据。",
+      "completedAt": "2025-08-03T15:33:21.009Z"
+    }
+  ]
+}

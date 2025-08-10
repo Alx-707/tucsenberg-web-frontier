@@ -1,0 +1,639 @@
+{
+  "timestamp": "2025-08-07T01:28:06.940Z",
+  "summary": {
+    "totalComponents": 55,
+    "dynamicImportCandidates": 24,
+    "heavyComponents": 17
+  },
+  "candidates": [
+    {
+      "path": "src/components/shared/progress-indicator.tsx",
+      "size": "3.69",
+      "lines": 132,
+      "score": 3,
+      "reasons": [
+        "isLarge",
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/shared/animated-icon.tsx",
+      "size": "2.65",
+      "lines": 101,
+      "score": 3,
+      "reasons": [
+        "isLarge",
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/performance/web-vitals-indicator.tsx",
+      "size": "7.08",
+      "lines": 249,
+      "score": 3,
+      "reasons": [
+        "isLarge",
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/i18n/performance-dashboard.tsx",
+      "size": "6.39",
+      "lines": 220,
+      "score": 3,
+      "reasons": [
+        "isLarge",
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/i18n/locale-detection-demo.tsx",
+      "size": "6.64",
+      "lines": 235,
+      "score": 3,
+      "reasons": [
+        "isLarge",
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/language-toggle.tsx",
+      "size": "3.42",
+      "lines": 113,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/ui/sheet.tsx",
+      "size": "4.11",
+      "lines": 159,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "size": "8.27",
+      "lines": 275,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/ui/animated-counter.tsx",
+      "size": "5.54",
+      "lines": 221,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/theme/theme-performance-monitor.tsx",
+      "size": "2.62",
+      "lines": 92,
+      "score": 2,
+      "reasons": [
+        "isClientComponent",
+        "isNonCritical"
+      ]
+    },
+    {
+      "path": "src/components/shared/under-construction.tsx",
+      "size": "3.56",
+      "lines": 117,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/layout/mobile-navigation.tsx",
+      "size": "4.33",
+      "lines": 159,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/layout/main-navigation.tsx",
+      "size": "3.48",
+      "lines": 126,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/layout/logo.tsx",
+      "size": "2.69",
+      "lines": 121,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/layout/language-switcher.tsx",
+      "size": "6.81",
+      "lines": 235,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/layout/footer.tsx",
+      "size": "4.64",
+      "lines": 175,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/i18n/translation-preloader.tsx",
+      "size": "6.92",
+      "lines": 258,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/i18n/translation-fallback.tsx",
+      "size": "5.05",
+      "lines": 198,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/i18n/format-helpers.tsx",
+      "size": "5.75",
+      "lines": 217,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/i18n/enhanced-locale-switcher.tsx",
+      "size": "8.94",
+      "lines": 334,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/home/tech-stack-section.tsx",
+      "size": "7.63",
+      "lines": 264,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/home/project-overview.tsx",
+      "size": "8.79",
+      "lines": 289,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/home/hero-section.tsx",
+      "size": "5.89",
+      "lines": 237,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    },
+    {
+      "path": "src/components/home/call-to-action.tsx",
+      "size": "8.14",
+      "lines": 295,
+      "score": 2,
+      "reasons": [
+        "isLarge",
+        "isClientComponent"
+      ]
+    }
+  ],
+  "heavyComponents": [
+    {
+      "path": "src/components/__tests__/theme-toggle.test.tsx",
+      "size": "41.05",
+      "lines": 1302,
+      "imports": 3
+    },
+    {
+      "path": "src/components/layout/__tests__/language-switcher.test.tsx",
+      "size": "34.79",
+      "lines": 1112,
+      "imports": 5
+    },
+    {
+      "path": "src/components/layout/__tests__/mobile-navigation.test.tsx",
+      "size": "10.35",
+      "lines": 354,
+      "imports": 5
+    },
+    {
+      "path": "src/components/i18n/enhanced-locale-switcher.tsx",
+      "size": "8.94",
+      "lines": 334,
+      "imports": 10
+    },
+    {
+      "path": "src/components/home/project-overview.tsx",
+      "size": "8.79",
+      "lines": 289,
+      "imports": 7
+    },
+    {
+      "path": "src/components/layout/__tests__/main-navigation.test.tsx",
+      "size": "8.63",
+      "lines": 292,
+      "imports": 4
+    },
+    {
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "size": "8.27",
+      "lines": 275,
+      "imports": 4
+    },
+    {
+      "path": "src/components/home/call-to-action.tsx",
+      "size": "8.14",
+      "lines": 295,
+      "imports": 6
+    },
+    {
+      "path": "src/components/home/tech-stack-section.tsx",
+      "size": "7.63",
+      "lines": 264,
+      "imports": 9
+    },
+    {
+      "path": "src/components/performance/web-vitals-indicator.tsx",
+      "size": "7.08",
+      "lines": 249,
+      "imports": 2
+    },
+    {
+      "path": "src/components/i18n/translation-preloader.tsx",
+      "size": "6.92",
+      "lines": 258,
+      "imports": 3
+    },
+    {
+      "path": "src/components/layout/language-switcher.tsx",
+      "size": "6.81",
+      "lines": 235,
+      "imports": 10
+    },
+    {
+      "path": "src/components/i18n/locale-detection-demo.tsx",
+      "size": "6.64",
+      "lines": 235,
+      "imports": 8
+    },
+    {
+      "path": "src/components/i18n/performance-dashboard.tsx",
+      "size": "6.39",
+      "lines": 220,
+      "imports": 3
+    },
+    {
+      "path": "src/components/home/hero-section.tsx",
+      "size": "5.89",
+      "lines": 237,
+      "imports": 5
+    },
+    {
+      "path": "src/components/i18n/format-helpers.tsx",
+      "size": "5.75",
+      "lines": 217,
+      "imports": 3
+    },
+    {
+      "path": "src/components/ui/animated-counter.tsx",
+      "size": "5.54",
+      "lines": 221,
+      "imports": 5
+    }
+  ],
+  "importAnalysis": {
+    "externalLibraries": [
+      {
+        "library": "react",
+        "usageCount": 32,
+        "files": [
+          "src/components/theme-provider.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/ui/tabs.tsx",
+          "src/components/ui/sheet.tsx"
+        ]
+      },
+      {
+        "library": "lucide-react",
+        "usageCount": 19,
+        "files": [
+          "src/components/theme-toggle.tsx",
+          "src/components/loading-spinner.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/ui/sheet.tsx"
+        ]
+      },
+      {
+        "library": "next-intl",
+        "usageCount": 19,
+        "files": [
+          "src/components/loading-spinner.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/shared/under-construction.tsx",
+          "src/components/shared/progress-indicator.tsx"
+        ]
+      },
+      {
+        "library": "@testing-library/react",
+        "usageCount": 6,
+        "files": [
+          "src/components/layout/__tests__/test-utils.ts",
+          "src/components/layout/__tests__/mobile-navigation.test.tsx",
+          "src/components/layout/__tests__/main-navigation.test.tsx",
+          "src/components/layout/__tests__/language-switcher.test.tsx",
+          "src/components/layout/__tests__/header.test.tsx"
+        ]
+      },
+      {
+        "library": "class-variance-authority",
+        "usageCount": 3,
+        "files": [
+          "src/components/ui/navigation-menu.tsx",
+          "src/components/ui/button.tsx",
+          "src/components/ui/badge.tsx"
+        ]
+      },
+      {
+        "library": "@testing-library/user-event",
+        "usageCount": 3,
+        "files": [
+          "src/components/layout/__tests__/mobile-navigation.test.tsx",
+          "src/components/layout/__tests__/main-navigation.test.tsx",
+          "src/components/layout/__tests__/language-switcher.test.tsx"
+        ]
+      },
+      {
+        "library": "next/navigation",
+        "usageCount": 2,
+        "files": [
+          "src/components/layout/mobile-navigation.tsx",
+          "src/components/layout/main-navigation.tsx"
+        ]
+      },
+      {
+        "library": "next-themes",
+        "usageCount": 1,
+        "files": [
+          "src/components/theme-provider.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-tabs",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/tabs.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-dialog",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/sheet.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-navigation-menu",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/navigation-menu.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-label",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/label.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-dropdown-menu",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/dropdown-menu.tsx"
+        ]
+      },
+      {
+        "library": "@radix-ui/react-slot",
+        "usageCount": 1,
+        "files": [
+          "src/components/ui/button.tsx"
+        ]
+      },
+      {
+        "library": "next/image",
+        "usageCount": 1,
+        "files": [
+          "src/components/layout/logo.tsx"
+        ]
+      },
+      {
+        "library": "next/link",
+        "usageCount": 1,
+        "files": [
+          "src/components/layout/footer.tsx"
+        ]
+      }
+    ]
+  },
+  "recommendations": {
+    "highPriority": [
+      {
+        "path": "src/components/shared/progress-indicator.tsx",
+        "size": "3.69",
+        "lines": 132,
+        "score": 3,
+        "reasons": [
+          "isLarge",
+          "isClientComponent",
+          "isNonCritical"
+        ]
+      },
+      {
+        "path": "src/components/shared/animated-icon.tsx",
+        "size": "2.65",
+        "lines": 101,
+        "score": 3,
+        "reasons": [
+          "isLarge",
+          "isClientComponent",
+          "isNonCritical"
+        ]
+      },
+      {
+        "path": "src/components/performance/web-vitals-indicator.tsx",
+        "size": "7.08",
+        "lines": 249,
+        "score": 3,
+        "reasons": [
+          "isLarge",
+          "isClientComponent",
+          "isNonCritical"
+        ]
+      },
+      {
+        "path": "src/components/i18n/performance-dashboard.tsx",
+        "size": "6.39",
+        "lines": 220,
+        "score": 3,
+        "reasons": [
+          "isLarge",
+          "isClientComponent",
+          "isNonCritical"
+        ]
+      },
+      {
+        "path": "src/components/i18n/locale-detection-demo.tsx",
+        "size": "6.64",
+        "lines": 235,
+        "score": 3,
+        "reasons": [
+          "isLarge",
+          "isClientComponent",
+          "isNonCritical"
+        ]
+      }
+    ],
+    "mediumPriority": [
+      {
+        "path": "src/components/language-toggle.tsx",
+        "size": "3.42",
+        "lines": 113,
+        "score": 2,
+        "reasons": [
+          "isLarge",
+          "isClientComponent"
+        ]
+      },
+      {
+        "path": "src/components/ui/sheet.tsx",
+        "size": "4.11",
+        "lines": 159,
+        "score": 2,
+        "reasons": [
+          "isLarge",
+          "isClientComponent"
+        ]
+      },
+      {
+        "path": "src/components/ui/dropdown-menu.tsx",
+        "size": "8.27",
+        "lines": 275,
+        "score": 2,
+        "reasons": [
+          "isLarge",
+          "isClientComponent"
+        ]
+      }
+    ],
+    "libraryOptimization": [
+      {
+        "library": "react",
+        "usageCount": 32,
+        "files": [
+          "src/components/theme-provider.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/ui/tabs.tsx",
+          "src/components/ui/sheet.tsx"
+        ]
+      },
+      {
+        "library": "lucide-react",
+        "usageCount": 19,
+        "files": [
+          "src/components/theme-toggle.tsx",
+          "src/components/loading-spinner.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/ui/sheet.tsx"
+        ]
+      },
+      {
+        "library": "next-intl",
+        "usageCount": 19,
+        "files": [
+          "src/components/loading-spinner.tsx",
+          "src/components/language-toggle.tsx",
+          "src/components/error-boundary.tsx",
+          "src/components/shared/under-construction.tsx",
+          "src/components/shared/progress-indicator.tsx"
+        ]
+      },
+      {
+        "library": "@testing-library/react",
+        "usageCount": 6,
+        "files": [
+          "src/components/layout/__tests__/test-utils.ts",
+          "src/components/layout/__tests__/mobile-navigation.test.tsx",
+          "src/components/layout/__tests__/main-navigation.test.tsx",
+          "src/components/layout/__tests__/language-switcher.test.tsx",
+          "src/components/layout/__tests__/header.test.tsx"
+        ]
+      }
+    ],
+    "expectedImprovements": {
+      "bundleSizeReduction": "15-25%",
+      "initialLoadImprovement": "200-400ms",
+      "lcpImprovement": "50-100ms",
+      "chunkSizeOptimization": "20-30%"
+    }
+  }
+}

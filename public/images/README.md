@@ -1,0 +1,43 @@
+# Social Media Share Images
+
+This directory contains social media sharing images for SEO optimization.
+
+## Required Images
+
+### og-image.jpg
+- **Size**: 1200x630px
+- **Format**: JPEG
+- **Purpose**: Open Graph image for social media sharing
+- **Content**: Should include:
+  - Tucsenberg Web Frontier logo/branding
+  - Key messaging: "Modern B2B Enterprise Web Platform"
+  - Technology stack highlights: "Next.js 15 + React 19 + TypeScript"
+  - Clean, professional design matching brand colors
+
+### twitter-image.jpg (Optional)
+- **Size**: 1200x600px  
+- **Format**: JPEG
+- **Purpose**: Twitter Cards specific image
+- **Content**: Similar to og-image but optimized for Twitter's aspect ratio
+
+## Design Guidelines
+
+1. **Brand Consistency**: Use project's color scheme and typography
+2. **Readability**: Ensure text is legible at small sizes
+3. **Professional**: Maintain B2B enterprise aesthetic
+4. **Technology Focus**: Highlight modern tech stack
+5. **Call to Action**: Include subtle CTA or value proposition
+
+## Current Status
+
+- ✅ SEO configuration updated to reference `/images/og-image.jpg`
+- ⏳ Actual image files need to be created by design team
+- ⏳ Images should be optimized for web (compressed but high quality)
+
+## Testing
+
+After adding images, test social sharing on:
+- Facebook Sharing Debugger
+- Twitter Card Validator  
+- LinkedIn Post Inspector
+- WhatsApp link preview

@@ -1,0 +1,151 @@
+# 字体子集化实施指南
+
+## 概述
+
+基于项目中文字符分析，我们识别出 1064 个唯一中文字符。
+通过字体子集化，预期可以减少字体文件大小 94.7%，
+提升LCP性能 30-50ms。
+
+## 实施步骤
+
+### 1. 安装字体处理工具
+
+```bash
+# 安装Python fonttools
+pip install fonttools
+
+# 验证安装
+pyftsubset --help
+```
+
+### 2. 生成字体子集
+
+```bash
+# 创建输出目录
+mkdir -p public/fonts/subsets
+
+# 生成WOFF2格式子集
+pip install fonttools
+pyftsubset "PingFang SC.ttc" \
+  --text="一丁三上下不与专且世业丝两严个中丰串临为主举久义之乏也习乱了争事二于云互五亚些交产享亮人仅今介仍从仓他付代令以仪们件价任份企休优会传伪估似但位低住体何余作佳使例供依便保信修倍借债值偏做停健储像允元充先光克免入全公六兰共关兴其具典兼内再冗写冲决况准减凑几出击函分切划列则创初删判利别到制刷前剩副割力功加务劣动助努励势匀包化匹区医十千升半协卓单南博占卡卫印危即卸厂历压原参又叉及友双反发取受变口句只召可台史右号司叹各合同名后向吗否含听启告员周命和咨品哈响善器四回因团困围固国图圆圈在地场址均坊坏坐块坚坛坡型域培基堡塔塞填境增壮声处备复外多够大天失头奖套奠好如妥始姓委威媒子字存季孤学它守安完官定宝实审客宣家容宽密富察寸对寻导封射将小少尔尝就尺尽尾局层居屏屑展属峭峰嵌巅工左巧巨差己已币市布师希带帮常幅幕干平年并幽广序库应底废度康廓延建开异弃式引张弱弹强归当录形彩影径待很律得御循微徽心必忆忍志快念忽态思急性总恢息悦您情惊惩惯想愉意感慎慢懒成我或战截戳户所扁手才打扣执扩扫批找承技把投抖护报抱担拆拉拒拟拥择括拼拿持挂指按挑捕换据捷掌排探接控推措描提插握揭搜搭摘摸播操擎支收改攻放政故效敏教敬数整文料斜断新方施无既日旧旨早时明易星映昨是显普景晰智暂暗暴曲更曾替最月有服望期未末本术机杂权杆材束杠条来松板极构析枚果架某染查标栈栏样核根格框案桌档检森概槛槽模檢次欢款止正此步死殊段每比毫氏水永求汇污没沿泄法泛注洁洞活派流浅测浏浮消涉涵深混添清渐渡温測港渲湾源溯滑滚满滤漏演潜澳激灰灵点烈热焦然照煮熟爬爱父片版牌物特状独猜献率环现球理瓶生用由电画畅界留略疑疗登白百的益盐监盒盖盘目盲直相省看真眼着知矩短码研破础硬确碍碑碳磁示社禁离秀私种秒积称移程稍稳究空突窗立站竞章端符第等策筛筹签简算管箭箱类粒粗粘精糊系素索紧紫累繁红约级纯纲纳线练组细织终绍经结绕绘络绝统继绪续维综绿缀缓编缘缝缩缺网罚置署美翻考者而耗耦职联聚胁胆背胜能脚脱自至致航般良色艳节英苹范荐获菜营著蓝藏虑虫虽蛙融行衡补表被裂装西要覆见观规视览觉角解触言誉警计认讨让训议记许论设访证评识诉诊词译试话询该详语误说请诺读课调谍谨豁象负贡责败账货质贴贵费资赋赖赞起超越趋足跃距跟跨路跳践踪身转轮软轻载较辅辑输辨边达迁迅过迎运近返这进远违连迟迭述迹追退送适选透逐递途逗通速造逻遇遍遗遵避邮部都配醒采释里重量金鉴针钟钥钩钮链销锁错锚键长门闭问闲间阅阈队防阵阶阻际陆降限陡除险隆随隐隔障难雅集零需露青静非靠面革音页顶项顺须顾预领颈频颖题颜额风饰馈首香驱验骤骨體高魔鲜黄黑默鼓鼠齐龄！％（），：？" \
+  --output-file="public/fonts/subsets/pingfang-sc-subset.woff2" \
+  --flavor=woff2 \
+  --layout-features="*" \
+  --glyph-names \
+  --symbol-cmap \
+  --legacy-cmap \
+  --notdef-glyph \
+  --notdef-outline \
+  --recommended-glyphs \
+  --name-legacy \
+  --drop-tables= \
+  --no-hinting
+
+# 生成WOFF格式子集
+pyftsubset "PingFang SC.ttc" \
+  --text="一丁三上下不与专且世业丝两严个中丰串临为主举久义之乏也习乱了争事二于云互五亚些交产享亮人仅今介仍从仓他付代令以仪们件价任份企休优会传伪估似但位低住体何余作佳使例供依便保信修倍借债值偏做停健储像允元充先光克免入全公六兰共关兴其具典兼内再冗写冲决况准减凑几出击函分切划列则创初删判利别到制刷前剩副割力功加务劣动助努励势匀包化匹区医十千升半协卓单南博占卡卫印危即卸厂历压原参又叉及友双反发取受变口句只召可台史右号司叹各合同名后向吗否含听启告员周命和咨品哈响善器四回因团困围固国图圆圈在地场址均坊坏坐块坚坛坡型域培基堡塔塞填境增壮声处备复外多够大天失头奖套奠好如妥始姓委威媒子字存季孤学它守安完官定宝实审客宣家容宽密富察寸对寻导封射将小少尔尝就尺尽尾局层居屏屑展属峭峰嵌巅工左巧巨差己已币市布师希带帮常幅幕干平年并幽广序库应底废度康廓延建开异弃式引张弱弹强归当录形彩影径待很律得御循微徽心必忆忍志快念忽态思急性总恢息悦您情惊惩惯想愉意感慎慢懒成我或战截戳户所扁手才打扣执扩扫批找承技把投抖护报抱担拆拉拒拟拥择括拼拿持挂指按挑捕换据捷掌排探接控推措描提插握揭搜搭摘摸播操擎支收改攻放政故效敏教敬数整文料斜断新方施无既日旧旨早时明易星映昨是显普景晰智暂暗暴曲更曾替最月有服望期未末本术机杂权杆材束杠条来松板极构析枚果架某染查标栈栏样核根格框案桌档检森概槛槽模檢次欢款止正此步死殊段每比毫氏水永求汇污没沿泄法泛注洁洞活派流浅测浏浮消涉涵深混添清渐渡温測港渲湾源溯滑滚满滤漏演潜澳激灰灵点烈热焦然照煮熟爬爱父片版牌物特状独猜献率环现球理瓶生用由电画畅界留略疑疗登白百的益盐监盒盖盘目盲直相省看真眼着知矩短码研破础硬确碍碑碳磁示社禁离秀私种秒积称移程稍稳究空突窗立站竞章端符第等策筛筹签简算管箭箱类粒粗粘精糊系素索紧紫累繁红约级纯纲纳线练组细织终绍经结绕绘络绝统继绪续维综绿缀缓编缘缝缩缺网罚置署美翻考者而耗耦职联聚胁胆背胜能脚脱自至致航般良色艳节英苹范荐获菜营著蓝藏虑虫虽蛙融行衡补表被裂装西要覆见观规视览觉角解触言誉警计认讨让训议记许论设访证评识诉诊词译试话询该详语误说请诺读课调谍谨豁象负贡责败账货质贴贵费资赋赖赞起超越趋足跃距跟跨路跳践踪身转轮软轻载较辅辑输辨边达迁迅过迎运近返这进远违连迟迭述迹追退送适选透逐递途逗通速造逻遇遍遗遵避邮部都配醒采释里重量金鉴针钟钥钩钮链销锁错锚键长门闭问闲间阅阈队防阵阶阻际陆降限陡除险隆随隐隔障难雅集零需露青静非靠面革音页顶项顺须顾预领颈频颖题颜额风饰馈首香驱验骤骨體高魔鲜黄黑默鼓鼠齐龄！％（），：？" \
+  --output-file="public/fonts/subsets/pingfang-sc-subset.woff" \
+  --flavor=woff \
+  --layout-features="*"
+```
+
+### 3. 更新CSS配置
+
+将以下CSS添加到 `src/app/globals.css`：
+
+```css
+/* 字体子集化配置 */
+@font-face {
+  font-family: 'PingFang SC Subset';
+  src: url('/fonts/subsets/pingfang-sc-subset.woff2') format('woff2'),
+       url('/fonts/subsets/pingfang-sc-subset.woff') format('woff');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  unicode-range: U+4E00-4E01, U+4E09-4E0B, U+4E0D-4E0E, U+4E13-4E14, U+4E16, U+4E1A, U+4E1D, U+4E24-4E25, U+4E2A, U+4E2D, U+4E30, U+4E32, U+4E34, U+4E3A-4E3B, U+4E3E, U+4E45, U+4E49, U+4E4B, U+4E4F, U+4E5F-4E60, U+4E71, U+4E86, U+4E89, U+4E8B-4E8C, U+4E8E, U+4E91-4E92, U+4E94, U+4E9A-4E9B, U+4EA4, U+4EA7, U+4EAB, U+4EAE, U+4EBA, U+4EC5, U+4ECA-4ECB, U+4ECD-4ECE, U+4ED3, U+4ED6, U+4ED8, U+4EE3-4EE5, U+4EEA, U+4EEC, U+4EF6-4EF7, U+4EFB, U+4EFD, U+4F01, U+4F11, U+4F18, U+4F1A, U+4F20, U+4F2A, U+4F30, U+4F3C, U+4F46, U+4F4D-4F4F, U+4F53, U+4F55, U+4F59, U+4F5C, U+4F73, U+4F7F, U+4F8B, U+4F9B, U+4F9D, U+4FBF, U+4FDD, U+4FE1, U+4FEE, U+500D, U+501F, U+503A, U+503C, U+504F, U+505A, U+505C, U+5065, U+50A8, U+50CF, U+5141, U+5143, U+5145, U+5148-5149, U+514B, U+514D, U+5165, U+5168, U+516C-516D, U+5170-5171, U+5173-5174, U+5176-5178, U+517C, U+5185, U+518D, U+5197, U+5199, U+51B2-51B3, U+51B5, U+51C6, U+51CF, U+51D1, U+51E0, U+51FA-51FB, U+51FD, U+5206-5207, U+5212, U+5217, U+5219, U+521B, U+521D, U+5220, U+5224, U+5229, U+522B, U+5230, U+5236-5237, U+524D, U+5269, U+526F, U+5272, U+529B, U+529F-52A1, U+52A3, U+52A8-52AA, U+52B1, U+52BF, U+5300, U+5305, U+5316, U+5339-533B, U+5341, U+5343, U+5347, U+534A, U+534F, U+5353, U+5355, U+5357, U+535A, U+5360-5361, U+536B, U+5370-5371, U+5373, U+5378, U+5382, U+5386, U+538B, U+539F, U+53C2, U+53C8-53CD, U+53D1, U+53D6-53D8, U+53E3, U+53E5, U+53EA, U+53EC, U+53EF-53F0, U+53F2-53F3, U+53F7-53F9, U+5404, U+5408, U+540C-540E, U+5411, U+5417, U+5426, U+542B-542C, U+542F, U+544A, U+5458, U+5468, U+547D, U+548C, U+54A8, U+54C1, U+54C8, U+54CD, U+5584, U+5668, U+56DB, U+56DE, U+56E0, U+56E2, U+56F0, U+56F4, U+56FA, U+56FD-56FE, U+5706, U+5708, U+5728, U+5730, U+573A, U+5740, U+5747, U+574A, U+574F-5750, U+5757, U+575A-575B, U+5761, U+578B, U+57DF, U+57F9-57FA, U+5821, U+5854, U+585E, U+586B, U+5883, U+589E, U+58EE, U+58F0, U+5904, U+5907, U+590D, U+5916, U+591A, U+591F, U+5927, U+5929, U+5931, U+5934, U+5956-5957, U+5960, U+597D, U+5982, U+59A5, U+59CB, U+59D3-59D4, U+5A01, U+5A92, U+5B50, U+5B57-5B58, U+5B63-5B64, U+5B66, U+5B83, U+5B88-5B89, U+5B8C, U+5B98, U+5B9A, U+5B9D-5B9E, U+5BA1-5BA3, U+5BB6, U+5BB9, U+5BBD, U+5BC6, U+5BCC, U+5BDF, U+5BF8-5BF9, U+5BFB-5BFC, U+5C01, U+5C04, U+5C06, U+5C0F, U+5C11, U+5C14, U+5C1D, U+5C31, U+5C3A, U+5C3D-5C3E, U+5C40, U+5C42, U+5C45, U+5C4F, U+5C51, U+5C55, U+5C5E, U+5CED, U+5CF0, U+5D4C, U+5DC5, U+5DE5-5DE8, U+5DEE, U+5DF1-5DF2, U+5E01-5E03, U+5E08, U+5E0C, U+5E26, U+5E2E, U+5E38, U+5E45, U+5E55, U+5E72-5E74, U+5E76, U+5E7D, U+5E7F, U+5E8F, U+5E93-5E95, U+5E9F, U+5EA6, U+5EB7, U+5ED3, U+5EF6, U+5EFA, U+5F00, U+5F02-5F03, U+5F0F, U+5F15, U+5F20, U+5F31, U+5F39-5F3A, U+5F52-5F53, U+5F55, U+5F62, U+5F69, U+5F71, U+5F84-5F85, U+5F88, U+5F8B, U+5F97, U+5FA1, U+5FAA, U+5FAE, U+5FBD, U+5FC3, U+5FC5-5FC6, U+5FCD, U+5FD7, U+5FEB, U+5FF5, U+5FFD, U+6001, U+601D, U+6025, U+6027, U+603B, U+6062, U+606F, U+60A6, U+60A8, U+60C5, U+60CA, U+60E9, U+60EF, U+60F3, U+6109, U+610F, U+611F, U+614E, U+6162, U+61D2, U+6210-6211, U+6216, U+6218, U+622A, U+6233, U+6237, U+6240-6241, U+624B, U+624D, U+6253, U+6263, U+6267, U+6269, U+626B, U+6279, U+627E-6280, U+628A, U+6295-6296, U+62A4-62A5, U+62B1, U+62C5-62C6, U+62C9, U+62D2, U+62DF, U+62E5, U+62E9, U+62EC, U+62FC, U+62FF, U+6301-6302, U+6307, U+6309, U+6311, U+6355, U+6362, U+636E, U+6377, U+638C, U+6392, U+63A2, U+63A5, U+63A7-63A8, U+63AA, U+63CF-63D0, U+63D2, U+63E1, U+63ED, U+641C, U+642D, U+6458, U+6478, U+64AD, U+64CD-64CE, U+652F, U+6536, U+6539, U+653B, U+653E-653F, U+6545, U+6548, U+654F, U+6559, U+656C, U+6570, U+6574, U+6587, U+6599, U+659C, U+65AD, U+65B0, U+65B9, U+65BD, U+65E0, U+65E2, U+65E5, U+65E7-65E9, U+65F6, U+660E, U+6613, U+661F-6620, U+6628, U+662F, U+663E, U+666E-6670, U+667A, U+6682, U+6697, U+66B4, U+66F2, U+66F4, U+66FE-6700, U+6708-6709, U+670D, U+671B, U+671F, U+672A-672C, U+672F, U+673A, U+6742-6743, U+6746, U+6750, U+675F-6761, U+6765, U+677E-677F, U+6781, U+6784, U+6790, U+679A, U+679C, U+67B6, U+67D0, U+67D3, U+67E5, U+6807-6808, U+680F, U+6837-6839, U+683C, U+6846, U+6848, U+684C, U+6863, U+68C0, U+68EE, U+6982, U+69DB, U+69FD, U+6A21, U+6AA2, U+6B21-6B22, U+6B3E, U+6B62-6B65, U+6B7B, U+6B8A, U+6BB5, U+6BCF, U+6BD4, U+6BEB, U+6C0F, U+6C34, U+6C38, U+6C42, U+6C47, U+6C61, U+6CA1, U+6CBF, U+6CC4, U+6CD5, U+6CDB, U+6CE8, U+6D01, U+6D1E, U+6D3B, U+6D3E, U+6D41, U+6D45, U+6D4B, U+6D4F, U+6D6E, U+6D88-6D89, U+6DB5, U+6DF1, U+6DF7, U+6DFB, U+6E05, U+6E10, U+6E21, U+6E29, U+6E2C, U+6E2F, U+6E32, U+6E7E, U+6E90, U+6EAF, U+6ED1, U+6EDA, U+6EE1, U+6EE4, U+6F0F, U+6F14, U+6F5C, U+6FB3, U+6FC0, U+7070, U+7075, U+70B9, U+70C8, U+70ED, U+7126, U+7136, U+7167, U+716E, U+719F, U+722C, U+7231, U+7236, U+7247-7248, U+724C, U+7269, U+7279, U+72B6, U+72EC, U+731C, U+732E, U+7387, U+73AF-73B0, U+7403, U+7406, U+74F6, U+751F, U+7528, U+7531, U+7535, U+753B, U+7545, U+754C, U+7559, U+7565, U+7591, U+7597, U+767B, U+767D-767E, U+7684, U+76CA, U+76D0-76D2, U+76D6, U+76D8, U+76EE, U+76F2, U+76F4, U+76F8, U+7701, U+770B, U+771F, U+773C, U+7740, U+77E5, U+77E9, U+77ED, U+7801, U+7814, U+7834, U+7840, U+786C, U+786E, U+788D, U+7891, U+78B3, U+78C1, U+793A, U+793E, U+7981, U+79BB, U+79C0-79C1, U+79CD, U+79D2, U+79EF-79F0, U+79FB, U+7A0B, U+7A0D, U+7A33, U+7A76, U+7A7A, U+7A81, U+7A97, U+7ACB, U+7AD9, U+7ADE, U+7AE0, U+7AEF, U+7B26, U+7B2C, U+7B49, U+7B56, U+7B5B, U+7B79, U+7B7E, U+7B80, U+7B97, U+7BA1, U+7BAD, U+7BB1, U+7C7B, U+7C92, U+7C97-7C98, U+7CBE, U+7CCA, U+7CFB, U+7D20, U+7D22, U+7D27, U+7D2B, U+7D2F, U+7E41, U+7EA2, U+7EA6-7EA7, U+7EAF, U+7EB2-7EB3, U+7EBF, U+7EC3-7EC4, U+7EC6-7EC8, U+7ECD, U+7ECF, U+7ED3, U+7ED5, U+7ED8, U+7EDC-7EDD, U+7EDF, U+7EE7, U+7EEA, U+7EED, U+7EF4, U+7EFC, U+7EFF-7F00, U+7F13, U+7F16, U+7F18, U+7F1D, U+7F29, U+7F3A, U+7F51, U+7F5A, U+7F6E, U+7F72, U+7F8E, U+7FFB, U+8003, U+8005, U+800C, U+8017, U+8026, U+804C, U+8054, U+805A, U+80C1, U+80C6, U+80CC, U+80DC, U+80FD, U+811A, U+8131, U+81EA, U+81F3-81F4, U+822A, U+822C, U+826F, U+8272-8273, U+8282, U+82F1, U+82F9, U+8303, U+8350, U+83B7, U+83DC, U+8425, U+8457, U+84DD, U+85CF, U+8651, U+866B, U+867D, U+86D9, U+878D, U+884C, U+8861, U+8865, U+8868, U+88AB, U+88C2, U+88C5, U+897F, U+8981, U+8986, U+89C1-89C2, U+89C4, U+89C6, U+89C8-89C9, U+89D2, U+89E3, U+89E6, U+8A00, U+8A89, U+8B66, U+8BA1, U+8BA4, U+8BA8-8BA9, U+8BAD-8BAE, U+8BB0, U+8BB8, U+8BBA, U+8BBE-8BBF, U+8BC1, U+8BC4, U+8BC6, U+8BC9-8BCA, U+8BCD, U+8BD1, U+8BD5, U+8BDD, U+8BE2, U+8BE5-8BE6, U+8BED, U+8BEF, U+8BF4, U+8BF7, U+8BFA-8BFB, U+8BFE, U+8C03, U+8C0D, U+8C28, U+8C41, U+8C61, U+8D1F, U+8D21, U+8D23, U+8D25-8D28, U+8D34-8D35, U+8D39, U+8D44, U+8D4B, U+8D56, U+8D5E, U+8D77, U+8D85, U+8D8A-8D8B, U+8DB3, U+8DC3, U+8DDD, U+8DDF, U+8DE8, U+8DEF, U+8DF3, U+8DF5, U+8E2A, U+8EAB, U+8F6C, U+8F6E-8F6F, U+8F7B, U+8F7D, U+8F83, U+8F85, U+8F91, U+8F93, U+8FA8, U+8FB9, U+8FBE, U+8FC1, U+8FC5, U+8FC7, U+8FCE, U+8FD0-8FD1, U+8FD4, U+8FD9, U+8FDB-8FDF, U+8FED, U+8FF0, U+8FF9, U+8FFD, U+9000-9002, U+9009, U+900F-9010, U+9012, U+9014, U+9017, U+901A, U+901F-9020, U+903B, U+9047, U+904D, U+9057, U+9075, U+907F, U+90AE, U+90E8, U+90FD, U+914D, U+9192, U+91C7, U+91CA, U+91CC-91CD, U+91CF, U+91D1, U+9274, U+9488, U+949F, U+94A5, U+94A9, U+94AE, U+94FE, U+9500-9501, U+9519-951A, U+952E, U+957F, U+95E8, U+95ED-95EE, U+95F2, U+95F4, U+9605, U+9608, U+961F, U+9632, U+9635-9636, U+963B, U+9645-9646, U+964D, U+9650, U+9661, U+9664, U+9669, U+9686, U+968F-9690, U+9694, U+969C, U+96BE, U+96C5-96C6, U+96F6, U+9700, U+9732, U+9752, U+9759, U+975E, U+9760, U+9762, U+9769, U+97F3, U+9875-9876, U+9879-987B, U+987E, U+9884, U+9886, U+9888, U+9891, U+9896, U+9898, U+989C-989D, U+98CE, U+9970, U+9988, U+9996, U+9999, U+9A71, U+9A8C, U+9AA4, U+9AA8, U+9AD4, U+9AD8, U+9B54, U+9C9C, U+9EC4, U+9ED1, U+9ED8, U+9F13, U+9F20, U+9F50, U+9F84, U+FF01, U+FF05, U+FF08-FF09, U+FF0C, U+FF1A, U+FF1F;
+}
+
+@font-face {
+  font-family: 'PingFang SC Subset';
+  src: url('/fonts/subsets/pingfang-sc-subset-bold.woff2') format('woff2'),
+       url('/fonts/subsets/pingfang-sc-subset-bold.woff') format('woff');
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+  unicode-range: U+4E00-4E01, U+4E09-4E0B, U+4E0D-4E0E, U+4E13-4E14, U+4E16, U+4E1A, U+4E1D, U+4E24-4E25, U+4E2A, U+4E2D, U+4E30, U+4E32, U+4E34, U+4E3A-4E3B, U+4E3E, U+4E45, U+4E49, U+4E4B, U+4E4F, U+4E5F-4E60, U+4E71, U+4E86, U+4E89, U+4E8B-4E8C, U+4E8E, U+4E91-4E92, U+4E94, U+4E9A-4E9B, U+4EA4, U+4EA7, U+4EAB, U+4EAE, U+4EBA, U+4EC5, U+4ECA-4ECB, U+4ECD-4ECE, U+4ED3, U+4ED6, U+4ED8, U+4EE3-4EE5, U+4EEA, U+4EEC, U+4EF6-4EF7, U+4EFB, U+4EFD, U+4F01, U+4F11, U+4F18, U+4F1A, U+4F20, U+4F2A, U+4F30, U+4F3C, U+4F46, U+4F4D-4F4F, U+4F53, U+4F55, U+4F59, U+4F5C, U+4F73, U+4F7F, U+4F8B, U+4F9B, U+4F9D, U+4FBF, U+4FDD, U+4FE1, U+4FEE, U+500D, U+501F, U+503A, U+503C, U+504F, U+505A, U+505C, U+5065, U+50A8, U+50CF, U+5141, U+5143, U+5145, U+5148-5149, U+514B, U+514D, U+5165, U+5168, U+516C-516D, U+5170-5171, U+5173-5174, U+5176-5178, U+517C, U+5185, U+518D, U+5197, U+5199, U+51B2-51B3, U+51B5, U+51C6, U+51CF, U+51D1, U+51E0, U+51FA-51FB, U+51FD, U+5206-5207, U+5212, U+5217, U+5219, U+521B, U+521D, U+5220, U+5224, U+5229, U+522B, U+5230, U+5236-5237, U+524D, U+5269, U+526F, U+5272, U+529B, U+529F-52A1, U+52A3, U+52A8-52AA, U+52B1, U+52BF, U+5300, U+5305, U+5316, U+5339-533B, U+5341, U+5343, U+5347, U+534A, U+534F, U+5353, U+5355, U+5357, U+535A, U+5360-5361, U+536B, U+5370-5371, U+5373, U+5378, U+5382, U+5386, U+538B, U+539F, U+53C2, U+53C8-53CD, U+53D1, U+53D6-53D8, U+53E3, U+53E5, U+53EA, U+53EC, U+53EF-53F0, U+53F2-53F3, U+53F7-53F9, U+5404, U+5408, U+540C-540E, U+5411, U+5417, U+5426, U+542B-542C, U+542F, U+544A, U+5458, U+5468, U+547D, U+548C, U+54A8, U+54C1, U+54C8, U+54CD, U+5584, U+5668, U+56DB, U+56DE, U+56E0, U+56E2, U+56F0, U+56F4, U+56FA, U+56FD-56FE, U+5706, U+5708, U+5728, U+5730, U+573A, U+5740, U+5747, U+574A, U+574F-5750, U+5757, U+575A-575B, U+5761, U+578B, U+57DF, U+57F9-57FA, U+5821, U+5854, U+585E, U+586B, U+5883, U+589E, U+58EE, U+58F0, U+5904, U+5907, U+590D, U+5916, U+591A, U+591F, U+5927, U+5929, U+5931, U+5934, U+5956-5957, U+5960, U+597D, U+5982, U+59A5, U+59CB, U+59D3-59D4, U+5A01, U+5A92, U+5B50, U+5B57-5B58, U+5B63-5B64, U+5B66, U+5B83, U+5B88-5B89, U+5B8C, U+5B98, U+5B9A, U+5B9D-5B9E, U+5BA1-5BA3, U+5BB6, U+5BB9, U+5BBD, U+5BC6, U+5BCC, U+5BDF, U+5BF8-5BF9, U+5BFB-5BFC, U+5C01, U+5C04, U+5C06, U+5C0F, U+5C11, U+5C14, U+5C1D, U+5C31, U+5C3A, U+5C3D-5C3E, U+5C40, U+5C42, U+5C45, U+5C4F, U+5C51, U+5C55, U+5C5E, U+5CED, U+5CF0, U+5D4C, U+5DC5, U+5DE5-5DE8, U+5DEE, U+5DF1-5DF2, U+5E01-5E03, U+5E08, U+5E0C, U+5E26, U+5E2E, U+5E38, U+5E45, U+5E55, U+5E72-5E74, U+5E76, U+5E7D, U+5E7F, U+5E8F, U+5E93-5E95, U+5E9F, U+5EA6, U+5EB7, U+5ED3, U+5EF6, U+5EFA, U+5F00, U+5F02-5F03, U+5F0F, U+5F15, U+5F20, U+5F31, U+5F39-5F3A, U+5F52-5F53, U+5F55, U+5F62, U+5F69, U+5F71, U+5F84-5F85, U+5F88, U+5F8B, U+5F97, U+5FA1, U+5FAA, U+5FAE, U+5FBD, U+5FC3, U+5FC5-5FC6, U+5FCD, U+5FD7, U+5FEB, U+5FF5, U+5FFD, U+6001, U+601D, U+6025, U+6027, U+603B, U+6062, U+606F, U+60A6, U+60A8, U+60C5, U+60CA, U+60E9, U+60EF, U+60F3, U+6109, U+610F, U+611F, U+614E, U+6162, U+61D2, U+6210-6211, U+6216, U+6218, U+622A, U+6233, U+6237, U+6240-6241, U+624B, U+624D, U+6253, U+6263, U+6267, U+6269, U+626B, U+6279, U+627E-6280, U+628A, U+6295-6296, U+62A4-62A5, U+62B1, U+62C5-62C6, U+62C9, U+62D2, U+62DF, U+62E5, U+62E9, U+62EC, U+62FC, U+62FF, U+6301-6302, U+6307, U+6309, U+6311, U+6355, U+6362, U+636E, U+6377, U+638C, U+6392, U+63A2, U+63A5, U+63A7-63A8, U+63AA, U+63CF-63D0, U+63D2, U+63E1, U+63ED, U+641C, U+642D, U+6458, U+6478, U+64AD, U+64CD-64CE, U+652F, U+6536, U+6539, U+653B, U+653E-653F, U+6545, U+6548, U+654F, U+6559, U+656C, U+6570, U+6574, U+6587, U+6599, U+659C, U+65AD, U+65B0, U+65B9, U+65BD, U+65E0, U+65E2, U+65E5, U+65E7-65E9, U+65F6, U+660E, U+6613, U+661F-6620, U+6628, U+662F, U+663E, U+666E-6670, U+667A, U+6682, U+6697, U+66B4, U+66F2, U+66F4, U+66FE-6700, U+6708-6709, U+670D, U+671B, U+671F, U+672A-672C, U+672F, U+673A, U+6742-6743, U+6746, U+6750, U+675F-6761, U+6765, U+677E-677F, U+6781, U+6784, U+6790, U+679A, U+679C, U+67B6, U+67D0, U+67D3, U+67E5, U+6807-6808, U+680F, U+6837-6839, U+683C, U+6846, U+6848, U+684C, U+6863, U+68C0, U+68EE, U+6982, U+69DB, U+69FD, U+6A21, U+6AA2, U+6B21-6B22, U+6B3E, U+6B62-6B65, U+6B7B, U+6B8A, U+6BB5, U+6BCF, U+6BD4, U+6BEB, U+6C0F, U+6C34, U+6C38, U+6C42, U+6C47, U+6C61, U+6CA1, U+6CBF, U+6CC4, U+6CD5, U+6CDB, U+6CE8, U+6D01, U+6D1E, U+6D3B, U+6D3E, U+6D41, U+6D45, U+6D4B, U+6D4F, U+6D6E, U+6D88-6D89, U+6DB5, U+6DF1, U+6DF7, U+6DFB, U+6E05, U+6E10, U+6E21, U+6E29, U+6E2C, U+6E2F, U+6E32, U+6E7E, U+6E90, U+6EAF, U+6ED1, U+6EDA, U+6EE1, U+6EE4, U+6F0F, U+6F14, U+6F5C, U+6FB3, U+6FC0, U+7070, U+7075, U+70B9, U+70C8, U+70ED, U+7126, U+7136, U+7167, U+716E, U+719F, U+722C, U+7231, U+7236, U+7247-7248, U+724C, U+7269, U+7279, U+72B6, U+72EC, U+731C, U+732E, U+7387, U+73AF-73B0, U+7403, U+7406, U+74F6, U+751F, U+7528, U+7531, U+7535, U+753B, U+7545, U+754C, U+7559, U+7565, U+7591, U+7597, U+767B, U+767D-767E, U+7684, U+76CA, U+76D0-76D2, U+76D6, U+76D8, U+76EE, U+76F2, U+76F4, U+76F8, U+7701, U+770B, U+771F, U+773C, U+7740, U+77E5, U+77E9, U+77ED, U+7801, U+7814, U+7834, U+7840, U+786C, U+786E, U+788D, U+7891, U+78B3, U+78C1, U+793A, U+793E, U+7981, U+79BB, U+79C0-79C1, U+79CD, U+79D2, U+79EF-79F0, U+79FB, U+7A0B, U+7A0D, U+7A33, U+7A76, U+7A7A, U+7A81, U+7A97, U+7ACB, U+7AD9, U+7ADE, U+7AE0, U+7AEF, U+7B26, U+7B2C, U+7B49, U+7B56, U+7B5B, U+7B79, U+7B7E, U+7B80, U+7B97, U+7BA1, U+7BAD, U+7BB1, U+7C7B, U+7C92, U+7C97-7C98, U+7CBE, U+7CCA, U+7CFB, U+7D20, U+7D22, U+7D27, U+7D2B, U+7D2F, U+7E41, U+7EA2, U+7EA6-7EA7, U+7EAF, U+7EB2-7EB3, U+7EBF, U+7EC3-7EC4, U+7EC6-7EC8, U+7ECD, U+7ECF, U+7ED3, U+7ED5, U+7ED8, U+7EDC-7EDD, U+7EDF, U+7EE7, U+7EEA, U+7EED, U+7EF4, U+7EFC, U+7EFF-7F00, U+7F13, U+7F16, U+7F18, U+7F1D, U+7F29, U+7F3A, U+7F51, U+7F5A, U+7F6E, U+7F72, U+7F8E, U+7FFB, U+8003, U+8005, U+800C, U+8017, U+8026, U+804C, U+8054, U+805A, U+80C1, U+80C6, U+80CC, U+80DC, U+80FD, U+811A, U+8131, U+81EA, U+81F3-81F4, U+822A, U+822C, U+826F, U+8272-8273, U+8282, U+82F1, U+82F9, U+8303, U+8350, U+83B7, U+83DC, U+8425, U+8457, U+84DD, U+85CF, U+8651, U+866B, U+867D, U+86D9, U+878D, U+884C, U+8861, U+8865, U+8868, U+88AB, U+88C2, U+88C5, U+897F, U+8981, U+8986, U+89C1-89C2, U+89C4, U+89C6, U+89C8-89C9, U+89D2, U+89E3, U+89E6, U+8A00, U+8A89, U+8B66, U+8BA1, U+8BA4, U+8BA8-8BA9, U+8BAD-8BAE, U+8BB0, U+8BB8, U+8BBA, U+8BBE-8BBF, U+8BC1, U+8BC4, U+8BC6, U+8BC9-8BCA, U+8BCD, U+8BD1, U+8BD5, U+8BDD, U+8BE2, U+8BE5-8BE6, U+8BED, U+8BEF, U+8BF4, U+8BF7, U+8BFA-8BFB, U+8BFE, U+8C03, U+8C0D, U+8C28, U+8C41, U+8C61, U+8D1F, U+8D21, U+8D23, U+8D25-8D28, U+8D34-8D35, U+8D39, U+8D44, U+8D4B, U+8D56, U+8D5E, U+8D77, U+8D85, U+8D8A-8D8B, U+8DB3, U+8DC3, U+8DDD, U+8DDF, U+8DE8, U+8DEF, U+8DF3, U+8DF5, U+8E2A, U+8EAB, U+8F6C, U+8F6E-8F6F, U+8F7B, U+8F7D, U+8F83, U+8F85, U+8F91, U+8F93, U+8FA8, U+8FB9, U+8FBE, U+8FC1, U+8FC5, U+8FC7, U+8FCE, U+8FD0-8FD1, U+8FD4, U+8FD9, U+8FDB-8FDF, U+8FED, U+8FF0, U+8FF9, U+8FFD, U+9000-9002, U+9009, U+900F-9010, U+9012, U+9014, U+9017, U+901A, U+901F-9020, U+903B, U+9047, U+904D, U+9057, U+9075, U+907F, U+90AE, U+90E8, U+90FD, U+914D, U+9192, U+91C7, U+91CA, U+91CC-91CD, U+91CF, U+91D1, U+9274, U+9488, U+949F, U+94A5, U+94A9, U+94AE, U+94FE, U+9500-9501, U+9519-951A, U+952E, U+957F, U+95E8, U+95ED-95EE, U+95F2, U+95F4, U+9605, U+9608, U+961F, U+9632, U+9635-9636, U+963B, U+9645-9646, U+964D, U+9650, U+9661, U+9664, U+9669, U+9686, U+968F-9690, U+9694, U+969C, U+96BE, U+96C5-96C6, U+96F6, U+9700, U+9732, U+9752, U+9759, U+975E, U+9760, U+9762, U+9769, U+97F3, U+9875-9876, U+9879-987B, U+987E, U+9884, U+9886, U+9888, U+9891, U+9896, U+9898, U+989C-989D, U+98CE, U+9970, U+9988, U+9996, U+9999, U+9A71, U+9A8C, U+9AA4, U+9AA8, U+9AD4, U+9AD8, U+9B54, U+9C9C, U+9EC4, U+9ED1, U+9ED8, U+9F13, U+9F20, U+9F50, U+9F84, U+FF01, U+FF05, U+FF08-FF09, U+FF0C, U+FF1A, U+FF1F;
+}
+
+/* 优化的中文字体栈 */
+.font-chinese {
+  font-family: 'PingFang SC Subset', 'PingFang SC', 'Hiragino Sans GB', 
+               'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC', 
+               'WenQuanYi Micro Hei', sans-serif;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 字体预加载提示 */
+/* 在HTML head中添加：
+<link rel="preload" href="/fonts/subsets/pingfang-sc-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/subsets/pingfang-sc-subset-bold.woff2" as="font" type="font/woff2" crossorigin>
+*/
+```
+
+### 4. 更新layout.tsx预加载配置
+
+在 `src/app/[locale]/layout.tsx` 中添加字体预加载：
+
+```tsx
+{/* 字体子集预加载 */}
+<link
+  rel='preload'
+  href='/fonts/subsets/pingfang-sc-subset.woff2'
+  as='font'
+  type='font/woff2'
+  crossOrigin='anonymous'
+/>
+<link
+  rel='preload'
+  href='/fonts/subsets/pingfang-sc-subset-bold.woff2'
+  as='font'
+  type='font/woff2'
+  crossOrigin='anonymous'
+/>
+```
+
+### 5. 验证实施效果
+
+```bash
+# 运行验证脚本
+node scripts/verify-font-subset.js
+
+# 检查字体文件大小
+ls -lh public/fonts/subsets/
+
+# 测试字体显示效果
+pnpm dev
+```
+
+## 预期性能改进
+
+- **文件大小减少**: 94.7%
+- **加载时间改进**: 30-50ms
+- **LCP改进**: 30-50ms
+- **缓存效率**: 95%
+
+## 注意事项
+
+1. **字体版权**: 确保有合法的字体使用权限
+2. **字符覆盖**: 定期更新字符集以覆盖新增内容
+3. **回退策略**: 保持完整的字体回退链
+4. **浏览器兼容**: 测试不同浏览器的字体显示效果
+5. **缓存策略**: 配置适当的HTTP缓存头
+
+## 维护建议
+
+- 每季度重新分析字符使用情况
+- 监控字体加载性能指标
+- 定期更新字体子集文件
+- 保持字体回退策略的有效性

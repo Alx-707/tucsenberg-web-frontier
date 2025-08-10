@@ -1,0 +1,468 @@
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/instrumentation.ts
+  16:7  warning  Unused eslint-disable directive (no problems were reported from 'no-console')
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/next.config.ts
+  72:3  error  Async method 'headers' has no 'await' expression  require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/__tests__/dropdown-menu.test.tsx
+   20:88  warning  Elements with the ARIA role "menuitemradio" must have the following attributes defined: aria-checked  jsx-a11y/role-has-required-aria-props
+  656:72  error    No magic number: 3                                                                                    no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/constants/test-constants.ts
+  230:56  error  No magic number: 2                                     no-magic-numbers
+  366:26  error  No magic number: 0.1                                   no-magic-numbers
+  366:32  error  No magic number: 0.2                                   no-magic-numbers
+  501:1   error  File has too many lines (517). Maximum allowed is 500  max-lines
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/__tests__/use-breakpoint.test.ts
+   16:9   error  'mockAddEventListener' is already declared in the upper scope on line 9 column 3      no-shadow
+   17:9   error  'mockRemoveEventListener' is already declared in the upper scope on line 10 column 3  no-shadow
+   18:9   error  'mockDispatchEvent' is already declared in the upper scope on line 11 column 3        no-shadow
+   20:9   error  'mockMatchMedia' is already declared in the upper scope on line 12 column 3           no-shadow
+   21:9   error  'mockMediaQueryList' is already declared in the upper scope on line 13 column 3       no-shadow
+   33:9   error  'mockWindowDimensions' is already declared in the upper scope on line 14 column 3     no-shadow
+   38:9   error  'mockWindow' is already declared in the upper scope on line 8 column 3                no-shadow
+  141:41  error  No magic number: 650                                                                  no-magic-numbers
+  198:41  error  No magic number: 1280                                                                 no-magic-numbers
+  214:41  error  No magic number: 650                                                                  no-magic-numbers
+  264:41  error  No magic number: 1024                                                                 no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/__tests__/use-performance-monitor.test.ts
+    8:19  error  No magic number: 50    no-magic-numbers
+    8:24  error  No magic number: 1024  no-magic-numbers
+    8:31  error  No magic number: 1024  no-magic-numbers
+    9:26  error  No magic number: 1024  no-magic-numbers
+    9:33  error  No magic number: 1024  no-magic-numbers
+   10:26  error  No magic number: 1024  no-magic-numbers
+   10:33  error  No magic number: 1024  no-magic-numbers
+   85:30  error  No magic number: 1024  no-magic-numbers
+   85:37  error  No magic number: 1024  no-magic-numbers
+  255:24  error  No magic number: 30    no-magic-numbers
+  255:29  error  No magic number: 1024  no-magic-numbers
+  255:36  error  No magic number: 1024  no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/__tests__/use-reduced-motion.test.ts
+  201:50  error  No magic number: 2  no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/__tests__/use-theme-toggle.test.ts
+  271:32  error  No magic number: 400  no-magic-numbers
+  297:32  error  No magic number: 50   no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-breakpoint.ts
+  51:7  error  Avoid initializing state in an effect. Instead, pass "width"'s initial value to its `useState`  react-you-might-not-need-an-effect/no-initialize-state
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-intersection-observer.ts
+  126:9  error  Avoid using state and effects as an event handler. Instead, call the event handling code directly when the event occurs  react-you-might-not-need-an-effect/no-event-handler
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/hooks/use-keyboard-navigation.ts
+  122:6  warning  React Hook useCallback has a missing dependency: 'containerRef'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/content-validation.test.ts
+   57:18  error  '_title' is assigned a value but never used        no-unused-vars
+   58:24  error  '_publishedAt' is assigned a value but never used  no-unused-vars
+  205:20  error  '_excerpt' is assigned a value but never used      no-unused-vars
+  206:17  error  '_tags' is assigned a value but never used         no-unused-vars
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/enhanced-web-vitals.test.ts
+  272:57  warning  Async arrow function has no 'await' expression                                          require-await
+  309:54  warning  Async arrow function has no 'await' expression                                          require-await
+  325:58  warning  Async arrow function has no 'await' expression                                          require-await
+  341:56  warning  Async arrow function has no 'await' expression                                          require-await
+  551:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  562:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  579:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  596:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  609:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  618:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  634:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  650:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+  665:15  error    'EnhancedWebVitalsCollector' is already declared in the upper scope on line 3 column 5  no-shadow
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/i18n-cache.test.ts
+  305:7  warning  Do not use 'new' for side effects  no-new
+  315:9  warning  Do not use 'new' for side effects  no-new
+  323:9  warning  Do not use 'new' for side effects  no-new
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/theme-analytics/setup.ts
+  211:27  error  No magic number: 10  no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/translation-manager.test.ts
+  270:35  error  No magic number: 250  no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/__tests__/web-vitals-collector.test.ts
+  115:13  error    'newCollector' is assigned a value but never used                      no-unused-vars
+  115:13  error    'newCollector' is assigned a value but never used                      @typescript-eslint/no-unused-vars
+  128:9   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  230:42  error    No magic number: 4                                                     no-magic-numbers
+  233:50  error    No magic number: 1920                                                  no-magic-numbers
+  234:51  error    No magic number: 1080                                                  no-magic-numbers
+  489:9   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  500:9   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+  526:9   warning  Expected an assignment or function call and instead saw an expression  @typescript-eslint/no-unused-expressions
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/enhanced-web-vitals.ts
+  54:68  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  81:42  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  94:44  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/locale-detector.ts
+   14:27  error  Method 'getLocaleFromMap' has a complexity of 17. Maximum allowed is 15     complexity
+   48:30  error  Method 'getLocaleFromGeoMap' has a complexity of 16. Maximum allowed is 15  complexity
+  101:14  error  '_error' is defined but never used                                          no-unused-vars
+  101:14  error  '_error' is defined but never used                                          @typescript-eslint/no-unused-vars
+  133:22  error  '_error' is defined but never used                                          no-unused-vars
+  133:22  error  '_error' is defined but never used                                          @typescript-eslint/no-unused-vars
+  141:14  error  '_error' is defined but never used                                          no-unused-vars
+  141:14  error  '_error' is defined but never used                                          @typescript-eslint/no-unused-vars
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-manager-core.ts
+  192:5   error  Unexpected console statement. Only these console methods are allowed: error, warn  no-console
+  198:3   error  Async method 'checkLingoTranslation' has no 'await' expression                     require-await
+  209:3   error  Async method 'validateTranslationConsistency' has no 'await' expression            require-await
+  280:3   error  Async method 'getQualityTrends' has no 'await' expression                          require-await
+  289:3   error  Async method 'validateTranslationQuality' has no 'await' expression                require-await
+  319:9   error  Unary operator '++' used                                                           no-plusplus
+  334:52  error  No magic number: 0.1                                                               no-magic-numbers
+  365:3   error  Async method 'getQualityTrend' has no 'await' expression                           require-await
+  376:32  error  No magic number: 0.3                                                               no-magic-numbers
+  376:38  error  No magic number: 0.7                                                               no-magic-numbers
+  377:53  error  No magic number: 50                                                                no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-quality-checker.ts
+   98:80  error  No magic number: 2                                                       no-magic-numbers
+  130:3   error  Async method 'validateTranslationConsistency' has no 'await' expression  require-await
+  162:7   error  Unary operator '++' used                                                 no-plusplus
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/translation-utils.ts
+  111:36  error  No magic number: 30                                                     no-magic-numbers
+  111:54  error  No magic number: 20                                                     no-magic-numbers
+  111:74  error  No magic number: 10                                                     no-magic-numbers
+  161:23  error  No magic number: 10                                                     no-magic-numbers
+  176:8   error  Async function 'checkTerminologyConsistency' has no 'await' expression  require-await
+  216:10  error  Unnecessary 'else' after 'return'                                       no-else-return
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/web-vitals/alert-system.ts
+  192:61  error  No magic number: 36                       no-magic-numbers
+  192:72  error  No magic number: 2                        no-magic-numbers
+  192:75  error  No magic number: 9                        no-magic-numbers
+  272:59  error  No magic number: 36                       no-magic-numbers
+  272:70  error  No magic number: 2                        no-magic-numbers
+  272:73  error  No magic number: 9                        no-magic-numbers
+  308:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  327:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/web-vitals/baseline-manager.ts
+  143:23  error  No magic number: 0.25  no-magic-numbers
+  143:38  error  No magic number: 30    no-magic-numbers
+  144:28  error  No magic number: 0.1   no-magic-numbers
+  144:42  error  No magic number: 15    no-magic-numbers
+  147:23  error  No magic number: 4000  no-magic-numbers
+  147:38  error  No magic number: 30    no-magic-numbers
+  148:28  error  No magic number: 2500  no-magic-numbers
+  148:43  error  No magic number: 15    no-magic-numbers
+  151:23  error  No magic number: 300   no-magic-numbers
+  151:37  error  No magic number: 30    no-magic-numbers
+  152:42  error  No magic number: 15    no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/lib/web-vitals/collector.ts
+  256:28  error  Method 'getDetailedMetrics' has a complexity of 18. Maximum allowed is 15  complexity
+  281:31  error  Unexpected any. Specify a different type                                   @typescript-eslint/no-explicit-any
+  281:52  error  No magic number: 4                                                         no-magic-numbers
+  282:49  error  No magic number: 4                                                         no-magic-numbers
+  285:39  error  No magic number: 1920                                                      no-magic-numbers
+  286:41  error  No magic number: 1080                                                      no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/test/mock-templates.tsx
+  23:67  error  Expected to return a value at the end of arrow function  consistent-return
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/comprehensive-error-handling.test.ts
+   59:7   error    Unary operator '++' used                                                   no-plusplus
+   81:14  error    'error' is defined but never used                                          no-unused-vars
+   81:14  error    'error' is defined but never used                                          @typescript-eslint/no-unused-vars
+   94:7   error    Generic Object Injection Sink                                              security/detect-object-injection
+   95:22  error    Unary operator '++' used                                                   no-plusplus
+   96:7   error    Unary operator '++' used                                                   no-plusplus
+   99:67  error    No magic number: 0.8                                                       no-magic-numbers
+  104:3   warning  Async method 'recoverFromError' has no 'await' expression                  require-await
+  106:5   error    'context' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  106:5   error    'context' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  153:7   error    Generic Object Injection Sink                                              security/detect-object-injection
+  166:7   error    'apiSimulator' is assigned a value but never used                          no-unused-vars
+  166:7   error    'apiSimulator' is assigned a value but never used                          @typescript-eslint/no-unused-vars
+  167:7   error    'boundaryTester' is assigned a value but never used                        no-unused-vars
+  167:7   error    'boundaryTester' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+  168:7   error    'recoveryTester' is assigned a value but never used                        no-unused-vars
+  168:7   error    'recoveryTester' is assigned a value but never used                        @typescript-eslint/no-unused-vars
+  186:39  warning  Async arrow function has no 'await' expression                             require-await
+  191:27  error    No magic number: 5                                                         no-magic-numbers
+  196:13  error    No magic number: 5                                                         no-magic-numbers
+  206:11  error    No magic number: 5                                                         no-magic-numbers
+  212:52  error    No magic number: 5                                                         no-magic-numbers
+  216:39  warning  Async arrow function has no 'await' expression                             require-await
+  221:27  error    No magic number: 5                                                         no-magic-numbers
+  226:13  error    No magic number: 5                                                         no-magic-numbers
+  233:58  error    No magic number: 150                                                       no-magic-numbers
+  240:11  error    No magic number: 5                                                         no-magic-numbers
+  251:44  warning  Async arrow function has no 'await' expression                             require-await
+  252:9   error    Unary operator '++' used                                                   no-plusplus
+  253:26  error    No magic number: 5                                                         no-magic-numbers
+  260:27  error    No magic number: 5                                                         no-magic-numbers
+  265:13  error    No magic number: 5                                                         no-magic-numbers
+  272:58  error    No magic number: 150                                                       no-magic-numbers
+  278:9   error    No magic number: 5                                                         no-magic-numbers
+  291:39  warning  Async arrow function has no 'await' expression                             require-await
+  292:41  warning  Async arrow function has no 'await' expression                             require-await
+  293:39  warning  Async arrow function has no 'await' expression                             require-await
+  309:39  warning  Async arrow function has no 'await' expression                             require-await
+  312:28  error    No magic number: 5                                                         no-magic-numbers
+  382:40  warning  Async arrow function has no 'await' expression                             require-await
+  383:9   error    Unary operator '++' used                                                   no-plusplus
+  384:31  error    No magic number: 5                                                         no-magic-numbers
+  397:27  error    No magic number: 4                                                         no-magic-numbers
+  416:43  warning  Async arrow function has no 'await' expression                             require-await
+  421:29  error    No magic number: 5                                                         no-magic-numbers
+  431:16  error    Generic Object Injection Sink                                              security/detect-object-injection
+  443:36  warning  Async arrow function has no 'await' expression                             require-await
+  447:45  error    detect Math.random()                                                       security-node/detect-insecure-randomness
+  447:61  error    No magic number: 0.5                                                       no-magic-numbers
+  455:29  error    No magic number: 10                                                        no-magic-numbers
+  484:36  warning  Async arrow function has no 'await' expression                             require-await
+  485:19  error    No magic number: 2                                                         no-magic-numbers
+  493:66  error    No magic number: 10                                                        no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/error-boundary.test.tsx
+  116:10  error    'AsyncErrorComponent' is defined but never used  no-unused-vars
+  116:10  error    'AsyncErrorComponent' is defined but never used  @typescript-eslint/no-unused-vars
+  121:3   error    'React' is not defined                           no-undef
+  146:14  error    Generic Object Injection Sink                    security/detect-object-injection
+  158:79  warning  Async arrow function has no 'await' expression   require-await
+  187:73  warning  Async arrow function has no 'await' expression   require-await
+  201:66  warning  Async arrow function has no 'await' expression   require-await
+  209:29  error    'expected' is assigned a value but never used    no-unused-vars
+  209:29  error    'expected' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  243:7   error    Unary operator '++' used                         no-plusplus
+  276:7   error    Unary operator '++' used                         no-plusplus
+  283:7   error    Unary operator '++' used                         no-plusplus
+  289:7   error    Unary operator '++' used                         no-plusplus
+  297:64  warning  Async arrow function has no 'await' expression   require-await
+  315:85  warning  Async arrow function has no 'await' expression   require-await
+  363:65  warning  Async arrow function has no 'await' expression   require-await
+  387:67  warning  Async arrow function has no 'await' expression   require-await
+  435:69  warning  Async arrow function has no 'await' expression   require-await
+  449:69  warning  Async arrow function has no 'await' expression   require-await
+  463:59  warning  Async arrow function has no 'await' expression   require-await
+  479:71  warning  Async arrow function has no 'await' expression   require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/error-handling-summary.test.ts
+   98:68  error    No magic number: 1000000                        no-magic-numbers
+  108:61  warning  Async arrow function has no 'await' expression  require-await
+  109:9   error    Unary operator '++' used                        no-plusplus
+  110:24  error    No magic number: 3                              no-magic-numbers
+  119:9   error    No magic number: 3                              no-magic-numbers
+  120:9   error    No magic number: 10                             no-magic-numbers
+  123:36  error    No magic number: 3                              no-magic-numbers
+  219:57  error    No magic number: 50                             no-magic-numbers
+  220:57  error    No magic number: 50                             no-magic-numbers
+  222:35  error    No magic number: 50                             no-magic-numbers
+  223:35  error    No magic number: 50                             no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/form-validation-boundary.test.ts
+   37:17  error  No magic number: 1024         no-magic-numbers
+   37:24  error  No magic number: 1024         no-magic-numbers
+   82:7   error  Unsafe Regular Expression     security/detect-unsafe-regex
+  207:7   error  Unsafe Regular Expression     security/detect-unsafe-regex
+  210:7   error  Unsafe Regular Expression     security/detect-unsafe-regex
+  343:63  error  No magic number: 250          no-magic-numbers
+  437:63  error  No magic number: 50           no-magic-numbers
+  458:32  error  No magic number: 18           no-magic-numbers
+  458:36  error  No magic number: 25           no-magic-numbers
+  458:40  error  No magic number: 65           no-magic-numbers
+  458:49  error  No magic number: 120          no-magic-numbers
+  470:9   error  No magic number: -100         no-magic-numbers
+  473:9   error  No magic number: 1.5          no-magic-numbers
+  474:9   error  No magic number: 3.14         no-magic-numbers
+  522:9   error  Script URL is a form of eval  no-script-url
+  538:62  error  No magic number: 15000        no-magic-numbers
+  566:17  error  No magic number: 2            no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/network-errors.test.ts
+   40:3   warning  Async method 'get' has no 'await' expression    require-await
+   44:3   warning  Async method 'post' has no 'await' expression   require-await
+   72:34  error    No magic number: 400                            no-magic-numbers
+  110:14  error    'primaryError' is defined but never used        no-unused-vars
+  110:14  error    'primaryError' is defined but never used        @typescript-eslint/no-unused-vars
+  114:16  error    'fallbackError' is defined but never used       no-unused-vars
+  114:16  error    'fallbackError' is defined but never used       @typescript-eslint/no-unused-vars
+  151:9   error    Unary operator '++' used                        no-plusplus
+  152:26  error    No magic number: 2                              no-magic-numbers
+  157:11  warning  Async method 'json' has no 'await' expression   require-await
+  163:30  error    No magic number: 3                              no-magic-numbers
+  174:51  error    No magic number: 300                            no-magic-numbers
+  175:8   error    No magic number: 10000                          no-magic-numbers
+  212:9   error    Unary operator '++' used                        no-plusplus
+  214:26  error    No magic number: 2                              no-magic-numbers
+  219:11  warning  Async method 'json' has no 'await' expression   require-await
+  225:30  error    No magic number: 3                              no-magic-numbers
+  230:52  error    No magic number: 0.7                            no-magic-numbers
+  239:18  error    'error' is defined but never used               no-unused-vars
+  239:18  error    'error' is defined but never used               @typescript-eslint/no-unused-vars
+  262:17  warning  Async method 'json' has no 'await' expression   require-await
+  273:8   error    No magic number: 10000                          no-magic-numbers
+  282:16  error    No magic number: 2000                           no-magic-numbers
+  287:8   error    No magic number: 15000                          no-magic-numbers
+  292:29  error    No magic number: 400                            no-magic-numbers
+  292:34  error    No magic number: 401                            no-magic-numbers
+  292:39  error    No magic number: 403                            no-magic-numbers
+  292:49  error    No magic number: 422                            no-magic-numbers
+  292:54  error    No magic number: 429                            no-magic-numbers
+  299:8   error    No magic number: 20000                          no-magic-numbers
+  302:34  error    No magic number: 502                            no-magic-numbers
+  302:39  error    No magic number: 503                            no-magic-numbers
+  302:44  error    No magic number: 504                            no-magic-numbers
+  309:8   error    No magic number: 20000                          no-magic-numbers
+  316:9   error    Unary operator '++' used                        no-plusplus
+  325:30  error    No magic number: 4                              no-magic-numbers
+  332:9   error    Unary operator '++' used                        no-plusplus
+  348:11  error    'callCount' is assigned a value but never used  no-unused-vars
+  348:11  error    'callCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  350:9   error    Unary operator '++' used                        no-plusplus
+  357:13  warning  Async method 'json' has no 'await' expression   require-await
+  397:13  warning  Async method 'json' has no 'await' expression   require-await
+  402:11  warning  Async method 'json' has no 'await' expression   require-await
+  427:73  error    No magic number: 3                              no-magic-numbers
+  427:76  error    No magic number: 2                              no-magic-numbers
+  430:36  error    No magic number: 3                              no-magic-numbers
+  431:47  error    No magic number: 3                              no-magic-numbers
+  434:51  warning  Async arrow function has no 'await' expression  require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/setup.ts
+   56:11  error    detect Math.random()                                                     security-node/detect-insecure-randomness
+   89:7   warning  Async method 'json' has no 'await' expression                            require-await
+  103:28  error    No magic number: 401                                                     no-magic-numbers
+  108:28  error    No magic number: 403                                                     no-magic-numbers
+  118:28  error    No magic number: 429                                                     no-magic-numbers
+  126:7   warning  Async method 'json' has no 'await' expression                            require-await
+  143:12  error    Generic Object Injection Sink                                            security/detect-object-injection
+  157:12  error    Generic Object Injection Sink                                            security/detect-object-injection
+  195:12  error    No magic number: -1000000                                                no-magic-numbers
+  212:45  error    'error' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  217:18  error    'error' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  284:7   error    Unary operator '++' used                                                 no-plusplus
+  289:9   error    'lastError' is assigned a value but never used                           no-unused-vars
+  289:9   error    'lastError' is assigned a value but never used                           @typescript-eslint/no-unused-vars
+  311:14  error    'error' is defined but never used                                        no-unused-vars
+  311:14  error    'error' is defined but never used                                        @typescript-eslint/no-unused-vars
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/error-scenarios/system-errors.test.ts
+   42:29  error    Generic Object Injection Sink                   security/detect-object-injection
+  138:33  error    No magic number: 2                              no-magic-numbers
+  193:7   error    Generic Object Injection Sink                   security/detect-object-injection
+  193:23  error    Generic Object Injection Sink                   security/detect-object-injection
+  307:58  error    No magic number: 10                             no-magic-numbers
+  328:36  error    No magic number: 10                             no-magic-numbers
+  341:41  warning  Async arrow function has no 'await' expression  require-await
+  342:9   error    Unary operator '++' used                        no-plusplus
+  343:28  error    No magic number: 3                              no-magic-numbers
+  352:9   error    No magic number: 3                              no-magic-numbers
+  353:9   error    No magic number: 10                             no-magic-numbers
+  357:33  error    No magic number: 3                              no-magic-numbers
+  361:47  warning  Async arrow function has no 'await' expression  require-await
+  369:11  error    No magic number: 2                              no-magic-numbers
+  370:11  error    No magic number: 10                             no-magic-numbers
+  379:46  warning  Async arrow function has no 'await' expression  require-await
+  381:9   error    Unary operator '++' used                        no-plusplus
+  383:28  error    No magic number: 4                              no-magic-numbers
+  392:9   error    No magic number: 5                              no-magic-numbers
+  393:9   error    No magic number: 10                             no-magic-numbers
+  397:33  error    No magic number: 4                              no-magic-numbers
+  403:41  warning  Async arrow function has no 'await' expression  require-await
+  407:42  warning  Async arrow function has no 'await' expression  require-await
+  422:41  warning  Async arrow function has no 'await' expression  require-await
+  426:42  warning  Async arrow function has no 'await' expression  require-await
+  441:41  warning  Async arrow function has no 'await' expression  require-await
+  445:42  warning  Async arrow function has no 'await' expression  require-await
+  473:37  error    No magic number: 3                              no-magic-numbers
+  494:32  error    No magic number: 4                              no-magic-numbers
+  495:39  error    No magic number: 2                              no-magic-numbers
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/api/test-content.test.ts
+   96:42  error  No magic number: 2                     no-magic-numbers
+  106:42  error  No magic number: 2                     no-magic-numbers
+  218:9   error  Expected an error object to be thrown  no-throw-literal
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/components/contact-form.test.tsx
+  130:14  error    Generic Object Injection Sink                   security/detect-object-injection
+  138:11  warning  Async method 'json' has no 'await' expression   require-await
+  389:74  warning  Async arrow function has no 'await' expression  require-await
+  418:66  warning  Async arrow function has no 'await' expression  require-await
+  429:71  warning  Async arrow function has no 'await' expression  require-await
+  524:9   warning  Async method 'json' has no 'await' expression   require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/components/footer.test.tsx
+  135:34  error    'label' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  135:34  error    'label' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  169:14  error    Generic Object Injection Sink                                            security/detect-object-injection
+  180:68  warning  Async arrow function has no 'await' expression                           require-await
+  201:65  warning  Async arrow function has no 'await' expression                           require-await
+  228:64  warning  Async arrow function has no 'await' expression                           require-await
+  247:72  warning  Async arrow function has no 'await' expression                           require-await
+  259:67  warning  Async arrow function has no 'await' expression                           require-await
+  279:63  warning  Async arrow function has no 'await' expression                           require-await
+  291:70  warning  Async arrow function has no 'await' expression                           require-await
+  303:70  warning  Async arrow function has no 'await' expression                           require-await
+  320:16  error    Generic Object Injection Sink                                            security/detect-object-injection
+  330:66  warning  Async arrow function has no 'await' expression                           require-await
+  341:71  warning  Async arrow function has no 'await' expression                           require-await
+  356:67  warning  Async arrow function has no 'await' expression                           require-await
+  367:65  warning  Async arrow function has no 'await' expression                           require-await
+  381:68  warning  Async arrow function has no 'await' expression                           require-await
+  393:61  warning  Async arrow function has no 'await' expression                           require-await
+  403:79  warning  Async arrow function has no 'await' expression                           require-await
+  412:40  error    No magic number: 2                                                       no-magic-numbers
+  417:74  warning  Async arrow function has no 'await' expression                           require-await
+  425:69  warning  Async arrow function has no 'await' expression                           require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/components/header.test.tsx
+  1:10  error  'fireEvent' is defined but never used  no-unused-vars
+  1:10  error  'fireEvent' is defined but never used  @typescript-eslint/no-unused-vars
+  1:37  error  'waitFor' is defined but never used    no-unused-vars
+  1:37  error  'waitFor' is defined but never used    @typescript-eslint/no-unused-vars
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/components/language-toggle.test.tsx
+   73:37  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   73:37  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+   84:34  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   84:34  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  137:14  error    Generic Object Injection Sink                                              security/detect-object-injection
+  196:64  warning  Async arrow function has no 'await' expression                             require-await
+  226:71  warning  Async arrow function has no 'await' expression                             require-await
+  259:75  warning  Async arrow function has no 'await' expression                             require-await
+  273:66  warning  Async arrow function has no 'await' expression                             require-await
+  285:76  warning  Async arrow function has no 'await' expression                             require-await
+  305:68  warning  Async arrow function has no 'await' expression                             require-await
+  323:64  warning  Async arrow function has no 'await' expression                             require-await
+  351:69  warning  Async arrow function has no 'await' expression                             require-await
+  360:61  warning  Async arrow function has no 'await' expression                             require-await
+  371:63  warning  Async arrow function has no 'await' expression                             require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/components/theme-toggle.test.tsx
+   62:37  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+   62:37  error    'asChild' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  221:71  warning  Async arrow function has no 'await' expression                             require-await
+  233:72  warning  Async arrow function has no 'await' expression                             require-await
+  247:76  warning  Async arrow function has no 'await' expression                             require-await
+  272:57  warning  Async arrow function has no 'await' expression                             require-await
+  282:64  warning  Async arrow function has no 'await' expression                             require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/pages/home.test.tsx
+   69:37  error    No magic number: 5                              no-magic-numbers
+  101:59  warning  Async arrow function has no 'await' expression  require-await
+
+/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/integration/setup.ts
+   7:3  warning  Unexpected console statement. Only these console methods are allowed: error, warn  no-console
+  12:3  warning  Unexpected console statement. Only these console methods are allowed: error, warn  no-console
+
+✖ 382 problems (284 errors, 98 warnings)
+  1 error and 1 warning potentially fixable with the `--fix` option.
+

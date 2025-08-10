@@ -1,0 +1,110 @@
+{
+  "workflow": {
+    "name": "自动化质量保证工作流",
+    "version": "1.0.0",
+    "description": "任务完成后自动触发质量检查的工作流系统"
+  },
+  "monitoring": {
+    "watchInterval": 2000,
+    "maxConcurrentChecks": 3,
+    "retryAttempts": 2,
+    "timeout": 600000,
+    "enableNotifications": false
+  },
+  "paths": {
+    "tasksFile": "docs/data/tasks.json",
+    "scriptsDir": "scripts",
+    "logsDir": "logs",
+    "reportsDir": "reports",
+    "backupDir": "docs/data/backups"
+  },
+  "scripts": {
+    "watcher": "scripts/task-status-watcher.js",
+    "trigger": "scripts/quality-trigger.js",
+    "processor": "scripts/quality-result-processor.js",
+    "workflow": "scripts/automated-quality-workflow.js",
+    "aiReview": "scripts/ai-quality-review.js"
+  },
+  "qualityStandards": {
+    "defaultThreshold": 90,
+    "passRateThreshold": 100,
+    "enableAutoRollback": false,
+    "requireHumanConfirmation": true
+  },
+  "notifications": {
+    "webhook": null,
+    "email": {
+      "enabled": false,
+      "recipients": [],
+      "smtp": {
+        "host": "",
+        "port": 587,
+        "secure": false,
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      }
+    },
+    "slack": {
+      "enabled": false,
+      "webhookUrl": "",
+      "channel": "#quality-alerts"
+    }
+  },
+  "logging": {
+    "level": "info",
+    "maxFileSize": "10MB",
+    "maxFiles": 5,
+    "enableConsole": true,
+    "enableFile": true,
+    "format": "json"
+  },
+  "security": {
+    "enableScriptValidation": true,
+    "allowedScriptPaths": [
+      "scripts/task-status-watcher.js",
+      "scripts/quality-trigger.js",
+      "scripts/quality-result-processor.js",
+      "scripts/automated-quality-workflow.js",
+      "scripts/ai-quality-review.js"
+    ],
+    "maxExecutionTime": 900000,
+    "enableSandbox": false
+  },
+  "performance": {
+    "enableMetrics": true,
+    "metricsInterval": 30000,
+    "enableProfiling": false,
+    "memoryThreshold": "512MB",
+    "cpuThreshold": 80
+  },
+  "development": {
+    "enableDebugMode": false,
+    "enableTestMode": false,
+    "mockQualityChecks": false,
+    "simulateFailures": false
+  },
+  "integrations": {
+    "git": {
+      "enabled": true,
+      "autoCommitReports": false,
+      "branchProtection": true
+    },
+    "ci": {
+      "enabled": false,
+      "provider": "github-actions",
+      "triggerOnQualityPass": false
+    },
+    "monitoring": {
+      "sentry": {
+        "enabled": false,
+        "dsn": ""
+      },
+      "prometheus": {
+        "enabled": false,
+        "port": 9090
+      }
+    }
+  }
+}

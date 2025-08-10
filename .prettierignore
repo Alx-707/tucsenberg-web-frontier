@@ -1,0 +1,110 @@
+# Dependencies
+node_modules/
+.pnpm/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Reports and generated content
+reports/
+logs/
+coverage/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git files
+.git/
+.gitignore
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+
+# Binary files
+*.ico
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.woff
+*.woff2
+*.ttf
+*.eot
+
+# Generated documentation
+*.html
+*.pdf
+
+# Backup files
+*.backup
+*.bak
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Database files
+*.db
+*.sqlite
+
+# Cache directories
+.cache/
+.parcel-cache/
+.eslintcache
+
+# Husky hooks
+.husky/_/
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# Storybook
+storybook-static/
+
+# Vercel
+.vercel/
+
+# Turbo
+.turbo/
+
+# Documentation and markdown files with code examples
+*.md
+docs/
+.augment/
+
+# Configuration files that may contain non-standard syntax
+*.dot
+*.yml
+*.yaml
+
+# Content files
+content/

@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://tucsenberg.com
+
+# Sitemaps
+Sitemap: https://tucsenberg.com/sitemap.xml
+Sitemap: https://tucsenberg.com/server-sitemap.xml

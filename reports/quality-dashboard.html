@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>质量监控仪表板</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .dashboard { max-width: 1200px; margin: 0 auto; }
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .metric-value { font-size: 2em; font-weight: bold; margin-bottom: 10px; }
+        .status-excellent { color: #10b981; }
+        .status-good { color: #3b82f6; }
+        .status-warning { color: #f59e0b; }
+        .status-poor { color: #ef4444; }
+        .issues { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .issue { padding: 10px; margin: 5px 0; border-left: 4px solid #ef4444; background: #fef2f2; }
+        .timestamp { color: #6b7280; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>质量监控仪表板</h1>
+            <p class="timestamp">生成时间: 2025/8/9 22:01:27</p>
+            <div class="metric-value status-poor">
+                总体评分: 42/100 (poor)
+            </div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <h3>测试覆盖率</h3>
+                <div class="metric-value status-poor">
+                    0%
+                </div>
+                <p>行覆盖率 (目标: 85%)</p>
+            </div>
+
+            <div class="metric-card">
+                <h3>构建性能</h3>
+                <div class="metric-value status-good">
+                    0s
+                </div>
+                <p>构建时间</p>
+            </div>
+
+            <div class="metric-card">
+                <h3>代码质量</h3>
+                <div class="metric-value status-poor">
+                    4
+                </div>
+                <p>质量问题数量</p>
+            </div>
+        </div>
+
+        
+        <div class="issues">
+            <h3>质量问题</h3>
+            
+                <div class="issue">
+                    <strong>coverage</strong>: lines 覆盖率 0% 低于阈值 85%
+                </div>
+            
+                <div class="issue">
+                    <strong>coverage</strong>: functions 覆盖率 0% 低于阈值 85%
+                </div>
+            
+                <div class="issue">
+                    <strong>coverage</strong>: branches 覆盖率 0% 低于阈值 80%
+                </div>
+            
+                <div class="issue">
+                    <strong>coverage</strong>: statements 覆盖率 0% 低于阈值 85%
+                </div>
+            
+                <div class="issue">
+                    <strong>eslint</strong>: ESLint 错误数量 1012 超过阈值
+                </div>
+            
+                <div class="issue">
+                    <strong>eslint</strong>: ESLint 警告数量 100 超过阈值
+                </div>
+            
+                <div class="issue">
+                    <strong>typescript</strong>: TypeScript 类型检查失败
+                </div>
+            
+                <div class="issue">
+                    <strong>duplication</strong>: 代码重复率较高
+                </div>
+            
+        </div>
+        
+
+        
+        <div class="issues">
+            <h3>改进建议</h3>
+            
+                <div class="issue" style="border-color: #3b82f6; background: #eff6ff;">
+                    增加单元测试以提高代码覆盖率
+                </div>
+            
+                <div class="issue" style="border-color: #3b82f6; background: #eff6ff;">
+                    修复代码质量问题
+                </div>
+            
+        </div>
+        
+    </div>
+</body>
+</html>
