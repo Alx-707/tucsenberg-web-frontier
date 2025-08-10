@@ -12,7 +12,7 @@ function HeroBadge({
   badgeVisible,
   version,
 }: {
-  badgeRef: (node: HTMLDivElement | null) => void;
+  badgeRef: (_node: HTMLDivElement | null) => void;
   badgeVisible: boolean;
   version: string;
 }) {
@@ -41,7 +41,7 @@ function HeroTitle({
   line1,
   line2,
 }: {
-  titleRef: (node: HTMLHeadingElement | null) => void;
+  titleRef: (_node: HTMLHeadingElement | null) => void;
   titleVisible: boolean;
   line1: string;
   line2: string;
@@ -93,7 +93,7 @@ function HeroActionButtons({
   buttonsVisible,
   t,
 }: {
-  buttonsRef: (node: HTMLDivElement | null) => void;
+  buttonsRef: (_node: HTMLDivElement | null) => void;
   buttonsVisible: boolean;
   t: (_key: string) => string;
 }) {

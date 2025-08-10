@@ -1,10 +1,22 @@
+import { TEST_COUNTS } from '@/constants/test-constants';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TEST_COUNTS } from '@/constants/test-constants';
 
 // Mock hooks with vi.hoisted
 const mockUseBreakpoint = vi.hoisted(() => vi.fn());
 const mockUseReducedMotion = vi.hoisted(() => vi.fn());
+
+// Default mock return values
+const defaultBreakpointReturn = {
+  currentBreakpoint: 'md' as const,
+  isAbove: vi.fn(() => false),
+  isBelow: vi.fn(() => false),
+  isExactly: vi.fn(() => true),
+  width: 768,
+};
+
+mockUseBreakpoint.mockReturnValue(defaultBreakpointReturn);
+mockUseReducedMotion.mockReturnValue(false);
 
 vi.mock('@/hooks/use-breakpoint', () => ({
   useBreakpoint: mockUseBreakpoint,
@@ -94,7 +106,8 @@ describe('ResponsiveLayout', () => {
       );
 
       const layout = screen.getByTestId('responsive-layout');
-      expect(layout).toHaveClass('responsive-layout');
+      // With default mock (md breakpoint), should have tablet class
+      expect(layout).toHaveClass('responsive-tablet');
     });
 
     it('should apply custom className', () => {
@@ -115,12 +128,11 @@ describe('ResponsiveLayout', () => {
   describe('移动端布局', () => {
     beforeEach(() => {
       mockUseBreakpoint.mockReturnValue({
-        isMobile: true,
-        isTablet: false,
-        isDesktop: false,
-        currentBreakpoint: 'mobile',
+        currentBreakpoint: 'sm',
+        isAbove: vi.fn(() => false),
+        isBelow: vi.fn((breakpoint) => breakpoint === 'md'), // isBelow('md') = true for mobile
+        isExactly: vi.fn((breakpoint) => breakpoint === 'sm'),
         width: 375,
-        height: 667,
       });
     });
 
@@ -132,7 +144,7 @@ describe('ResponsiveLayout', () => {
       );
 
       const layout = screen.getByTestId('responsive-layout');
-      expect(layout).toHaveClass('mobile-layout');
+      expect(layout).toHaveClass('responsive-mobile');
     });
 
     it('should render mobile navigation when provided', () => {
@@ -174,12 +186,11 @@ describe('ResponsiveLayout', () => {
   describe('平板端布局', () => {
     beforeEach(() => {
       mockUseBreakpoint.mockReturnValue({
-        isMobile: false,
-        isTablet: true,
-        isDesktop: false,
-        currentBreakpoint: 'tablet',
+        currentBreakpoint: 'md',
+        isAbove: vi.fn(() => false),
+        isBelow: vi.fn(() => false), // isBelow('md') = false for tablet
+        isExactly: vi.fn((breakpoint) => breakpoint === 'md'),
         width: 768,
-        height: 1024,
       });
     });
 
@@ -191,7 +202,7 @@ describe('ResponsiveLayout', () => {
       );
 
       const layout = screen.getByTestId('responsive-layout');
-      expect(layout).toHaveClass('tablet-layout');
+      expect(layout).toHaveClass('responsive-tablet');
     });
 
     it('should render tablet sidebar when provided', () => {
@@ -210,6 +221,16 @@ describe('ResponsiveLayout', () => {
   });
 
   describe('桌面端布局', () => {
+    beforeEach(() => {
+      mockUseBreakpoint.mockReturnValue({
+        currentBreakpoint: 'xl',
+        isAbove: vi.fn((breakpoint) => breakpoint === 'lg'), // isAbove('lg') = true for desktop
+        isBelow: vi.fn(() => false),
+        isExactly: vi.fn((breakpoint) => breakpoint === 'xl'),
+        width: 1280,
+      });
+    });
+
     it('should apply desktop-specific classes', () => {
       render(
         <ResponsiveLayout data-testid='responsive-layout'>
@@ -218,7 +239,7 @@ describe('ResponsiveLayout', () => {
       );
 
       const layout = screen.getByTestId('responsive-layout');
-      expect(layout).toHaveClass('desktop-layout');
+      expect(layout).toHaveClass('responsive-desktop');
     });
 
     it('should render desktop sidebar when provided', () => {

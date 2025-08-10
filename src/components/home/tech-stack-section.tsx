@@ -74,7 +74,7 @@ function TechStackTitle({
   title,
   subtitle,
 }: {
-  titleRef: (node: HTMLDivElement | null) => void;
+  titleRef: (_node: HTMLDivElement | null) => void;
   titleVisible: boolean;
   title: string;
   subtitle: string;
@@ -107,7 +107,7 @@ function TechStackTabs({
 }: {
   selectedCategory: TechStackCategory;
   setSelectedCategory: (_category: TechStackCategory) => void;
-  tabsRef: (node: HTMLDivElement | null) => void;
+  tabsRef: (_node: HTMLDivElement | null) => void;
   tabsVisible: boolean;
   categorizedTech: Record<TechStackCategory, typeof techStackData>;
   t: (_key: string) => string;

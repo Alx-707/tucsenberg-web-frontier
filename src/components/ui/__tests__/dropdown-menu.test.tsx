@@ -1,4 +1,4 @@
-import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
+import { TEST_COUNT_CONSTANTS, TEST_COUNTS } from '@/constants/test-constants';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -653,7 +653,7 @@ describe('DropdownMenu Components', () => {
 
       expect(screen.getByTestId('dropdown-label')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-group')).toBeInTheDocument();
-      expect(screen.getAllByTestId('dropdown-separator')).toHaveLength(3);
+      expect(screen.getAllByTestId('dropdown-separator')).toHaveLength(TEST_COUNTS.SMALL);
       expect(screen.getByTestId('dropdown-checkbox-item')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-radio-group')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-sub')).toBeInTheDocument();
