@@ -1,0 +1,52 @@
+{
+  "timestamp": "2025-08-11T16:08:57.661Z",
+  "tests": [
+    {
+      "name": "Playwright 包安装检查",
+      "passed": "^1.54.2",
+      "details": "Playwright 已安装",
+      "error": null,
+      "timestamp": "2025-08-11T16:08:57.667Z"
+    },
+    {
+      "name": "Playwright 配置文件检查",
+      "passed": true,
+      "details": "配置文件存在",
+      "error": null,
+      "timestamp": "2025-08-11T16:08:57.667Z"
+    },
+    {
+      "name": "E2E 测试目录检查",
+      "passed": true,
+      "details": "测试目录存在",
+      "error": null,
+      "timestamp": "2025-08-11T16:08:57.667Z"
+    },
+    {
+      "name": "开发服务器检查",
+      "passed": true,
+      "details": "服务器运行在 http://localhost:3000",
+      "error": null,
+      "timestamp": "2025-08-11T16:09:03.294Z"
+    },
+    {
+      "name": "Playwright 基础测试",
+      "passed": false,
+      "details": "测试执行失败",
+      "error": "spawnSync /bin/sh ETIMEDOUT",
+      "timestamp": "2025-08-11T16:10:03.598Z"
+    },
+    {
+      "name": "Web Eval Agent 兼容性测试",
+      "passed": false,
+      "details": "兼容性测试失败",
+      "error": "Command failed: node /tmp/web-eval-test.js\nnode:internal/modules/cjs/loader:1215\n  throw err;\n  ^\n\nError: Cannot find module 'playwright'\nRequire stack:\n- /private/tmp/web-eval-test.js\n    at Module._resolveFilename (node:internal/modules/cjs/loader:1212:15)\n    at Module._load (node:internal/modules/cjs/loader:1043:27)\n    at Module.require (node:internal/modules/cjs/loader:1298:19)\n    at require (node:internal/modules/helpers:182:18)\n    at Object.<anonymous> (/private/tmp/web-eval-test.js:2:30)\n    at Module._compile (node:internal/modules/cjs/loader:1529:14)\n    at Module._extensions..js (node:internal/modules/cjs/loader:1613:10)\n    at Module.load (node:internal/modules/cjs/loader:1275:32)\n    at Module._load (node:internal/modules/cjs/loader:1096:12)\n    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12) {\n  code: 'MODULE_NOT_FOUND',\n  requireStack: [ '/private/tmp/web-eval-test.js' ]\n}\n\nNode.js v20.19.2\n",
+      "timestamp": "2025-08-11T16:10:03.927Z"
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2
+  }
+}

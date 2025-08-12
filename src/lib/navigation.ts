@@ -4,8 +4,8 @@
  * This module provides navigation configuration, route definitions,
  * and utility functions for the responsive navigation system.
  */
-import type { Locale } from '@/types/i18n';
 import { LOCALES_CONFIG } from '@/config/paths';
+import type { Locale } from '@/types/i18n';
 
 // Navigation item interface
 export interface NavigationItem {
@@ -57,8 +57,10 @@ export const mobileNavigation: NavigationItem[] = mainNavigation;
 
 // Utility function to check if a path is active
 export function isActivePath(currentPath: string, itemPath: string): boolean {
+  // Handle empty string as root path
+  let cleanCurrentPath = currentPath || '/';
+
   // Remove locale prefix for comparison using safe string matching
-  let cleanCurrentPath = currentPath;
   for (const locale of LOCALES_CONFIG.locales) {
     const localePrefix = `/${locale}`;
     if (cleanCurrentPath.startsWith(localePrefix)) {
@@ -66,13 +68,20 @@ export function isActivePath(currentPath: string, itemPath: string): boolean {
       break;
     }
   }
+
   const cleanItemPath = itemPath === '/' ? '/' : itemPath;
 
+  // Handle root path matching
   if (cleanItemPath === '/') {
     return cleanCurrentPath === '/';
   }
 
-  return cleanCurrentPath.startsWith(cleanItemPath);
+  // Ensure we match complete path segments, not partial matches
+  // Add trailing slash to both paths for comparison to avoid partial matches
+  const normalizedCurrentPath = cleanCurrentPath.endsWith('/') ? cleanCurrentPath : cleanCurrentPath + '/';
+  const normalizedItemPath = cleanItemPath.endsWith('/') ? cleanItemPath : cleanItemPath + '/';
+
+  return normalizedCurrentPath.startsWith(normalizedItemPath);
 }
 
 // Utility function to get localized href
@@ -95,25 +104,25 @@ export function getLocalizedHref(href: string, locale: Locale): string {
 }
 
 // Navigation breakpoints
-export const NAVIGATION_BREAKPOINTS = {
+export const NAVIGATION_BREAKPOINTS = Object.freeze({
   mobile: 768,
   tablet: 1024,
   desktop: 1280,
-} as const;
+} as const);
 
 // Animation durations
-export const NAVIGATION_ANIMATIONS = {
-  mobileMenuToggle: 200,
-  dropdownFade: 150,
+export const NAVIGATION_ANIMATIONS = Object.freeze({
+  mobileMenuToggle: 250,
+  dropdownFade: 100,
   hoverTransition: 100,
-} as const;
+} as const);
 
 // ARIA labels and accessibility
-export const NAVIGATION_ARIA = {
+export const NAVIGATION_ARIA = Object.freeze({
   mainNav: 'Main navigation',
   mobileMenuButton: 'Toggle mobile menu',
   mobileMenu: 'Mobile navigation menu',
   languageSelector: 'Language selector',
   themeSelector: 'Theme selector',
   skipToContent: 'Skip to main content',
-} as const;
+} as const);

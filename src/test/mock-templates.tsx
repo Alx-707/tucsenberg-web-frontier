@@ -19,16 +19,22 @@ export const createReactHooksMock = () => {
     const mockUseRef = vi.fn();
 
     return {
-      useState: mockUseState.mockImplementation((initial) => [initial, mockSetState]),
+      useState: mockUseState.mockImplementation((initial) => [
+        initial,
+        mockSetState,
+      ]),
       useEffect: mockUseEffect.mockImplementation((effect, _deps) => {
         if (typeof effect === 'function') {
           const cleanup = effect();
           return cleanup;
         }
+        return undefined;
       }),
       useCallback: mockUseCallback.mockImplementation((callback) => callback),
       useMemo: mockUseMemo.mockImplementation((factory) => factory()),
-      useRef: mockUseRef.mockImplementation((initial) => ({ current: initial })),
+      useRef: mockUseRef.mockImplementation((initial) => ({
+        current: initial,
+      })),
       // 提供访问mock函数的方式
       _mocks: {
         setState: mockSetState,
@@ -115,15 +121,38 @@ export const createBrowserAPIMock = () => {
       observe: vi.fn((element) => {
         // 模拟元素进入视口
         setTimeout(() => {
-          callback([{
-            target: element,
-            isIntersecting: true,
-            intersectionRatio: 1,
-            boundingClientRect: { top: 0, left: 0, right: 100, bottom: 100, width: 100, height: 100 },
-            intersectionRect: { top: 0, left: 0, right: 100, bottom: 100, width: 100, height: 100 },
-            rootBounds: { top: 0, left: 0, right: 1000, bottom: 1000, width: 1000, height: 1000 },
-            time: Date.now(),
-          }]);
+          callback([
+            {
+              target: element,
+              isIntersecting: true,
+              intersectionRatio: 1,
+              boundingClientRect: {
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 100,
+                width: 100,
+                height: 100,
+              },
+              intersectionRect: {
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 100,
+                width: 100,
+                height: 100,
+              },
+              rootBounds: {
+                top: 0,
+                left: 0,
+                right: 1000,
+                bottom: 1000,
+                width: 1000,
+                height: 1000,
+              },
+              time: Date.now(),
+            },
+          ]);
         }, 0);
       }),
       unobserve: vi.fn(),
@@ -135,13 +164,22 @@ export const createBrowserAPIMock = () => {
       observe: vi.fn((element) => {
         // 模拟尺寸变化
         setTimeout(() => {
-          callback([{
-            target: element,
-            contentRect: { width: 100, height: 100, top: 0, left: 0, right: 100, bottom: 100 },
-            borderBoxSize: [{ inlineSize: 100, blockSize: 100 }],
-            contentBoxSize: [{ inlineSize: 100, blockSize: 100 }],
-            devicePixelContentBoxSize: [{ inlineSize: 100, blockSize: 100 }],
-          }]);
+          callback([
+            {
+              target: element,
+              contentRect: {
+                width: 100,
+                height: 100,
+                top: 0,
+                left: 0,
+                right: 100,
+                bottom: 100,
+              },
+              borderBoxSize: [{ inlineSize: 100, blockSize: 100 }],
+              contentBoxSize: [{ inlineSize: 100, blockSize: 100 }],
+              devicePixelContentBoxSize: [{ inlineSize: 100, blockSize: 100 }],
+            },
+          ]);
         }, 0);
       }),
       unobserve: vi.fn(),
@@ -215,7 +253,7 @@ export const createUIComponentMock = () => {
     // DropdownMenu组件Mock
     const DropdownMenu = ({ children, open, onOpenChange }: any) => (
       <div
-        data-testid="dropdown-menu"
+        data-testid='dropdown-menu'
         data-open={open}
         onClick={() => onOpenChange?.(!open)}
       >
@@ -225,7 +263,7 @@ export const createUIComponentMock = () => {
 
     const DropdownMenuContent = ({ children, align, ...props }: any) => (
       <div
-        data-testid="dropdown-content"
+        data-testid='dropdown-content'
         data-align={align}
         {...props}
       >
@@ -234,13 +272,13 @@ export const createUIComponentMock = () => {
     );
 
     const DropdownMenuTrigger = ({ children }: any) => (
-      <div data-testid="dropdown-trigger">{children}</div>
+      <div data-testid='dropdown-trigger'>{children}</div>
     );
 
     // Button组件Mock
     const Button = ({ children, variant, size, ...props }: any) => (
       <button
-        data-testid="theme-button"
+        data-testid='theme-button'
         data-variant={variant}
         data-size={size}
         {...props}
@@ -253,7 +291,7 @@ export const createUIComponentMock = () => {
     const Icons = {
       Sun: ({ className, ...props }: any) => (
         <span
-          data-testid="sun-icon"
+          data-testid='sun-icon'
           className={className}
           {...props}
         >
@@ -262,7 +300,7 @@ export const createUIComponentMock = () => {
       ),
       Moon: ({ className, ...props }: any) => (
         <span
-          data-testid="moon-icon"
+          data-testid='moon-icon'
           className={className}
           {...props}
         >
@@ -271,7 +309,7 @@ export const createUIComponentMock = () => {
       ),
       Monitor: ({ className, ...props }: any) => (
         <span
-          data-testid="monitor-icon"
+          data-testid='monitor-icon'
           className={className}
           {...props}
         >
@@ -343,16 +381,19 @@ export const createTestUtils = () => {
      * 等待异步操作完成
      */
     waitForAsync: async (ms: number = 0) => {
-      await new Promise(resolve => setTimeout(resolve, ms));
+      await new Promise((resolve) => setTimeout(resolve, ms));
     },
 
     /**
      * 模拟用户交互
      */
-    simulateUserInteraction: async (element: HTMLElement, action: 'click' | 'focus' | 'blur') => {
+    simulateUserInteraction: async (
+      element: HTMLElement,
+      action: 'click' | 'focus' | 'blur',
+    ) => {
       const event = new Event(action, { bubbles: true });
       element.dispatchEvent(event);
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise((resolve) => setTimeout(resolve, 0));
     },
 
     /**

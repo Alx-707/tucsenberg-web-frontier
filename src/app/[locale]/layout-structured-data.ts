@@ -1,6 +1,6 @@
 import {
-    generateLocalizedStructuredData,
-    type Locale,
+  generateLocalizedStructuredData,
+  type Locale,
 } from '@/lib/structured-data';
 
 /**
@@ -15,9 +15,10 @@ export interface PageStructuredData {
  * 生成页面结构化数据
  * 包含组织信息和网站信息的JSON-LD数据
  */
-export async function generatePageStructuredData(
-  locale: Locale,
-): Promise<{ organizationData: Record<string, unknown>; websiteData: Record<string, unknown> }> {
+export async function generatePageStructuredData(locale: Locale): Promise<{
+  organizationData: Record<string, unknown>;
+  websiteData: Record<string, unknown>;
+}> {
   const organizationData = await generateLocalizedStructuredData(
     locale,
     'Organization',

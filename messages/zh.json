@@ -469,6 +469,17 @@
       "construction": "建设进行中"
     }
   },
+  "ReactScanDemo": {
+    "title": "React Scan 性能演示",
+    "description": "React Scan 性能监控功能的交互式演示",
+    "instructions": {
+      "title": "如何使用此演示",
+      "step1": "按 Ctrl+Shift+X 切换 React Scan 开启/关闭",
+      "step2": "点击下方按钮触发不同类型的渲染",
+      "step3": "观察红色高亮（不必要渲染）和绿色高亮（优化渲染）",
+      "step4": "使用右下角的 React Scan 工具栏进行详细分析"
+    }
+  },
   "structured-data": {
     "organization": {
       "name": "图森堡网络前沿",

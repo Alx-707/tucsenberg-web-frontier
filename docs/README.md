@@ -6,12 +6,11 @@
 
 ## 📖 文档列表
 
-### 🎯 TinaCMS 相关文档
+### 🎯 内容管理相关文档
 
 | 文档 | 描述 | 适用人群 |
 |------|------|----------|
-| [`tinacms-quick-start.md`](./tinacms-quick-start.md) | 5分钟快速入门指南 | 新用户、内容编辑者 |
-| [`tinacms-user-guide.md`](./tinacms-user-guide.md) | 完整操作指南和最佳实践 | 所有用户、管理员 |
+| [`technology/技术栈.md`](./technology/技术栈.md) | MDX内容管理系统说明 | 开发者、内容编辑者 |
 
 ### 🏗️ 技术文档
 
@@ -22,16 +21,16 @@
 ## 🎯 快速导航
 
 ### 新用户入门路径
-1. 📖 阅读 [TinaCMS 快速入门指南](./tinacms-quick-start.md)
-2. 🚀 启动开发环境：`pnpm run tina:dev`
-3. 🌐 访问管理界面：`localhost:3000/admin`
-4. ✍️ 创建第一篇文章
+1. 📖 阅读 [技术栈文档](./technology/技术栈.md) 了解MDX内容管理
+2. 🚀 启动开发环境：`pnpm dev`
+3. 🌐 访问主站：`localhost:3000`
+4. ✍️ 直接编辑 `content/` 目录下的MDX文件
 
 ### 深度使用路径
-1. 📚 学习 [TinaCMS 完整操作指南](./tinacms-user-guide.md)
-2. 🔧 了解高级功能和自定义组件
-3. 💡 掌握最佳实践和团队协作
-4. 🛠️ 配置生产环境和权限管理
+1. 📚 学习 MDX 语法和 Front Matter 配置
+2. 🔧 了解自定义组件和多语言管理
+3. 💡 掌握Git工作流和内容同步
+4. 🛠️ 配置生产环境和部署流程
 
 ## 🔗 重要链接
 

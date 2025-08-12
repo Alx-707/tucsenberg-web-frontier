@@ -4,7 +4,18 @@
  */
 
 /* eslint-disable security/detect-object-injection */
-/* eslint-disable no-magic-numbers */
+
+// SEO常量定义
+const SEO_CONSTANTS = {
+  PRIORITY: {
+    HIGHEST: 1.0,
+    HIGH: 0.8,
+  },
+  CHANGEFREQ: {
+    DAILY: 'daily',
+    WEEKLY: 'weekly',
+  },
+};
 
 // 硬编码配置，避免ES模块导入问题
 const SITE_CONFIG = {
@@ -86,8 +97,8 @@ function generateSitemapEntry(pageType, locale, options = {}) {
 
   return {
     loc: url,
-    changefreq: options.changefreq || 'weekly',
-    priority: options.priority || 0.8,
+    changefreq: options.changefreq || SEO_CONSTANTS.CHANGEFREQ.WEEKLY,
+    priority: options.priority || SEO_CONSTANTS.PRIORITY.HIGH,
     lastmod: options.lastmod || new Date().toISOString(),
     alternateRefs,
   };
@@ -102,8 +113,14 @@ function generateAllSitemapEntries() {
   Object.keys(PATHS_CONFIG).forEach((pageType) => {
     LOCALES_CONFIG.locales.forEach((locale) => {
       const entry = generateSitemapEntry(pageType, locale, {
-        changefreq: pageType === 'home' ? 'daily' : 'weekly',
-        priority: pageType === 'home' ? 1.0 : 0.8,
+        changefreq:
+          pageType === 'home'
+            ? SEO_CONSTANTS.CHANGEFREQ.DAILY
+            : SEO_CONSTANTS.CHANGEFREQ.WEEKLY,
+        priority:
+          pageType === 'home'
+            ? SEO_CONSTANTS.PRIORITY.HIGHEST
+            : SEO_CONSTANTS.PRIORITY.HIGH,
       });
       entries.push(entry);
     });

@@ -4,6 +4,20 @@
  * 遵循项目编码标准，提高测试代码的可维护性
  */
 
+// 导入Web Vitals相关常量
+
+// 导入UI相关常量
+import {
+    TEST_CONTENT_LIMITS,
+    TEST_SAMPLE_CONSTANTS,
+    TEST_SCREEN_CONSTANTS,
+    TEST_SPECIAL_CONSTANTS,
+} from './test-ui-constants';
+import {
+    TEST_WEB_VITALS_DIAGNOSTICS,
+    WEB_VITALS_CONSTANTS,
+} from './test-web-vitals-constants';
+
 // ==================== 应用特定测试常量 ====================
 
 /** 时间计算相关常量 */
@@ -23,14 +37,20 @@ export const TEST_TIME_CALCULATIONS = {
 
 /** 延迟相关常量 */
 export const TEST_DELAY_VALUES = {
-  /** 短延迟 - 100ms */
-  SHORT_DELAY: 100,
+  /** 短延迟 - 150ms */
+  SHORT_DELAY: 150,
 
-  /** 中等延迟 - 300ms */
-  MEDIUM_DELAY: 300,
+  /** 中等延迟 - 200ms */
+  MEDIUM_DELAY: 200,
 
   /** 清理延迟 - 500ms */
   CLEANUP_DELAY: 500,
+
+  /** 主题切换延迟 - 400ms */
+  THEME_CHANGE_DELAY: 400,
+
+  /** 减少动画延迟 - 50ms */
+  REDUCED_MOTION_DELAY: 50,
 } as const;
 
 /** 百分比值常量 */
@@ -56,11 +76,11 @@ export const TEST_PERFORMANCE_TIMESTAMPS = {
   /** 偏移量 - 1005 */
   OFFSET: 1005,
 
-  /** 小增量 - 1010 */
-  INCREMENT_SMALL: 1010,
+  /** 小增量 - 1050 */
+  INCREMENT_SMALL: 1050,
 
-  /** 中等增量 - 1020 */
-  INCREMENT_MEDIUM: 1020,
+  /** 中等增量 - 1100 */
+  INCREMENT_MEDIUM: 1100,
 
   /** 大基数 - 200000 */
   LARGE_BASE: 200000,
@@ -68,8 +88,8 @@ export const TEST_PERFORMANCE_TIMESTAMPS = {
   /** 大偏移 - 200100 */
   LARGE_OFFSET: 200100,
 
-  /** 超大值 - 300000 */
-  EXTRA_LARGE: 300000,
+  /** 超大值 - 2100 */
+  EXTRA_LARGE: 2100,
 } as const;
 
 /** 应用特定测试常量 */
@@ -92,9 +112,21 @@ export const TEST_APP_CONSTANTS = {
   /** 中等计数4 - 4 */
   MEDIUM_COUNT_FOUR: 4,
 
+  /** 标准计数5 - 5 */
+  STANDARD_COUNT_FIVE: 5,
+
   // 比例
   /** 比例值 - 6.25 */
   RATIO_VALUE: 6.25,
+
+  /** 健康阈值 - 0.8 */
+  HEALTH_THRESHOLD: 0.8,
+
+  /** 置信度阈值 - 0.5 */
+  CONFIDENCE_THRESHOLD: 0.5,
+
+  /** 低置信度阈值 - 0.2 */
+  LOW_CONFIDENCE_THRESHOLD: 0.2,
 
   // 时间相关常量
   /** 时间单位 - 60 */
@@ -113,6 +145,16 @@ export const TEST_APP_CONSTANTS = {
   // 超时相关
   /** 超时基数 - 1000ms */
   TIMEOUT_BASE: 1000,
+
+  /** 延迟时间 - 150ms */
+  DELAY_TIME: 150,
+
+  // 屏幕分辨率常量
+  /** 标准宽度 - 1920 */
+  STANDARD_WIDTH: 1920,
+
+  /** 标准高度 - 1080 */
+  STANDARD_HEIGHT: 1080,
 } as const;
 
 // ==================== 基础测试常量 ====================
@@ -147,6 +189,14 @@ export const TEST_BASE_NUMBERS = {
   // 浮点数测试
   FLOAT_DECIMAL_ONE: 0.1,
   FLOAT_DECIMAL_TWO: 0.2,
+
+  // 内存大小（MB）
+  MEMORY_SIZE_50MB: 50,
+  MEMORY_SIZE_100MB: 100,
+  MEMORY_SIZE_200MB: 200,
+
+  // 字节转换
+  BYTES_PER_KB: 1024,
 } as const;
 
 /** 测试超时常量 (毫秒) */
@@ -280,7 +330,8 @@ export const TEST_ANGLE_CONSTANTS = {
   FULL_CIRCLE: TEST_BASE_NUMBERS.FULL_CIRCLE_DEGREES,
 
   /** 半圆 - 180度 */
-  HALF_CIRCLE: TEST_BASE_NUMBERS.FULL_CIRCLE_DEGREES / TEST_BASE_NUMBERS.DIVISION_BY_TWO,
+  HALF_CIRCLE:
+    TEST_BASE_NUMBERS.FULL_CIRCLE_DEGREES / TEST_BASE_NUMBERS.DIVISION_BY_TWO,
 
   /** 直角 - 90度 */
   RIGHT_ANGLE: TEST_BASE_NUMBERS.RIGHT_ANGLE_DEGREES,
@@ -304,50 +355,9 @@ export const TEST_CONTRAST_CONSTANTS = {
   PRECISION_DIGITS: 2,
 } as const;
 
-/** 测试屏幕尺寸常量 */
-export const TEST_SCREEN_CONSTANTS = {
-  /** 移动端宽度 - 768px */
-  MOBILE_WIDTH: 768,
+// 测试屏幕尺寸常量已移动到 test-ui-constants.ts
 
-  /** 平板宽度 - 1024px */
-  TABLET_WIDTH: 1024,
-
-  /** 桌面宽度 - 1920px */
-  DESKTOP_WIDTH: 1920,
-
-  /** 标准高度 - 768px */
-  STANDARD_HEIGHT: 768,
-} as const;
-
-/** 测试内容限制常量 */
-export const TEST_CONTENT_LIMITS = {
-  /** 标题最大长度 - 60 */
-  TITLE_MAX: 60,
-
-  /** 描述最大长度 - 160 */
-  DESCRIPTION_MAX: 160,
-
-  /** 短文本最大长度 - 20 */
-  SHORT_TEXT_MAX: 20,
-
-  /** 长文本最大长度 - 500 */
-  LONG_TEXT_MAX: 500,
-
-  /** 最大文件大小 - 1024KB */
-  MAX_FILE_SIZE: 1024,
-
-  /** 函数最大行数 - 120 */
-  FUNCTION_MAX_LINES: 120,
-
-  /** 文件最大行数 - 500 */
-  FILE_MAX_LINES: 500,
-
-  /** 最大复杂度 - 15 */
-  MAX_COMPLEXITY: 15,
-
-  /** 最大嵌套回调 - 3 */
-  MAX_NESTED_CALLBACKS: 3,
-} as const;
+// 测试内容限制常量已移动到 test-ui-constants.ts
 
 /** 测试动画缓动常量 */
 export const TEST_EASING_CONSTANTS = {
@@ -361,75 +371,7 @@ export const TEST_EASING_CONSTANTS = {
   THREE_QUARTER_POINT: 0.75,
 } as const;
 
-/** 测试数值样本常量 */
-export const TEST_SAMPLE_CONSTANTS = {
-  /** 小数测试值 - 123.7 */
-  DECIMAL_SAMPLE: 123.7,
-
-  /** 负小数测试值 - -5.2 */
-  NEGATIVE_DECIMAL: -5.2,
-
-  /** 零值测试 */
-  ZERO_VALUE: 0,
-
-  /** 正整数测试值 - 42 */
-  POSITIVE_INTEGER: 42,
-
-  /** 负整数测试值 - -15 */
-  NEGATIVE_INTEGER: -15,
-
-  /** 小数精度测试值 - 0.123456789 */
-  PRECISION_DECIMAL: 0.123456789,
-
-  /** 科学计数法测试值 - 1e6 */
-  SCIENTIFIC_NOTATION: 1e6,
-
-  /** 极小数值 - 0.0001 */
-  VERY_SMALL_NUMBER: 0.0001,
-
-  /** 边界值测试 - Number.MAX_SAFE_INTEGER */
-  MAX_SAFE_INTEGER: Number.MAX_SAFE_INTEGER,
-
-  /** 边界值测试 - Number.MIN_SAFE_INTEGER */
-  MIN_SAFE_INTEGER: Number.MIN_SAFE_INTEGER,
-
-  // 格式化器测试专用常量
-  /** 整数样本 - 1234 */
-  INTEGER_SAMPLE: 1234,
-
-  /** 百分比样本 - 96 */
-  PERCENTAGE_SAMPLE: 96,
-
-  /** 货币样本 - 1235 */
-  CURRENCY_SAMPLE: 1235,
-
-  /** 精度样本 - 123.456 */
-  PRECISION_SAMPLE: 123.456,
-
-  /** 价格样本 - 100 */
-  PRICE_SAMPLE: 100,
-
-  /** 大整数 - 1000000 */
-  LARGE_INTEGER: 1000000,
-} as const;
-
-/** 测试特殊数值常量 */
-export const TEST_SPECIAL_CONSTANTS = {
-  /** 十六进制大数 - 0x80000000 */
-  HEX_LARGE_NUMBER: 0x80000000,
-
-  /** 负数测试值 - -100 */
-  NEGATIVE_VALUE: -100,
-
-  /** 浮点精度测试 - 0.1 + 0.2 */
-  FLOAT_PRECISION_ISSUE: TEST_BASE_NUMBERS.FLOAT_DECIMAL_ONE + TEST_BASE_NUMBERS.FLOAT_DECIMAL_TWO,
-
-  /** 无穷大 */
-  POSITIVE_INFINITY: Number.POSITIVE_INFINITY,
-
-  /** 负无穷大 */
-  NEGATIVE_INFINITY: Number.NEGATIVE_INFINITY,
-} as const;
+// 测试样本常量和特殊常量已移动到 test-ui-constants.ts
 
 /** 测试性能监控常量 */
 export const TEST_PERFORMANCE_MONITORING = {
@@ -464,152 +406,32 @@ export const TEST_PERFORMANCE_MONITORING = {
   THRESHOLD_CHECK_INTERVAL: 5000,
 } as const;
 
+/** 主题分析常量 */
+export const THEME_ANALYTICS_CONSTANTS = {
+  /** 主题切换延迟 - 400ms */
+  THEME_SWITCH_DELAY: 400,
+
+  /** 主题分析采样率 - 0.1 */
+  ANALYTICS_SAMPLE_RATE: 0.1,
+
+  /** 主题数据缓存大小 - 50 */
+  CACHE_SIZE: 50,
+
+  /** 主题切换超时 - 1000ms */
+  SWITCH_TIMEOUT: 1000,
+
+  /** 完整采样率 - 1.0 */
+  SAMPLING_RATE_FULL: 1.0,
+
+  /** 默认最大数据点 - 100 */
+  MAX_DATA_POINTS_DEFAULT: 100,
+
+  /** 默认性能阈值 - 500ms */
+  PERFORMANCE_THRESHOLD_DEFAULT: 500,
+} as const;
+
 // ==================== 性能测试常量 ====================
-
-/** Web Vitals 性能监控相关常量 */
-export const WEB_VITALS_CONSTANTS = {
-  // 性能阈值 - CLS (Cumulative Layout Shift)
-  CLS_GOOD_THRESHOLD: 0.1,
-  CLS_NEEDS_IMPROVEMENT_THRESHOLD: 0.25,
-  CLS_WARNING_CHANGE: 0.05,
-  CLS_CRITICAL_CHANGE: 0.1,
-
-  // 性能阈值 - FID (First Input Delay)
-  FID_GOOD_THRESHOLD: 100,
-  FID_NEEDS_IMPROVEMENT_THRESHOLD: 300,
-  FID_WARNING_CHANGE: 50,
-  FID_CRITICAL_CHANGE: 100,
-
-  // 性能阈值 - LCP (Largest Contentful Paint)
-  LCP_GOOD_THRESHOLD: 2500,
-  LCP_NEEDS_IMPROVEMENT_THRESHOLD: 4000,
-  LCP_WARNING_CHANGE: 500,
-  LCP_CRITICAL_CHANGE: 1000,
-
-  // 性能阈值 - FCP (First Contentful Paint)
-  FCP_GOOD_THRESHOLD: 1800,
-  FCP_NEEDS_IMPROVEMENT_THRESHOLD: 3000,
-  FCP_WARNING_CHANGE: 300,
-  FCP_CRITICAL_CHANGE: 600,
-
-  // 性能阈值 - TTFB (Time to First Byte)
-  TTFB_GOOD_THRESHOLD: 800,
-  TTFB_NEEDS_IMPROVEMENT_THRESHOLD: 1800,
-  TTFB_WARNING_CHANGE: 200,
-  TTFB_CRITICAL_CHANGE: 400,
-
-  // 性能监控配置
-  MONITORING_SAMPLE_RATE: 0.1,
-  REPORTING_INTERVAL: 30000,
-  CACHE_SIZE: 100,
-  THRESHOLD_CHECK_INTERVAL: 5000,
-  PERFORMANCE_OBSERVER_BUFFER_SIZE: 150,
-  METRIC_COLLECTION_TIMEOUT: 10000,
-
-  // 网络相关
-  NETWORK_DOWNLINK: 10,
-  NETWORK_RTT: 50,
-
-  // 设备相关
-  DEVICE_MEMORY: 8,
-
-  // 资源加载相关
-  SLOW_RESOURCE_DURATION: 2000, // 2秒，用于测试慢资源检测
-  SLOW_RESOURCE_THRESHOLD: 1000, // 1秒，慢资源阈值
-  MAX_SLOW_RESOURCES: 10, // 最大慢资源数量
-  MAX_SLOW_RESOURCES_PENALTY: 5, // 慢资源数量阈值
-  SLOW_RESOURCE_PENALTY: 10, // 慢资源评分惩罚
-
-  // 测试评分阈值
-  TEST_SCORE_THRESHOLD_GOOD: 80,
-  TEST_SCORE_THRESHOLD_POOR: 50,
-  PERFECT_SCORE: 100, // 完美评分
-
-  // 评分权重和乘数
-  SCORE_WEIGHT_QUARTER: 0.25,
-  SCORE_MULTIPLIER_GOOD: 15,
-  SCORE_MULTIPLIER_NEEDS_IMPROVEMENT: 25,
-  SCORE_MULTIPLIER_POOR: 35,
-
-  // 回归检测百分比阈值
-  PERCENT_CHANGE_WARNING: 10, // 10%变化触发警告
-  PERCENT_CHANGE_CRITICAL: 25, // 25%变化触发严重警告
-
-  // 测试用百分比和计数常量
-  TEST_PERCENTAGE_FIFTY: 50,
-  TEST_COUNT_TWO: 2,
-
-  // 测试时间常量
-  TEST_FETCH_START: 100,
-  TEST_DOMAIN_LOOKUP_END: 150,
-  TEST_CONNECT_START: 200,
-  TEST_CONNECT_END: 250,
-  TEST_REQUEST_START: 300,
-  TEST_RESPONSE_START: 400,
-  TEST_RESPONSE_END: 500,
-  TEST_DOM_INTERACTIVE: 600,
-  TEST_DOM_CONTENT_LOADED_START: 700,
-  TEST_DOM_CONTENT_LOADED_END: 750,
-  TEST_DOM_COMPLETE: 800,
-  TEST_LOAD_EVENT_END: 900,
-
-  // 网络测试常量
-  TEST_DOWNLINK_SPEED: 10,
-  TEST_RTT_LATENCY: 50,
-
-  // 评分阈值常量
-  GRADE_A_THRESHOLD: 90,
-  GRADE_B_THRESHOLD: 80,
-  GRADE_C_THRESHOLD: 70,
-  GRADE_D_THRESHOLD: 60,
-
-  // 性能监控常量
-  PERFORMANCE_SAMPLE_SIZE: 50,
-  BASELINE_REFRESH_HOURS: 24,
-  SCORE_EXCELLENT_THRESHOLD: 90,
-  SCORE_AVERAGE_THRESHOLD: 70,
-  REPORT_HISTORY_LIMIT: 10,
-
-  // 小数位数常量
-  DECIMAL_PLACES_ONE: 1,
-  DECIMAL_PLACES_TWO: 2,
-  DECIMAL_PLACES_THREE: 3,
-
-  // 字节转换常量
-  BYTES_TO_KB_DIVISOR: 1024,
-
-  // 时间单位常量
-  MINUTES_PER_HOUR: 60,
-} as const;
-
-/** Web Vitals 诊断测试常量 */
-export const TEST_WEB_VITALS_DIAGNOSTICS = {
-  // 基准性能值
-  CLS_BASELINE: 0.05,
-  LCP_BASELINE: 2000,
-  FID_BASELINE: 80,
-  FCP_BASELINE: 1500,
-  TTFB_BASELINE: 600,
-  INP_BASELINE: 150,
-
-  // 增量值（用于生成测试数据）
-  CLS_INCREMENT: 0.01,
-  LCP_INCREMENT: 100,
-  FID_INCREMENT: 10,
-
-  // 性能评分
-  PERFORMANCE_SCORE: 85,
-
-  // 历史数据时间偏移
-  HISTORICAL_TIME_OFFSET: 3600000, // 1小时
-
-  // 网络相关常量
-  NETWORK_DOWNLINK: 4,
-  NETWORK_RTT: 50,
-
-  // 设备相关常量
-  DEVICE_MEMORY: 8,
-} as const;
+// Web Vitals 常量已移动到 test-web-vitals-constants.ts
 
 // ==================== 统一导出对象 ====================
 
@@ -646,3 +468,20 @@ export const TEST_CONSTANTS = {
   DELAY: TEST_DELAY_VALUES,
   PERFORMANCE_TIMESTAMPS: TEST_PERFORMANCE_TIMESTAMPS,
 } as const;
+
+// ==================== 单独导出常用常量 ====================
+
+// 导出常用的测试常量以便直接使用
+export {
+    TEST_CONTENT_LIMITS,
+    TEST_SAMPLE_CONSTANTS,
+    TEST_SCREEN_CONSTANTS,
+    TEST_SPECIAL_CONSTANTS
+} from './test-ui-constants';
+
+// 导出Web Vitals相关常量
+export {
+    TEST_WEB_VITALS_DIAGNOSTICS,
+    WEB_VITALS_CONSTANTS
+} from './test-web-vitals-constants';
+

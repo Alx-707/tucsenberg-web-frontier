@@ -45,7 +45,11 @@
   "i18n-ally.localesPaths": [
     "messages",
     "src/i18n",
-    "src/components/i18n"
+    "src/components/i18n",
+    "coverage/tucsenberg-web-frontier/src/i18n",
+    "coverage/tucsenberg-web-frontier/src/components/i18n",
+    "coverage/lcov-report/tucsenberg-web-frontier/src/i18n",
+    "coverage/lcov-report/tucsenberg-web-frontier/src/components/i18n"
   ],
   "editor.codeActionsOnSaveTimeout": 3000,
   "typescript.preferences.organizeImportsIgnoreCase": false

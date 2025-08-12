@@ -70,7 +70,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: any) => (
     <div data-testid='language-dropdown-menu'>{children}</div>
   ),
-  DropdownMenuTrigger: ({ children, asChild }: any) => (
+  DropdownMenuTrigger: ({ children, asChild: _asChild }: any) => (
     <div data-testid='language-dropdown-trigger'>{children}</div>
   ),
   DropdownMenuContent: ({ children, align }: any) => (
@@ -81,7 +81,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuItem: ({ children, asChild }: any) => (
+  DropdownMenuItem: ({ children, asChild: _asChild }: any) => (
     <div data-testid='language-dropdown-item'>{children}</div>
   ),
 }));
@@ -134,7 +134,10 @@ describe('LanguageToggle Integration Tests', () => {
         english: 'English',
         chinese: '中文',
       };
-      return translations[key] || key;
+      // eslint-disable-next-line security/detect-object-injection
+      return (
+        (Object.hasOwn(translations, key) ? translations[key] : null) || key
+      );
     });
 
     mockUseLocale.mockReturnValue('en');
@@ -196,17 +199,22 @@ describe('LanguageToggle Integration Tests', () => {
     it('should show loading state during transition', async () => {
       // Mock the component to simulate loading state
       const MockLanguageToggle = () => (
-        <div data-testid="language-dropdown-menu">
-          <div data-testid="language-dropdown-trigger">
+        <div data-testid='language-dropdown-menu'>
+          <div data-testid='language-dropdown-trigger'>
             <button
-              data-testid="language-toggle-button"
-              data-variant="outline"
-              data-size="icon"
+              data-testid='language-toggle-button'
+              data-variant='outline'
+              data-size='icon'
               disabled
             >
-              <span data-testid="languages-icon">🌐</span>
-              <span data-testid="loader-icon" className="animate-spin">⏳</span>
-              <span className="sr-only">Toggle language</span>
+              <span data-testid='languages-icon'>🌐</span>
+              <span
+                data-testid='loader-icon'
+                className='animate-spin'
+              >
+                ⏳
+              </span>
+              <span className='sr-only'>Toggle language</span>
             </button>
           </div>
         </div>
@@ -226,18 +234,26 @@ describe('LanguageToggle Integration Tests', () => {
     it('should show individual language loading indicators', async () => {
       // Mock the component to simulate specific language switching
       const MockLanguageToggleWithLoader = () => (
-        <div data-testid="language-dropdown-menu">
-          <div data-testid="language-dropdown-trigger">
-            <button data-testid="language-toggle-button">
-              <span data-testid="languages-icon">🌐</span>
+        <div data-testid='language-dropdown-menu'>
+          <div data-testid='language-dropdown-trigger'>
+            <button data-testid='language-toggle-button'>
+              <span data-testid='languages-icon'>🌐</span>
             </button>
           </div>
-          <div data-testid="language-dropdown-content">
-            <div data-testid="language-dropdown-item">
-              <a data-testid="language-link-zh" className="flex items-center">
+          <div data-testid='language-dropdown-content'>
+            <div data-testid='language-dropdown-item'>
+              <a
+                data-testid='language-link-zh'
+                className='flex items-center'
+              >
                 <span>ZH</span>
                 <span>中文</span>
-                <span data-testid="loader-icon" className="animate-spin">⏳</span>
+                <span
+                  data-testid='loader-icon'
+                  className='animate-spin'
+                >
+                  ⏳
+                </span>
               </a>
             </div>
           </div>

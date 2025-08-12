@@ -1,34 +1,178 @@
-import { TEST_COUNT_CONSTANTS, TEST_COUNTS } from '@/constants/test-constants';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import { TEST_COUNT_CONSTANTS, TEST_COUNTS } from '@/constants/test-constants';
+// Import after mocks
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../dropdown-menu';
 
 // Use vi.hoisted to ensure proper mock setup
 const { mockRadixComponents, mockLucideIcons } = vi.hoisted(() => ({
   mockRadixComponents: {
-    Root: ({ children, ...props }: any) => <div data-testid="dropdown-root" {...props}>{children}</div>,
-    Portal: ({ children, ...props }: any) => <div data-testid="dropdown-portal" {...props}>{children}</div>,
-    Trigger: ({ children, ...props }: any) => <button data-testid="dropdown-trigger" {...props}>{children}</button>,
-    Content: ({ children, ...props }: any) => <div data-testid="dropdown-content" {...props}>{children}</div>,
-    Group: ({ children, ...props }: any) => <div data-testid="dropdown-group" {...props}>{children}</div>,
-    Item: ({ children, ...props }: any) => <div data-testid="dropdown-item" role="menuitem" {...props}>{children}</div>,
-    CheckboxItem: ({ children, checked, ...props }: any) => (
-      <div data-testid="dropdown-checkbox-item" role="menuitemcheckbox" aria-checked={checked} {...props}>
+    Root: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-root'
+        {...props}
+      >
         {children}
       </div>
     ),
-    RadioGroup: ({ children, ...props }: any) => <div data-testid="dropdown-radio-group" role="radiogroup" {...props}>{children}</div>,
-    RadioItem: ({ children, ...props }: any) => <div data-testid="dropdown-radio-item" role="menuitemradio" {...props}>{children}</div>,
-    ItemIndicator: ({ children, ...props }: any) => <span data-testid="dropdown-indicator" {...props}>{children}</span>,
-    Label: ({ children, ...props }: any) => <div data-testid="dropdown-label" {...props}>{children}</div>,
-    Separator: ({ ...props }: any) => <div data-testid="dropdown-separator" role="separator" {...props} />,
-    Sub: ({ children, ...props }: any) => <div data-testid="dropdown-sub" {...props}>{children}</div>,
-    SubTrigger: ({ children, ...props }: any) => <div data-testid="dropdown-sub-trigger" {...props}>{children}</div>,
-    SubContent: ({ children, ...props }: any) => <div data-testid="dropdown-sub-content" {...props}>{children}</div>,
+    Portal: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-portal'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    Trigger: ({ children, ...props }: any) => (
+      <button
+        data-testid='dropdown-trigger'
+        {...props}
+      >
+        {children}
+      </button>
+    ),
+    Content: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-content'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    Group: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-group'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    Item: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-item'
+        role='menuitem'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    CheckboxItem: ({ children, checked, ...props }: any) => (
+      <div
+        data-testid='dropdown-checkbox-item'
+        role='menuitemcheckbox'
+        aria-checked={checked}
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    RadioGroup: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-radio-group'
+        role='radiogroup'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    RadioItem: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-radio-item'
+        role='menuitemradio'
+        aria-checked='false'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    ItemIndicator: ({ children, ...props }: any) => (
+      <span
+        data-testid='dropdown-indicator'
+        {...props}
+      >
+        {children}
+      </span>
+    ),
+    Label: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-label'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    Separator: ({ ...props }: any) => (
+      <div
+        data-testid='dropdown-separator'
+        role='separator'
+        {...props}
+      />
+    ),
+    Sub: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-sub'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    SubTrigger: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-sub-trigger'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
+    SubContent: ({ children, ...props }: any) => (
+      <div
+        data-testid='dropdown-sub-content'
+        {...props}
+      >
+        {children}
+      </div>
+    ),
   },
   mockLucideIcons: {
-    CheckIcon: ({ className }: any) => <span data-testid="check-icon" className={className}>✓</span>,
-    ChevronRightIcon: ({ className }: any) => <span data-testid="chevron-right-icon" className={className}>→</span>,
-    CircleIcon: ({ className }: any) => <span data-testid="circle-icon" className={className}>●</span>,
+    CheckIcon: ({ className }: any) => (
+      <span
+        data-testid='check-icon'
+        className={className}
+      >
+        ✓
+      </span>
+    ),
+    ChevronRightIcon: ({ className }: any) => (
+      <span
+        data-testid='chevron-right-icon'
+        className={className}
+      >
+        →
+      </span>
+    ),
+    CircleIcon: ({ className }: any) => (
+      <span
+        data-testid='circle-icon'
+        className={className}
+      >
+        ●
+      </span>
+    ),
   },
 }));
 
@@ -38,31 +182,13 @@ vi.mock('@radix-ui/react-dropdown-menu', () => mockRadixComponents);
 // Mock Lucide icons
 vi.mock('lucide-react', () => mockLucideIcons);
 
-// Import after mocks
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuRadioGroup,
-    DropdownMenuRadioItem,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuSub,
-    DropdownMenuSubContent,
-    DropdownMenuSubTrigger,
-    DropdownMenuTrigger
-} from '../dropdown-menu';
-
 describe('DropdownMenu Components', () => {
   describe('DropdownMenu', () => {
     it('renders dropdown menu root', () => {
       render(
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const root = screen.getByTestId('dropdown-root');
@@ -72,9 +198,9 @@ describe('DropdownMenu Components', () => {
 
     it('passes through props to root', () => {
       render(
-        <DropdownMenu data-custom="test-value">
+        <DropdownMenu data-custom='test-value'>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const root = screen.getByTestId('dropdown-root');
@@ -87,7 +213,7 @@ describe('DropdownMenu Components', () => {
       render(
         <DropdownMenu>
           <DropdownMenuTrigger>Open Menu</DropdownMenuTrigger>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const trigger = screen.getByTestId('dropdown-trigger');
@@ -102,7 +228,7 @@ describe('DropdownMenu Components', () => {
       render(
         <DropdownMenu>
           <DropdownMenuTrigger onClick={handleClick}>Open</DropdownMenuTrigger>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const trigger = screen.getByTestId('dropdown-trigger');
@@ -117,7 +243,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuTrigger asChild>
             <div>Custom Trigger</div>
           </DropdownMenuTrigger>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const trigger = screen.getByTestId('dropdown-trigger');
@@ -134,7 +260,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const content = screen.getByTestId('dropdown-content');
@@ -147,10 +273,10 @@ describe('DropdownMenu Components', () => {
       render(
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-          <DropdownMenuContent className="custom-content">
+          <DropdownMenuContent className='custom-content'>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const content = screen.getByTestId('dropdown-content');
@@ -164,7 +290,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent sideOffset={8}>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const content = screen.getByTestId('dropdown-content');
@@ -178,7 +304,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const portal = screen.getByTestId('dropdown-portal');
@@ -197,7 +323,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem>Default Item</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -212,9 +338,11 @@ describe('DropdownMenu Components', () => {
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem variant="destructive">Delete Item</DropdownMenuItem>
+            <DropdownMenuItem variant='destructive'>
+              Delete Item
+            </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -228,7 +356,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem inset>Inset Item</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -242,9 +370,11 @@ describe('DropdownMenu Components', () => {
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onClick={handleClick}>Clickable Item</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleClick}>
+              Clickable Item
+            </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -260,7 +390,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem disabled>Disabled Item</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -278,7 +408,7 @@ describe('DropdownMenu Components', () => {
               Checkbox Item
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-checkbox-item');
@@ -296,7 +426,7 @@ describe('DropdownMenu Components', () => {
               Checked Item
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-checkbox-item');
@@ -317,7 +447,7 @@ describe('DropdownMenu Components', () => {
               Undefined Checked
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-checkbox-item');
@@ -331,17 +461,24 @@ describe('DropdownMenu Components', () => {
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuRadioGroup value="option1">
-              <DropdownMenuRadioItem value="option1">Option 1</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="option2">Option 2</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup value='option1'>
+              <DropdownMenuRadioItem value='option1'>
+                Option 1
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='option2'>
+                Option 2
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const radioGroup = screen.getByTestId('dropdown-radio-group');
       expect(radioGroup).toBeInTheDocument();
-      expect(radioGroup).toHaveAttribute('data-slot', 'dropdown-menu-radio-group');
+      expect(radioGroup).toHaveAttribute(
+        'data-slot',
+        'dropdown-menu-radio-group',
+      );
       expect(radioGroup).toHaveAttribute('value', 'option1');
     });
 
@@ -351,10 +488,12 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuRadioGroup>
-              <DropdownMenuRadioItem value="option1">Option 1</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='option1'>
+                Option 1
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const radioItem = screen.getByTestId('dropdown-radio-item');
@@ -362,7 +501,10 @@ describe('DropdownMenu Components', () => {
       const circleIcon = screen.getByTestId('circle-icon');
 
       expect(radioItem).toBeInTheDocument();
-      expect(radioItem).toHaveAttribute('data-slot', 'dropdown-menu-radio-item');
+      expect(radioItem).toHaveAttribute(
+        'data-slot',
+        'dropdown-menu-radio-item',
+      );
       expect(radioItem).toHaveAttribute('value', 'option1');
       expect(indicator).toBeInTheDocument();
       expect(circleIcon).toBeInTheDocument();
@@ -377,7 +519,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuLabel>Menu Label</DropdownMenuLabel>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const label = screen.getByTestId('dropdown-label');
@@ -391,9 +533,11 @@ describe('DropdownMenu Components', () => {
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel className="custom-label">Custom Label</DropdownMenuLabel>
+            <DropdownMenuLabel className='custom-label'>
+              Custom Label
+            </DropdownMenuLabel>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const label = screen.getByTestId('dropdown-label');
@@ -407,7 +551,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuLabel inset>Inset Label</DropdownMenuLabel>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const label = screen.getByTestId('dropdown-label');
@@ -425,7 +569,7 @@ describe('DropdownMenu Components', () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem>Item 2</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const separator = screen.getByTestId('dropdown-separator');
@@ -439,9 +583,9 @@ describe('DropdownMenu Components', () => {
         <DropdownMenu>
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuSeparator className="custom-separator" />
+            <DropdownMenuSeparator className='custom-separator' />
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const separator = screen.getByTestId('dropdown-separator');
@@ -460,7 +604,7 @@ describe('DropdownMenu Components', () => {
               <DropdownMenuShortcut>⌘C</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const shortcut = screen.getByText('⌘C');
@@ -475,10 +619,12 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem>
               Paste
-              <DropdownMenuShortcut className="custom-shortcut">⌘V</DropdownMenuShortcut>
+              <DropdownMenuShortcut className='custom-shortcut'>
+                ⌘V
+              </DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const shortcut = screen.getByText('⌘V');
@@ -497,7 +643,7 @@ describe('DropdownMenu Components', () => {
               <DropdownMenuItem>Grouped Item 2</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const group = screen.getByTestId('dropdown-group');
@@ -519,7 +665,7 @@ describe('DropdownMenu Components', () => {
               </DropdownMenuSubContent>
             </DropdownMenuSub>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const sub = screen.getByTestId('dropdown-sub');
@@ -528,8 +674,14 @@ describe('DropdownMenu Components', () => {
 
       expect(sub).toBeInTheDocument();
       expect(sub).toHaveAttribute('data-slot', 'dropdown-menu-sub');
-      expect(subTrigger).toHaveAttribute('data-slot', 'dropdown-menu-sub-trigger');
-      expect(subContent).toHaveAttribute('data-slot', 'dropdown-menu-sub-content');
+      expect(subTrigger).toHaveAttribute(
+        'data-slot',
+        'dropdown-menu-sub-trigger',
+      );
+      expect(subContent).toHaveAttribute(
+        'data-slot',
+        'dropdown-menu-sub-content',
+      );
     });
 
     it('shows chevron icon in sub trigger', () => {
@@ -541,7 +693,7 @@ describe('DropdownMenu Components', () => {
               <DropdownMenuSubTrigger>More Options</DropdownMenuSubTrigger>
             </DropdownMenuSub>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const chevronIcon = screen.getByTestId('chevron-right-icon');
@@ -554,10 +706,12 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuTrigger>Open</DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger inset>Inset Sub Trigger</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger inset>
+                Inset Sub Trigger
+              </DropdownMenuSubTrigger>
             </DropdownMenuSub>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const subTrigger = screen.getByTestId('dropdown-sub-trigger');
@@ -574,7 +728,7 @@ describe('DropdownMenu Components', () => {
             <DropdownMenuItem>Item 1</DropdownMenuItem>
             <DropdownMenuItem>Item 2</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const trigger = screen.getByTestId('dropdown-trigger');
@@ -588,11 +742,11 @@ describe('DropdownMenu Components', () => {
     it('supports ARIA attributes', () => {
       render(
         <DropdownMenu>
-          <DropdownMenuTrigger aria-label="Open menu">Menu</DropdownMenuTrigger>
+          <DropdownMenuTrigger aria-label='Open menu'>Menu</DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem>Item 1</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const trigger = screen.getByTestId('dropdown-trigger');
@@ -606,7 +760,7 @@ describe('DropdownMenu Components', () => {
           <DropdownMenuContent>
             <DropdownMenuItem disabled>Disabled Item</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       const item = screen.getByTestId('dropdown-item');
@@ -636,9 +790,9 @@ describe('DropdownMenu Components', () => {
               Show Toolbar
             </DropdownMenuCheckboxItem>
             <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup value="light">
-              <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup value='light'>
+              <DropdownMenuRadioItem value='light'>Light</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value='dark'>Dark</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
             <DropdownMenuSeparator />
             <DropdownMenuSub>
@@ -648,12 +802,14 @@ describe('DropdownMenu Components', () => {
               </DropdownMenuSubContent>
             </DropdownMenuSub>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>,
       );
 
       expect(screen.getByTestId('dropdown-label')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-group')).toBeInTheDocument();
-      expect(screen.getAllByTestId('dropdown-separator')).toHaveLength(TEST_COUNTS.SMALL);
+      expect(screen.getAllByTestId('dropdown-separator')).toHaveLength(
+        TEST_COUNTS.SMALL,
+      );
       expect(screen.getByTestId('dropdown-checkbox-item')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-radio-group')).toBeInTheDocument();
       expect(screen.getByTestId('dropdown-sub')).toBeInTheDocument();

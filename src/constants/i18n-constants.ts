@@ -116,6 +116,32 @@ export const QUALITY_WEIGHTS = {
   PLACEHOLDER_PENALTY: 20,
 } as const;
 
+/** 翻译质量评分系数 */
+export const QUALITY_SCORING = {
+  /** 质量评分惩罚系数 */
+  ISSUE_PENALTY_FACTOR: 0.1,
+  /** 质量趋势分数范围 - 最小值 */
+  TREND_SCORE_MIN: 0.7,
+  /** 质量趋势分数范围 - 变化幅度 */
+  TREND_SCORE_RANGE: 0.3,
+  /** 质量趋势键数量 - 基础值 */
+  TREND_KEY_COUNT_BASE: 50,
+  /** 质量趋势键数量 - 变化范围 */
+  TREND_KEY_COUNT_RANGE: 100,
+} as const;
+
+/** 翻译质量检查阈值 */
+export const QUALITY_CHECK_THRESHOLDS = {
+  /** 高质量阈值 */
+  HIGH_QUALITY: 30,
+  /** 中等质量阈值 */
+  MEDIUM_QUALITY: 20,
+  /** 低质量阈值 */
+  LOW_QUALITY: 10,
+  /** 术语一致性检查阈值 */
+  TERMINOLOGY_CONSISTENCY: 10,
+} as const;
+
 /** 翻译验证阈值 */
 export const VALIDATION_THRESHOLDS = {
   /** 空翻译惩罚 */

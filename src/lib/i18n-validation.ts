@@ -45,7 +45,8 @@ async function loadTranslations(
     try {
       const messages = await import(`../../messages/${locale}.json`);
       translations[locale] = messages.default;
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+    } catch (_error) {
       errors.push({
         type: 'missing_key',
         key: 'translation_file',

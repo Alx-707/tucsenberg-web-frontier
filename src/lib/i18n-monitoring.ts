@@ -12,14 +12,17 @@ import {
 } from '@/constants/i18n-constants';
 
 // 错误级别
+/* eslint-disable @typescript-eslint/no-unused-vars, no-unused-vars */
 export enum ErrorLevel {
   INFO = 'info',
   WARNING = 'warning',
   ERROR = 'error',
   CRITICAL = 'critical',
 }
+/* eslint-enable @typescript-eslint/no-unused-vars, no-unused-vars */
 
 // 监控事件类型
+/* eslint-disable @typescript-eslint/no-unused-vars, no-unused-vars */
 export enum MonitoringEventType {
   TRANSLATION_MISSING = 'translation_missing',
   TRANSLATION_ERROR = 'translation_error',
@@ -28,6 +31,7 @@ export enum MonitoringEventType {
   PERFORMANCE_ISSUE = 'performance_issue',
   QUALITY_ISSUE = 'quality_issue',
 }
+/* eslint-enable @typescript-eslint/no-unused-vars, no-unused-vars */
 
 // 监控事件
 export interface MonitoringEvent {

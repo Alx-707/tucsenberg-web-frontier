@@ -1,7 +1,7 @@
 'use client';
 
-import { Locale } from '@/types/i18n';
 import { CACHE_DURATIONS, CACHE_LIMITS } from '@/constants/i18n-constants';
+import { Locale } from '@/types/i18n';
 
 // 存储键名常量
 const STORAGE_KEYS = {
@@ -68,7 +68,18 @@ class CookieManager {
       const [cookieName, ...cookieValueParts] = cookie.trim().split('=');
       if (cookieName === name) {
         const cookieValue = cookieValueParts.join('=');
-        return cookieValue ? decodeURIComponent(cookieValue) : null;
+        if (cookieValue) {
+          try {
+            return decodeURIComponent(cookieValue);
+          } catch {
+            // 静默处理URI解码错误
+            if (process.env.NODE_ENV === 'development') {
+              // console.warn('Failed to decode cookie value:', error);
+            }
+            return null;
+          }
+        }
+        return null;
       }
     }
     return null;
@@ -135,10 +146,18 @@ export class LocaleStorageManager {
    */
   static saveUserPreference(preference: UserLocalePreference): void {
     // 保存到 Cookie (用于 SSR)
-    CookieManager.set(
-      STORAGE_KEYS.LOCALE_PREFERENCE,
-      JSON.stringify(preference),
-    );
+    try {
+      CookieManager.set(
+        STORAGE_KEYS.LOCALE_PREFERENCE,
+        JSON.stringify(preference),
+      );
+    } catch {
+      // 静默处理cookie错误，避免在生产环境中输出日志
+      if (process.env.NODE_ENV === 'development') {
+        // 在开发环境中可以使用调试器或其他日志方案
+        // console.warn('Failed to save locale preference to cookie:', error);
+      }
+    }
 
     // 保存到 localStorage (用于客户端持久化)
     LocalStorageManager.set(STORAGE_KEYS.LOCALE_PREFERENCE, preference);
@@ -232,7 +251,13 @@ export class LocaleStorageManager {
     timestamp: number;
     confidence: number;
   }): void {
-    const history = this.getDetectionHistory();
+    const existingHistory = this.getDetectionHistory();
+
+    // 如果没有历史记录，创建新的
+    const history: LocaleDetectionHistory = existingHistory || {
+      detections: [],
+      lastUpdated: Date.now(),
+    };
 
     // 添加新的检测记录
     history.detections.push(detection);
@@ -252,17 +277,24 @@ export class LocaleStorageManager {
   /**
    * 获取检测历史
    */
-  static getDetectionHistory(): LocaleDetectionHistory {
+  static getDetectionHistory(): LocaleDetectionHistory | null {
     const history = LocalStorageManager.get<LocaleDetectionHistory>(
       STORAGE_KEYS.LOCALE_DETECTION_HISTORY,
     );
 
-    return (
-      history || {
-        detections: [],
-        lastUpdated: Date.now(),
-      }
-    );
+    return history;
+  }
+
+  /**
+   * 添加检测记录
+   */
+  static addDetectionRecord(detection: {
+    locale: Locale;
+    source: string;
+    timestamp: number;
+    confidence: number;
+  }): void {
+    this.updateDetectionHistory(detection);
   }
 
   /**

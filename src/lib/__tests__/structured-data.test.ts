@@ -279,9 +279,7 @@ describe('Structured Data Generation', () => {
         '@type': 'Product',
         'name': 'Enterprise Solution',
         'description': 'Advanced business platform',
-        'image': [
-          '/product-image.jpg',
-        ],
+        'image': ['/product-image.jpg'],
         'manufacturer': {
           '@type': 'Organization',
           'name': 'Tucsenberg',

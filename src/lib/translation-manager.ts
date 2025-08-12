@@ -2,16 +2,19 @@
  * 翻译管理器主导出文件
  * 包含Lingo.dev集成接口和翻译质量管理
  */
-import { TranslationManagerCore } from './translation-manager-core';
 import type {
   TranslationManagerConfig,
   TranslationQualityCheck,
 } from '@/types/translation-manager';
+import { TranslationManagerCore } from './translation-manager-core';
 
 /**
  * 翻译管理器主类 - 继承核心功能
  */
-export class TranslationManager extends TranslationManagerCore implements TranslationQualityCheck {
+export class TranslationManager
+  extends TranslationManagerCore
+  implements TranslationQualityCheck
+{
   constructor(config: TranslationManagerConfig) {
     super(config);
   }

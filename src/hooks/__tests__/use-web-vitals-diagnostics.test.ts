@@ -1,13 +1,7 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  TEST_APP_CONSTANTS,
-  TEST_COUNT_CONSTANTS,
-  TEST_WEB_VITALS_DIAGNOSTICS,
-} from '@/constants/test-constants';
-import { useWebVitalsDiagnostics } from '../use-web-vitals-diagnostics';
 
-// Mock enhanced-web-vitals
+// 1. 直接Mock模块 - 移到文件顶部确保在所有导入前执行
 vi.mock('@/lib/enhanced-web-vitals', () => ({
   enhancedWebVitalsCollector: {
     generateDiagnosticReport: vi.fn(),
@@ -16,21 +10,26 @@ vi.mock('@/lib/enhanced-web-vitals', () => ({
   },
 }));
 
-// Mock localStorage
-const mockLocalStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
+// 2. 使用vi.hoisted确保Mock函数在模块导入前设置
+const {
+  mockLocalStorage,
+  mockConsoleWarn,
+} = vi.hoisted(() => ({
+  mockLocalStorage: {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  },
+  mockConsoleWarn: vi.fn(),
+}));
 
+// 3. Mock浏览器API
 Object.defineProperty(global, 'localStorage', {
   value: mockLocalStorage,
   writable: true,
 });
 
-// Mock console.warn
-const mockConsoleWarn = vi.fn();
 Object.defineProperty(global, 'console', {
   value: {
     ...console,
@@ -39,8 +38,52 @@ Object.defineProperty(global, 'console', {
   writable: true,
 });
 
+// Mock window对象
+Object.defineProperty(global, 'window', {
+  value: {
+    location: { href: 'http://localhost:3000/test' },
+    navigator: { userAgent: 'test-agent' },
+  },
+  writable: true,
+});
+
+// 4. 导入测试常量和被测试的模块
+import {
+    TEST_COUNT_CONSTANTS,
+    TEST_WEB_VITALS_DIAGNOSTICS
+} from '@/constants/test-constants';
+import { useWebVitalsDiagnostics } from '../use-web-vitals-diagnostics';
+
+// Mock验证函数
+const verifyMockSetup = async () => {
+  const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+
+  // 验证Mock函数是否正确设置
+  expect(vi.isMockFunction(enhancedWebVitalsCollector.generateDiagnosticReport)).toBe(true);
+  expect(vi.isMockFunction(enhancedWebVitalsCollector.getMetrics)).toBe(true);
+  expect(vi.isMockFunction(enhancedWebVitalsCollector.reset)).toBe(true);
+
+  // 验证Mock函数可以被调用
+  expect(enhancedWebVitalsCollector.generateDiagnosticReport).toBeDefined();
+  expect(enhancedWebVitalsCollector.getMetrics).toBeDefined();
+  expect(enhancedWebVitalsCollector.reset).toBeDefined();
+};
+
+// 辅助函数：验证Hook返回值的完整性
+const validateHookResult = (result: any) => {
+  // 在测试环境中，Hook应该立即返回有效对象
+  expect(result.current).toBeTruthy();
+  expect(result.current).not.toBeNull();
+  expect(typeof result.current.refreshDiagnostics).toBe('function');
+  expect(typeof result.current.getPerformanceTrends).toBe('function');
+  expect(typeof result.current.exportReport).toBe('function');
+  expect(typeof result.current.getPageComparison).toBe('function');
+  expect(typeof result.current.clearHistory).toBe('function');
+};
+
 describe('useWebVitalsDiagnostics', () => {
-  const mockDiagnosticReport = {
+  // Mock返回值应该匹配generateDiagnosticReport的返回类型
+  const mockGenerateReportResult = {
     metrics: {
       cls: TEST_WEB_VITALS_DIAGNOSTICS.CLS_BASELINE,
       lcp: TEST_WEB_VITALS_DIAGNOSTICS.LCP_BASELINE,
@@ -69,30 +112,70 @@ describe('useWebVitalsDiagnostics', () => {
     },
   };
 
+  // 期望的DiagnosticReport结构（Hook内部转换后的）
+  const mockDiagnosticReport = {
+    timestamp: Date.now(),
+    vitals: mockGenerateReportResult.metrics,
+    score: mockGenerateReportResult.analysis.score,
+    issues: mockGenerateReportResult.analysis.issues,
+    recommendations: mockGenerateReportResult.analysis.recommendations,
+    pageUrl: 'http://localhost:3000/test',
+    userAgent: 'test-agent',
+  };
+
   beforeEach(async () => {
+    // 1. 验证Mock设置
+    await verifyMockSetup();
+
+    // 2. 统一使用vi.clearAllMocks()重置所有Mock
     vi.clearAllMocks();
     vi.useFakeTimers();
 
-    // Setup mock for enhanced-web-vitals
-    const { enhancedWebVitalsCollector } = (await vi.importMock(
-      '@/lib/enhanced-web-vitals',
-    )) as any;
-    vi.mocked(
-      enhancedWebVitalsCollector.generateDiagnosticReport,
-    ).mockReturnValue(mockDiagnosticReport);
+    // 3. 获取Mock实例并设置默认行为
+    const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+    enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue(mockGenerateReportResult);
+    enhancedWebVitalsCollector.getMetrics.mockReturnValue({});
+    enhancedWebVitalsCollector.reset.mockImplementation(() => {});
 
+    // 4. 设置浏览器API Mock的默认行为
     mockLocalStorage.getItem.mockReturnValue(null);
+    mockLocalStorage.setItem.mockImplementation(() => {});
+    mockLocalStorage.removeItem.mockImplementation(() => {});
+    mockLocalStorage.clear.mockImplementation(() => {});
+    mockConsoleWarn.mockImplementation(() => {});
   });
+
+  // 辅助函数：重置所有Mock到默认状态
+  const resetMocksToDefault = async () => {
+    vi.clearAllMocks();
+
+    // 获取Mock实例并重新设置默认行为
+    const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+    enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue(mockGenerateReportResult);
+    enhancedWebVitalsCollector.getMetrics.mockReturnValue({});
+    enhancedWebVitalsCollector.reset.mockImplementation(() => {});
+
+    // 重置浏览器API Mock
+    mockLocalStorage.getItem.mockReturnValue(null);
+    mockLocalStorage.setItem.mockImplementation(() => {});
+    mockLocalStorage.removeItem.mockImplementation(() => {});
+    mockLocalStorage.clear.mockImplementation(() => {});
+    mockConsoleWarn.mockImplementation(() => {});
+  };
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.restoreAllMocks();
+    // 统一使用vi.clearAllMocks()而不是vi.resetAllMocks()
+    vi.clearAllMocks();
   });
 
   describe('initialization', () => {
     it('should initialize with loading state', () => {
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      expect(result.current).not.toBeNull();
+      expect(result.current).toBeDefined();
       expect(result.current.isLoading).toBe(true);
       expect(result.current.currentReport).toBe(null);
       expect(result.current.historicalReports).toEqual([]);
@@ -102,6 +185,10 @@ describe('useWebVitalsDiagnostics', () => {
     it('should provide all required functions', () => {
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      expect(result.current).not.toBeNull();
+      expect(result.current).toBeDefined();
+
       expect(typeof result.current.refreshDiagnostics).toBe('function');
       expect(typeof result.current.getPerformanceTrends).toBe('function');
       expect(typeof result.current.exportReport).toBe('function');
@@ -109,7 +196,7 @@ describe('useWebVitalsDiagnostics', () => {
       expect(typeof result.current.clearHistory).toBe('function');
     });
 
-    it('should load historical data from localStorage on mount', async () => {
+    it('should load historical data from localStorage on mount', () => {
       const historicalData = [
         { ...mockDiagnosticReport, timestamp: Date.now() - 1000 },
         {
@@ -123,68 +210,86 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
-      await act(async () => {
-        await result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
-      });
+      // 验证Hook正确初始化
+      expect(result.current).not.toBeNull();
+      expect(result.current).toBeDefined();
 
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false);
-      });
-
-      expect(result.current.historicalReports.length).toBeGreaterThan(0);
+      // 验证历史数据已加载（同步操作）
+      expect(result.current.historicalReports).toEqual(historicalData);
     });
   });
 
   describe('refreshDiagnostics', () => {
     it('should generate new diagnostic report', async () => {
+      await resetMocksToDefault();
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 在测试环境中，Hook应该立即可用，无需等待初始化
+      expect(result.current).toBeTruthy();
+      expect(typeof result.current.refreshDiagnostics).toBe('function');
+
       await act(async () => {
+        // 先推进计时器处理初始化延迟
+        vi.runAllTimers();
+        // 然后调用refreshDiagnostics
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        // 再次推进计时器处理异步延迟
+        vi.runAllTimers();
         await promise;
       });
 
-      // Verify the mock was called (we can't directly access it here, so just check the result)
+      // 验证Mock被调用
+      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+      expect(enhancedWebVitalsCollector.generateDiagnosticReport).toHaveBeenCalled();
+
+      // 验证结果
       expect(result.current.currentReport).toBeTruthy();
-      expect(result.current.currentReport).toBeTruthy();
-      expect(result.current.currentReport?.metrics.cls).toBe(
+      expect(result.current.currentReport?.vitals.cls).toBe(
         TEST_WEB_VITALS_DIAGNOSTICS.CLS_BASELINE,
       );
       expect(result.current.isLoading).toBe(false);
     });
 
     it('should save report to localStorage', async () => {
+      await resetMocksToDefault();
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 在测试环境中，Hook应该立即可用
+      expect(result.current).toBeTruthy();
+      expect(typeof result.current.refreshDiagnostics).toBe('function');
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         'webVitalsDiagnostics',
-        expect.stringContaining('"metrics"'),
+        expect.stringContaining('"vitals"'),
       );
     });
 
     it('should handle errors during report generation', async () => {
-      const { enhancedWebVitalsCollector } = (await vi.importMock(
-        '@/lib/enhanced-web-vitals',
-      )) as any;
-      vi.mocked(
-        enhancedWebVitalsCollector.generateDiagnosticReport,
-      ).mockImplementation(() => {
+      await resetMocksToDefault();
+
+      // 设置错误Mock
+      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+      enhancedWebVitalsCollector.generateDiagnosticReport.mockImplementation(() => {
         throw new Error('Report generation failed');
       });
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 在测试环境中，Hook应该立即可用
+      expect(result.current).toBeTruthy();
+      expect(typeof result.current.refreshDiagnostics).toBe('function');
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
@@ -193,29 +298,35 @@ describe('useWebVitalsDiagnostics', () => {
     });
 
     it('should handle unknown errors', async () => {
-      const { enhancedWebVitalsCollector } = (await vi.importMock(
-        '@/lib/enhanced-web-vitals',
-      )) as any;
-      vi.mocked(
-        enhancedWebVitalsCollector.generateDiagnosticReport,
-      ).mockImplementation(() => {
+      await resetMocksToDefault();
+
+      // 设置错误Mock
+      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+      enhancedWebVitalsCollector.generateDiagnosticReport.mockImplementation(() => {
         throw new Error('String error');
       });
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 在测试环境中，Hook应该立即可用
+      expect(result.current).toBeTruthy();
+      expect(typeof result.current.refreshDiagnostics).toBe('function');
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
-      expect(result.current.error).toBe('Unknown error');
+      expect(result.current.error).toBe('String error');
     });
   });
 
   describe('localStorage operations', () => {
     it('should handle localStorage read errors gracefully', () => {
+      resetMocksToDefault();
+      // 设置localStorage错误
       mockLocalStorage.getItem.mockImplementation(() => {
         throw new Error('Storage error');
       });
@@ -224,20 +335,24 @@ describe('useWebVitalsDiagnostics', () => {
 
       // Should not throw and should warn
       expect(() => result.current).not.toThrow();
+      expect(result.current).not.toBeNull();
       expect(mockConsoleWarn).toHaveBeenCalledWith(
-        'Failed to load historical diagnostics data:',
+        'Failed to load diagnostics data:',
         expect.any(Error),
       );
     });
 
     it('should handle invalid JSON in localStorage', () => {
+      resetMocksToDefault();
+      // 设置无效JSON
       mockLocalStorage.getItem.mockReturnValue('invalid json');
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
       expect(() => result.current).not.toThrow();
+      expect(result.current).not.toBeNull();
       expect(mockConsoleWarn).toHaveBeenCalledWith(
-        'Failed to load historical diagnostics data:',
+        'Failed to load diagnostics data:',
         expect.any(Error),
       );
     });
@@ -247,9 +362,13 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      validateHookResult(result);
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
@@ -264,9 +383,13 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      validateHookResult(result);
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
@@ -289,36 +412,43 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      expect(result.current).not.toBeNull();
+      expect(result.current).toBeDefined();
+
       await act(async () => {
-        const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
-        await promise;
+        await result.current.refreshDiagnostics();
+        vi.runAllTimers();
       });
 
       // Check that setItem was called with limited data
       const setItemCalls = mockLocalStorage.setItem.mock.calls;
       expect(setItemCalls.length).toBeGreaterThan(0);
       const savedData = JSON.parse(setItemCalls[0]![1] as string);
-      expect(savedData.length).toBeLessThanOrEqual(
-        TEST_APP_CONSTANTS.PERCENTAGE_HALF,
-      );
+      expect(savedData.length).toBeLessThanOrEqual(50);
     });
   });
 
   describe('performance trends analysis', () => {
-    it('should return null when insufficient data', () => {
+    it('should return null when insufficient data', async () => {
+      await resetMocksToDefault();
       const { result } = renderHook(() => useWebVitalsDiagnostics());
+
+      // 验证Hook正确初始化
+      validateHookResult(result);
 
       const trends = result.current.getPerformanceTrends();
       expect(trends).toBe(null);
     });
 
     it('should calculate performance trends with sufficient data', async () => {
+      await resetMocksToDefault();
+
       // Create historical data with varying metrics
       const historicalData = Array.from({ length: 25 }, (_, i) => ({
         ...mockDiagnosticReport,
-        metrics: {
-          ...mockDiagnosticReport.metrics,
+        vitals: {
+          ...mockDiagnosticReport.vitals,
           cls:
             TEST_WEB_VITALS_DIAGNOSTICS.CLS_BASELINE +
             i * TEST_WEB_VITALS_DIAGNOSTICS.CLS_INCREMENT,
@@ -329,10 +459,7 @@ describe('useWebVitalsDiagnostics', () => {
             TEST_WEB_VITALS_DIAGNOSTICS.FID_BASELINE +
             i * TEST_WEB_VITALS_DIAGNOSTICS.FID_INCREMENT,
         },
-        analysis: {
-          ...mockDiagnosticReport.analysis,
-          score: TEST_WEB_VITALS_DIAGNOSTICS.PERFORMANCE_SCORE - i,
-        },
+        score: TEST_WEB_VITALS_DIAGNOSTICS.PERFORMANCE_SCORE - i,
         timestamp: Date.now() - i * 1000,
       }));
 
@@ -340,26 +467,41 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      validateHookResult(result);
+
       await act(async () => {
-        const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
-        await promise;
+        await result.current.refreshDiagnostics();
+        vi.runAllTimers();
       });
 
       const trends = result.current.getPerformanceTrends();
 
       expect(trends).toBeTruthy();
-      expect(trends?.cls).toBeDefined();
-      expect(trends?.lcp).toBeDefined();
-      expect(trends?.fid).toBeDefined();
-      expect(trends?.score).toBeDefined();
+      expect(trends?.find((t) => t.metric === 'cls')).toBeDefined();
+      expect(trends?.find((t) => t.metric === 'lcp')).toBeDefined();
+      expect(trends?.find((t) => t.metric === 'fid')).toBeDefined();
+      expect(trends?.length).toBeGreaterThan(0);
     });
 
     it('should handle empty metrics in trend calculation', async () => {
+      await resetMocksToDefault();
+
+      // 设置Mock返回零值，确保新生成的报告也是零值
+      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+      enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue({
+        ...mockGenerateReportResult,
+        metrics: {
+          ...mockGenerateReportResult.metrics,
+          cls: 0,
+          fid: 0,
+        },
+      });
+
       const historicalData = Array.from({ length: 25 }, (_, i) => ({
         ...mockDiagnosticReport,
-        metrics: {
-          ...mockDiagnosticReport.metrics,
+        vitals: {
+          ...mockDiagnosticReport.vitals,
           cls: 0, // Zero values should be filtered out
           lcp:
             i % TEST_COUNT_CONSTANTS.SMALL === 0
@@ -374,17 +516,19 @@ describe('useWebVitalsDiagnostics', () => {
 
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      validateHookResult(result);
+
       await act(async () => {
-        const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
-        await promise;
+        await result.current.refreshDiagnostics();
+        vi.runAllTimers();
       });
 
       const trends = result.current.getPerformanceTrends();
       expect(trends).toBeTruthy();
       // Should handle zero values gracefully
-      expect(trends?.cls).toBe(0);
-      expect(trends?.fid).toBe(0);
+      expect(trends?.find((t) => t.metric === 'cls')?.recent).toBe(0);
+      expect(trends?.find((t) => t.metric === 'fid')?.recent).toBe(0);
     });
   });
 
@@ -392,9 +536,13 @@ describe('useWebVitalsDiagnostics', () => {
     it('should call exportReport function', async () => {
       const { result } = renderHook(() => useWebVitalsDiagnostics());
 
+      // 验证Hook正确初始化
+      validateHookResult(result);
+
       await act(async () => {
+        vi.runAllTimers();
         const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await promise;
       });
 
@@ -403,8 +551,11 @@ describe('useWebVitalsDiagnostics', () => {
       }).not.toThrow();
     });
 
-    it('should handle export with empty state', () => {
+    it('should handle export with empty state', async () => {
       const { result } = renderHook(() => useWebVitalsDiagnostics());
+
+      // 验证Hook正确初始化
+      validateHookResult(result);
 
       expect(() => {
         result.current.exportReport('json');
@@ -414,13 +565,16 @@ describe('useWebVitalsDiagnostics', () => {
 
   describe('clear history', () => {
     it('should clear historical data', async () => {
+      await resetMocksToDefault();
       const { result } = renderHook(() => useWebVitalsDiagnostics());
+
+      // 验证Hook正确初始化
+      validateHookResult(result);
 
       // First add some data
       await act(async () => {
-        const promise = result.current.refreshDiagnostics();
-        vi.advanceTimersByTime(1000);
-        await promise;
+        await result.current.refreshDiagnostics();
+        vi.runAllTimers();
       });
 
       expect(result.current.historicalReports.length).toBeGreaterThan(0);
@@ -440,7 +594,11 @@ describe('useWebVitalsDiagnostics', () => {
 
   describe('edge cases', () => {
     it('should handle multiple rapid refresh calls', async () => {
+      await resetMocksToDefault();
       const { result } = renderHook(() => useWebVitalsDiagnostics());
+
+      // 验证Hook正确初始化
+      validateHookResult(result);
 
       await act(async () => {
         const promises = [
@@ -449,7 +607,7 @@ describe('useWebVitalsDiagnostics', () => {
           result.current.refreshDiagnostics(),
         ];
 
-        vi.advanceTimersByTime(1000);
+        vi.runAllTimers();
         await Promise.all(promises);
       });
 
@@ -458,8 +616,12 @@ describe('useWebVitalsDiagnostics', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    it('should handle component unmounting during async operation', () => {
+    it('should handle component unmounting during async operation', async () => {
+      await resetMocksToDefault();
       const { result, unmount } = renderHook(() => useWebVitalsDiagnostics());
+
+      // 验证Hook正确初始化
+      validateHookResult(result);
 
       act(() => {
         result.current.refreshDiagnostics();
@@ -469,7 +631,7 @@ describe('useWebVitalsDiagnostics', () => {
       unmount();
 
       // Should not cause errors
-      vi.advanceTimersByTime(1000);
+      vi.runAllTimers();
 
       // No assertions needed - just ensuring no errors are thrown
     });

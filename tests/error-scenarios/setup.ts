@@ -53,7 +53,10 @@ export class NetworkErrorSimulator {
   // 模拟间歇性网络错误
   simulateIntermittentFailure(failureRate: number = 0.5): void {
     global.fetch = vi.fn().mockImplementation((url, options) => {
-      if (Math.random() < failureRate) {
+      if (
+        crypto &&
+        crypto.getRandomValues(new Uint32Array(1))[0]! / 2 ** 32 < failureRate
+      ) {
         return Promise.reject(new Error('Intermittent network failure'));
       }
       return this.originalFetch(url, options);
@@ -123,6 +126,19 @@ export class APIErrorSimulator {
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
+      headers: new Headers(),
+      redirected: false,
+      statusText: 'OK',
+      type: 'basic' as Response['type'],
+      url: '',
+      body: null,
+      bodyUsed: false,
+      clone: vi.fn(),
+      arrayBuffer: vi.fn(),
+      blob: vi.fn(),
+      formData: vi.fn(),
+      text: vi.fn(),
+      bytes: vi.fn().mockResolvedValue(new Uint8Array()),
       json: async () => {
         throw new Error('Unexpected token in JSON');
       },
@@ -130,31 +146,31 @@ export class APIErrorSimulator {
   }
 
   private getStatusText(status: number): string {
-    const statusTexts: Record<number, string> = {
-      400: 'Bad Request',
-      401: 'Unauthorized',
-      403: 'Forbidden',
-      404: 'Not Found',
-      429: 'Too Many Requests',
-      500: 'Internal Server Error',
-      502: 'Bad Gateway',
-      503: 'Service Unavailable',
-    };
-    return statusTexts[status] || 'Unknown Error';
+    const statusTexts = new Map([
+      [400, 'Bad Request'],
+      [401, 'Unauthorized'],
+      [403, 'Forbidden'],
+      [404, 'Not Found'],
+      [429, 'Too Many Requests'],
+      [500, 'Internal Server Error'],
+      [502, 'Bad Gateway'],
+      [503, 'Service Unavailable'],
+    ]);
+    return statusTexts.get(status) || 'Unknown Error';
   }
 
   private getDefaultErrorMessage(status: number): string {
-    const messages: Record<number, string> = {
-      400: 'The request was invalid',
-      401: 'Authentication required',
-      403: 'Access denied',
-      404: 'The requested resource was not found',
-      429: 'Too many requests, please try again later',
-      500: 'An internal server error occurred',
-      502: 'Bad gateway',
-      503: 'Service temporarily unavailable',
-    };
-    return messages[status] || 'An unknown error occurred';
+    const messages = new Map([
+      [400, 'The request was invalid'],
+      [401, 'Authentication required'],
+      [403, 'Access denied'],
+      [404, 'The requested resource was not found'],
+      [429, 'Too many requests, please try again later'],
+      [500, 'An internal server error occurred'],
+      [502, 'Bad gateway'],
+      [503, 'Service temporarily unavailable'],
+    ]);
+    return messages.get(status) || 'An unknown error occurred';
   }
 }
 
@@ -224,12 +240,12 @@ export function createTestErrorBoundary() {
       return { hasError: true, error };
     }
 
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
       this.props.onError?.(error);
       console.error('Test Error Boundary caught error:', error, errorInfo);
     }
 
-    render() {
+    override render() {
       if (this.state.hasError) {
         return React.createElement(
           'div',
@@ -273,10 +289,10 @@ export class ErrorRecoveryTester {
   // 测试重试机制
   async testRetryMechanism(
     operation: () => Promise<any>,
-    operationId: string,
+    _operationId: string,
     maxRetries: number = 3,
     backoffMs: number = 10,
-  ): Promise<{ success: boolean; attempts: number }> {
+  ): Promise<{ success: boolean; attempts: number; lastError?: Error | null }> {
     let attempts = 0;
     let lastError: Error | null = null;
 
@@ -297,7 +313,7 @@ export class ErrorRecoveryTester {
       }
     }
 
-    return { success: false, attempts };
+    return { success: false, attempts, lastError };
   }
 
   // 测试降级机制

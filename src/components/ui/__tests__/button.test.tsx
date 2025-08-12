@@ -7,7 +7,10 @@ import { Button } from '../button';
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
   default: ({ children, href, ...props }: any) => (
-    <a href={href} {...props}>
+    <a
+      href={href}
+      {...props}
+    >
       {children}
     </a>
   ),
@@ -18,7 +21,10 @@ vi.mock('@radix-ui/react-slot', () => ({
   Slot: ({ children, ...props }: any) => {
     // 如果children是React元素，克隆并添加props
     if (React.isValidElement(children)) {
-      return React.cloneElement(children, { ...props, ...children.props });
+      return React.cloneElement(children, {
+        ...props,
+        ...(children.props || {}),
+      });
     }
     // 否则返回一个div包装
     return <div {...props}>{children}</div>;

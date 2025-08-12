@@ -2,12 +2,7 @@
 
 import { AccessibilityManager } from '@/lib/accessibility';
 import { logger } from '@/lib/logger';
-import {
-    useCallback,
-    useEffect,
-    useRef,
-    useState
-} from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Intersection Observer Hook 配置选项
@@ -30,7 +25,7 @@ export interface IntersectionObserverHookReturn<
   T extends HTMLElement = HTMLElement,
 > {
   /** 要观察的元素引用 - 回调函数形式 */
-  ref: (node: T | null) => void;
+  ref: (_node: T | null) => void;
   /** 当前是否可见 */
   isVisible: boolean;
   /** 是否曾经可见过 */
@@ -76,6 +71,62 @@ const DEFAULT_OPTIONS: Required<Omit<IntersectionObserverOptions, 'root'>> = {
  * }
  * ```
  */
+/**
+ * 处理可见性状态的辅助函数
+ */
+function setVisibilityState(
+  setIsVisible: (_visible: boolean) => void,
+  setHasBeenVisible: (_visible: boolean) => void,
+  hasBeenVisibleRef: { current: boolean },
+  visible: boolean,
+) {
+  setIsVisible(visible);
+  setHasBeenVisible(visible);
+  hasBeenVisibleRef.current = visible;
+}
+
+/**
+ * 创建 IntersectionObserver 的辅助函数
+ */
+function createObserver(
+  element: HTMLElement,
+  handleIntersection: (
+    _entries: IntersectionObserverEntry[],
+    _observer: IntersectionObserver,
+  ) => void,
+  config: IntersectionObserverOptions & {
+    threshold: number;
+    rootMargin: string;
+    triggerOnce: boolean;
+  },
+  fallbackToVisible: () => void,
+): (() => void) | null {
+  try {
+    const observer = new IntersectionObserver((entries) => {
+      handleIntersection(entries, observer);
+    }, {
+      threshold: config.threshold,
+      rootMargin: config.rootMargin,
+      root: config.root || null,
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.unobserve(element);
+      observer.disconnect();
+    };
+  } catch (error) {
+    logger.warn('IntersectionObserver error', {
+      error: error instanceof Error ? error.message : String(error),
+      threshold: config.threshold,
+      rootMargin: config.rootMargin,
+    });
+    fallbackToVisible();
+    return null;
+  }
+}
+
 export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
   options: IntersectionObserverOptions = {},
 ): IntersectionObserverHookReturn<T> {
@@ -83,25 +134,23 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
   const [isVisible, setIsVisible] = useState(false);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
   const [element, setElement] = useState<T | null>(null);
-
-  // 使用ref来避免依赖循环
   const hasBeenVisibleRef = useRef(false);
 
-  // 合并默认配置
-  const config = { ...DEFAULT_OPTIONS, ...options };
+  // 提取所有配置值，避免依赖整个config对象
+  const threshold = options.threshold ?? DEFAULT_OPTIONS.threshold;
+  const rootMargin = options.rootMargin ?? DEFAULT_OPTIONS.rootMargin;
+  const triggerOnce = options.triggerOnce ?? DEFAULT_OPTIONS.triggerOnce;
+  const root = options.root ?? null;
 
-  // 检查可访问性设置
   const prefersReducedMotion = AccessibilityManager.prefersReducedMotion();
 
-  // 创建一个回调ref来跟踪元素变化
   const callbackRef = useCallback((node: T | null) => {
     ref.current = node;
     setElement(node);
   }, []);
 
   const handleIntersection = useCallback(
-    (entries: IntersectionObserverEntry[], observer?: IntersectionObserver) => {
-      // 安全的数组访问，避免对象注入
+    (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       const entry = entries.length > 0 ? entries[0] : null;
       if (!entry) return;
 
@@ -113,69 +162,48 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
         setHasBeenVisible(true);
       }
 
-      // 如果设置了只触发一次且已经可见过，停止观察
-      if (config.triggerOnce && isCurrentlyVisible && entry.target && observer) {
+      // 只有在 triggerOnce 为 true 且元素当前可见时才停止观察
+      if (triggerOnce && isCurrentlyVisible && entry.target) {
         observer.unobserve(entry.target);
       }
     },
-    [config.triggerOnce],
+    [triggerOnce],
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-event-handler
     if (!element) return undefined;
 
-    // 如果用户偏好减少动画，直接设置为可见
-    if (prefersReducedMotion) {
-      setIsVisible(true);
-      setHasBeenVisible(true);
-      hasBeenVisibleRef.current = true;
+    const fallbackToVisible = () =>
+      setVisibilityState(
+        setIsVisible,
+        setHasBeenVisible,
+        hasBeenVisibleRef,
+        true,
+      );
+
+    if (
+      prefersReducedMotion ||
+      typeof window === 'undefined' ||
+      !window.IntersectionObserver
+    ) {
+      fallbackToVisible();
       return undefined;
     }
 
-    // 检查浏览器支持
-    if (typeof window === 'undefined' || !window.IntersectionObserver) {
-      // 服务端渲染或不支持时的降级处理
-      setIsVisible(true);
-      setHasBeenVisible(true);
-      hasBeenVisibleRef.current = true;
-      return undefined;
-    }
+    // 创建配置对象，使用提取的稳定值
+    const config = {
+      threshold,
+      rootMargin,
+      triggerOnce,
+      root,
+    };
 
-    try {
-      const observer = new IntersectionObserver(handleIntersection, {
-        threshold: config.threshold,
-        rootMargin: config.rootMargin,
-        root: config.root || null,
-      });
-
-      observer.observe(element);
-
-      // 清理函数
-      return () => {
-        observer.unobserve(element);
-        observer.disconnect();
-      };
-    } catch (error) {
-      // 错误处理：确保不影响页面功能
-      logger.warn('IntersectionObserver error', {
-        error: error instanceof Error ? error.message : String(error),
-        threshold: config.threshold,
-        rootMargin: config.rootMargin,
-      });
-      setIsVisible(true);
-      setHasBeenVisible(true);
-      hasBeenVisibleRef.current = true;
-      return undefined;
-    }
-  }, [
-    element,
-    config.threshold,
-    config.rootMargin,
-    config.triggerOnce,
-    config.root,
-    handleIntersection,
-    prefersReducedMotion,
-  ]);
+    return (
+      createObserver(element, handleIntersection, config, fallbackToVisible) ||
+      undefined
+    );
+  }, [element, threshold, rootMargin, triggerOnce, root, handleIntersection, prefersReducedMotion]);
 
   return {
     ref: callbackRef,

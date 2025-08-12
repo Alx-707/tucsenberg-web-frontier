@@ -54,8 +54,8 @@ export const TEST_DELAY_VALUES = {
   /** 中等延迟 - 300ms */
   MEDIUM_DELAY: 300,
 
-  /** 清理延迟 - 500ms */
-  CLEANUP_DELAY: 500,
+  /** 清理延迟 - 1000ms */
+  CLEANUP_DELAY: 1000,
 } as const;
 
 // ==================== 百分比值常量 ====================

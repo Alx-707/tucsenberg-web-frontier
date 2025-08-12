@@ -66,7 +66,7 @@ describe('Utils', () => {
 
     it('should resolve Tailwind conflicts correctly', () => {
       const result = cn('p-2 p-4', 'm-1 m-2', 'text-lg text-sm');
-      expect(result).toBe('p-4 m-2 text-lg');
+      expect(result).toBe('p-4 m-2 text-sm');
     });
 
     it('should handle responsive classes', () => {

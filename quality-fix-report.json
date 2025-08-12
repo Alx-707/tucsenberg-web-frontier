@@ -1,0 +1,24 @@
+{
+  "timestamp": "2025-08-11T11:23:57.611Z",
+  "fixes": [
+    {
+      "type": "formatting",
+      "description": "自动修复了代码格式化问题",
+      "status": "success"
+    }
+  ],
+  "skipped": [
+    {
+      "type": "eslint-manual",
+      "description": "部分ESLint问题需要手动修复",
+      "reason": "包含需要手动处理的规则违反"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "totalFixes": 1,
+    "totalSkipped": 0,
+    "totalErrors": 0,
+    "successRate": 100
+  }
+}

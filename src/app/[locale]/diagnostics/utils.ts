@@ -1,3 +1,8 @@
+// ==================== 类型定义 ====================
+
+// 导入Web Vitals相关类型
+import type { MetricRating, WebVitalsMetrics } from '@/lib/web-vitals-monitor';
+
 // 诊断页面工具函数和常量
 
 // 常量定义 - 避免魔法数字
@@ -33,11 +38,6 @@ export const PERFORMANCE_THRESHOLDS = {
   SCORE_GOOD: 80,
   SCORE_NEEDS_IMPROVEMENT: 50,
 } as const;
-
-// ==================== 类型定义 ====================
-
-// 导入Web Vitals相关类型
-import type { WebVitalsMetrics, MetricRating } from '@/lib/web-vitals-monitor';
 
 /**
  * Web Vitals 性能摘要接口

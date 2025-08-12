@@ -6,6 +6,8 @@
  * @author ThemeToggle测试优化项目
  */
 
+import { vi } from 'vitest';
+
 /**
  * 主题类型定义
  */
@@ -44,12 +46,12 @@ export class ThemeTestUtils {
     const defaultMock: ThemeHookMock = {
       theme: 'light',
       isOpen: false,
-      setIsOpen: (global as any).jest.fn(),
+      setIsOpen: vi.fn(),
       supportsViewTransitions: true,
       prefersReducedMotion: false,
       prefersHighContrast: false,
-      handleThemeChange: (global as any).jest.fn(),
-      handleKeyDown: (global as any).jest.fn(),
+      handleThemeChange: vi.fn(),
+      handleKeyDown: vi.fn(),
       ariaAttributes: {
         'aria-label': '主题切换',
         'aria-expanded': 'false',
@@ -85,7 +87,7 @@ export class ThemeTestUtils {
    * 创建View Transitions API Mock
    */
   static createViewTransitionsMock(): any {
-    return (global as any).jest
+    return vi
       .fn()
       .mockImplementation((callback?: () => void) => {
         callback?.();
@@ -98,10 +100,10 @@ export class ThemeTestUtils {
    */
   static createLocalStorageMock() {
     return {
-      getItem: (global as any).jest.fn(),
-      setItem: (global as any).jest.fn(),
-      removeItem: (global as any).jest.fn(),
-      clear: (global as any).jest.fn(),
+      getItem: vi.fn(),
+      setItem: vi.fn(),
+      removeItem: vi.fn(),
+      clear: vi.fn(),
     };
   }
 
@@ -109,15 +111,15 @@ export class ThemeTestUtils {
    * 创建matchMedia Mock
    */
   static createMatchMediaMock() {
-    return (global as any).jest.fn().mockImplementation((query: string) => ({
+    return vi.fn().mockImplementation((query: string) => ({
       matches: false,
       media: query,
       onchange: null,
-      addListener: (global as any).jest.fn(),
-      removeListener: (global as any).jest.fn(),
-      addEventListener: (global as any).jest.fn(),
-      removeEventListener: (global as any).jest.fn(),
-      dispatchEvent: (global as any).jest.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
     }));
   }
 
@@ -326,7 +328,7 @@ class ThemeTestMockFactory {
 
       // 便捷的重置方法
       reset: () => {
-        (global as any).jest.clearAllMocks();
+        vi.clearAllMocks();
         ThemeTestUtils.updateThemeHookMock(themeHookMock, {
           theme: 'light',
           isOpen: false,
@@ -370,4 +372,5 @@ class ThemeTestMockFactory {
 /**
  * 导出所有工具
  */
-export { ThemeTestAssertions, ThemeTestMockFactory, ThemeTestUtils as default };
+export { ThemeTestUtils as default, ThemeTestAssertions, ThemeTestMockFactory };
+

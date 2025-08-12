@@ -6,15 +6,13 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  APIErrorSimulator,
-  BoundaryConditionTester,
-  ErrorRecoveryTester,
-  NetworkErrorSimulator,
-} from './setup';
+  TEST_APP_CONSTANTS,
+  TEST_DELAY_VALUES,
+} from '@/constants/test-constants';
+import { NetworkErrorSimulator } from './setup';
 
 // 综合错误处理系统
 class ComprehensiveErrorHandler {
-  private errorCounts: Map<string, number> = new Map();
   private circuitBreakers: Map<
     string,
     { failures: number; lastFailure: Date; isOpen: boolean }
@@ -56,7 +54,7 @@ class ComprehensiveErrorHandler {
       return result;
     } catch (error) {
       // 增加失败计数
-      breaker.failures++;
+      breaker.failures += 1;
       breaker.lastFailure = new Date();
 
       // 检查是否应该开启断路器
@@ -78,7 +76,7 @@ class ComprehensiveErrorHandler {
       const isHealthy = await healthCheckFn();
       this.healthChecks.set(serviceId, isHealthy);
       return isHealthy;
-    } catch (error) {
+    } catch {
       this.healthChecks.set(serviceId, false);
       return false;
     }
@@ -91,20 +89,29 @@ class ComprehensiveErrorHandler {
     let totalCount = 0;
 
     this.healthChecks.forEach((isHealthy, serviceId) => {
-      services[serviceId] = isHealthy;
-      if (isHealthy) healthyCount++;
-      totalCount++;
+      // 使用安全的属性设置，避免对象注入
+      Object.defineProperty(services, serviceId, {
+        value: isHealthy,
+        writable: true,
+        enumerable: true,
+        configurable: true,
+      });
+      if (isHealthy) healthyCount += 1;
+      totalCount += 1;
     });
 
-    const overall = totalCount > 0 ? healthyCount / totalCount >= 0.8 : true;
+    const overall =
+      totalCount > 0
+        ? healthyCount / totalCount >= TEST_APP_CONSTANTS.HEALTH_THRESHOLD
+        : true;
     return { overall, services };
   }
 
   // 错误恢复策略
-  async recoverFromError(
+  recoverFromError(
     error: Error,
-    context: any,
-  ): Promise<{ recovered: boolean; strategy: string }> {
+    _context: unknown,
+  ): { recovered: boolean; strategy: string } {
     const errorMessage = error.message.toLowerCase();
 
     // 网络错误恢复
@@ -148,13 +155,22 @@ class ComprehensiveErrorHandler {
     string,
     { failures: number; isOpen: boolean; lastFailure: Date }
   > {
-    const status: Record<string, any> = {};
+    const status: Record<
+      string,
+      { failures: number; isOpen: boolean; lastFailure: Date }
+    > = {};
     this.circuitBreakers.forEach((breaker, serviceId) => {
-      status[serviceId] = {
-        failures: breaker.failures,
-        isOpen: breaker.isOpen,
-        lastFailure: breaker.lastFailure,
-      };
+      // 使用安全的属性设置，避免对象注入
+      Object.defineProperty(status, serviceId, {
+        value: {
+          failures: breaker.failures,
+          isOpen: breaker.isOpen,
+          lastFailure: breaker.lastFailure,
+        },
+        writable: true,
+        enumerable: true,
+        configurable: true,
+      });
     });
     return status;
   }
@@ -163,16 +179,18 @@ class ComprehensiveErrorHandler {
 describe('Comprehensive Error Handling Integration Tests', () => {
   let errorHandler: ComprehensiveErrorHandler;
   let networkSimulator: NetworkErrorSimulator;
-  let apiSimulator: APIErrorSimulator;
-  let boundaryTester: BoundaryConditionTester;
-  let recoveryTester: ErrorRecoveryTester;
+  // 预留用于未来扩展的测试工具
+  // let apiSimulator: APIErrorSimulator;
+  // let boundaryTester: BoundaryConditionTester;
+  // let recoveryTester: ErrorRecoveryTester;
 
   beforeEach(() => {
     errorHandler = new ComprehensiveErrorHandler();
     networkSimulator = new NetworkErrorSimulator();
-    apiSimulator = new APIErrorSimulator();
-    boundaryTester = new BoundaryConditionTester();
-    recoveryTester = new ErrorRecoveryTester();
+    // 预留用于未来扩展的测试工具初始化
+    // apiSimulator = new APIErrorSimulator();
+    // boundaryTester = new BoundaryConditionTester();
+    // recoveryTester = new ErrorRecoveryTester();
     vi.clearAllMocks();
   });
 
@@ -188,12 +206,12 @@ describe('Comprehensive Error Handling Integration Tests', () => {
       };
 
       // 触发5次失败以开启断路器
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE; i += 1) {
         await expect(
           errorHandler.executeWithCircuitBreaker(
             failingService,
             'test-service',
-            5,
+            TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE,
           ),
         ).rejects.toThrow('Service unavailable');
       }
@@ -203,13 +221,15 @@ describe('Comprehensive Error Handling Integration Tests', () => {
         errorHandler.executeWithCircuitBreaker(
           failingService,
           'test-service',
-          5,
+          TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE,
         ),
       ).rejects.toThrow('Circuit breaker is open');
 
       const status = errorHandler.getCircuitBreakerStatus();
-      expect(status['test-service'].isOpen).toBe(true);
-      expect(status['test-service'].failures).toBe(5);
+      expect(status['test-service']?.isOpen).toBe(true);
+      expect(status['test-service']?.failures).toBe(
+        TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE,
+      );
     });
 
     it('should reset circuit breaker after timeout', async () => {
@@ -218,19 +238,21 @@ describe('Comprehensive Error Handling Integration Tests', () => {
       };
 
       // 开启断路器
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE; i += 1) {
         await expect(
           errorHandler.executeWithCircuitBreaker(
             failingService,
             'test-service',
-            5,
-            100,
+            TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE,
+            TEST_DELAY_VALUES.SHORT_DELAY,
           ),
         ).rejects.toThrow('Service unavailable');
       }
 
       // 等待超时
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await new Promise((resolve) =>
+        setTimeout(resolve, TEST_APP_CONSTANTS.DELAY_TIME),
+      );
 
       // 现在应该允许重试
       await expect(
@@ -243,21 +265,21 @@ describe('Comprehensive Error Handling Integration Tests', () => {
       ).rejects.toThrow('Service unavailable');
 
       const status = errorHandler.getCircuitBreakerStatus();
-      expect(status['test-service'].failures).toBe(1); // 重置后的第一次失败
+      expect(status['test-service']?.failures).toBe(1); // 重置后的第一次失败
     });
 
     it('should handle successful operations after circuit breaker reset', async () => {
       let callCount = 0;
       const intermittentService = async () => {
-        callCount++;
-        if (callCount <= 5) {
+        callCount += 1;
+        if (callCount <= TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE) {
           throw new Error('Service unavailable');
         }
         return 'Success';
       };
 
       // 开启断路器
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < TEST_APP_CONSTANTS.STANDARD_COUNT_FIVE; i += 1) {
         await expect(
           errorHandler.executeWithCircuitBreaker(
             intermittentService,
@@ -281,8 +303,8 @@ describe('Comprehensive Error Handling Integration Tests', () => {
       expect(result).toBe('Success');
 
       const status = errorHandler.getCircuitBreakerStatus();
-      expect(status['test-service'].failures).toBe(0);
-      expect(status['test-service'].isOpen).toBe(false);
+      expect(status['test-service']?.failures).toBe(0);
+      expect(status['test-service']?.isOpen).toBe(false);
     });
   });
 
@@ -405,7 +427,7 @@ describe('Comprehensive Error Handling Integration Tests', () => {
 
       // 断路器应该开启
       const status = errorHandler.getCircuitBreakerStatus();
-      expect(status['main-system'].isOpen).toBe(true);
+      expect(status['main-system']?.isOpen).toBe(true);
     });
 
     it('should handle cascading failures across multiple services', async () => {
@@ -428,7 +450,12 @@ describe('Comprehensive Error Handling Integration Tests', () => {
       // 所有服务的断路器都应该开启
       const allStatus = errorHandler.getCircuitBreakerStatus();
       services.forEach((service) => {
-        expect(allStatus[service].isOpen).toBe(true);
+        // 使用安全的属性访问，避免对象注入
+        const serviceStatus =
+          allStatus && typeof allStatus === 'object' && service in allStatus
+            ? allStatus[service as keyof typeof allStatus]
+            : null;
+        expect(serviceStatus?.isOpen).toBe(true);
       });
     });
 
@@ -444,7 +471,11 @@ describe('Comprehensive Error Handling Integration Tests', () => {
           if (shouldFail === true) {
             throw new Error(`${id} failed`);
           }
-          if (shouldFail === 'sometimes' && Math.random() < 0.5) {
+          if (
+            shouldFail === 'sometimes' &&
+            crypto &&
+            crypto.getRandomValues(new Uint32Array(1))[0]! / 2 ** 32 < 0.5
+          ) {
             throw new Error(`${id} intermittent failure`);
           }
           return `${id} success`;

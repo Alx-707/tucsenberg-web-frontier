@@ -1,9 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  EnhancedWebVitalsCollector,
-  enhancedWebVitalsCollector,
+    EnhancedWebVitalsCollector,
+    enhancedWebVitalsCollector,
 } from '../enhanced-web-vitals';
+import { DEVICE_DEFAULTS } from '../web-vitals/constants';
 
 // Mock logger
 vi.mock('@/lib/logger', () => ({
@@ -57,7 +58,7 @@ Object.defineProperty(global, 'navigator', {
     userAgent: 'Test Browser',
     connection: {
       effectiveType: '4g',
-      downlink: 10,
+      downlink: WEB_VITALS_CONSTANTS.NETWORK_DOWNLINK,
       rtt: 100,
       saveData: false,
     },
@@ -132,7 +133,8 @@ describe('EnhancedWebVitalsCollector', () => {
 
     it('should set up performance observers on initialization', () => {
       // Create a new collector instance to trigger observer setup
-      const newCollector = new EnhancedWebVitalsCollector();
+      const observerCollector = new EnhancedWebVitalsCollector();
+      expect(observerCollector).toBeDefined();
 
       // Should attempt to create performance observers
       expect(mockPerformanceObserver).toHaveBeenCalled();
@@ -145,7 +147,8 @@ describe('EnhancedWebVitalsCollector', () => {
 
       expect(() => {
         // EnhancedWebVitalsCollector is not constructable, using instance
-        EnhancedWebVitalsCollector;
+        const CollectorClass = EnhancedWebVitalsCollector;
+        expect(CollectorClass).toBeDefined();
       }).not.toThrow();
 
       // Restore
@@ -243,15 +246,17 @@ describe('EnhancedWebVitalsCollector', () => {
       const metrics = collector.getDetailedMetrics();
 
       expect(metrics.device).toBeDefined();
-      expect(metrics.device.memory).toBe(
-        WEB_VITALS_CONSTANTS.DEVICE_MEMORY,
-      );
+      expect(metrics.device.memory).toBe(WEB_VITALS_CONSTANTS.DEVICE_MEMORY);
       expect(metrics.device.cores).toBe(
-        navigator.hardwareConcurrency || 4,
+        navigator.hardwareConcurrency || DEVICE_DEFAULTS.CPU_CORES,
       );
       expect(metrics.device.userAgent).toBe('Test Browser');
-      expect(metrics.device.viewport.width).toBe(1920);
-      expect(metrics.device.viewport.height).toBe(1080);
+      expect(metrics.device.viewport.width).toBe(
+        DEVICE_DEFAULTS.VIEWPORT_WIDTH,
+      );
+      expect(metrics.device.viewport.height).toBe(
+        DEVICE_DEFAULTS.VIEWPORT_HEIGHT,
+      );
     });
 
     it('should collect connection information', () => {
@@ -523,7 +528,8 @@ describe('EnhancedWebVitalsCollector', () => {
 
       expect(() => {
         // EnhancedWebVitalsCollector is not constructable
-        EnhancedWebVitalsCollector;
+        const CollectorClass = EnhancedWebVitalsCollector;
+        expect(CollectorClass).toBeDefined();
       }).not.toThrow();
     });
 
@@ -534,7 +540,8 @@ describe('EnhancedWebVitalsCollector', () => {
 
       expect(() => {
         // EnhancedWebVitalsCollector is not constructable
-        EnhancedWebVitalsCollector;
+        const CollectorClass = EnhancedWebVitalsCollector;
+        expect(CollectorClass).toBeDefined();
       }).not.toThrow();
     });
 
@@ -560,7 +567,8 @@ describe('EnhancedWebVitalsCollector', () => {
 
       expect(() => {
         // EnhancedWebVitalsCollector is not constructable
-        EnhancedWebVitalsCollector;
+        const CollectorClass = EnhancedWebVitalsCollector;
+        expect(CollectorClass).toBeDefined();
       }).not.toThrow();
     });
   });

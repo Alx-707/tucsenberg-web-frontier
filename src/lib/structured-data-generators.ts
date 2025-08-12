@@ -1,12 +1,12 @@
 import { getTranslations } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import type {
+  ArticleData,
+  BreadcrumbData,
   Locale,
   OrganizationData,
-  WebSiteData,
-  ArticleData,
   ProductData,
-  BreadcrumbData,
+  WebSiteData,
 } from './structured-data-types';
 
 /**

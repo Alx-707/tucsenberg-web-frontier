@@ -27,84 +27,84 @@ export type PageType =
   | 'terms';
 
 // 核心路径配置 - 使用标准路径方案
-export const PATHS_CONFIG = {
+export const PATHS_CONFIG = Object.freeze({
   // 基础路径
-  home: {
+  home: Object.freeze({
     en: '/',
     zh: '/',
-  },
+  }),
 
   // 主要页面路径 - 统一使用标准路径
-  about: {
+  about: Object.freeze({
     en: '/about',
     zh: '/about',
-  },
+  }),
 
-  contact: {
+  contact: Object.freeze({
     en: '/contact',
     zh: '/contact',
-  },
+  }),
 
-  blog: {
+  blog: Object.freeze({
     en: '/blog',
     zh: '/blog',
-  },
+  }),
 
-  products: {
+  products: Object.freeze({
     en: '/products',
     zh: '/products',
-  },
+  }),
 
-  services: {
+  services: Object.freeze({
     en: '/services',
     zh: '/services',
-  },
+  }),
 
-  pricing: {
+  pricing: Object.freeze({
     en: '/pricing',
     zh: '/pricing',
-  },
+  }),
 
-  support: {
+  support: Object.freeze({
     en: '/support',
     zh: '/support',
-  },
+  }),
 
   // 法律页面 - 统一使用标准路径
-  privacy: {
+  privacy: Object.freeze({
     en: '/privacy',
     zh: '/privacy',
-  },
+  }),
 
-  terms: {
+  terms: Object.freeze({
     en: '/terms',
     zh: '/terms',
-  },
-} as const satisfies Record<PageType, LocalizedPath>;
+  }),
+} as const satisfies Record<PageType, LocalizedPath>);
 
 // 语言配置
-export const LOCALES_CONFIG = {
-  locales: ['en', 'zh'] as const,
+export const LOCALES_CONFIG = Object.freeze({
+  locales: Object.freeze(['en', 'zh'] as const),
   defaultLocale: 'en' as const,
 
   // 语言前缀配置
-  prefixes: {
+  prefixes: Object.freeze({
     en: '', // 默认语言不需要前缀
     zh: '/zh',
-  },
+  }),
 
   // 语言显示名称
-  displayNames: {
+  displayNames: Object.freeze({
     en: 'English',
     zh: '中文',
-  },
+  }),
 
   // 时区配置
-  timeZones: {
+  timeZones: Object.freeze({
     en: 'UTC',
     zh: 'Asia/Shanghai',
-  },
-} as const;
+  }),
+} as const);
 
 // 站点配置
 export const SITE_CONFIG = {

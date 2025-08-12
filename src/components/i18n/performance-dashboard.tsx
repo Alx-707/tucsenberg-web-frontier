@@ -5,6 +5,7 @@ import {
   evaluatePerformance,
   PERFORMANCE_TARGETS,
 } from '@/lib/i18n-performance';
+import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import { useI18nPerformance } from '@/hooks/use-enhanced-translations';
 
 interface PerformanceMetrics {
@@ -15,11 +16,18 @@ interface PerformanceMetrics {
 }
 
 export function I18nPerformanceDashboard() {
+  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isVisible, setIsVisible] = useState(
     process.env.NODE_ENV === 'development',
   );
   const { getMetrics, resetMetrics } = useI18nPerformance();
+
+  // 注册工具到布局管理器
+  useEffect(() => {
+    registerTool('i18nPerformanceDashboard');
+    return () => unregisterTool('i18nPerformanceDashboard');
+  }, []); // 移除函数依赖，避免无限循环
 
   useEffect(() => {
     const updateMetrics = () => {
@@ -43,7 +51,7 @@ export function I18nPerformanceDashboard() {
   const evaluation = evaluatePerformance(metrics);
 
   return (
-    <div className='fixed right-4 bottom-4 z-50 max-w-sm rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+    <div className={`${getClasses('i18nPerformanceDashboard')} rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800`}>
       <div className='mb-3 flex items-center justify-between'>
         <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
           I18n Performance
@@ -168,9 +176,16 @@ function getGradeColor(grade: string): string {
  * 只显示关键指标，适合生产环境
  */
 export function I18nPerformanceIndicator() {
+  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [showDetails, setShowDetails] = useState(false);
   const { getMetrics } = useI18nPerformance();
+
+  // 注册工具到布局管理器
+  useEffect(() => {
+    registerTool('i18nPerformanceIndicator');
+    return () => unregisterTool('i18nPerformanceIndicator');
+  }, []); // 移除函数依赖，避免无限循环
 
   useEffect(() => {
     const updateMetrics = () => {
@@ -182,7 +197,7 @@ export function I18nPerformanceIndicator() {
     const interval = setInterval(updateMetrics, 10000); // 每10秒更新
 
     return () => clearInterval(interval);
-  }, [getMetrics]);
+  }, []); // 移除函数依赖，避免无限循环
 
   if (!metrics) return null;
 
@@ -193,7 +208,7 @@ export function I18nPerformanceIndicator() {
   if (!hasIssues && !showDetails) return null;
 
   return (
-    <div className='fixed bottom-4 left-4 z-50'>
+    <div className={getClasses('i18nPerformanceIndicator')}>
       <button
         onClick={() => setShowDetails(!showDetails)}
         className={`rounded-full px-3 py-2 text-xs font-medium transition-colors ${

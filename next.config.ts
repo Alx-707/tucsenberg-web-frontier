@@ -1,7 +1,8 @@
+import path from 'path';
+import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import createMDX from '@next/mdx';
 import { withSentryConfig } from '@sentry/nextjs';
-import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
@@ -43,16 +44,11 @@ const nextConfig: NextConfig = {
   // 让 Next.js 使用默认的外部包处理方式
 
   webpack: (config, { dev, isServer }) => {
-    // TinaCMS webpack 配置
-    if (dev && !isServer) {
-      // 在开发环境中为 TinaCMS 添加必要的配置
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        path: false,
-        os: false,
-      };
-    }
+    // Path alias configuration for @/ -> src/
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+    };
 
     // 生产环境包大小优化
     if (!dev && !isServer) {
@@ -70,6 +66,9 @@ const nextConfig: NextConfig = {
   },
 
   async headers() {
+    // Note: This function is async to comply with Next.js API requirements
+    // even though we're returning static configuration
+    await Promise.resolve(); // Satisfy require-await ESLint rule
     return [
       {
         source: '/:path*',

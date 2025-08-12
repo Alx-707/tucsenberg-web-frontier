@@ -1,11 +1,7 @@
-/**
- * @jest-environment jsdom
- */
-import React from 'react';
+import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 
 // 测试常量
 export const TEST_TIMEOUTS = {
@@ -290,4 +286,5 @@ export async function simulateKeyboardNavigation(key: string) {
 }
 
 // Export test utilities
-export { act, screen, userEvent, TEST_COUNT_CONSTANTS };
+export { act, screen, TEST_COUNT_CONSTANTS, userEvent };
+

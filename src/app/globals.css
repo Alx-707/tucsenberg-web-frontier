@@ -323,38 +323,62 @@
   }
 }
 
-/* ==================== 字体子集化优化配置 ==================== */
+/* ==================== CLS 优化配置 ==================== */
 
-/* 字体子集预加载配置 - 在layout.tsx中添加对应的preload链接 */
-@font-face {
-  font-family: 'PingFang SC Subset';
-  src:
-    url('/fonts/subsets/pingfang-sc-subset.woff2') format('woff2'),
-    url('/fonts/subsets/pingfang-sc-subset.woff') format('woff');
-  font-display: swap;
-  font-weight: 400;
-  font-style: normal;
-  /* Unicode范围将在字体生成后更新 */
-  unicode-range: U+4E00-9FFF, U+FF00-FFEF;
+/* 防止布局偏移的基础样式 */
+.cls-optimized {
+  /* 为动态内容预留空间 */
+  min-height: 1rem;
+  /* 使用 contain 属性限制布局影响 */
+  contain: layout style;
 }
 
-@font-face {
-  font-family: 'PingFang SC Subset';
-  src:
-    url('/fonts/subsets/pingfang-sc-subset-bold.woff2') format('woff2'),
-    url('/fonts/subsets/pingfang-sc-subset-bold.woff') format('woff');
-  font-display: swap;
-  font-weight: 700;
-  font-style: normal;
-  unicode-range: U+4E00-9FFF, U+FF00-FFEF;
+/* 图片容器防止布局偏移 */
+.image-container {
+  position: relative;
+  overflow: hidden;
+  /* 使用 aspect-ratio 维持宽高比 */
+  aspect-ratio: 16 / 9;
 }
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 动态组件容器 */
+.dynamic-component-container {
+  /* 为动态加载的组件预留最小空间 */
+  min-height: 2rem;
+  /* 防止内容跳跃 */
+  contain: layout;
+}
+
+/* 开发工具容器优化 */
+.dev-tools-container {
+  /* 使用 fixed 定位避免影响页面布局 */
+  position: fixed;
+  /* 确保不影响文档流 */
+  pointer-events: none;
+  /* 允许子元素交互 */
+}
+
+.dev-tools-container > * {
+  pointer-events: auto;
+}
+
+/* ==================== 字体优化配置 ==================== */
 
 /* 优化的中文字体回退策略 */
 .font-chinese,
 [lang='zh'] {
   font-family:
-    'PingFang SC Subset', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    'Source Han Sans SC', 'Noto Sans CJK SC', 'WenQuanYi Micro Hei', sans-serif;
+    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Source Han Sans SC',
+    'Noto Sans CJK SC', 'WenQuanYi Micro Hei', sans-serif;
   font-feature-settings:
     'kern' 1,
     'liga' 1,

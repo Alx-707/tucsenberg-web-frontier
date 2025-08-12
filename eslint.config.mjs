@@ -1,11 +1,11 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import reactYouMightNotNeedAnEffect from 'eslint-plugin-react-you-might-not-need-an-effect';
 import security from 'eslint-plugin-security';
 import securityNode from 'eslint-plugin-security-node';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -400,5 +400,29 @@ export default [
       'jest.config.js',
       'tina/__generated__/**', // 忽略TinaCMS生成的文件
     ],
+  },
+
+  // 测试文件宽松配置 - 自动生成
+  {
+    name: 'test-files-relaxed-config',
+    files: [
+      'tests/**/*.{js,jsx,ts,tsx}',
+      'src/**/*.test.{js,jsx,ts,tsx}',
+      'src/**/__tests__/**/*.{js,jsx,ts,tsx}',
+    ],
+    rules: {
+      'no-magic-numbers': 'off',
+      'no-plusplus': 'off',
+      'require-await': 'off',
+      'security/detect-object-injection': 'off',
+      'security/detect-unsafe-regex': 'off',
+      'no-script-url': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      'no-underscore-dangle': 'off',
+      'max-lines-per-function': 'off',
+      'max-lines': 'off',
+      'no-throw-literal': 'off',
+    },
   },
 ];

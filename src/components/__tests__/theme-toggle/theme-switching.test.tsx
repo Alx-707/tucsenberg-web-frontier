@@ -1,10 +1,7 @@
-import { render } from '@/test/utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { render } from '@/test/utils';
 import { ThemeToggle } from '../../theme-toggle';
-import {
-    cleanupThemeToggleTest,
-    setupThemeToggleTest,
-} from './setup';
+import { cleanupThemeToggleTest, setupThemeToggleTest } from './setup';
 
 describe('ThemeToggle - Theme Switching', () => {
   beforeEach(() => {
@@ -101,11 +98,15 @@ describe('ThemeToggle - Theme Switching', () => {
     render(<ThemeToggle />);
 
     // Verify the component renders within theme provider context
-    const themeProvider = document.querySelector('[data-testid="theme-provider"]');
+    const themeProvider = document.querySelector(
+      '[data-testid="theme-provider"]',
+    );
     expect(themeProvider).toBeInTheDocument();
 
     // Verify the component renders within intl provider context
-    const intlProvider = document.querySelector('[data-testid="intl-provider"]');
+    const intlProvider = document.querySelector(
+      '[data-testid="intl-provider"]',
+    );
     expect(intlProvider).toBeInTheDocument();
 
     // Verify button is properly nested
@@ -136,7 +137,9 @@ describe('ThemeToggle - Theme Switching', () => {
     render(<ThemeToggle />);
 
     // Verify theme provider has correct attributes
-    const themeProvider = document.querySelector('[data-testid="theme-provider"]');
+    const themeProvider = document.querySelector(
+      '[data-testid="theme-provider"]',
+    );
     expect(themeProvider).toHaveAttribute('data-theme', 'light');
     expect(themeProvider).toHaveAttribute('data-themes', 'light,dark,system');
 

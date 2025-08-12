@@ -3,11 +3,11 @@ import {
   analyzePerformance,
   testWebVitalsCollection,
 } from '@/scripts/test-web-vitals';
-import { 
-  TestResults, 
-  PERFORMANCE_CONSTANTS, 
-  simulatePerformanceIssues, 
-  exportTestResults 
+import {
+  exportTestResults,
+  PERFORMANCE_CONSTANTS,
+  simulatePerformanceIssues,
+  TestResults,
 } from './utils';
 
 // 诊断功能 Hook

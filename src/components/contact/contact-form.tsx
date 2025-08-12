@@ -1,11 +1,11 @@
 'use client';
 
+import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useTranslations } from 'next-intl';
-import React, { useState } from 'react';
 
 // 常量定义
 const VALIDATION_CONSTANTS = {
@@ -226,7 +226,11 @@ function useFormValidation(formData: FormData, t: (_key: string) => string) {
     const newErrors: FormErrors = {};
 
     // 使用辅助函数进行验证
-    const firstNameError = validateNameField(formData.firstName, t, 'firstName');
+    const firstNameError = validateNameField(
+      formData.firstName,
+      t,
+      'firstName',
+    );
     const lastNameError = validateNameField(formData.lastName, t, 'lastName');
     const emailError = validateEmail(formData.email, t);
     const messageError = validateMessage(formData.message, t);
@@ -349,7 +353,11 @@ export function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
 
   const { validateForm } = useFormValidation(formData, t);
-  const { handleInputChange } = useInputHandling(setFormData, errors, setErrors);
+  const { handleInputChange } = useInputHandling(
+    setFormData,
+    errors,
+    setErrors,
+  );
   const { isSubmitting, submitStatus, handleSubmit } = useFormSubmission(
     formData,
     validateForm,

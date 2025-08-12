@@ -1,9 +1,9 @@
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
-import {
-    EnhancedWebVitalsCollector,
-    PERFORMANCE_THRESHOLDS,
-} from '@/lib/enhanced-web-vitals';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  EnhancedWebVitalsCollector,
+  PERFORMANCE_THRESHOLDS,
+} from '@/lib/enhanced-web-vitals';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 
 // Use vi.hoisted to ensure proper mock setup
 const {
@@ -232,19 +232,30 @@ describe('enhanced-web-vitals', () => {
         entryType: 'navigation',
         startTime: 0,
         duration: 1000,
+        initiatorType: 'navigation',
+        nextHopProtocol: 'h2',
+        workerStart: 0,
+        redirectStart: 0,
+        redirectEnd: 0,
         fetchStart: WEB_VITALS_CONSTANTS.TEST_FETCH_START,
+        domainLookupStart: WEB_VITALS_CONSTANTS.TEST_FETCH_START,
         domainLookupEnd: WEB_VITALS_CONSTANTS.TEST_DOMAIN_LOOKUP_END,
         connectStart: WEB_VITALS_CONSTANTS.TEST_CONNECT_START,
         connectEnd: WEB_VITALS_CONSTANTS.TEST_CONNECT_END,
+        secureConnectionStart: WEB_VITALS_CONSTANTS.TEST_CONNECT_START,
         requestStart: WEB_VITALS_CONSTANTS.TEST_REQUEST_START,
         responseStart: WEB_VITALS_CONSTANTS.TEST_RESPONSE_START,
         responseEnd: WEB_VITALS_CONSTANTS.TEST_RESPONSE_END,
+        transferSize: 1024,
+        encodedBodySize: 512,
+        decodedBodySize: 512,
         domInteractive: WEB_VITALS_CONSTANTS.TEST_DOM_INTERACTIVE,
         domContentLoadedEventStart:
           WEB_VITALS_CONSTANTS.TEST_DOM_CONTENT_LOADED_START,
         domContentLoadedEventEnd:
           WEB_VITALS_CONSTANTS.TEST_DOM_CONTENT_LOADED_END,
         domComplete: WEB_VITALS_CONSTANTS.TEST_DOM_COMPLETE,
+        loadEventStart: WEB_VITALS_CONSTANTS.TEST_DOM_COMPLETE,
         loadEventEnd: WEB_VITALS_CONSTANTS.TEST_LOAD_EVENT_END,
       },
     ]);
@@ -269,8 +280,7 @@ describe('enhanced-web-vitals', () => {
   });
 
   describe('PERFORMANCE_THRESHOLDS', () => {
-    it('should have correct threshold values', async () => {
-
+    it('should have correct threshold values', () => {
       expect(PERFORMANCE_THRESHOLDS.SLOW_RESOURCE_THRESHOLD).toBe(
         WEB_VITALS_CONSTANTS.SLOW_RESOURCE_THRESHOLD,
       );
@@ -306,8 +316,7 @@ describe('enhanced-web-vitals', () => {
       );
     });
 
-    it('should have correct score weights', async () => {
-
+    it('should have correct score weights', () => {
       const weights = PERFORMANCE_THRESHOLDS.SCORE_WEIGHTS;
       expect(weights.CLS).toBe(WEB_VITALS_CONSTANTS.SCORE_WEIGHT_QUARTER);
       expect(weights.LCP).toBe(WEB_VITALS_CONSTANTS.SCORE_WEIGHT_QUARTER);
@@ -322,8 +331,7 @@ describe('enhanced-web-vitals', () => {
       expect(totalWeight).toBe(1);
     });
 
-    it('should have correct score multipliers', async () => {
-
+    it('should have correct score multipliers', () => {
       const multipliers = PERFORMANCE_THRESHOLDS.SCORE_MULTIPLIERS;
       expect(multipliers.GOOD).toBe(WEB_VITALS_CONSTANTS.SCORE_MULTIPLIER_GOOD);
       expect(multipliers.NEEDS_IMPROVEMENT).toBe(
@@ -338,7 +346,7 @@ describe('enhanced-web-vitals', () => {
   });
 
   describe('DetailedWebVitals interface', () => {
-    it('should have all required properties', async () => {
+    it('should have all required properties', () => {
       // This is a type test - we just need to ensure the interface exists
       // and can be imported without errors. Since it's a TypeScript interface,
       // we can't test it at runtime, so we just verify the import works.
@@ -353,173 +361,7 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should create instance with custom config', () => {
-      const config = {
-        enableDetailedAnalysis: false,
-        enableResourceTiming: false,
-        enableUserTiming: false,
-        enableNavigationTiming: false,
-        enableNetworkInfo: false,
-        enableMemoryInfo: false,
-        enableDeviceInfo: false,
-        enablePerformanceObserver: false,
-        enableIntersectionObserver: false,
-        enableMutationObserver: false,
-        enableVisibilityAPI: false,
-        enableBeaconAPI: false,
-        enableServiceWorkerInfo: false,
-        enableCacheInfo: false,
-        enableBatteryInfo: false,
-        enableGeolocationInfo: false,
-        enableScreenInfo: false,
-        enableTouchInfo: false,
-        enableKeyboardInfo: false,
-        enableMouseInfo: false,
-        enableScrollInfo: false,
-        enableResizeInfo: false,
-        enableOrientationInfo: false,
-        enableConnectionInfo: false,
-        enableStorageInfo: false,
-        enableCookieInfo: false,
-        enableHistoryInfo: false,
-        enableLocationInfo: false,
-        enableReferrerInfo: false,
-        enableUserAgentInfo: false,
-        enableLanguageInfo: false,
-        enableTimezoneInfo: false,
-        enablePlatformInfo: false,
-        enableHardwareInfo: false,
-        enableSoftwareInfo: false,
-        enableSecurityInfo: false,
-        enableAccessibilityInfo: false,
-        enableSEOInfo: false,
-        enableAnalyticsInfo: false,
-        enableErrorInfo: false,
-        enableWarningInfo: false,
-        enableDebugInfo: false,
-        enableVerboseInfo: false,
-        enableQuietMode: true,
-        enableTestMode: true,
-        enableDevelopmentMode: false,
-        enableProductionMode: false,
-        enableStagingMode: false,
-        enableLocalMode: true,
-        enableRemoteMode: false,
-        enableOfflineMode: false,
-        enableOnlineMode: true,
-        enableMobileMode: false,
-        enableDesktopMode: true,
-        enableTabletMode: false,
-        enableLowEndMode: false,
-        enableHighEndMode: true,
-        enableSlowNetworkMode: false,
-        enableFastNetworkMode: true,
-        enableLowMemoryMode: false,
-        enableHighMemoryMode: true,
-        enableLowBatteryMode: false,
-        enableHighBatteryMode: true,
-        enableDarkMode: false,
-        enableLightMode: true,
-        enableHighContrastMode: false,
-        enableReducedMotionMode: false,
-        enableReducedDataMode: false,
-        enableReducedTransparencyMode: false,
-        enableIncreasedContrastMode: false,
-        enableInvertedColorsMode: false,
-        enableGrayscaleMode: false,
-        enableMonochromeMode: false,
-        enableColorBlindMode: false,
-        enableDyslexiaMode: false,
-        enableADHDMode: false,
-        enableAutismMode: false,
-        enableAnxietyMode: false,
-        enableDepressionMode: false,
-        enableBipolarMode: false,
-        enableSchizophreniaMode: false,
-        enableDementiaMode: false,
-        enableAlzheimersMode: false,
-        enableParkinsonsMode: false,
-        enableMultipleSclerosisMode: false,
-        enableCerebralPalsyMode: false,
-        enableSpinaBifidaMode: false,
-        enableMuscularDystrophyMode: false,
-        enableAmyotrophicLateralSclerosisMode: false,
-        enableHuntingtonsMode: false,
-        enableEpilepsyMode: false,
-        enableMigraineMode: false,
-        enableChronicPainMode: false,
-        enableFibromyalgiaMode: false,
-        enableArthritisMode: false,
-        enableOsteoporosisMode: false,
-        enableDiabetesMode: false,
-        enableHeartDiseaseMode: false,
-        enableStrokeMode: false,
-        enableCancerMode: false,
-        enableKidneyDiseaseMode: false,
-        enableLiverDiseaseMode: false,
-        enableLungDiseaseMode: false,
-        enableThyroidDiseaseMode: false,
-        enableAutoimmuneDiseaseMode: false,
-        enableInflammatoryBowelDiseaseMode: false,
-        enableCeliacDiseaseMode: false,
-        enableCrohnsMode: false,
-        enableUlcerativeColitisMode: false,
-        enableIrritableBowelSyndromeMode: false,
-        enableGastroesophagealRefluxDiseaseMode: false,
-        enablePepticUlcerMode: false,
-        enableGallstonesMode: false,
-        enableKidneyStonesMode: false,
-        enableUrinaryTractInfectionMode: false,
-        enableProstatitisMode: false,
-        enableEndometriosisMode: false,
-        enablePolycysticOvarySyndromeMode: false,
-        enableMenopauseMode: false,
-        enableAndropauseMode: false,
-        enablePregnancyMode: false,
-        enableBreastfeedingMode: false,
-        enableInfertilityMode: false,
-        enableMiscarriageMode: false,
-        enableStillbirthMode: false,
-        enableInfantDeathMode: false,
-        enableChildDeathMode: false,
-        enableAdultDeathMode: false,
-        enableElderlyDeathMode: false,
-        enableSuicideMode: false,
-        enableHomicideMode: false,
-        enableAccidentMode: false,
-        enableNaturalDisasterMode: false,
-        enableWarMode: false,
-        enableTerrorismMode: false,
-        enableViolenceMode: false,
-        enableAbuseMode: false,
-        enableNeglectMode: false,
-        enableTraumaMode: false,
-        enablePTSDMode: false,
-        enableComplexPTSDMode: false,
-        enableAcuteStressDisorderMode: false,
-        enableAdjustmentDisorderMode: false,
-        enableGeneralizedAnxietyDisorderMode: false,
-        enablePanicDisorderMode: false,
-        enableSocialAnxietyDisorderMode: false,
-        enableSpecificPhobiaMode: false,
-        enableAgoraphobiaMode: false,
-        enableSeparationAnxietyDisorderMode: false,
-        enableSelectiveMutismMode: false,
-        enableMajorDepressiveDisorderMode: false,
-        enablePersistentDepressiveDisorderMode: false,
-        enableBipolarIDisorderMode: false,
-        enableBipolarIIDisorderMode: false,
-        enableCyclothymicDisorderMode: false,
-        enableDisruptiveMoodDysregulationDisorderMode: false,
-        enablePremenstrualDysphoricDisorderMode: false,
-        enableSubstanceInducedMoodDisorderMode: false,
-        enableMoodDisorderDueToMedicalConditionMode: false,
-        enableOtherSpecifiedBipolarDisorderMode: false,
-        enableUnspecifiedBipolarDisorderMode: false,
-        enableOtherSpecifiedDepressiveDisorderMode: false,
-        enableUnspecifiedDepressiveDisorderMode: false,
-      };
-
-      const analyzer = new EnhancedWebVitalsCollector(config);
+      const analyzer = new EnhancedWebVitalsCollector();
       expect(analyzer).toBeInstanceOf(EnhancedWebVitalsCollector);
     });
 
@@ -548,9 +390,11 @@ describe('enhanced-web-vitals', () => {
 
   describe('async operations', () => {
     it('should handle async initialization', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
-      const analyzer = new EnhancedWebVitalsCollector();
+      const analyzer = new AsyncCollector();
 
       // Simulate async operations
       vi.advanceTimersByTime(WEB_VITALS_CONSTANTS.TEST_TIMER_ADVANCE);
@@ -559,10 +403,12 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle async data collection', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
       // Create collector instance which should set up observers
-      const analyzer = new EnhancedWebVitalsCollector();
+      const analyzer = new AsyncCollector();
 
       // Simulate async data collection
       vi.advanceTimersByTime(1000);
@@ -576,9 +422,11 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle timeout scenarios', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
-      const analyzer = new EnhancedWebVitalsCollector();
+      const analyzer = new AsyncCollector();
 
       // Simulate long-running operations
       vi.advanceTimersByTime(WEB_VITALS_CONSTANTS.TEST_TIMEOUT_LONG);
@@ -593,9 +441,11 @@ describe('enhanced-web-vitals', () => {
         throw new Error('PerformanceObserver error');
       });
 
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
-      expect(() => new EnhancedWebVitalsCollector()).not.toThrow();
+      expect(() => new AsyncCollector()).not.toThrow();
     });
 
     it('should handle IntersectionObserver errors', async () => {
@@ -606,21 +456,25 @@ describe('enhanced-web-vitals', () => {
         writable: true,
       });
 
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
-      expect(() => new EnhancedWebVitalsCollector()).not.toThrow();
+      expect(() => new AsyncCollector()).not.toThrow();
     });
 
     it('should handle performance API errors', async () => {
       // Mock performance API to return empty array instead of throwing
       mockPerformance.getEntriesByType.mockReturnValue([]);
 
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
       // Should not throw when performance API returns empty results
-      expect(() => new EnhancedWebVitalsCollector()).not.toThrow();
+      expect(() => new AsyncCollector()).not.toThrow();
 
-      const collector = new EnhancedWebVitalsCollector();
+      const collector = new AsyncCollector();
       const metrics = collector.getDetailedMetrics();
 
       // Should still provide default metrics
@@ -631,10 +485,12 @@ describe('enhanced-web-vitals', () => {
 
   describe('Web Vitals Integration', () => {
     it('should call web-vitals functions when collecting metrics', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
       // Create a new collector instance to trigger metric collection
-      const collector = new EnhancedWebVitalsCollector();
+      const collector = new AsyncCollector();
 
       // Get metrics to ensure collection has happened
       const metrics = collector.getDetailedMetrics();
@@ -647,12 +503,14 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle web vitals callbacks correctly', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
       // Create collector and verify it doesn't throw
-      expect(() => new EnhancedWebVitalsCollector()).not.toThrow();
+      expect(() => new AsyncCollector()).not.toThrow();
 
-      const collector = new EnhancedWebVitalsCollector();
+      const collector = new AsyncCollector();
       const metrics = collector.getDetailedMetrics();
 
       // Verify metrics structure
@@ -662,10 +520,12 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should log metrics when received', async () => {
-      const { EnhancedWebVitalsCollector } = await import('../web-vitals');
+      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
+        '../web-vitals'
+      );
 
       // Create collector instance
-      const collector = new EnhancedWebVitalsCollector();
+      const collector = new AsyncCollector();
 
       // Generate diagnostic report which should trigger logging
       const report = collector.generateDiagnosticReport();

@@ -29,6 +29,13 @@ export default defineConfig({
       'coverage',
       '**/*.d.ts',
       '**/*.stories.{js,jsx,ts,tsx}',
+      // 排除setup文件和工具文件
+      '**/setup.{js,jsx,ts,tsx}',
+      '**/test-utils.{js,jsx,ts,tsx}',
+      '**/__tests__/**/setup.{js,jsx,ts,tsx}',
+      '**/__tests__/**/test-utils.{js,jsx,ts,tsx}',
+      // 排除E2E测试文件（应该由Playwright运行）
+      'tests/e2e/**/*',
     ],
 
     // 覆盖率配置

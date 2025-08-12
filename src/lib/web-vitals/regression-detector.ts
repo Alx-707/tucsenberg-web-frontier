@@ -1,8 +1,8 @@
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import type {
-    DetailedWebVitals,
-    PerformanceBaseline,
-    RegressionDetectionResult,
+  DetailedWebVitals,
+  PerformanceBaseline,
+  RegressionDetectionResult,
 } from './types';
 
 /**
@@ -42,22 +42,32 @@ export class PerformanceRegressionDetector {
    */
   private static getMetricThreshold(
     metric: string,
-    severity: 'warning' | 'critical'
+    severity: 'warning' | 'critical',
   ): number | undefined {
     // 使用白名单验证指标名称和严重程度
     const thresholds = PerformanceRegressionDetector.REGRESSION_THRESHOLDS;
 
     switch (metric) {
       case 'cls':
-        return severity === 'warning' ? thresholds.cls.warning : thresholds.cls.critical;
+        return severity === 'warning'
+          ? thresholds.cls.warning
+          : thresholds.cls.critical;
       case 'fid':
-        return severity === 'warning' ? thresholds.fid.warning : thresholds.fid.critical;
+        return severity === 'warning'
+          ? thresholds.fid.warning
+          : thresholds.fid.critical;
       case 'lcp':
-        return severity === 'warning' ? thresholds.lcp.warning : thresholds.lcp.critical;
+        return severity === 'warning'
+          ? thresholds.lcp.warning
+          : thresholds.lcp.critical;
       case 'fcp':
-        return severity === 'warning' ? thresholds.fcp.warning : thresholds.fcp.critical;
+        return severity === 'warning'
+          ? thresholds.fcp.warning
+          : thresholds.fcp.critical;
       case 'ttfb':
-        return severity === 'warning' ? thresholds.ttfb.warning : thresholds.ttfb.critical;
+        return severity === 'warning'
+          ? thresholds.ttfb.warning
+          : thresholds.ttfb.critical;
       default:
         return undefined;
     }
@@ -180,7 +190,10 @@ export class PerformanceRegressionDetector {
     severity: 'warning' | 'critical',
   ): number {
     // 使用安全的方法获取指标阈值
-    const metricThreshold = PerformanceRegressionDetector.getMetricThreshold(metric, severity);
+    const metricThreshold = PerformanceRegressionDetector.getMetricThreshold(
+      metric,
+      severity,
+    );
 
     if (metricThreshold !== undefined) {
       return metricThreshold;
@@ -188,7 +201,9 @@ export class PerformanceRegressionDetector {
 
     // 回退到百分比变化阈值
     const thresholds = PerformanceRegressionDetector.REGRESSION_THRESHOLDS;
-    return severity === 'warning' ? thresholds.percentChange.warning : thresholds.percentChange.critical;
+    return severity === 'warning'
+      ? thresholds.percentChange.warning
+      : thresholds.percentChange.critical;
   }
 
   /**

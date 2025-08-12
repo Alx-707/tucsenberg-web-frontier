@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Locale } from '@/types/i18n';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { Locale } from '@/types/i18n';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  LocaleDetectionHistory,
-  LocaleStorageManager,
-  UserLocalePreference,
+    LocaleDetectionHistory,
+    LocaleStorageManager,
+    UserLocalePreference,
 } from '../locale-storage';
 
 // Mock constants
@@ -216,24 +216,19 @@ describe('LocaleStorageManager', () => {
 
   describe('saveDetectionHistory', () => {
     it('should save detection history to localStorage', () => {
-      const history: LocaleDetectionHistory = {
-        detections: [
-          {
-            locale: 'en',
-            source: 'browser',
-            timestamp: Date.now(),
-            confidence: 0.8,
-          },
-        ],
-        lastUpdated: Date.now(),
+      const detection = {
+        locale: 'en' as const,
+        source: 'browser',
+        timestamp: Date.now(),
+        confidence: 0.8,
       };
 
       // Note: saveDetectionHistory is private, testing through public interface
-      LocaleStorageManager.getDetectionHistory();
+      LocaleStorageManager.addDetectionRecord(detection);
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         'locale_detection_history',
-        JSON.stringify(history),
+        expect.stringContaining('"locale":"en"'),
       );
     });
 
@@ -319,10 +314,19 @@ describe('LocaleStorageManager', () => {
     it('should create new history when none exists', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
 
-      // addDetectionRecord is private, testing through public interface
-      const history = LocaleStorageManager.getDetectionHistory();
-      expect(history).toBeDefined();
-      expect(Array.isArray(history.detections)).toBe(true);
+      // Call addDetectionRecord through the public method
+      (LocaleStorageManager as any).addDetectionRecord({
+        locale: 'en',
+        source: 'test',
+        timestamp: Date.now(),
+        confidence: 0.9,
+      });
+
+      // Verify that setItem was called with new history
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
+        'locale_detection_history',
+        expect.stringContaining('"detections"'),
+      );
     });
 
     it('should limit history to maximum entries', () => {

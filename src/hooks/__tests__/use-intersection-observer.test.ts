@@ -37,7 +37,9 @@ describe('useIntersectionObserver', () => {
     mockAccessibilityManager.prefersReducedMotion.mockReturnValue(false);
 
     // Store callback for manual triggering
-    let storedCallback: ((_entries: IntersectionObserverEntry[]) => void) | null = null;
+    let storedCallback:
+      | ((_entries: IntersectionObserverEntry[]) => void)
+      | null = null;
 
     mockIntersectionObserver.mockImplementation((callback) => {
       storedCallback = callback;
@@ -271,14 +273,16 @@ describe('useIntersectionObserver', () => {
       let observerCallback:
         | ((_entries: IntersectionObserverEntry[]) => void)
         | null = null;
+      let mockObserverInstance: any;
 
       mockIntersectionObserver.mockImplementation((callback) => {
         observerCallback = callback;
-        return {
+        mockObserverInstance = {
           observe: mockObserve,
           unobserve: mockUnobserve,
           disconnect: mockDisconnect,
         };
+        return mockObserverInstance;
       });
 
       const { result } = renderHook(() =>
@@ -289,7 +293,10 @@ describe('useIntersectionObserver', () => {
         result.current.ref(mockElement);
       });
 
-      // Simulate intersection
+      // Clear any calls that happened during setup
+      mockUnobserve.mockClear();
+
+      // Element enters viewport
       act(() => {
         if (observerCallback) {
           observerCallback([
@@ -311,6 +318,36 @@ describe('useIntersectionObserver', () => {
         }
       });
 
+      expect(result.current.isVisible).toBe(true);
+      expect(result.current.hasBeenVisible).toBe(true);
+      // 当 triggerOnce 为 false 时，intersection callback中不应该调用 unobserve
+      expect(mockUnobserve).not.toHaveBeenCalled();
+
+      // Element leaves viewport
+      act(() => {
+        if (observerCallback) {
+          observerCallback([
+            {
+              isIntersecting: false,
+              target: mockElement,
+              boundingClientRect: new DOMRect(0, 0, 100, 100),
+              intersectionRatio: 0,
+              intersectionRect: new DOMRect(0, 0, 0, 0),
+              rootBounds: new DOMRect(
+                0,
+                0,
+                TEST_SCREEN_CONSTANTS.TABLET_WIDTH,
+                TEST_SCREEN_CONSTANTS.STANDARD_HEIGHT,
+              ),
+              time: Date.now(),
+            } as IntersectionObserverEntry,
+          ]);
+        }
+      });
+
+      expect(result.current.isVisible).toBe(false);
+      expect(result.current.hasBeenVisible).toBe(true); // Should remain true
+      // intersection callback中仍然不应该调用 unobserve
       expect(mockUnobserve).not.toHaveBeenCalled();
     });
   });

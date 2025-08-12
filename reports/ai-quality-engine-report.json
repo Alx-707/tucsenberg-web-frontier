@@ -1,0 +1,165 @@
+{
+  "timestamp": "2025-08-11T14:38:37.658Z",
+  "engine": "ai-quality-v1.0",
+  "summary": {
+    "overallScore": 74,
+    "totalChecks": 10,
+    "passedChecks": 10,
+    "failedChecks": 0,
+    "criticalIssues": 3,
+    "recommendations": []
+  },
+  "dimensions": {
+    "codeQuality": {
+      "score": 70,
+      "weight": 25,
+      "details": [
+        {
+          "check": "TypeScript",
+          "status": "PASS",
+          "impact": "high"
+        },
+        {
+          "check": "Prettier",
+          "status": "FAIL",
+          "impact": "low",
+          "issue": "Format issues"
+        },
+        {
+          "check": "ESLint",
+          "status": "KNOWN_ISSUES",
+          "impact": "high",
+          "issue": "Known ESLint issues"
+        }
+      ]
+    },
+    "security": {
+      "score": 70,
+      "weight": 25,
+      "details": [
+        {
+          "check": "Dependency Audit",
+          "status": "PASS",
+          "impact": "critical"
+        },
+        {
+          "check": "Security Scan",
+          "status": "FAIL",
+          "impact": "high",
+          "issue": "Security vulnerabilities"
+        }
+      ]
+    },
+    "performance": {
+      "score": 75,
+      "weight": 20,
+      "details": [
+        {
+          "check": "Performance Analysis",
+          "status": "FAIL",
+          "impact": "high",
+          "issue": "Performance issues"
+        },
+        {
+          "check": "Bundle Size",
+          "status": "PASS",
+          "impact": "medium"
+        }
+      ]
+    },
+    "architecture": {
+      "score": 100,
+      "weight": 15,
+      "details": [
+        {
+          "check": "Architecture Validation",
+          "status": "PASS",
+          "impact": "medium"
+        }
+      ]
+    },
+    "testing": {
+      "score": 50,
+      "weight": 10,
+      "details": [
+        {
+          "check": "Unit Tests",
+          "status": "FAIL",
+          "impact": "high",
+          "issue": "Test failures"
+        }
+      ]
+    },
+    "maintainability": {
+      "score": 70,
+      "weight": 5,
+      "details": [
+        {
+          "check": "Code Duplication",
+          "status": "FAIL",
+          "impact": "medium",
+          "issue": "High duplication"
+        }
+      ]
+    }
+  },
+  "aiInsights": {
+    "patterns": [
+      {
+        "type": "dependencies",
+        "description": "项目有 26 个生产依赖和 53 个开发依赖",
+        "recommendation": "依赖数量合理"
+      },
+      {
+        "type": "documentation",
+        "description": "文档完整性: README ✓, CHANGELOG ✗",
+        "recommendation": "文档基础良好"
+      },
+      {
+        "type": "best-practices",
+        "description": "最佳实践: .gitignore ✓, .editorconfig ✓",
+        "recommendation": "基础配置文件齐全"
+      }
+    ],
+    "risks": [
+      "存在一些技术债务，建议逐步改进",
+      "安全性需要加强，建议优先处理安全问题"
+    ],
+    "opportunities": [
+      "性能优化空间较大，建议进行性能调优"
+    ],
+    "technicalDebt": "medium"
+  },
+  "actionPlan": [
+    {
+      "priority": "MEDIUM",
+      "area": "codeQuality",
+      "action": "修复codeQuality中的1个问题",
+      "impact": "预计提升20分"
+    },
+    {
+      "priority": "MEDIUM",
+      "area": "security",
+      "action": "修复security中的1个问题",
+      "impact": "预计提升20分"
+    },
+    {
+      "priority": "MEDIUM",
+      "area": "performance",
+      "action": "修复performance中的1个问题",
+      "impact": "预计提升20分"
+    },
+    {
+      "priority": "MEDIUM",
+      "area": "testing",
+      "action": "修复testing中的1个问题",
+      "impact": "预计提升20分"
+    },
+    {
+      "priority": "MEDIUM",
+      "area": "maintainability",
+      "action": "修复maintainability中的1个问题",
+      "impact": "预计提升20分"
+    }
+  ]
+}

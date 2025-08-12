@@ -20,17 +20,29 @@ const mocks = vi.hoisted(() => ({
     handleThemeChange: vi.fn(),
     handleKeyDown: vi.fn(),
     ariaAttributes: {
-      "aria-label": "主题切换",
-      "aria-expanded": "false",
-      "aria-haspopup": "menu",
-      "aria-current": "light",
+      'aria-label': '主题切换',
+      'aria-expanded': 'false',
+      'aria-haspopup': 'menu',
+      'aria-current': 'light',
     },
   },
 }));
 
 // Export for external access
-const { mockSetTheme, mockTheme, mockSystemTheme, mockResolvedTheme, mockUseThemeToggle } = mocks;
-export { mockResolvedTheme, mockSetTheme, mockSystemTheme, mockTheme, mockUseThemeToggle };
+const {
+  mockSetTheme,
+  mockTheme,
+  mockSystemTheme,
+  mockResolvedTheme,
+  mockUseThemeToggle,
+} = mocks;
+export {
+  mockResolvedTheme,
+  mockSetTheme,
+  mockSystemTheme,
+  mockTheme,
+  mockUseThemeToggle,
+};
 
 vi.mock('next-themes', () => ({
   useTheme: vi.fn(() => ({
@@ -49,7 +61,7 @@ vi.mock('@/hooks/use-theme-toggle', () => ({
 vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children, open, onOpenChange }: any) => (
     <div
-      data-testid="dropdown-menu"
+      data-testid='dropdown-menu'
       data-open={open}
       onClick={() => onOpenChange?.(!open)}
     >
@@ -64,7 +76,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     ...props
   }: any) => (
     <div
-      data-testid="dropdown-content"
+      data-testid='dropdown-content'
       data-align={align}
       className={className}
       role={role}
@@ -78,9 +90,16 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       // When asChild is true, render children directly
       return children;
     }
-    return <div data-testid="dropdown-trigger">{children}</div>;
+    return <div data-testid='dropdown-trigger'>{children}</div>;
   },
-  DropdownMenuItem: ({ children, onClick, onKeyDown, className, role, ...props }: any) => (
+  DropdownMenuItem: ({
+    children,
+    onClick,
+    onKeyDown,
+    className,
+    role,
+    ...props
+  }: any) => (
     <div
       onClick={onClick}
       onKeyDown={onKeyDown}
@@ -100,7 +119,7 @@ vi.mock('@/components/ui/button', () => ({
     }
     return (
       <button
-        data-testid="theme-button"
+        data-testid='theme-button'
         data-variant={variant}
         data-size={size}
         className={className}
@@ -116,7 +135,7 @@ vi.mock('@/components/ui/button', () => ({
 vi.mock('lucide-react', () => ({
   Sun: ({ className, ...props }: any) => (
     <span
-      data-testid="sun-icon"
+      data-testid='sun-icon'
       className={className}
       {...props}
     >
@@ -125,7 +144,7 @@ vi.mock('lucide-react', () => ({
   ),
   Moon: ({ className, ...props }: any) => (
     <span
-      data-testid="moon-icon"
+      data-testid='moon-icon'
       className={className}
       {...props}
     >
@@ -134,7 +153,7 @@ vi.mock('lucide-react', () => ({
   ),
   Monitor: ({ className, ...props }: any) => (
     <span
-      data-testid="monitor-icon"
+      data-testid='monitor-icon'
       className={className}
       {...props}
     >
@@ -145,30 +164,35 @@ vi.mock('lucide-react', () => ({
 
 // Mock theme components
 vi.mock('@/components/theme/theme-toggle-button', () => {
-  const MockThemeToggleButton = React.forwardRef(({
-    ariaAttributes,
-    onKeyDown,
-    onClick,
-    prefersHighContrast: _prefersHighContrast,
-    prefersReducedMotion: _prefersReducedMotion,
-    ...props
-  }: any, ref: any) => {
-    return (
-      <button
-        ref={ref}
-        data-testid="theme-toggle-button"
-        data-variant="outline"
-        data-size="icon"
-        onKeyDown={onKeyDown}
-        onClick={onClick}
-        {...ariaAttributes}
-        {...props}
-      >
-        <span data-testid="sun-icon">☀️</span>
-        <span data-testid="moon-icon">🌙</span>
-      </button>
-    );
-  });
+  const MockThemeToggleButton = React.forwardRef(
+    (
+      {
+        ariaAttributes,
+        onKeyDown,
+        onClick,
+        prefersHighContrast: _prefersHighContrast,
+        prefersReducedMotion: _prefersReducedMotion,
+        ...props
+      }: any,
+      ref: any,
+    ) => {
+      return (
+        <button
+          ref={ref}
+          data-testid='theme-toggle-button'
+          data-variant='outline'
+          data-size='icon'
+          onKeyDown={onKeyDown}
+          onClick={onClick}
+          {...ariaAttributes}
+          {...props}
+        >
+          <span data-testid='sun-icon'>☀️</span>
+          <span data-testid='moon-icon'>🌙</span>
+        </button>
+      );
+    },
+  );
 
   MockThemeToggleButton.displayName = 'MockThemeToggleButton';
 
@@ -198,7 +222,7 @@ vi.mock('@/components/theme/theme-menu-item', () => ({
         aria-label={ariaLabel}
         onClick={onClick}
         onKeyDown={onKeyDown}
-        role="menuitem"
+        role='menuitem'
         {...props}
       >
         {Icon && <Icon data-testid={`${theme}-icon`} />}
@@ -275,10 +299,10 @@ export function setupThemeToggleTest() {
     handleThemeChange: vi.fn(),
     handleKeyDown: vi.fn(),
     ariaAttributes: {
-      "aria-label": "主题切换",
-      "aria-expanded": "false",
-      "aria-haspopup": "menu",
-      "aria-current": "light",
+      'aria-label': '主题切换',
+      'aria-expanded': 'false',
+      'aria-haspopup': 'menu',
+      'aria-current': 'light',
     },
   });
 }

@@ -235,33 +235,34 @@ export interface I18nConfig {
 
 // 翻译钩子返回类型
 export interface UseTranslationReturn {
-  t: (key: TranslationKey, params?: TranslationParams) => string;
+  t: (_key: TranslationKey, _params?: TranslationParams) => string;
   locale: Locale;
   isLoading: boolean;
   error: TranslationError | null;
-  changeLanguage: (locale: Locale) => Promise<void>;
+  changeLanguage: (_locale: Locale) => Promise<void>;
   ready: boolean;
 }
 
 // 格式化钩子返回类型
 export interface UseFormatterReturn {
   formatDate: (
-    date: Date | string | number,
-    options?: Intl.DateTimeFormatOptions,
+    _date: Date | string | number,
+    _options?: Intl.DateTimeFormatOptions,
   ) => string;
-  formatNumber: (value: number, options?: Intl.NumberFormatOptions) => string;
-  formatCurrency: (value: number, currency?: string) => string;
-  formatPercentage: (value: number) => string;
-  formatList: (items: string[], options?: Intl.ListFormatOptions) => string;
+  formatNumber: (_value: number, _options?: Intl.NumberFormatOptions) => string;
+  formatCurrency: (_value: number, _currency?: string) => string;
+  formatPercentage: (_value: number) => string;
+  formatList: (_items: string[], _options?: Intl.ListFormatOptions) => string;
   formatRelativeTime: (
-    value: number,
-    unit: Intl.RelativeTimeFormatUnit,
+    _value: number,
+    _unit: Intl.RelativeTimeFormatUnit,
   ) => string;
 }
 
 // 路由国际化类型
 export interface LocalizedPathnames {
-  [key: string]: string | { [locale in Locale]: string };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  [_key: string]: string | { [_locale in Locale]: string };
 }
 
 // 域名配置类型

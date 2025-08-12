@@ -1,5 +1,9 @@
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { logger } from '@/lib/logger';
+import {
+  BASELINE_CONSTANTS,
+  WEB_VITALS_THRESHOLDS,
+} from '@/constants/performance-constants';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import type { DetailedWebVitals, PerformanceBaseline } from './types';
 
 /**
@@ -143,16 +147,22 @@ export class PerformanceBaselineManager {
     let score = 100;
 
     // CLS 评分
-    if (metrics.cls > 0.25) score -= 30;
-    else if (metrics.cls > 0.1) score -= 15;
+    if (metrics.cls > BASELINE_CONSTANTS.CLS_BASELINE)
+      score -= BASELINE_CONSTANTS.CLS_BASELINE_DAYS;
+    else if (metrics.cls > BASELINE_CONSTANTS.FID_BASELINE)
+      score -= BASELINE_CONSTANTS.FID_BASELINE_DAYS;
 
     // LCP 评分
-    if (metrics.lcp > 4000) score -= 30;
-    else if (metrics.lcp > 2500) score -= 15;
+    if (metrics.lcp > BASELINE_CONSTANTS.LCP_BASELINE)
+      score -= BASELINE_CONSTANTS.LCP_BASELINE_DAYS;
+    else if (metrics.lcp > BASELINE_CONSTANTS.TTFB_BASELINE)
+      score -= BASELINE_CONSTANTS.TTFB_BASELINE_DAYS;
 
     // FID 评分
-    if (metrics.fid > 300) score -= 30;
-    else if (metrics.fid > 100) score -= 15;
+    if (metrics.fid > BASELINE_CONSTANTS.INP_BASELINE)
+      score -= BASELINE_CONSTANTS.INP_BASELINE_DAYS;
+    else if (metrics.fid > WEB_VITALS_THRESHOLDS.FID.GOOD)
+      score -= BASELINE_CONSTANTS.INP_BASELINE_EXTRA_DAYS;
 
     return Math.max(0, score);
   }

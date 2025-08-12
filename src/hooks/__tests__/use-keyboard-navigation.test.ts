@@ -259,7 +259,7 @@ describe('useKeyboardNavigation', () => {
       // Test that Home/End navigation functions can be called without errors
       expect(() => {
         result.current.focusFirst(); // Should handle Home key
-        result.current.focusLast();  // Should handle End key
+        result.current.focusLast(); // Should handle End key
       }).not.toThrow();
 
       // Test that the hook handles enabled state correctly

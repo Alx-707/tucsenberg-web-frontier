@@ -1,27 +1,28 @@
-import {
-    DETECTION_SCORING,
-    PERFORMANCE_THRESHOLDS,
-} from '@/constants/i18n-constants';
 import { Locale } from '@/types/i18n';
 import {
-    LocaleQualityReport,
-    QualityIssue,
-    QualityReport,
-    QualityScore,
-    QualityTrend,
-    QualityTrendReport,
-    TranslationManagerConfig,
-    TranslationQualityCheck,
-    ValidationReport,
+  LocaleQualityReport,
+  QualityIssue,
+  QualityReport,
+  QualityScore,
+  QualityTrend,
+  QualityTrendReport,
+  TranslationManagerConfig,
+  TranslationQualityCheck,
+  ValidationReport,
 } from '@/types/translation-manager';
+import {
+  DETECTION_SCORING,
+  PERFORMANCE_THRESHOLDS,
+  QUALITY_SCORING,
+} from '@/constants/i18n-constants';
 import { TranslationQualityChecker } from './translation-quality-checker';
 import {
-    calculateConfidence,
-    flattenTranslations,
-    generateRecommendations,
-    generateSuggestions,
-    getNestedValue,
-    isEmptyTranslation,
+  calculateConfidence,
+  flattenTranslations,
+  generateRecommendations,
+  generateSuggestions,
+  getNestedValue,
+  isEmptyTranslation,
 } from './translation-utils';
 
 /**
@@ -51,7 +52,10 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   /**
    * 安全地设置指定语言的翻译数据
    */
-  private setTranslationsForLocale(locale: Locale, translations: Record<string, unknown>): void {
+  private setTranslationsForLocale(
+    locale: Locale,
+    translations: Record<string, unknown>,
+  ): void {
     // 使用 switch 语句替代动态属性访问
     switch (locale) {
       case 'en':
@@ -72,7 +76,7 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   private setQualityScoreForLocale(
     byLocale: Record<Locale, QualityScore>,
     locale: Locale,
-    score: QualityScore
+    score: QualityScore,
   ): void {
     // 使用 switch 语句替代动态属性访问
     switch (locale) {
@@ -95,7 +99,7 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   private setTranslationResult(
     result: Record<string, string>,
     key: string,
-    translation: string
+    translation: string,
   ): void {
     // 验证键名格式，只允许字母、数字、点、下划线和连字符
     if (!/^[a-zA-Z0-9._-]+$/.test(key)) {
@@ -119,7 +123,10 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   /**
    * 安全地获取扁平化翻译值
    */
-  private getTranslationValue(flatTranslations: Record<string, string>, key: string): string | undefined {
+  private getTranslationValue(
+    flatTranslations: Record<string, string>,
+    key: string,
+  ): string | undefined {
     // 验证键名格式
     if (!/^[a-zA-Z0-9._-]+$/.test(key)) {
       return undefined;
@@ -140,7 +147,10 @@ export class TranslationManagerCore implements TranslationQualityCheck {
 
   constructor(config: TranslationManagerConfig) {
     this.config = config;
-    this.qualityChecker = new TranslationQualityChecker(config, this.translations);
+    this.qualityChecker = new TranslationQualityChecker(
+      config,
+      this.translations,
+    );
   }
 
   /**
@@ -174,7 +184,10 @@ export class TranslationManagerCore implements TranslationQualityCheck {
     }
 
     // 更新质量检查器的翻译数据
-    this.qualityChecker = new TranslationQualityChecker(this.config, this.translations);
+    this.qualityChecker = new TranslationQualityChecker(
+      this.config,
+      this.translations,
+    );
   }
 
   /**
@@ -185,28 +198,31 @@ export class TranslationManagerCore implements TranslationQualityCheck {
       console.warn(
         'Lingo.dev integration enabled but missing API key or project ID',
       );
-      return;
+    } else {
+      // 这里可以添加Lingo.dev API的初始化逻辑
+      // 初始化完成，不需要额外的日志输出
     }
-
-    // 这里可以添加Lingo.dev API的初始化逻辑
-    // 初始化完成，不需要额外的日志输出
   }
 
   /**
    * 检查Lingo.dev翻译质量
    */
-  async checkLingoTranslation(
+  checkLingoTranslation(
     key: string,
     aiTranslation: string,
     humanTranslation?: string,
   ): Promise<QualityScore> {
-    return this.qualityChecker.checkLingoTranslation(key, aiTranslation, humanTranslation);
+    return this.qualityChecker.checkLingoTranslation(
+      key,
+      aiTranslation,
+      humanTranslation,
+    );
   }
 
   /**
    * 验证翻译一致性
    */
-  async validateTranslationConsistency(
+  validateTranslationConsistency(
     translations: Record<string, string>,
   ): Promise<ValidationReport> {
     return this.qualityChecker.validateTranslationConsistency(translations);
@@ -277,16 +293,16 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   /**
    * 获取质量趋势
    */
-  private async getQualityTrends(): Promise<QualityTrend[]> {
+  private getQualityTrends(): Promise<QualityTrend[]> {
     // 这里可以实现质量趋势分析
     // 例如从历史数据中获取质量变化趋势
-    return [];
+    return Promise.resolve([]);
   }
 
   /**
    * 验证翻译质量
    */
-  async validateTranslationQuality(locale: string): Promise<LocaleQualityReport> {
+  validateTranslationQuality(locale: string): Promise<LocaleQualityReport> {
     const translations = this.getTranslationsForLocale(locale as Locale);
     const flatTranslations = flattenTranslations(translations);
 
@@ -298,7 +314,7 @@ export class TranslationManagerCore implements TranslationQualityCheck {
     for (const loc of this.config.locales) {
       const locTranslations = this.getTranslationsForLocale(loc);
       const locFlat = flattenTranslations(locTranslations);
-      Object.keys(locFlat).forEach(key => allKeys.add(key));
+      Object.keys(locFlat).forEach((key) => allKeys.add(key));
     }
 
     const totalKeys = allKeys.size;
@@ -310,30 +326,29 @@ export class TranslationManagerCore implements TranslationQualityCheck {
       if (!value || isEmptyTranslation(value as string)) {
         issues.push({
           type: 'missing',
-          key,
           severity: 'high',
           message: `Missing translation for key: ${key}`,
-          locale: locale as Locale,
         });
       } else {
-        validKeys++;
+        validKeys += 1;
 
         // 检查过长翻译
         if (typeof value === 'string' && value.length > 200) {
           issues.push({
             type: 'length',
-            key,
             severity: 'medium',
             message: `Translation too long: ${value.length} characters`,
-            locale: locale as Locale,
           });
         }
       }
     }
 
-    const score = Math.max(0, 1 - (issues.length * 0.1));
+    const score = Math.max(
+      0,
+      1 - issues.length * QUALITY_SCORING.ISSUE_PENALTY_FACTOR,
+    );
 
-    return {
+    return Promise.resolve({
       locale: locale as Locale,
       totalKeys,
       validKeys,
@@ -342,7 +357,7 @@ export class TranslationManagerCore implements TranslationQualityCheck {
       timestamp: new Date().toISOString(),
       confidence: calculateConfidence(issues),
       suggestions: generateSuggestions(issues),
-    };
+    });
   }
 
   /**
@@ -362,7 +377,7 @@ export class TranslationManagerCore implements TranslationQualityCheck {
   /**
    * 获取质量趋势
    */
-  async getQualityTrend(locale: string, days: number): Promise<QualityTrendReport> {
+  getQualityTrend(locale: string, days: number): Promise<QualityTrendReport> {
     // 模拟历史数据
     const dataPoints: QualityTrend[] = [];
     const now = new Date();
@@ -372,18 +387,22 @@ export class TranslationManagerCore implements TranslationQualityCheck {
       date.setDate(date.getDate() - i);
 
       dataPoints.push({
-        date: date.toISOString().split('T')[0],
-        score: Math.random() * 0.3 + 0.7, // 0.7-1.0 range
-        keyCount: Math.floor(Math.random() * 100) + 50, // 50-150 range
+        date: date.toISOString().split('T')[0] || date.toISOString(),
+        score:
+          Math.random() * QUALITY_SCORING.TREND_SCORE_RANGE +
+          QUALITY_SCORING.TREND_SCORE_MIN, // 0.7-1.0 range
+        keyCount:
+          Math.floor(Math.random() * QUALITY_SCORING.TREND_KEY_COUNT_RANGE) +
+          QUALITY_SCORING.TREND_KEY_COUNT_BASE, // 50-150 range
         locale: locale as Locale,
       });
     }
 
-    return {
+    return Promise.resolve({
       locale: locale as Locale,
       period: days,
       dataPoints,
-    };
+    });
   }
 
   /**
@@ -400,7 +419,9 @@ export class TranslationManagerCore implements TranslationQualityCheck {
 
     // 如果翻译不存在或为空，回退到默认语言
     if (!translation && locale !== this.config.defaultLocale) {
-      const defaultTranslations = this.getTranslationsForLocale(this.config.defaultLocale);
+      const defaultTranslations = this.getTranslationsForLocale(
+        this.config.defaultLocale,
+      );
       translation = getNestedValue(defaultTranslations, key);
     }
 

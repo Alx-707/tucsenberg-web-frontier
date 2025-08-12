@@ -37,27 +37,37 @@ export interface TestResults {
   timestamp: number;
 }
 
-// 工具函数：模拟性能问题
+// 工具函数：模拟性能问题（优化版本 - 减少 CLS 影响）
 export function simulatePerformanceIssues(): void {
-  // 模拟布局偏移
+  // 模拟布局偏移 - 使用更温和的方式，避免严重的 CLS
   const div = document.createElement('div');
-  div.style.height = '100px';
-  div.style.backgroundColor = 'red';
-  div.style.position = 'absolute';
-  div.style.top = '0';
-  div.style.left = '0';
+  div.style.height = '50px'; // 减少初始高度
+  div.style.backgroundColor = 'rgba(255, 0, 0, 0.3)'; // 半透明，减少视觉冲击
+  div.style.position = 'fixed'; // 使用 fixed 定位，减少对页面布局的影响
+  div.style.top = '10px';
+  div.style.right = '10px'; // 移到右上角，避免影响主要内容
+  div.style.width = '100px';
+  div.style.zIndex = '9999';
+  div.style.borderRadius = '4px';
+  div.style.transition = 'height 0.3s ease'; // 添加过渡动画，减少突兀感
   document.body.appendChild(div);
 
   setTimeout(() => {
-    div.style.height = '200px';
+    div.style.height = '80px'; // 减少高度变化幅度
     setTimeout(() => {
-      document.body.removeChild(div);
+      div.style.opacity = '0'; // 淡出效果
+      setTimeout(() => {
+        if (document.body.contains(div)) {
+          document.body.removeChild(div);
+        }
+      }, 300); // 等待淡出动画完成
     }, PERFORMANCE_CONSTANTS.SIMULATION_DELAY);
   }, PERFORMANCE_CONSTANTS.BLOCKING_DURATION);
 
-  // 模拟主线程阻塞
+  // 模拟主线程阻塞 - 减少阻塞时间
   const start = performance.now();
-  while (performance.now() - start < PERFORMANCE_CONSTANTS.BLOCKING_DURATION) {
+  const reducedBlockingTime = Math.min(PERFORMANCE_CONSTANTS.BLOCKING_DURATION, 50); // 最多阻塞50ms
+  while (performance.now() - start < reducedBlockingTime) {
     // 阻塞主线程
   }
 }
@@ -74,9 +84,12 @@ export function exportTestResults(testResults: TestResults): void {
     },
   };
 
-  const blob = new Blob([JSON.stringify(data, null, PERFORMANCE_CONSTANTS.SPACING_INDENT)], {
-    type: 'application/json',
-  });
+  const blob = new Blob(
+    [JSON.stringify(data, null, PERFORMANCE_CONSTANTS.SPACING_INDENT)],
+    {
+      type: 'application/json',
+    },
+  );
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;

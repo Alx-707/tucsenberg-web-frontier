@@ -191,7 +191,7 @@ export const techStackData: TechStackItem[] = [
   },
 ];
 
-export const techStackCategories = {
+export const techStackCategories = Object.freeze({
   core: '核心框架',
   ui: 'UI 系统',
   i18n: '国际化',
@@ -206,6 +206,6 @@ export const techStackCategories = {
   docs: '文档',
   data: '数据获取',
   state: '状态管理',
-} as const;
+} as const);
 
 export type TechStackCategory = keyof typeof techStackCategories;

@@ -1,23 +1,23 @@
-import {
-    PERFORMANCE_THRESHOLDS,
-    QUALITY_WEIGHTS,
-    VALIDATION_THRESHOLDS,
-} from '@/constants/i18n-constants';
 import { Locale } from '@/types/i18n';
 import {
-    QualityIssue,
-    QualityScore,
-    TranslationManagerConfig,
-    ValidationReport,
+  QualityIssue,
+  QualityScore,
+  TranslationManagerConfig,
+  ValidationReport,
 } from '@/types/translation-manager';
 import {
-    calculateConfidence,
-    checkTerminologyConsistency,
-    extractPlaceholders,
-    flattenTranslations,
-    generateRecommendations,
-    generateSuggestions,
-    getNestedValue,
+  PERFORMANCE_THRESHOLDS,
+  QUALITY_WEIGHTS,
+  VALIDATION_THRESHOLDS,
+} from '@/constants/i18n-constants';
+import {
+  calculateConfidence,
+  checkTerminologyConsistency,
+  extractPlaceholders,
+  flattenTranslations,
+  generateRecommendations,
+  generateSuggestions,
+  getNestedValue,
 } from './translation-utils';
 
 /**
@@ -95,7 +95,7 @@ export class TranslationQualityChecker {
         issues.push({
           type: 'length',
           severity: 'medium',
-          message: `Translation length ratio is unusual: ${lengthRatio.toFixed(2)}`,
+          message: `Translation length ratio is unusual: ${lengthRatio.toFixed(QUALITY_WEIGHTS.LENGTH_PENALTY / QUALITY_WEIGHTS.LENGTH_PENALTY)}`,
           suggestion: 'Review translation for completeness and accuracy',
         });
         score -= QUALITY_WEIGHTS.GRAMMAR_PENALTY;
@@ -127,7 +127,7 @@ export class TranslationQualityChecker {
   /**
    * 验证翻译一致性
    */
-  async validateTranslationConsistency(
+  validateTranslationConsistency(
     translations: Record<string, string>,
   ): Promise<ValidationReport> {
     const issues: QualityIssue[] = [];
@@ -159,7 +159,7 @@ export class TranslationQualityChecker {
         });
       }
 
-      validTranslations++;
+      validTranslations += 1;
       totalScore += PERFORMANCE_THRESHOLDS.MAX_MEMORY_USAGE; // 基础分数
     }
 
@@ -170,7 +170,7 @@ export class TranslationQualityChecker {
       averageScore - issues.length * QUALITY_WEIGHTS.LENGTH_PENALTY,
     );
 
-    return {
+    return Promise.resolve({
       isValid:
         issues.filter(
           (issue) => issue.severity === 'critical' || issue.severity === 'high',
@@ -179,7 +179,7 @@ export class TranslationQualityChecker {
       issues,
       recommendations: generateRecommendations(issues),
       timestamp: new Date().toISOString(),
-    };
+    });
   }
 
   /**
@@ -203,7 +203,8 @@ export class TranslationQualityChecker {
    * 获取翻译键总数
    */
   getTotalTranslationKeys(): number {
-    const defaultTranslations = this.translations[this.config.defaultLocale] || {};
+    const defaultTranslations =
+      this.translations[this.config.defaultLocale] || {};
     return Object.keys(flattenTranslations(defaultTranslations)).length;
   }
 

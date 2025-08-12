@@ -30,7 +30,10 @@ interface MainContentProps {
   historicalData: SimpleWebVitals[];
 }
 
-export function MainContent({ currentMetrics, historicalData }: MainContentProps) {
+export function MainContent({
+  currentMetrics,
+  historicalData,
+}: MainContentProps) {
   return (
     <>
       {/* 当前页面性能指标 */}

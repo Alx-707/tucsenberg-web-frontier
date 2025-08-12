@@ -8,11 +8,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { 
-  TestResults, 
-  PERFORMANCE_CONSTANTS, 
-  getMetricStatus, 
-  getMetricLabel 
+import {
+  getMetricLabel,
+  getMetricStatus,
+  PERFORMANCE_CONSTANTS,
+  TestResults,
 } from './utils';
 
 // 子组件：页面头部
@@ -98,8 +98,16 @@ export function MetricCard({
 }: MetricCardProps) {
   const displayValue =
     decimalPlaces > 0 ? value.toFixed(decimalPlaces) : Math.round(value);
-  const status = getMetricStatus(value, goodThreshold, needsImprovementThreshold);
-  const statusLabel = getMetricLabel(value, goodThreshold, needsImprovementThreshold);
+  const status = getMetricStatus(
+    value,
+    goodThreshold,
+    needsImprovementThreshold,
+  );
+  const statusLabel = getMetricLabel(
+    value,
+    goodThreshold,
+    needsImprovementThreshold,
+  );
 
   return (
     <Card>
@@ -111,7 +119,10 @@ export function MetricCard({
           {displayValue}
           {unit}
         </div>
-        <Badge variant={status} className='mt-2'>
+        <Badge
+          variant={status}
+          className='mt-2'
+        >
           {statusLabel}
         </Badge>
       </CardContent>
@@ -131,7 +142,9 @@ export function MetricsGrid({ testResults }: MetricsGridProps) {
         label='CLS (累积布局偏移)'
         value={testResults.metrics.cls}
         goodThreshold={PERFORMANCE_CONSTANTS.CLS_GOOD_THRESHOLD}
-        needsImprovementThreshold={PERFORMANCE_CONSTANTS.CLS_NEEDS_IMPROVEMENT_THRESHOLD}
+        needsImprovementThreshold={
+          PERFORMANCE_CONSTANTS.CLS_NEEDS_IMPROVEMENT_THRESHOLD
+        }
         decimalPlaces={PERFORMANCE_CONSTANTS.DECIMAL_PLACES}
       />
       <MetricCard
@@ -139,28 +152,36 @@ export function MetricsGrid({ testResults }: MetricsGridProps) {
         value={testResults.metrics.lcp}
         unit='ms'
         goodThreshold={PERFORMANCE_CONSTANTS.LCP_GOOD_THRESHOLD}
-        needsImprovementThreshold={PERFORMANCE_CONSTANTS.LCP_NEEDS_IMPROVEMENT_THRESHOLD}
+        needsImprovementThreshold={
+          PERFORMANCE_CONSTANTS.LCP_NEEDS_IMPROVEMENT_THRESHOLD
+        }
       />
       <MetricCard
         label='FID (首次输入延迟)'
         value={testResults.metrics.fid}
         unit='ms'
         goodThreshold={PERFORMANCE_CONSTANTS.FID_GOOD_THRESHOLD}
-        needsImprovementThreshold={PERFORMANCE_CONSTANTS.FID_NEEDS_IMPROVEMENT_THRESHOLD}
+        needsImprovementThreshold={
+          PERFORMANCE_CONSTANTS.FID_NEEDS_IMPROVEMENT_THRESHOLD
+        }
       />
       <MetricCard
         label='FCP (首次内容绘制)'
         value={testResults.metrics.fcp}
         unit='ms'
         goodThreshold={PERFORMANCE_CONSTANTS.FCP_GOOD_THRESHOLD}
-        needsImprovementThreshold={PERFORMANCE_CONSTANTS.FCP_NEEDS_IMPROVEMENT_THRESHOLD}
+        needsImprovementThreshold={
+          PERFORMANCE_CONSTANTS.FCP_NEEDS_IMPROVEMENT_THRESHOLD
+        }
       />
       <MetricCard
         label='TTFB (首字节时间)'
         value={testResults.metrics.ttfb}
         unit='ms'
         goodThreshold={PERFORMANCE_CONSTANTS.TTFB_GOOD_THRESHOLD}
-        needsImprovementThreshold={PERFORMANCE_CONSTANTS.TTFB_NEEDS_IMPROVEMENT_THRESHOLD}
+        needsImprovementThreshold={
+          PERFORMANCE_CONSTANTS.TTFB_NEEDS_IMPROVEMENT_THRESHOLD
+        }
       />
     </div>
   );
@@ -185,14 +206,19 @@ export function AnalysisResults({ testResults }: AnalysisResultsProps) {
           {testResults.analysis.issues.length > 0 ? (
             <ul className='space-y-2'>
               {testResults.analysis.issues.map((issue, index) => (
-                <li key={index} className='flex items-start gap-2'>
+                <li
+                  key={index}
+                  className='flex items-start gap-2'
+                >
                   <span className='text-destructive mt-1 text-xs'>●</span>
                   <span className='text-sm'>{issue}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className='text-muted-foreground text-sm'>未发现明显的性能问题</p>
+            <p className='text-muted-foreground text-sm'>
+              未发现明显的性能问题
+            </p>
           )}
         </CardContent>
       </Card>
@@ -201,21 +227,27 @@ export function AnalysisResults({ testResults }: AnalysisResultsProps) {
         <CardHeader>
           <CardTitle>优化建议</CardTitle>
           <CardDescription>
-            针对性的性能优化建议 ({testResults.analysis.recommendations.length} 条)
+            针对性的性能优化建议 ({testResults.analysis.recommendations.length}{' '}
+            条)
           </CardDescription>
         </CardHeader>
         <CardContent>
           {testResults.analysis.recommendations.length > 0 ? (
             <ul className='space-y-2'>
               {testResults.analysis.recommendations.map((rec, index) => (
-                <li key={index} className='flex items-start gap-2'>
+                <li
+                  key={index}
+                  className='flex items-start gap-2'
+                >
                   <span className='text-primary mt-1 text-xs'>●</span>
                   <span className='text-sm'>{rec}</span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className='text-muted-foreground text-sm'>当前性能表现良好，无需特别优化</p>
+            <p className='text-muted-foreground text-sm'>
+              当前性能表现良好，无需特别优化
+            </p>
           )}
         </CardContent>
       </Card>

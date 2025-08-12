@@ -60,7 +60,7 @@ interface LanguageItemProps {
   switchingTo: Locale | null;
   pathname: string;
   compact: boolean;
-  onLanguageSwitch: (locale: Locale) => void;
+  onLanguageSwitch: (_locale: Locale) => void;
 }
 
 const LanguageItem = memo(
@@ -180,21 +180,22 @@ const EnhancedLocaleSwitcherComponent = ({
   const { switchingTo, switchSuccess, isPending, handleLanguageSwitch } =
     useLanguageSwitch();
   const { getStats } = useLocaleStorage();
-  const { detectClientLocale } = useClientLocaleDetection();
+  const { detectClientLocale: _detectClientLocale } =
+    useClientLocaleDetection();
 
   // 计算检测信息 - 使用useMemo避免派生状态
   const detectionInfo = useMemo(() => {
     if (!showDetectionInfo) return null;
 
     const stats = getStats();
-    const detection = detectClientLocale();
+    const detection = _detectClientLocale();
 
     return {
       source: stats.hasOverride ? 'user' : detection.source,
       confidence: detection.confidence,
       isUserOverride: stats.hasOverride,
     };
-  }, [showDetectionInfo, getStats, detectClientLocale]);
+  }, [showDetectionInfo, getStats]);
 
   const renderDetectionInfo = () => {
     if (!showDetectionInfo || !detectionInfo) return null;

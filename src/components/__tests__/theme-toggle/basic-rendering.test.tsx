@@ -1,5 +1,5 @@
-import { render } from '@/test/utils';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { render } from '@/test/utils';
 import { ThemeToggle } from '../../theme-toggle';
 import { cleanupThemeToggleTest, setupThemeToggleTest } from './setup';
 
@@ -42,7 +42,10 @@ describe('ThemeToggle - Basic Rendering', () => {
     const themeButton = document.querySelector(
       '[data-slot="dropdown-menu-trigger"]',
     );
-    expect(themeButton).toHaveAttribute('aria-label', '主题切换按钮，当前主题：light');
+    expect(themeButton).toHaveAttribute(
+      'aria-label',
+      '主题切换按钮，当前主题：light',
+    );
     expect(themeButton).toHaveAttribute('aria-expanded', 'false');
     expect(themeButton).toHaveAttribute('aria-haspopup', 'menu');
     expect(themeButton).toHaveAttribute('role', 'button');

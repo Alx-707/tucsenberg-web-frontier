@@ -49,7 +49,7 @@ export const TIME_CONSTANTS = {
     BASE_NUMBERS.MILLISECONDS_PER_SECOND,
 
   /** 1天 = 24小时 */
-  DAY:
+  FULL_DAY:
     BASE_NUMBERS.HOURS_PER_DAY *
     BASE_NUMBERS.MINUTES_PER_HOUR *
     BASE_NUMBERS.SECONDS_PER_MINUTE *
@@ -65,11 +65,11 @@ export const TIME_CONSTANTS = {
 
 /** 延迟和超时常量 (毫秒) */
 export const DELAY_CONSTANTS = {
-  /** 短延迟 - 150ms，用于UI动画和过渡 */
-  SHORT_DELAY: 150,
+  /** 短延迟 - 100ms，用于UI动画和过渡 */
+  SHORT_DELAY: 100,
 
-  /** 中等延迟 - 200ms，用于用户反馈 */
-  MEDIUM_DELAY: 200,
+  /** 中等延迟 - 300ms，用于用户反馈 */
+  MEDIUM_DELAY: 300,
 
   /** 标准超时 - 1000ms，用于一般操作 */
   STANDARD_TIMEOUT: TIME_CONSTANTS.SECOND,
@@ -138,11 +138,11 @@ export const OPACITY_CONSTANTS = {
   /** 中等透明度 - 50% */
   MEDIUM_OPACITY: 0.5,
 
-  /** 中高透明度 - 60% */
-  MEDIUM_HIGH_OPACITY: 0.6,
+  /** 中高透明度 - 75% */
+  MEDIUM_HIGH_OPACITY: 0.75,
 
-  /** 高透明度 - 70% */
-  HIGH_OPACITY: 0.7,
+  /** 高透明度 - 80% */
+  HIGH_OPACITY: 0.8,
 
   /** 很高透明度 - 90% */
   VERY_HIGH_OPACITY: 0.9,
@@ -179,11 +179,11 @@ export const PERFORMANCE_CONSTANTS = {
   /** 时间戳偏移 - 1005 */
   TIMESTAMP_OFFSET: 1005,
 
-  /** 时间戳增量 - 1050 */
-  TIMESTAMP_INCREMENT_SMALL: TIMESTAMP_BASE + BASE_NUMBERS.HALF_PERCENTAGE,
+  /** 时间戳增量 - 1010 */
+  TIMESTAMP_INCREMENT_SMALL: 1010,
 
-  /** 时间戳增量 - 1100 */
-  TIMESTAMP_INCREMENT_MEDIUM: TIMESTAMP_BASE + BASE_NUMBERS.PERCENTAGE_FULL,
+  /** 时间戳增量 - 1020 */
+  TIMESTAMP_INCREMENT_MEDIUM: 1020,
 
   /** 时间戳增量 - 1150 */
   TIMESTAMP_INCREMENT_LARGE:
@@ -217,8 +217,8 @@ export const PERFORMANCE_CONSTANTS = {
   /** 大数值偏移 - 200100 */
   LARGE_NUMBER_OFFSET: 200100,
 
-  /** 大数值增量 - 2100 */
-  LARGE_INCREMENT: 2100,
+  /** 大数值增量 - 300000 */
+  LARGE_INCREMENT: 300000,
 } as const;
 
 /** 测试和调试常量 */
@@ -239,7 +239,7 @@ export const DEBUG_CONSTANTS = {
 // ==================== 导出所有常量 ====================
 
 /** 所有应用常量的统一导出 */
-export const APP_CONSTANTS = {
+export const APP_CONSTANTS = Object.freeze({
   TIME: TIME_CONSTANTS,
   DELAY: DELAY_CONSTANTS,
   CONTENT: CONTENT_LIMITS,
@@ -248,7 +248,7 @@ export const APP_CONSTANTS = {
   PERCENTAGE: PERCENTAGE_CONSTANTS,
   PERFORMANCE: PERFORMANCE_CONSTANTS,
   DEBUG: DEBUG_CONSTANTS,
-} as const;
+} as const);
 
 /** 常量类型定义 */
 export type AppConstants = typeof APP_CONSTANTS;

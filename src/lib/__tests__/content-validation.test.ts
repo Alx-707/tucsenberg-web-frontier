@@ -1,9 +1,9 @@
-import {
-    TEST_CONTENT_LIMITS,
-    TEST_COUNT_CONSTANTS,
-} from '@/constants/test-constants';
-import { ContentType } from '@/types/content';
 import { describe, expect, it } from 'vitest';
+import { ContentType } from '@/types/content';
+import {
+  TEST_CONTENT_LIMITS,
+  TEST_COUNT_CONSTANTS,
+} from '@/constants/test-constants';
 import { validateContentMetadata } from '../content-validation';
 
 describe('content-validation', () => {
@@ -29,7 +29,7 @@ describe('content-validation', () => {
       });
 
       it('should fail validation when title is missing', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { title: _title, ...metadataWithoutTitle } = validMetadata;
 
         const result = validateContentMetadata(metadataWithoutTitle, 'posts');
@@ -39,7 +39,7 @@ describe('content-validation', () => {
       });
 
       it('should fail validation when publishedAt is missing', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { publishedAt: _publishedAt, ...metadataWithoutPublishedAt } =
           validMetadata;
 
@@ -53,9 +53,10 @@ describe('content-validation', () => {
       });
 
       it('should fail validation when both title and publishedAt are missing', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const {
-          title: _title, // eslint-disable-line @typescript-eslint/no-unused-vars
-          publishedAt: _publishedAt, // eslint-disable-line @typescript-eslint/no-unused-vars
+          title: _title,
+          publishedAt: _publishedAt,
           ...metadataWithoutRequired
         } = validMetadata;
 
@@ -150,7 +151,7 @@ describe('content-validation', () => {
       });
 
       it('should handle missing updatedAt gracefully', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { updatedAt: _updatedAt, ...metadataWithoutUpdatedAt } =
           validMetadata;
 
@@ -166,7 +167,7 @@ describe('content-validation', () => {
 
     describe('type-specific validation', () => {
       it('should warn about missing excerpt for blog posts', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { excerpt: _excerpt, ...metadataWithoutExcerpt } = validMetadata;
 
         const result = validateContentMetadata(metadataWithoutExcerpt, 'posts');
@@ -178,7 +179,7 @@ describe('content-validation', () => {
       });
 
       it('should warn about missing tags for blog posts', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { tags: _tags, ...metadataWithoutTags } = validMetadata;
 
         const result = validateContentMetadata(metadataWithoutTags, 'posts');
@@ -201,9 +202,10 @@ describe('content-validation', () => {
       });
 
       it('should not warn about missing excerpt/tags for non-blog content', () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const {
-          excerpt: _excerpt, // eslint-disable-line @typescript-eslint/no-unused-vars
-          tags: _tags, // eslint-disable-line @typescript-eslint/no-unused-vars
+          excerpt: _excerpt,
+          tags: _tags,
           ...metadataWithoutExcerptAndTags
         } = validMetadata;
 
@@ -278,7 +280,7 @@ describe('content-validation', () => {
       });
 
       it('should handle missing SEO object gracefully', () => {
-        // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
         const { seo: _seo, ...metadataWithoutSeo } = validMetadata;
         const metadata = metadataWithoutSeo;
 

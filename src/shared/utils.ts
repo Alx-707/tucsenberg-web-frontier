@@ -30,6 +30,10 @@ export function formatDate(date: Date): string {
  * ```
  */
 export function validateEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // 更严格的邮箱验证正则表达式
+  // 允许: 字母、数字、点、连字符、下划线、加号
+  // 不允许: 开头或结尾的点、连续的点、特殊字符如#$%等
+  // 支持单字符域名如 a@b.c 和数字域名如 1@2.3
+  const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z0-9]{1,}$/;
   return emailRegex.test(email);
 }

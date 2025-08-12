@@ -1,5 +1,9 @@
 import { Locale } from '@/types/i18n';
-import { BROWSER_LOCALE_MAP, DEFAULT_LOCALE, SUPPORTED_LOCALES } from './locale-constants';
+import {
+  BROWSER_LOCALE_MAP,
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+} from './locale-constants';
 import { LocaleDetectionResult } from './locale-detection-types';
 import { LocaleStorageManager } from './locale-storage';
 
@@ -30,8 +34,13 @@ export function useClientLocaleDetection() {
           BROWSER_LOCALE_MAP,
           normalizedLang,
         )
-          ? Object.prototype.hasOwnProperty.call(BROWSER_LOCALE_MAP, normalizedLang)
-            ? (BROWSER_LOCALE_MAP as Record<string, Locale>)[normalizedLang as keyof typeof BROWSER_LOCALE_MAP]
+          ? Object.prototype.hasOwnProperty.call(
+              BROWSER_LOCALE_MAP,
+              normalizedLang,
+            )
+            ? (BROWSER_LOCALE_MAP as Record<string, Locale>)[
+                normalizedLang as keyof typeof BROWSER_LOCALE_MAP
+              ]
             : undefined
           : undefined;
 

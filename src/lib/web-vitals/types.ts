@@ -85,6 +85,12 @@ export interface PerformanceBaseline {
     memory?: number;
     cores?: number;
   };
+  buildInfo?: {
+    version: string;
+    commit: string;
+    branch: string;
+    timestamp: number;
+  };
 }
 
 /**

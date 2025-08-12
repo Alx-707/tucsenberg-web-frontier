@@ -327,13 +327,12 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
   }
   ```
 
-### TinaCMS访问界面规则
+### 内容管理规则
 
-- **中文管理入口**: `localhost:3000/admin` - 必须提供中文化导航
-- **TinaCMS编辑器**: `localhost:4001/admin/index.html` - 原生编辑界面
-- **GraphQL查询**: `localhost:4001/graphql` - API查询和测试
-- **界面语言限制**: TinaCMS原生界面固定英文，无法修改
-- **解决方案**: 通过中文入口页面提供使用指导
+- **MDX文件编辑**: 直接编辑`content/`目录下的MDX文件
+- **Front Matter验证**: 使用TypeScript接口验证元数据完整性
+- **多语言同步**: 英中文内容必须保持结构一致性
+- **文件命名规范**: 使用kebab-case命名，保持语言目录对应
 
 ### 媒体文件管理
 
@@ -342,6 +341,7 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 - **大小限制**: 单文件≤5MB
 - **命名规范**: 使用kebab-case英文命名
 - **组织结构**: 按功能分子目录（blog/、pages/、og/等）
+- **引用方式**: 在MDX文件中使用相对路径引用图片
 
 ## 质量检查流程
 

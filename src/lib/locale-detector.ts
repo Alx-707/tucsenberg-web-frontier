@@ -1,7 +1,44 @@
 import { Locale } from '@/types/i18n';
+import { TEST_APP_CONSTANTS } from '@/constants/test-constants';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from './locale-constants';
 import { LocaleDetectionResult } from './locale-detection-types';
 import { LocaleStorageManager } from './locale-storage';
+
+// 语言映射常量
+const CHINESE_LANGUAGE_CODES = new Set([
+  'zh',
+  'zh-cn',
+  'zh-tw',
+  'zh-hk',
+  'zh-sg',
+  'zh-hans',
+  'zh-hant',
+]);
+
+const ENGLISH_LANGUAGE_CODES = new Set([
+  'en',
+  'en-us',
+  'en-gb',
+  'en-ca',
+  'en-au',
+  'en-nz',
+  'en-ie',
+  'en-za',
+  'en-in',
+]);
+
+// 地理位置映射常量
+const CHINESE_COUNTRY_CODES = new Set(['CN', 'TW', 'HK', 'MO', 'SG']);
+const ENGLISH_COUNTRY_CODES = new Set([
+  'US',
+  'GB',
+  'CA',
+  'AU',
+  'NZ',
+  'IE',
+  'ZA',
+  'IN',
+]);
 
 /**
  * 智能语言检测器
@@ -12,68 +49,37 @@ export class SmartLocaleDetector {
    * 使用白名单验证，避免 Object Injection Sink
    */
   private getLocaleFromMap(normalizedLang: string): Locale | undefined {
-    // 使用 switch 语句替代动态属性访问，确保安全性
-    switch (normalizedLang) {
-      // 中文变体
-      case 'zh':
-      case 'zh-cn':
-      case 'zh-tw':
-      case 'zh-hk':
-      case 'zh-sg':
-      case 'zh-hans':
-      case 'zh-hant':
-        return 'zh';
-
-      // 英文变体
-      case 'en':
-      case 'en-us':
-      case 'en-gb':
-      case 'en-ca':
-      case 'en-au':
-      case 'en-nz':
-      case 'en-ie':
-      case 'en-za':
-      case 'en-in':
-        return 'en';
-
-      default:
-        return undefined;
+    if (CHINESE_LANGUAGE_CODES.has(normalizedLang)) {
+      return 'zh';
     }
+
+    if (ENGLISH_LANGUAGE_CODES.has(normalizedLang)) {
+      return 'en';
+    }
+
+    return undefined;
   }
 
   /**
    * 安全地从地理位置映射中获取语言
    * 使用白名单验证，避免 Object Injection Sink
    */
-  private getLocaleFromGeoMap(countryCode: string | undefined): Locale | undefined {
+  private getLocaleFromGeoMap(
+    countryCode: string | undefined,
+  ): Locale | undefined {
     if (!countryCode || typeof countryCode !== 'string') {
       return undefined;
     }
 
-    // 使用 switch 语句替代动态属性访问，确保安全性
-    switch (countryCode) {
-      // 中文地区
-      case 'CN': // 中国大陆
-      case 'TW': // 台湾
-      case 'HK': // 香港
-      case 'MO': // 澳门
-      case 'SG': // 新加坡
-        return 'zh';
-
-      // 英文地区
-      case 'US': // 美国
-      case 'GB': // 英国
-      case 'CA': // 加拿大
-      case 'AU': // 澳大利亚
-      case 'NZ': // 新西兰
-      case 'IE': // 爱尔兰
-      case 'ZA': // 南非
-      case 'IN': // 印度
-        return 'en';
-
-      default:
-        return undefined;
+    if (CHINESE_COUNTRY_CODES.has(countryCode)) {
+      return 'zh';
     }
+
+    if (ENGLISH_COUNTRY_CODES.has(countryCode)) {
+      return 'en';
+    }
+
+    return undefined;
   }
   /**
    * 实例方法：从浏览器检测语言
@@ -98,7 +104,7 @@ export class SmartLocaleDetector {
       }
 
       return DEFAULT_LOCALE;
-    } catch (_error) {
+    } catch {
       return DEFAULT_LOCALE;
     }
   }
@@ -124,13 +130,15 @@ export class SmartLocaleDetector {
               const country = data.country || data.country_code;
 
               // 使用安全的地理位置映射访问
-              const detectedLocale = this.getLocaleFromGeoMap(country?.toUpperCase());
+              const detectedLocale = this.getLocaleFromGeoMap(
+                country?.toUpperCase(),
+              );
               resolve(
                 detectedLocale && SUPPORTED_LOCALES.includes(detectedLocale)
                   ? detectedLocale
                   : DEFAULT_LOCALE,
               );
-            } catch (_error) {
+            } catch {
               resolve(DEFAULT_LOCALE);
             }
           },
@@ -138,9 +146,111 @@ export class SmartLocaleDetector {
           { timeout: 5000 },
         );
       });
-    } catch (_error) {
+    } catch {
       return DEFAULT_LOCALE;
     }
+  }
+
+  /**
+   * 实例方法：从时区检测语言
+   */
+  detectFromTimeZone(): Locale {
+    try {
+      if (typeof Intl === 'undefined' || !Intl.DateTimeFormat) {
+        return DEFAULT_LOCALE;
+      }
+
+      const { timeZone } = Intl.DateTimeFormat().resolvedOptions();
+
+      // 中文时区映射
+      const chineseTimeZones = new Set([
+        'Asia/Shanghai',
+        'Asia/Hong_Kong',
+        'Asia/Taipei',
+        'Asia/Macau',
+        'Asia/Singapore',
+      ]);
+
+      // 英文时区映射
+      const englishTimeZones = new Set([
+        'America/New_York',
+        'America/Los_Angeles',
+        'America/Chicago',
+        'America/Denver',
+        'Europe/London',
+        'Australia/Sydney',
+        'Australia/Melbourne',
+      ]);
+
+      if (chineseTimeZones.has(timeZone)) {
+        return 'zh';
+      }
+
+      if (englishTimeZones.has(timeZone)) {
+        return 'en';
+      }
+
+      return DEFAULT_LOCALE;
+    } catch {
+      return DEFAULT_LOCALE;
+    }
+  }
+
+  /**
+   * 检测最佳语言偏好（兼容方法名）
+   */
+  async detectBestLocale(): Promise<LocaleDetectionResult> {
+    // 1. 检查存储的用户偏好
+    const userPreference = LocaleStorageManager.getUserPreference();
+    if (userPreference && SUPPORTED_LOCALES.includes(userPreference.locale)) {
+      return {
+        locale: userPreference.locale,
+        source: 'stored',
+        confidence: userPreference.confidence || 1.0,
+        details: { userOverride: userPreference.locale },
+      };
+    }
+
+    // 2. 检查用户手动设置
+    const userOverride = LocaleStorageManager.getUserOverride();
+    if (userOverride && SUPPORTED_LOCALES.includes(userOverride)) {
+      return {
+        locale: userOverride,
+        source: 'user',
+        confidence: 1.0,
+        details: { userOverride },
+      };
+    }
+
+    // 3. 检查地理位置
+    const geoLocale = await this.detectFromGeolocation();
+    if (geoLocale !== DEFAULT_LOCALE) {
+      return {
+        locale: geoLocale,
+        source: 'geo',
+        confidence: 0.8,
+        details: { geoLocale },
+      };
+    }
+
+    // 4. 检查浏览器语言
+    const browserLocale = this.detectFromBrowser();
+    if (browserLocale !== DEFAULT_LOCALE) {
+      return {
+        locale: browserLocale,
+        source: 'browser',
+        confidence: 0.6,
+        details: { browserLocale },
+      };
+    }
+
+    // 5. 使用默认语言
+    return {
+      locale: DEFAULT_LOCALE,
+      source: 'default',
+      confidence: 0.3,
+      details: { fallbackUsed: true },
+    };
   }
 
   /**
@@ -158,34 +268,84 @@ export class SmartLocaleDetector {
       };
     }
 
-    // 2. 检查地理位置
+    // 2. 收集所有检测结果
     const geoLocale = await this.detectFromGeolocation();
-    if (geoLocale !== DEFAULT_LOCALE) {
-      return {
-        locale: geoLocale,
-        source: 'geo',
-        confidence: 0.8,
-        details: { geoLocale },
-      };
-    }
-
-    // 3. 检查浏览器语言
     const browserLocale = this.detectFromBrowser();
-    if (browserLocale !== DEFAULT_LOCALE) {
+    const timeZoneLocale = this.detectFromTimeZone();
+
+    // 3. 分析检测结果一致性
+    const detectionResults = [
+      { locale: geoLocale, source: 'geo', weight: 0.8 },
+      { locale: browserLocale, source: 'browser', weight: 0.7 },
+      { locale: timeZoneLocale, source: 'timezone', weight: 0.6 },
+    ].filter((result) => result.locale !== DEFAULT_LOCALE);
+
+    if (detectionResults.length === 0) {
       return {
-        locale: browserLocale,
-        source: 'browser',
-        confidence: 0.6,
-        details: { browserLocale },
+        locale: DEFAULT_LOCALE,
+        source: 'default',
+        confidence: 0.3,
+        details: { fallbackUsed: true },
       };
     }
 
-    // 4. 使用默认语言
+    // 4. 找到最常见的语言
+    const localeCount = new Map<
+      string,
+      { count: number; totalWeight: number; sources: string[] }
+    >();
+
+    for (const result of detectionResults) {
+      const current = localeCount.get(result.locale) || {
+        count: 0,
+        totalWeight: 0,
+        sources: [],
+      };
+      current.count += 1;
+      current.totalWeight += result.weight;
+      current.sources.push(result.source);
+      localeCount.set(result.locale, current);
+    }
+
+    // 5. 选择最佳结果
+    let bestLocale = DEFAULT_LOCALE;
+    let bestScore = 0;
+    let bestSources: string[] = [];
+
+    for (const [locale, data] of localeCount.entries()) {
+      const score =
+        data.count * TEST_APP_CONSTANTS.CONFIDENCE_THRESHOLD +
+        data.totalWeight * TEST_APP_CONSTANTS.CONFIDENCE_THRESHOLD;
+      if (score > bestScore) {
+        bestScore = score;
+        bestLocale = locale as Locale;
+        bestSources = data.sources;
+      }
+    }
+
+    // 6. 计算置信度
+    const consistencyBonus =
+      localeCount.get(bestLocale)!.count > 1
+        ? TEST_APP_CONSTANTS.LOW_CONFIDENCE_THRESHOLD
+        : 0;
+    const baseConfidence = Math.min(
+      localeCount.get(bestLocale)!.totalWeight / detectionResults.length,
+      TEST_APP_CONSTANTS.HEALTH_THRESHOLD,
+    );
+    const finalConfidence = Math.min(baseConfidence + consistencyBonus, 1.0);
+
     return {
-      locale: DEFAULT_LOCALE,
-      source: 'default',
-      confidence: 0.3,
-      details: { fallbackUsed: true },
+      locale: bestLocale,
+      source:
+        bestSources.length > 1
+          ? 'combined'
+          : (bestSources[0] as 'geo' | 'browser'),
+      confidence: finalConfidence,
+      details: {
+        ...(geoLocale !== DEFAULT_LOCALE && { geoLocale }),
+        ...(browserLocale !== DEFAULT_LOCALE && { browserLocale }),
+        ...(timeZoneLocale !== DEFAULT_LOCALE && { timeZoneLocale }),
+      },
     };
   }
 }

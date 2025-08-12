@@ -1,10 +1,10 @@
 'use client';
 
+import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 // Hero Badge Component
 function HeroBadge({

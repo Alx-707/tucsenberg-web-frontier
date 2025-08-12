@@ -123,21 +123,31 @@ describe('ContactForm Integration Tests', () => {
         'validation.emailRequired': 'Email is required',
         'validation.emailInvalid': 'Please enter a valid email address',
         'validation.messageRequired': 'Message is required',
-        'validation.messageTooShort': 'Message must be at least 10 characters long',
+        'validation.messageTooShort':
+          'Message must be at least 10 characters long',
         'validation.firstNameTooShort': 'First name is too short',
         'validation.lastNameTooShort': 'Last name is too short',
       };
-      return translations[key] || key;
+      // eslint-disable-next-line security/detect-object-injection
+      return (
+        (Object.hasOwn(translations, key) ? translations[key] : null) || key
+      );
     });
 
     // Setup successful fetch mock by default with delay to test loading state
-    mockFetch.mockImplementation(() =>
-      new Promise(resolve =>
-        setTimeout(() => resolve({
-          ok: true,
-          json: async () => ({ success: true }),
-        }), 100) // 100ms delay to see loading state
-      )
+    mockFetch.mockImplementation(
+      () =>
+        new Promise(
+          (resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  ok: true,
+                  json: async () => ({ success: true }),
+                }),
+              100,
+            ), // 100ms delay to see loading state
+        ),
     );
   });
 
@@ -246,7 +256,9 @@ describe('ContactForm Integration Tests', () => {
       });
 
       // Verify company field does not show error (it's optional)
-      expect(screen.queryByText('Company name is required')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Company name is required'),
+      ).not.toBeInTheDocument();
 
       // Verify form was not submitted
       expect(mockFetch).not.toHaveBeenCalled();
@@ -264,7 +276,10 @@ describe('ContactForm Integration Tests', () => {
       // Fill all required fields with valid data except email
       await user.type(firstNameInput, 'John');
       await user.type(lastNameInput, 'Doe');
-      await user.type(messageInput, 'This is a test message with enough length');
+      await user.type(
+        messageInput,
+        'This is a test message with enough length',
+      );
 
       // Enter invalid email
       await user.type(emailInput, 'invalid-email');
@@ -277,7 +292,9 @@ describe('ContactForm Integration Tests', () => {
       });
 
       // Verify that the form is still in its initial state (not submitted)
-      expect(screen.queryByText('Message sent successfully!')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Message sent successfully!'),
+      ).not.toBeInTheDocument();
 
       // Clear and enter valid email
       await user.clear(emailInput);

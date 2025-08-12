@@ -2,8 +2,8 @@
  * URL生成器单元测试
  */
 
-/* eslint-disable no-magic-numbers */
 import { beforeEach, describe, expect, it } from 'vitest';
+import { SEO_CONSTANTS } from '@/constants/seo-constants';
 import {
   generateCanonicalURL,
   generatePageURL,
@@ -115,7 +115,7 @@ describe('URLGenerator', () => {
       expect(entry).toMatchObject({
         loc: 'https://tucsenberg.com/about',
         changefreq: 'weekly',
-        priority: 0.8,
+        priority: SEO_CONSTANTS.URL_GENERATION.DEFAULT_PAGE_PRIORITY,
         alternateRefs: expect.arrayContaining([
           expect.objectContaining({
             href: 'https://tucsenberg.com/about',
@@ -414,7 +414,9 @@ describe('Comprehensive sitemap generation', () => {
     });
 
     otherEntries.forEach((entry) => {
-      expect(entry.priority).toBe(0.8);
+      expect(entry.priority).toBe(
+        SEO_CONSTANTS.URL_GENERATION.DEFAULT_PAGE_PRIORITY,
+      );
       expect(entry.changefreq).toBe('weekly');
     });
   });

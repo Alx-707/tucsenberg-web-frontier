@@ -3,8 +3,11 @@
  * 用于模拟和测试性能数据收集
  */
 
+import {
+  enhancedWebVitalsCollector,
+  type DetailedWebVitals,
+} from '@/lib/web-vitals';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
-import { enhancedWebVitalsCollector, type DetailedWebVitals } from '@/lib/web-vitals';
 
 // 模拟性能数据已移除，使用实际的Web Vitals收集器进行测试
 
@@ -94,22 +97,24 @@ function logResourceInfo(report: DiagnosticReport): void {
 
   if (report.metrics.resourceTiming.slowResources.length > 0) {
     console.log('🐌 慢速资源:');
-    report.metrics.resourceTiming.slowResources.forEach((resource, index: number) => {
-      // 安全的对象属性访问
-      const name = Object.prototype.hasOwnProperty.call(resource, 'name')
-        ? resource.name
-        : 'unknown';
-      const duration = Object.prototype.hasOwnProperty.call(
-        resource,
-        'duration',
-      )
-        ? resource.duration
-        : 0;
-      const type = Object.prototype.hasOwnProperty.call(resource, 'type')
-        ? resource.type
-        : 'unknown';
-      console.log(`${index + 1}. ${name} (${duration}ms, ${type})`);
-    });
+    report.metrics.resourceTiming.slowResources.forEach(
+      (resource, index: number) => {
+        // 安全的对象属性访问
+        const name = Object.prototype.hasOwnProperty.call(resource, 'name')
+          ? resource.name
+          : 'unknown';
+        const duration = Object.prototype.hasOwnProperty.call(
+          resource,
+          'duration',
+        )
+          ? resource.duration
+          : 0;
+        const type = Object.prototype.hasOwnProperty.call(resource, 'type')
+          ? resource.type
+          : 'unknown';
+        console.log(`${index + 1}. ${name} (${duration}ms, ${type})`);
+      },
+    );
   }
 }
 

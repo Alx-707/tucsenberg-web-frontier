@@ -5,7 +5,6 @@
 
 /* eslint-disable security/detect-object-injection */
 
-/* eslint-disable no-magic-numbers */
 import {
   getLocalizedPath,
   LOCALES_CONFIG,
@@ -14,6 +13,7 @@ import {
   type Locale,
   type PageType,
 } from '@/config/paths';
+import { SEO_CONSTANTS } from '@/constants/seo-constants';
 
 // URL生成选项接口
 export interface URLGeneratorOptions {
@@ -172,8 +172,10 @@ export class URLGenerator {
 
     return {
       loc: url,
-      changefreq: options.changefreq || 'weekly',
-      priority: options.priority || 0.8,
+      changefreq:
+        options.changefreq || SEO_CONSTANTS.URL_GENERATION.DEFAULT_CHANGEFREQ,
+      priority:
+        options.priority || SEO_CONSTANTS.URL_GENERATION.DEFAULT_PAGE_PRIORITY,
       lastmod: options.lastmod || new Date().toISOString(),
       alternateRefs,
     };
@@ -189,8 +191,14 @@ export class URLGenerator {
     Object.keys(PATHS_CONFIG).forEach((pageType) => {
       this.locales.forEach((locale) => {
         const entry = this.generateSitemapEntry(pageType as PageType, locale, {
-          changefreq: pageType === 'home' ? 'daily' : 'weekly',
-          priority: pageType === 'home' ? 1.0 : 0.8,
+          changefreq:
+            pageType === 'home'
+              ? SEO_CONSTANTS.URL_GENERATION.HOME_CHANGEFREQ
+              : SEO_CONSTANTS.URL_GENERATION.DEFAULT_CHANGEFREQ,
+          priority:
+            pageType === 'home'
+              ? SEO_CONSTANTS.URL_GENERATION.HOME_PAGE_PRIORITY
+              : SEO_CONSTANTS.URL_GENERATION.DEFAULT_PAGE_PRIORITY,
         });
         entries.push(entry);
       });

@@ -1,7 +1,7 @@
-import { act, renderHook } from '@testing-library/react';
 import React from 'react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
+import { TEST_DELAY_VALUES } from '@/constants/test-constants';
 import { useThemeToggle } from '../use-theme-toggle';
 
 // View Transitions API will be mocked in vi.hoisted
@@ -268,7 +268,7 @@ describe('useThemeToggle', () => {
 
       // Fast forward 400ms (normal delay)
       act(() => {
-        vi.advanceTimersByTime(400); // Normal delay for theme change announcement
+        vi.advanceTimersByTime(TEST_DELAY_VALUES.THEME_CHANGE_DELAY); // Normal delay for theme change announcement
       });
 
       expect(mockAnnounceThemeChange).toHaveBeenCalledWith('dark');
@@ -292,9 +292,9 @@ describe('useThemeToggle', () => {
 
       expect(mockAnnounceThemeChange).not.toHaveBeenCalled();
 
-      // Fast forward 50ms (reduced motion delay)
+      // Fast forward reduced motion delay
       act(() => {
-        vi.advanceTimersByTime(50); // 50ms for reduced motion
+        vi.advanceTimersByTime(TEST_DELAY_VALUES.REDUCED_MOTION_DELAY); // Reduced motion delay
       });
 
       expect(mockAnnounceThemeChange).toHaveBeenCalledWith('dark');

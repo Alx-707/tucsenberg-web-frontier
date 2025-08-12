@@ -7,7 +7,7 @@
 
 - 🎯 **现代技术栈**: Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2
 - 🎨 **现代化UI**: Tailwind CSS 4.1.11 + 响应式设计
-- 📝 **内容管理**: TinaCMS 2.8.2 + Git-based 工作流
+- 📝 **内容管理**: MDX + Git-based 工作流
 - 🌍 **国际化支持**: 英中双语切换 + next-intl
 - 🎭 **主题系统**: 明亮/暗黑/系统主题
 - 📊 **错误监控**: Sentry集成，完整可观察性
@@ -39,27 +39,18 @@ pnpm install
 ### 3. 启动开发服务器
 
 ```bash
-pnpm dev --turbo  # 使用Turbopack加速开发
+pnpm dev --turbo  # 使用Turbopack加速开发（React Scan自动启用）
+
+# 可选：禁用React Scan性能监控
+pnpm dev:no-scan  # 禁用React组件性能分析
 ```
 
-### 4. 配置 TinaCMS (可选)
-
-如需使用内容管理功能：
-
-```bash
-# 1. 访问 https://app.tina.io 创建账户
-# 2. 获取 Client ID 和 Token
-# 3. 更新 .env.local 文件中的 TinaCMS 配置
-# 4. 启动 TinaCMS 开发服务器
-pnpm tina:dev
-```
-
-### 5. 访问应用
+### 4. 访问应用
 
 - **主站**: [http://localhost:3000](http://localhost:3000)
-- **TinaCMS 管理界面**: [http://localhost:3000/admin](http://localhost:3000/admin)
+- **开发工具**: [http://localhost:3000/dev-tools](http://localhost:3000/dev-tools) (仅开发环境)
 
-### 6. 构建生产版本
+### 5. 构建生产版本
 
 ```bash
 pnpm build
@@ -96,15 +87,7 @@ pnpm build            # 构建生产版本
 pnpm start            # 启动生产服务器
 ```
 
-### 内容管理 (TinaCMS)
 
-```bash
-pnpm tina:dev         # 启动TinaCMS开发服务器
-pnpm tina:build       # 构建TinaCMS生产版本
-pnpm tina:admin       # 启动TinaCMS管理界面
-pnpm tina:init        # 初始化TinaCMS配置
-pnpm tina:check       # 检查TinaCMS部署就绪状态
-```
 
 ### 代码质量
 
@@ -158,15 +141,16 @@ pnpm test:coverage    # 测试覆盖率
 
 ### 内容管理
 
-- **TinaCMS 2.8.2** - Git-based 内容管理系统
-- **MDX** - Markdown + React 组件支持
+- **MDX** - Markdown + React 组件支持，基于文件系统的内容管理
 - **next-intl** - 多语言国际化解决方案
+- **Gray Matter** - Front Matter 解析和元数据处理
 
 ### 开发工具
 
 - **ESLint 9** - 代码质量检查 (9个插件)
 - **Prettier** - 代码格式化
 - **TypeScript严格模式** - 最严格的类型检查
+- **React Scan** - React 组件性能监控和渲染分析
 
 ### 质量保障
 

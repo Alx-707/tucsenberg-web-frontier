@@ -7,8 +7,8 @@
  */
 
 import '@testing-library/jest-dom';
-import React from 'react';
 import { fireEvent } from '@testing-library/react';
+import React from 'react';
 
 // 测试常量定义
 const TEST_CONSTANTS = {
@@ -50,12 +50,10 @@ export class ComponentTestStructure<TProps = any> {
    */
   generateTestSuite(): string {
     return `
-/**
- * @jest-environment jsdom
- */
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { TEST_CONSTANTS } from '@/constants/test-constants';
 import { fireEvent, render } from '@testing-library/react';
+import { beforeEach, afterEach, describe, it, expect, vi } from 'vitest';
 import { ${this.template.componentName} } from '../${this.template.componentName.toLowerCase()}';
 
 // Mock设置区域
@@ -63,15 +61,15 @@ ${this.generateMockSection()}
 
 describe('${this.template.componentName} Component', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
+    vi.clearAllMocks();
+    vi.useFakeTimers();
     ${typeof this.template.mockSetup === 'function' ? '// 调用mockSetup()' : ''}
   });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
-    jest.useRealTimers();
-    jest.restoreAllMocks();
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
     ${typeof this.template.mockCleanup === 'function' ? '// 调用mockCleanup()' : ''}
   });
 
@@ -127,9 +125,12 @@ describe('${this.template.componentName} Component', () => {
    */
   private generateMockSection(): string {
     return `
-// Mock配置示例
-// const mockFunction = jest.fn();
-// jest.mock('module-name', () => ({
+// Mock配置示例 - 使用vi.hoisted确保Mock在模块导入前设置
+// const { mockFunction } = vi.hoisted(() => ({
+//   mockFunction: vi.fn(),
+// }));
+//
+// vi.mock('module-name', () => ({
 //   functionName: mockFunction,
 // }));
 `;
@@ -196,7 +197,14 @@ describe('${this.template.componentName} Component', () => {
     };
 
     const safeTemplates = new Map(Object.entries(templates));
-    return safeTemplates.get(category);
+    return (
+      safeTemplates.get(category) ||
+      `
+    it('${description}', () => {
+      // 未知测试类别
+      throw new Error('Unknown test category: ${category}');
+    });`
+    );
   }
 }
 
@@ -210,7 +218,7 @@ export const TestUtils = {
   createMockFactory: <T extends (..._args: any[]) => any>(
     implementation?: T,
   ): any => {
-    return (global as any).jest.fn(implementation) as any;
+    return vi.fn(implementation) as any;
   },
 
   /**

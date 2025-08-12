@@ -1,20 +1,21 @@
+import {
+    TEST_BASE_NUMBERS,
+    TEST_CONSTANTS,
+    THEME_ANALYTICS_CONSTANTS,
+} from '@/constants/test-constants';
+import type {
+    MockSwitchPattern,
+    ThemeAnalyticsPrivate,
+} from '@/types/test-types';
 import * as Sentry from '@sentry/nextjs';
 import { vi } from 'vitest';
-import type {
-  MockSwitchPattern,
-  ThemeAnalyticsPrivate,
-} from '@/types/test-types';
 import {
-  TEST_CONSTANTS,
-  THEME_ANALYTICS_CONSTANTS,
-} from '@/constants/test-constants';
-import {
-  DEBUG_CONSTANTS,
-  DELAY_CONSTANTS,
-  OPACITY_CONSTANTS,
-  PERCENTAGE_CONSTANTS,
-  PERFORMANCE_CONSTANTS,
-  TIME_CONSTANTS,
+    DEBUG_CONSTANTS,
+    DELAY_CONSTANTS,
+    OPACITY_CONSTANTS,
+    PERCENTAGE_CONSTANTS,
+    PERFORMANCE_CONSTANTS,
+    TIME_CONSTANTS,
 } from '../../../constants/app-constants';
 import { ThemeAnalytics } from '../../theme-analytics';
 
@@ -93,11 +94,16 @@ Object.defineProperty(global, 'navigator', {
 
 // Mock document.startViewTransition
 export const mockStartViewTransition = vi.fn();
-Object.defineProperty(document, 'startViewTransition', {
-  value: mockStartViewTransition,
-  configurable: true,
-  writable: true,
-});
+if (!document.startViewTransition) {
+  Object.defineProperty(document, 'startViewTransition', {
+    value: mockStartViewTransition,
+    configurable: true,
+    writable: true,
+  });
+} else {
+  // If it already exists, just replace the implementation
+  document.startViewTransition = mockStartViewTransition;
+}
 
 // Setup function for theme analytics tests
 export function setupThemeAnalyticsTest() {
@@ -175,12 +181,9 @@ export function createMockSwitchPattern(
   overrides?: Partial<MockSwitchPattern>,
 ): MockSwitchPattern {
   return {
-    from: 'light',
-    to: 'dark',
-    timestamp: Date.now(),
-    duration: 150,
-    userAgent: mockNavigator.userAgent,
-    viewportSize: { width: 1920, height: 1080 },
+    sequence: ['light', 'dark'],
+    frequency: 1,
+    lastOccurrence: Date.now(),
     ...overrides,
   };
 }
@@ -194,7 +197,9 @@ export function getPrivateAnalytics(
 
 // Helper function to simulate time passage
 export function simulateTimePassage(milliseconds: number) {
-  const currentTime = mockPerformanceNow.mockReturnValue();
+  const currentTime =
+    mockPerformanceNow.mock.results[mockPerformanceNow.mock.results.length - 1]
+      ?.value || 1000;
   mockPerformanceNow.mockReturnValue(currentTime + milliseconds);
 }
 
@@ -207,10 +212,9 @@ export function simulateThemeSwitches(
   for (let i = 0; i < count; i++) {
     const from = patterns[i % patterns.length];
     const to = patterns[(i + 1) % patterns.length];
-    analytics.recordThemeSwitch(from as any, to as any, {
-      duration: 100 + i * 10,
-      timestamp: Date.now() + i * 1000,
-    });
+    const startTime = Date.now() + i * 1000;
+    const endTime = startTime + 100 + i * TEST_BASE_NUMBERS.LARGE_COUNT;
+    analytics.recordThemeSwitch(from as any, to as any, startTime, endTime);
   }
 }
 
@@ -221,12 +225,13 @@ export function cleanupThemeAnalyticsTest() {
 
 // Export constants for use in tests
 export {
-  TEST_CONSTANTS,
-  THEME_ANALYTICS_CONSTANTS,
-  DEBUG_CONSTANTS,
-  DELAY_CONSTANTS,
-  OPACITY_CONSTANTS,
-  PERCENTAGE_CONSTANTS,
-  PERFORMANCE_CONSTANTS,
-  TIME_CONSTANTS,
+    DEBUG_CONSTANTS,
+    DELAY_CONSTANTS,
+    OPACITY_CONSTANTS,
+    PERCENTAGE_CONSTANTS,
+    PERFORMANCE_CONSTANTS,
+    TEST_CONSTANTS,
+    THEME_ANALYTICS_CONSTANTS,
+    TIME_CONSTANTS
 };
+

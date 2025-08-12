@@ -77,9 +77,10 @@ class FormValidator {
       return { isValid: false, error: 'Email is too long' };
     }
 
-    // 邮箱验证，支持常见格式包括+号和点号
+    // 邮箱验证，使用安全的正则表达式避免ReDoS攻击
+    // 使用更简单的模式避免嵌套量词
     const emailRegex =
-      /^[a-zA-Z0-9]([a-zA-Z0-9._+-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
+      /^[a-zA-Z0-9][a-zA-Z0-9._+-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,6}$/;
     if (!emailRegex.test(email)) {
       return { isValid: false, error: 'Invalid email format' };
     }
@@ -202,12 +203,12 @@ class FormValidator {
       return { isValid: false, error: 'Content is too long' };
     }
 
-    // Check for potential XSS patterns
+    // Check for potential XSS patterns using safe regex patterns
     const xssPatterns = [
-      /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+      /<script[\s\S]{0,1000}?<\/script>/gi,
       /javascript:/gi,
-      /on\w+\s*=/gi,
-      /<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi,
+      /on\w{1,20}\s*=/gi,
+      /<iframe[\s\S]{0,1000}?<\/iframe>/gi,
     ];
 
     let hasXSS = false;

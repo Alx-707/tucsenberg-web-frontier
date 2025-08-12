@@ -180,7 +180,8 @@ export function useTranslationStatus() {
           const data = await response.json();
           setStatus(data);
         }
-      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      } catch (_error) {
         // Fallback to optimistic status
         setStatus({
           isComplete: true,

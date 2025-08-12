@@ -1,21 +1,21 @@
 // 诊断页面组件
 
+import {
+  AlertTriangle,
+  CheckCircle,
+  Download,
+  RefreshCw,
+  XCircle,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
-import {
-    AlertTriangle,
-    CheckCircle,
-    Download,
-    RefreshCw,
-    XCircle,
-} from 'lucide-react';
 import { formatMetric, getMetricStatus, type SimpleWebVitals } from './utils';
 
 // 重新导出类型以便其他文件使用

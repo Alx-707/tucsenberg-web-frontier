@@ -1,9 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import {
-  PerformanceAlertSystem,
-  PerformanceBaselineManager,
-  PerformanceRegressionDetector,
+    WEB_VITALS_CONSTANTS
+} from '@/constants/test-constants';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+    PerformanceAlertSystem,
+    PerformanceBaselineManager,
+    PerformanceRegressionDetector,
 } from '../enhanced-web-vitals';
 
 // Mock logger
@@ -59,6 +61,42 @@ describe('PerformanceBaselineManager', () => {
     timestamp: Date.now(),
     url: 'https://test.com/en/test-page',
     userAgent: 'Test Browser',
+    cls: 0.1,
+    fid: 100,
+    lcp: 2500,
+    fcp: 1800,
+    ttfb: 800,
+    inp: 50,
+    domContentLoaded: 1500,
+    loadComplete: 3000,
+    firstPaint: 1200,
+    resourceTiming: {
+      totalResources: 10,
+      slowResources: [],
+      totalSize: 1024000,
+      totalDuration: 2000,
+    },
+    connection: {
+      effectiveType: '4g',
+      downlink: 10,
+      rtt: 50,
+      saveData: false,
+    },
+    device: {
+      memory: 8,
+      cores: 4,
+      userAgent: 'Test Browser',
+      viewport: {
+        width: 1920,
+        height: 1080,
+      },
+    },
+    page: {
+      url: 'https://test.com/en/test-page',
+      referrer: '',
+      title: 'Test Page',
+      timestamp: Date.now(),
+    },
     metrics: {
       cls: 0.1,
       lcp: 2500,
@@ -483,7 +521,7 @@ describe('PerformanceAlertSystem', () => {
   });
 
   describe('性能警报检查', () => {
-    it('should trigger alerts for poor performance', () => {
+    it('should trigger alerts for poor performance', async () => {
       const poorMetrics = {
         cls: 0.3, // Critical
         lcp: 5000, // Critical
@@ -493,12 +531,19 @@ describe('PerformanceAlertSystem', () => {
         fcp: 4000,
       };
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      // 获取已经 Mock 的 logger
+      const { logger } = await import('@/lib/logger');
+      const loggerErrorSpy = vi.mocked(logger.error);
+      const loggerWarnSpy = vi.mocked(logger.warn);
+
+      // 清除之前的调用记录
+      loggerErrorSpy.mockClear();
+      loggerWarnSpy.mockClear();
 
       (alertSystem as any).checkMetrics(poorMetrics as any);
 
-      expect(consoleSpy).toHaveBeenCalled();
-      consoleSpy.mockRestore();
+      // 由于这些指标都超过了critical阈值，应该调用logger.error
+      expect(loggerErrorSpy).toHaveBeenCalled();
     });
 
     it('should not trigger alerts for good performance', () => {
@@ -538,26 +583,26 @@ describe('PerformanceAlertSystem', () => {
   });
 
   describe('通知系统', () => {
-    it('should send console notifications when enabled', () => {
+    it('should send console notifications when enabled', async () => {
       alertSystem.configure({
         enabled: true,
-        notifications: { console: true },
+        channels: { console: true },
       });
 
-      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      // Mock logger.error instead of console.warn for critical alerts
+      const { logger } = await vi.importMock('@/lib/logger');
+      const loggerSpy = vi.mocked(logger.error);
 
       (alertSystem as any).sendAlert('critical', 'Test alert message', {
         metric: 'cls',
         value: 0.5,
       });
 
-      // 检查第二次调用（实际的警报消息）
-      expect(consoleSpy).toHaveBeenNthCalledWith(
-        2,
+      // 检查logger.error被调用
+      expect(loggerSpy).toHaveBeenCalledWith(
         expect.stringContaining('Test alert message'),
         expect.any(Object),
       );
-      consoleSpy.mockRestore();
     });
 
     it('should handle webhook notifications', async () => {

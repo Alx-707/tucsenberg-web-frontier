@@ -74,6 +74,18 @@ export const TEST_SCREEN_CONSTANTS = {
 
   /** 标准高度 - 768px */
   STANDARD_HEIGHT: 768,
+
+  /** 小屏断点 - 640px */
+  BREAKPOINT_SM: 640,
+
+  /** 中屏断点 - 768px */
+  BREAKPOINT_MD: 768,
+
+  /** 大屏断点 - 1024px */
+  BREAKPOINT_LG: 1024,
+
+  /** 超大屏断点 - 1280px */
+  BREAKPOINT_XL: 1280,
 } as const;
 
 // ==================== 测试内容限制常量 ====================
@@ -89,6 +101,9 @@ export const TEST_CONTENT_LIMITS = {
   /** 短文本最大长度 - 20 */
   SHORT_TEXT_MAX: 20,
 
+  /** 中等文本最大长度 - 250 */
+  MEDIUM_TEXT_MAX: 250,
+
   /** 长文本最大长度 - 500 */
   LONG_TEXT_MAX: 500,
 
@@ -97,6 +112,15 @@ export const TEST_CONTENT_LIMITS = {
 
   /** 最大嵌套回调 - 3 */
   MAX_NESTED_CALLBACKS: 3,
+
+  /** 函数最大行数 - 80 */
+  FUNCTION_MAX_LINES: 80,
+
+  /** 文件最大行数 - 500 */
+  FILE_MAX_LINES: 500,
+
+  /** 最大复杂度 - 10 */
+  MAX_COMPLEXITY: 10,
 } as const;
 
 // ==================== 测试动画和缓动常量 ====================

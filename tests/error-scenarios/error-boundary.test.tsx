@@ -112,23 +112,6 @@ function ThrowErrorComponent({
   return <div data-testid='normal-component'>Normal component</div>;
 }
 
-// 创建异步错误组件
-function AsyncErrorComponent({
-  shouldThrow = true,
-}: {
-  shouldThrow?: boolean;
-}) {
-  React.useEffect(() => {
-    if (shouldThrow) {
-      setTimeout(() => {
-        throw new Error('Async error');
-      }, 100);
-    }
-  }, [shouldThrow]);
-
-  return <div data-testid='async-component'>Async component</div>;
-}
-
 describe('ErrorBoundary Error Handling Tests', () => {
   const user = userEvent.setup();
   const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -143,7 +126,10 @@ describe('ErrorBoundary Error Handling Tests', () => {
         retry: 'Try Again',
         errorMessage: 'Something went wrong. Please try refreshing the page.',
       };
-      return translations[key] || key;
+      // eslint-disable-next-line security/detect-object-injection
+      return (
+        (Object.hasOwn(translations, key) ? translations[key] : null) || key
+      );
     });
 
     // Clear console spy
@@ -206,7 +192,7 @@ describe('ErrorBoundary Error Handling Tests', () => {
         { message: '', expected: '' }, // Empty error message
       ];
 
-      for (const { message, expected } of errorTypes) {
+      for (const { message } of errorTypes) {
         const { unmount } = render(
           <ErrorBoundary>
             <ThrowErrorComponent
@@ -361,9 +347,8 @@ describe('ErrorBoundary Error Handling Tests', () => {
     });
 
     it('should handle production environment logging', async () => {
-      // Mock production environment
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      // Mock production environment using vi.stubEnv
+      vi.stubEnv('NODE_ENV', 'production');
 
       render(
         <ErrorBoundary>
@@ -379,7 +364,7 @@ describe('ErrorBoundary Error Handling Tests', () => {
       expect(screen.getByTestId('error-boundary-card')).toBeInTheDocument();
 
       // Restore environment
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
   });
 

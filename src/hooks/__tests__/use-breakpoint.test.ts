@@ -1,6 +1,9 @@
-import { TEST_SCREEN_CONSTANTS } from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  TEST_BASE_NUMBERS,
+  TEST_SCREEN_CONSTANTS,
+} from '@/constants/test-constants';
 import { useBreakpoint } from '../use-breakpoint';
 
 // Use vi.hoisted to ensure proper mock setup
@@ -13,12 +16,12 @@ const {
   mockMediaQueryList,
   mockWindowDimensions,
 } = vi.hoisted(() => {
-  const mockAddEventListener = vi.fn();
-  const mockRemoveEventListener = vi.fn();
-  const mockDispatchEvent = vi.fn();
+  const addEventListenerMock = vi.fn();
+  const removeEventListenerMock = vi.fn();
+  const dispatchEventMock = vi.fn();
 
-  const mockMatchMedia = vi.fn();
-  const mockMediaQueryList = {
+  const matchMediaMock = vi.fn();
+  const mediaQueryListMock = {
     matches: false,
     media: '',
     onchange: null,
@@ -30,49 +33,45 @@ const {
   };
 
   // Create a mutable dimensions object with hardcoded values to avoid import issues in hoisted
-  const mockWindowDimensions = {
+  const windowDimensionsMock = {
     innerWidth: 1024, // TEST_SCREEN_CONSTANTS.TABLET_WIDTH
-    innerHeight: 768,  // TEST_SCREEN_CONSTANTS.STANDARD_HEIGHT
+    innerHeight: 768, // TEST_SCREEN_CONSTANTS.STANDARD_HEIGHT
   };
 
-  const mockWindow = {
+  const windowMock = {
     get innerWidth() {
-      return mockWindowDimensions.innerWidth;
+      return windowDimensionsMock.innerWidth;
     },
     get innerHeight() {
-      return mockWindowDimensions.innerHeight;
+      return windowDimensionsMock.innerHeight;
     },
-    addEventListener: mockAddEventListener,
-    removeEventListener: mockRemoveEventListener,
-    dispatchEvent: mockDispatchEvent,
-    matchMedia: mockMatchMedia,
+    addEventListener: addEventListenerMock,
+    removeEventListener: removeEventListenerMock,
+    dispatchEvent: dispatchEventMock,
+    matchMedia: matchMediaMock,
   };
 
   // Setup default matchMedia behavior
-  mockMatchMedia.mockReturnValue(mockMediaQueryList);
+  matchMediaMock.mockReturnValue(mediaQueryListMock);
 
   return {
-    mockWindow,
-    mockAddEventListener,
-    mockRemoveEventListener,
-    mockDispatchEvent,
-    mockMatchMedia,
-    mockMediaQueryList,
-    mockWindowDimensions,
+    mockWindow: windowMock,
+    mockAddEventListener: addEventListenerMock,
+    mockRemoveEventListener: removeEventListenerMock,
+    mockDispatchEvent: dispatchEventMock,
+    mockMatchMedia: matchMediaMock,
+    mockMediaQueryList: mediaQueryListMock,
+    mockWindowDimensions: windowDimensionsMock,
   };
 });
 
-const {
-  mockResizeObserver,
-  mockObserve,
-  mockUnobserve,
-  mockDisconnect,
-} = vi.hoisted(() => ({
-  mockResizeObserver: vi.fn(),
-  mockObserve: vi.fn(),
-  mockUnobserve: vi.fn(),
-  mockDisconnect: vi.fn(),
-}));
+const { mockResizeObserver, mockObserve, mockUnobserve, mockDisconnect } =
+  vi.hoisted(() => ({
+    mockResizeObserver: vi.fn(),
+    mockObserve: vi.fn(),
+    mockUnobserve: vi.fn(),
+    mockDisconnect: vi.fn(),
+  }));
 
 // Setup ResizeObserver mock implementation
 mockResizeObserver.mockImplementation((_callback) => ({
@@ -130,15 +129,17 @@ describe('useBreakpoint', () => {
 
   describe('基本断点检测', () => {
     it('should detect mobile breakpoint', () => {
-      mockWindowDimensions.innerWidth = 650; // Between 640 (sm) and 768 (md)
+      const testWidth =
+        TEST_SCREEN_CONSTANTS.BREAKPOINT_SM + TEST_BASE_NUMBERS.LARGE_COUNT; // Between 640 (sm) and 768 (md)
+      mockWindowDimensions.innerWidth = testWidth;
 
       const { result } = renderHook(() => useBreakpoint());
 
       expect(result.current.currentBreakpoint).toBe('sm');
       expect(result.current.isExactly('sm')).toBe(true);
       expect(result.current.isBelow('md')).toBe(true);
-      expect(result.current.isAbove('sm')).toBe(true); // 650 >= 640
-      expect(result.current.width).toBe(650);
+      expect(result.current.isAbove('sm')).toBe(true);
+      expect(result.current.width).toBe(testWidth);
     });
 
     it('should detect tablet breakpoint', () => {
@@ -189,21 +190,24 @@ describe('useBreakpoint', () => {
   describe('响应式状态管理', () => {
     it('should update breakpoint on window resize', () => {
       // Start with desktop width
-      mockWindowDimensions.innerWidth = 1280;
+      mockWindowDimensions.innerWidth = TEST_SCREEN_CONSTANTS.BREAKPOINT_XL;
 
       const { result } = renderHook(() => useBreakpoint());
 
-      // Initial state should be xl (1280 >= 1280)
+      // Initial state should be xl
       expect(result.current.currentBreakpoint).toBe('xl');
-      expect(result.current.width).toBe(1280);
+      expect(result.current.width).toBe(TEST_SCREEN_CONSTANTS.BREAKPOINT_XL);
 
       // Simulate resize to mobile (within sm range: 640-767)
+      const testMobileWidth =
+        TEST_SCREEN_CONSTANTS.BREAKPOINT_SM + TEST_BASE_NUMBERS.LARGE_COUNT; // Within sm range
+
       act(() => {
-        mockWindowDimensions.innerWidth = 650; // Within sm range (640 <= 650 < 768)
+        mockWindowDimensions.innerWidth = testMobileWidth;
 
         // Manually trigger the resize handler if it was registered
         const resizeHandler = mockAddEventListener.mock.calls.find(
-          call => call[0] === 'resize'
+          (call) => call[0] === 'resize',
         )?.[1];
         if (resizeHandler) {
           resizeHandler(new Event('resize'));
@@ -211,7 +215,7 @@ describe('useBreakpoint', () => {
       });
 
       expect(result.current.currentBreakpoint).toBe('sm');
-      expect(result.current.width).toBe(650);
+      expect(result.current.width).toBe(testMobileWidth);
       expect(result.current.isExactly('sm')).toBe(true);
     });
 
@@ -220,10 +224,10 @@ describe('useBreakpoint', () => {
       // It only uses window.innerWidth, so this test verifies the width-based logic
 
       // Start with desktop width
-      mockWindowDimensions.innerWidth = 1280;
+      mockWindowDimensions.innerWidth = TEST_SCREEN_CONSTANTS.BREAKPOINT_XL;
       const { result } = renderHook(() => useBreakpoint());
 
-      // Should be above lg (1024px) with width 1280
+      // Should be above lg with xl width
       expect(result.current.isAbove('lg')).toBe(true);
       expect(result.current.currentBreakpoint).toBe('xl');
 
@@ -233,7 +237,7 @@ describe('useBreakpoint', () => {
 
         // Trigger resize event
         const resizeHandler = mockAddEventListener.mock.calls.find(
-          call => call[0] === 'resize'
+          (call) => call[0] === 'resize',
         )?.[1];
         if (resizeHandler) {
           resizeHandler(new Event('resize'));
@@ -253,15 +257,16 @@ describe('useBreakpoint', () => {
         lg: 1200,
       };
 
-      // Set width to 1024 for this test
-      mockWindowDimensions.innerWidth = 1024;
+      // Set width to lg breakpoint for this test
+      const testWidth = TEST_SCREEN_CONSTANTS.BREAKPOINT_LG;
+      mockWindowDimensions.innerWidth = testWidth;
 
       const { result } = renderHook(() => useBreakpoint(customBreakpoints));
 
       // With custom breakpoints: sm: 480, md: 768, lg: 1200, xl: 1280 (default), 2xl: 1536 (default)
       // 1024 >= 768 but < 1200, so it should be 'md'
       expect(result.current.currentBreakpoint).toBe('md');
-      expect(result.current.width).toBe(1024);
+      expect(result.current.width).toBe(testWidth);
     });
 
     it('should handle partial custom breakpoint gracefully', () => {
@@ -293,7 +298,7 @@ describe('useBreakpoint', () => {
 
         // Trigger resize event
         const resizeHandler = mockAddEventListener.mock.calls.find(
-          call => call[0] === 'resize'
+          (call) => call[0] === 'resize',
         )?.[1];
         if (resizeHandler) {
           resizeHandler(new Event('resize'));
@@ -333,7 +338,6 @@ describe('useBreakpoint', () => {
 
       try {
         // Create a window mock without innerWidth but with required methods
-        // @ts-expect-error - Testing edge case
         global.window = {
           addEventListener: vi.fn(),
           removeEventListener: vi.fn(),
@@ -347,7 +351,7 @@ describe('useBreakpoint', () => {
         expect(result.current.width).toBeUndefined();
         expect(result.current.currentBreakpoint).toBe('sm'); // NaN/undefined defaults to sm
         expect(result.current.isAbove('sm')).toBe(false); // undefined < 640
-        expect(result.current.isBelow('md')).toBe(false);  // undefined < 768 is false
+        expect(result.current.isBelow('md')).toBe(false); // undefined < 768 is false
       } finally {
         // Always restore window
         global.window = originalWindow;

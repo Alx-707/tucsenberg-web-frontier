@@ -1,15 +1,22 @@
-import { SITE_CONFIG, type PageType } from '@/config/paths';
-import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
-import { generateCanonicalURL } from '@/services/url-generator';
 import { getTranslations } from 'next-intl/server';
+import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
+import { SITE_CONFIG, type PageType } from '@/config/paths';
+import { generateCanonicalURL } from '@/services/url-generator';
 import {
-    generateArticleData,
-    generateBreadcrumbData,
-    generateOrganizationData,
-    generateProductData,
-    generateWebSiteData,
+  generateArticleData,
+  generateBreadcrumbData,
+  generateOrganizationData,
+  generateProductData,
+  generateWebSiteData,
 } from './structured-data-generators';
-import type { ArticleData, Locale, ProductData } from './structured-data-types';
+import type {
+  ArticleData,
+  BreadcrumbData,
+  Locale,
+  OrganizationData,
+  ProductData,
+  WebSiteData,
+} from './structured-data-types';
 
 /**
  * 创建面包屑导航结构化数据
@@ -164,7 +171,6 @@ export function generateLocalBusinessSchema(
   } as Record<string, unknown>;
 }
 
-
 /**
  * 生成本地化结构化数据
  */
@@ -179,15 +185,18 @@ export async function generateLocalizedStructuredData(
 
     switch (type) {
       case 'Organization':
-        return generateOrganizationData(t, data);
+        return generateOrganizationData(
+          t,
+          data as OrganizationData | undefined,
+        );
       case 'WebSite':
-        return generateWebSiteData(t, data);
+        return generateWebSiteData(t, data as WebSiteData | undefined);
       case 'Article':
-        return generateArticleData(t, locale, data);
+        return generateArticleData(t, locale, data as ArticleData);
       case 'Product':
-        return generateProductData(t, data);
+        return generateProductData(t, data as ProductData);
       case 'BreadcrumbList':
-        return generateBreadcrumbData(data);
+        return generateBreadcrumbData(data as BreadcrumbData);
       default:
         // 对于未知类型，返回基础结构而不使用扩展运算符
         return {

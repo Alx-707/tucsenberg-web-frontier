@@ -1,15 +1,15 @@
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { logger } from '@/lib/logger';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { PerformanceAlertSystem } from './alert-system';
 import { PerformanceBaselineManager } from './baseline-manager';
 import { EnhancedWebVitalsCollector } from './collector';
 import { PERFORMANCE_THRESHOLDS } from './constants';
 import { PerformanceRegressionDetector } from './regression-detector';
 import type {
-    DetailedWebVitals,
-    PerformanceAlertConfig,
-    PerformanceBaseline,
-    RegressionDetectionResult,
+  DetailedWebVitals,
+  PerformanceAlertConfig,
+  PerformanceBaseline,
+  RegressionDetectionResult,
 } from './types';
 
 /**
@@ -163,9 +163,7 @@ export class PerformanceMonitoringManager {
   ): string[] {
     const lines: string[] = [];
     lines.push('📈 与基准对比:');
-    lines.push(
-      `  基准时间: ${new Date(baseline.timestamp).toLocaleString()}`,
-    );
+    lines.push(`  基准时间: ${new Date(baseline.timestamp).toLocaleString()}`);
 
     const metricsToCompare: Array<keyof PerformanceBaseline['metrics']> = [
       'cls',

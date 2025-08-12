@@ -1,13 +1,22 @@
-
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { usePerformanceMonitor } from '../use-performance-monitor';
 
 // Mock performance.memory
 const mockPerformanceMemory = {
-  usedJSHeapSize: 50 * 1024 * 1024, // 50MB
-  totalJSHeapSize: 100 * 1024 * 1024, // 100MB
-  jsHeapSizeLimit: 200 * 1024 * 1024, // 200MB
+  usedJSHeapSize:
+    TEST_BASE_NUMBERS.MEMORY_SIZE_50MB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB, // 50MB
+  totalJSHeapSize:
+    TEST_BASE_NUMBERS.MEMORY_SIZE_100MB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB, // 100MB
+  jsHeapSizeLimit:
+    TEST_BASE_NUMBERS.MEMORY_SIZE_200MB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB *
+    TEST_BASE_NUMBERS.BYTES_PER_KB, // 200MB
 };
 
 // Mock performance API
@@ -28,12 +37,15 @@ vi.stubGlobal('Date', {
 });
 
 // Mock setTimeout and clearTimeout
-vi.stubGlobal('setTimeout', vi.fn((fn, _delay) => {
-  if (typeof fn === 'function') {
-    fn();
-  }
-  return 1;
-}));
+vi.stubGlobal(
+  'setTimeout',
+  vi.fn((fn, _delay) => {
+    if (typeof fn === 'function') {
+      fn();
+    }
+    return 1;
+  }),
+);
 vi.stubGlobal('clearTimeout', vi.fn());
 
 describe('usePerformanceMonitor', () => {
@@ -82,7 +94,10 @@ describe('usePerformanceMonitor', () => {
         alertThresholds: {
           loadTime: 1000,
           renderTime: 500,
-          memoryUsage: 100 * 1024 * 1024, // 100MB
+          memoryUsage:
+            TEST_BASE_NUMBERS.MEMORY_SIZE_100MB *
+            TEST_BASE_NUMBERS.BYTES_PER_KB *
+            TEST_BASE_NUMBERS.BYTES_PER_KB, // 100MB
         },
         autoMonitoring: true,
         monitoringInterval: 5000,
@@ -249,12 +264,18 @@ describe('usePerformanceMonitor', () => {
 
   describe('警报管理', () => {
     it('should load alerts from alert system', () => {
-      const { result } = renderHook(() => usePerformanceMonitor({
-        enableAlerts: true,
-        alertThresholds: {
-          memoryUsage: 30 * 1024 * 1024, // 30MB threshold
-        },
-      }));
+      const { result } = renderHook(() =>
+        usePerformanceMonitor({
+          enableAlerts: true,
+          alertThresholds: {
+            memoryUsage:
+              (TEST_BASE_NUMBERS.MEMORY_SIZE_50MB *
+                TEST_BASE_NUMBERS.BYTES_PER_KB *
+                TEST_BASE_NUMBERS.BYTES_PER_KB) /
+              TEST_BASE_NUMBERS.SMALL_COUNT, // 25MB threshold
+          },
+        }),
+      );
 
       // Start monitoring to trigger memory check
       act(() => {

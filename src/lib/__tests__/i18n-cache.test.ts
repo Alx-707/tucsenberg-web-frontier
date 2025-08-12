@@ -302,7 +302,10 @@ describe('I18nCacheManager', () => {
 
       mockLocalStorage.getItem.mockReturnValue(mockData);
 
-      new I18nCacheManager({ enablePersistence: true });
+      const persistentCacheManager = new I18nCacheManager({
+        enablePersistence: true,
+      });
+      expect(persistentCacheManager).toBeDefined();
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith('i18n_cache');
     });
 
@@ -312,7 +315,10 @@ describe('I18nCacheManager', () => {
       });
 
       expect(() => {
-        new I18nCacheManager({ enablePersistence: true });
+        const errorHandlingCacheManager = new I18nCacheManager({
+          enablePersistence: true,
+        });
+        expect(errorHandlingCacheManager).toBeDefined();
       }).not.toThrow();
     });
 
@@ -320,7 +326,10 @@ describe('I18nCacheManager', () => {
       mockLocalStorage.getItem.mockReturnValue('invalid json');
 
       expect(() => {
-        new I18nCacheManager({ enablePersistence: true });
+        const jsonErrorCacheManager = new I18nCacheManager({
+          enablePersistence: true,
+        });
+        expect(jsonErrorCacheManager).toBeDefined();
       }).not.toThrow();
     });
   });

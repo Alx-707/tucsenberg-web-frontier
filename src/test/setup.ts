@@ -147,13 +147,22 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }));
 
 // Mock PerformanceObserver for performance monitoring
-global.PerformanceObserver = vi.fn().mockImplementation((callback) => ({
+const MockPerformanceObserver = vi.fn().mockImplementation((_callback) => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
   takeRecords: vi.fn().mockReturnValue([]),
 }));
-(global.PerformanceObserver as any).supportedEntryTypes = ['navigation', 'resource', 'measure', 'mark'];
+
+// 添加静态属性
+Object.defineProperty(MockPerformanceObserver, 'supportedEntryTypes', {
+  value: ['navigation', 'resource', 'measure', 'mark'],
+  writable: false,
+  enumerable: true,
+  configurable: true,
+});
+
+global.PerformanceObserver = MockPerformanceObserver as any;
 
 // Mock environment variables - 使用vi.stubEnv而不是直接修改process.env
 vi.stubEnv('NODE_ENV', 'test');

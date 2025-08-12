@@ -3,4 +3,3 @@ export * from './locale-constants';
 export * from './locale-detection-hooks';
 export * from './locale-detection-types';
 export * from './locale-detector';
-

@@ -27,3 +27,13 @@ export const PERFORMANCE_THRESHOLDS = {
     POOR: WEB_VITALS_CONSTANTS.SCORE_MULTIPLIER_POOR,
   },
 } as const;
+
+/**
+ * 设备默认值常量
+ */
+export const DEVICE_DEFAULTS = {
+  MEMORY_GB: 4,
+  CPU_CORES: 4,
+  VIEWPORT_WIDTH: 1920,
+  VIEWPORT_HEIGHT: 1080,
+} as const;

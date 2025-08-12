@@ -9,7 +9,7 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import { useTranslations } from 'next-intl';
-import React, { Component, type ReactNode } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<
     return { hasError: true, error };
   }
 
-  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Always log errors for debugging and monitoring
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 

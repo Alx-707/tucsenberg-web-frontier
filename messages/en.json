@@ -469,6 +469,17 @@
       "construction": "Construction in progress"
     }
   },
+  "ReactScanDemo": {
+    "title": "React Scan Performance Demo",
+    "description": "Interactive demonstration of React Scan performance monitoring capabilities",
+    "instructions": {
+      "title": "How to Use This Demo",
+      "step1": "Press Ctrl+Shift+X to toggle React Scan on/off",
+      "step2": "Click the buttons below to trigger different types of renders",
+      "step3": "Watch for red highlights (unnecessary renders) and green highlights (optimized renders)",
+      "step4": "Use the React Scan toolbar in the bottom-right corner for detailed analysis"
+    }
+  },
   "structured-data": {
     "organization": {
       "name": "Tucsenberg Web Frontier",

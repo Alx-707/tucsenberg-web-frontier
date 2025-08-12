@@ -1,27 +1,30 @@
-import { type PageType } from '@/config/paths';
-import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
 import { getTranslations } from 'next-intl/server';
+import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
+import { type PageType } from '@/config/paths';
 import {
-    generateArticleData,
-    generateBreadcrumbData,
-    generateOrganizationData,
-    generateProductData,
-    generateWebSiteData,
+  generateArticleData,
+  generateBreadcrumbData,
+  generateOrganizationData,
+  generateProductData,
+  generateWebSiteData,
 } from './structured-data-generators';
+// 导入需要的函数
+import {
+  generateArticleSchema,
+  generateProductSchema,
+} from './structured-data-helpers';
 import type {
-    ArticleData,
-    BreadcrumbData,
-    Locale,
-    OrganizationData,
-    ProductData,
-    StructuredDataType,
-    WebSiteData,
+  ArticleData,
+  BreadcrumbData,
+  Locale,
+  OrganizationData,
+  ProductData,
+  StructuredDataType,
+  WebSiteData,
 } from './structured-data-types';
 
 // 重新导出类型
 export type { Locale } from './structured-data-types';
-
-
 
 /**
  * 生成本地化结构化数据
@@ -77,19 +80,13 @@ export function generateJSONLD(structuredData: unknown): string {
 
 // 重新导出便捷函数
 export {
-    createArticleStructuredData,
-    createBreadcrumbStructuredData,
-    generateArticleSchema,
-    generateBreadcrumbSchema,
-    generateFAQSchema,
-    generateLocalBusinessSchema,
-    generateProductSchema
-} from './structured-data-helpers';
-
-// 导入需要的函数
-import {
-    generateArticleSchema,
-    generateProductSchema
+  createArticleStructuredData,
+  createBreadcrumbStructuredData,
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  generateFAQSchema,
+  generateLocalBusinessSchema,
+  generateProductSchema,
 } from './structured-data-helpers';
 
 // 函数重载：根据页面类型返回不同长度的元组，便于测试中按索引访问

@@ -1,4 +1,5 @@
 import { QualityIssue } from '@/types/translation-manager';
+import { QUALITY_CHECK_THRESHOLDS } from '@/constants/i18n-constants';
 
 /**
  * 翻译工具函数集合
@@ -7,7 +8,11 @@ import { QualityIssue } from '@/types/translation-manager';
 /**
  * 安全地设置对象属性，避免 Object Injection Sink
  */
-function safeSetProperty(obj: Record<string, string>, key: string, value: string): void {
+function safeSetProperty(
+  obj: Record<string, string>,
+  key: string,
+  value: string,
+): void {
   // 验证键名格式，只允许字母、数字、点、下划线和连字符
   if (!/^[a-zA-Z0-9._-]+$/.test(key)) {
     return;
@@ -70,7 +75,10 @@ export function flattenTranslations(
     const newKey = prefix ? `${prefix}.${key}` : key;
 
     if (typeof value === 'object' && value !== null) {
-      Object.assign(result, flattenTranslations(value as Record<string, unknown>, newKey));
+      Object.assign(
+        result,
+        flattenTranslations(value as Record<string, unknown>, newKey),
+      );
     } else if (typeof value === 'string') {
       safeSetProperty(result, newKey, value);
     }
@@ -104,11 +112,18 @@ export function getNestedValue(
  * 计算置信度
  */
 export function calculateConfidence(issues: QualityIssue[]): number {
-  const criticalIssues = issues.filter((issue) => issue.severity === 'critical').length;
+  const criticalIssues = issues.filter(
+    (issue) => issue.severity === 'critical',
+  ).length;
   const highIssues = issues.filter((issue) => issue.severity === 'high').length;
-  const mediumIssues = issues.filter((issue) => issue.severity === 'medium').length;
+  const mediumIssues = issues.filter(
+    (issue) => issue.severity === 'medium',
+  ).length;
 
-  const penalty = criticalIssues * 30 + highIssues * 20 + mediumIssues * 10;
+  const penalty =
+    criticalIssues * QUALITY_CHECK_THRESHOLDS.HIGH_QUALITY +
+    highIssues * QUALITY_CHECK_THRESHOLDS.MEDIUM_QUALITY +
+    mediumIssues * QUALITY_CHECK_THRESHOLDS.LOW_QUALITY;
   return Math.max(0, 100 - penalty);
 }
 
@@ -147,7 +162,9 @@ export function generateSuggestions(issues: QualityIssue[]): string[] {
 export function generateRecommendations(issues: QualityIssue[]): string[] {
   const recommendations: string[] = [];
 
-  const criticalIssues = issues.filter((issue) => issue.severity === 'critical');
+  const criticalIssues = issues.filter(
+    (issue) => issue.severity === 'critical',
+  );
   const highIssues = issues.filter((issue) => issue.severity === 'high');
 
   if (criticalIssues.length > 0) {
@@ -158,11 +175,13 @@ export function generateRecommendations(issues: QualityIssue[]): string[] {
     recommendations.push('Review and fix high-priority issues');
   }
 
-  if (issues.length > 10) {
+  if (issues.length > QUALITY_CHECK_THRESHOLDS.LOW_QUALITY) {
     recommendations.push('Consider comprehensive translation review');
   }
 
-  const placeholderIssues = issues.filter((issue) => issue.type === 'placeholder');
+  const placeholderIssues = issues.filter(
+    (issue) => issue.type === 'placeholder',
+  );
   if (placeholderIssues.length > 0) {
     recommendations.push('Implement automated placeholder validation');
   }
@@ -173,7 +192,7 @@ export function generateRecommendations(issues: QualityIssue[]): string[] {
 /**
  * 检查术语一致性
  */
-export async function checkTerminologyConsistency(
+export function checkTerminologyConsistency(
   key: string,
   translation: string,
   terminologyMap?: Map<string, string>,
@@ -181,7 +200,7 @@ export async function checkTerminologyConsistency(
   const issues: QualityIssue[] = [];
 
   if (!terminologyMap || terminologyMap.size === 0) {
-    return issues;
+    return Promise.resolve(issues);
   }
 
   // 检查术语使用
@@ -196,7 +215,7 @@ export async function checkTerminologyConsistency(
     }
   }
 
-  return issues;
+  return Promise.resolve(issues);
 }
 
 /**
@@ -211,11 +230,11 @@ export function calculateQualityTrend(
 
   if (difference > TREND_THRESHOLD) {
     return 'improving';
-  } else if (difference < -TREND_THRESHOLD) {
-    return 'declining';
-  } else {
-    return 'stable';
   }
+  if (difference < -TREND_THRESHOLD) {
+    return 'declining';
+  }
+  return 'stable';
 }
 
 /**

@@ -1,0 +1,209 @@
+{
+  "timestamp": "2025-08-11T16:28:36.183Z",
+  "summary": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0,
+    "warnings": 0,
+    "successRate": "100.0%"
+  },
+  "details": [
+    {
+      "name": "Playwright 测试框架",
+      "passed": "^1.54.2",
+      "isWarning": false,
+      "details": "版本: ^1.54.2",
+      "status": "✅"
+    },
+    {
+      "name": "dotenv 配置工具",
+      "passed": "^17.2.1",
+      "isWarning": false,
+      "details": "版本: ^17.2.1",
+      "status": "✅"
+    },
+    {
+      "name": "concurrently 并发工具",
+      "passed": "^9.2.0",
+      "isWarning": false,
+      "details": "版本: ^9.2.0",
+      "status": "✅"
+    },
+    {
+      "name": "脚本配置: test:e2e",
+      "passed": "playwright test",
+      "isWarning": false,
+      "details": "已配置: playwright test",
+      "status": "✅"
+    },
+    {
+      "name": "脚本配置: test:e2e:safe",
+      "passed": "playwright test tests/e2e/safe-navigation.spec.ts",
+      "isWarning": false,
+      "details": "已配置: playwright test tests/e2e/safe-navigation.spec.ts",
+      "status": "✅"
+    },
+    {
+      "name": "脚本配置: test:web-eval-agent",
+      "passed": "node scripts/test-web-eval-agent.js",
+      "isWarning": false,
+      "details": "已配置: node scripts/test-web-eval-agent.js",
+      "status": "✅"
+    },
+    {
+      "name": "脚本配置: test:server:start",
+      "passed": "node scripts/start-test-server.js",
+      "isWarning": false,
+      "details": "已配置: node scripts/start-test-server.js",
+      "status": "✅"
+    },
+    {
+      "name": "脚本配置: playwright:install",
+      "passed": "playwright install",
+      "isWarning": false,
+      "details": "已配置: playwright install",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: Playwright 主配置",
+      "passed": true,
+      "isWarning": false,
+      "details": "playwright.config.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: 测试环境配置",
+      "passed": true,
+      "isWarning": false,
+      "details": ".env.test 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: 测试环境设置",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/test-environment-setup.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: 全局测试设置",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/global-setup.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: 全局测试清理",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/global-teardown.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: safe-navigation.spec.ts",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/safe-navigation.spec.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: web-eval-basic.spec.ts",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/web-eval-basic.spec.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: web-eval-integration.spec.ts",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/web-eval-integration.spec.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: basic-navigation.spec.ts",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/basic-navigation.spec.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: performance.spec.ts",
+      "passed": true,
+      "isWarning": false,
+      "details": "tests/e2e/performance.spec.ts 存在",
+      "status": "✅"
+    },
+    {
+      "name": "React Scan 禁用配置",
+      "passed": true,
+      "isWarning": false,
+      "details": "测试环境中 React Scan 被正确禁用",
+      "status": "✅"
+    },
+    {
+      "name": "测试模式配置",
+      "passed": true,
+      "isWarning": false,
+      "details": "测试模式已启用",
+      "status": "✅"
+    },
+    {
+      "name": "Playwright 配置",
+      "passed": true,
+      "isWarning": false,
+      "details": "Playwright 测试标识已设置",
+      "status": "✅"
+    },
+    {
+      "name": ".env.example 更新",
+      "passed": true,
+      "isWarning": true,
+      "details": "Web Eval Agent 配置已添加到示例文件",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: web-eval-agent-mcp-setup.md",
+      "passed": true,
+      "isWarning": false,
+      "details": "docs/web-eval-agent-mcp-setup.md 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: web-eval-agent-integration-summary.md",
+      "passed": true,
+      "isWarning": false,
+      "details": "docs/web-eval-agent-integration-summary.md 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: performance-tools-coordination.md",
+      "passed": true,
+      "isWarning": false,
+      "details": "docs/performance-tools-coordination.md 存在",
+      "status": "✅"
+    },
+    {
+      "name": "文件检查: react-scan-interference-analysis.md",
+      "passed": true,
+      "isWarning": false,
+      "details": "docs/react-scan-interference-analysis.md 存在",
+      "status": "✅"
+    },
+    {
+      "name": "React Scan 禁用机制",
+      "passed": true,
+      "isWarning": false,
+      "details": "React Scan Provider 包含禁用检查",
+      "status": "✅"
+    },
+    {
+      "name": "React Scan 环境检查",
+      "passed": true,
+      "isWarning": false,
+      "details": "React Scan 包含环境检查逻辑",
+      "status": "✅"
+    }
+  ],
+  "status": "SUCCESS"
+}

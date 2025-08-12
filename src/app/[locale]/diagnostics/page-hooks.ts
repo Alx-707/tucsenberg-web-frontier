@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import type { SimpleWebVitals } from './components';
 import {
   collectCurrentMetrics,
+  DATA_COLLECTION_DELAY,
+  exportDiagnosticsData,
   loadHistoricalData,
   saveCurrentData,
-  exportDiagnosticsData,
-  DATA_COLLECTION_DELAY,
 } from './page-utils';
 
 /**
@@ -23,7 +23,9 @@ export function useDiagnosticsData() {
     setIsLoading(true);
     try {
       // 等待数据收集
-      await new Promise((resolve) => setTimeout(resolve, DATA_COLLECTION_DELAY));
+      await new Promise((resolve) =>
+        setTimeout(resolve, DATA_COLLECTION_DELAY),
+      );
       const metrics = collectCurrentMetrics();
       setCurrentMetrics(metrics);
       const updatedHistory = saveCurrentData(metrics);

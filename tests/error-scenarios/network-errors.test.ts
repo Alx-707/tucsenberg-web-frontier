@@ -60,7 +60,7 @@ class TestAPIClient {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: data ? JSON.stringify(data) : undefined,
+          ...(data && { body: JSON.stringify(data) }),
         });
 
         if (!response.ok) {
@@ -424,7 +424,12 @@ describe('Network Error Handling Tests', () => {
         .mockRejectedValueOnce(new Error('Attempt 2 failed'))
         .mockResolvedValueOnce('Success');
 
-      const result = await recoveryTester.testRetryMechanism(operation, 3, 2);
+      const result = await recoveryTester.testRetryMechanism(
+        operation,
+        'test-operation',
+        3,
+        2,
+      );
 
       expect(result.success).toBe(true);
       expect(result.attempts).toBe(3);

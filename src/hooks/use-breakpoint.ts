@@ -47,9 +47,6 @@ export function useBreakpoint(
     };
 
     if (typeof window !== 'undefined') {
-      // Set initial width if not already set correctly
-      setWidth(window.innerWidth);
-
       window.addEventListener('resize', handleResize);
       return () => window.removeEventListener('resize', handleResize);
     }

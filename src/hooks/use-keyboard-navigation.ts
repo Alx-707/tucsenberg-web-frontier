@@ -32,8 +32,6 @@ const defaultOptions: Required<KeyboardNavigationOptions> = {
   onNavigate: () => {},
 };
 
-
-
 // 箭头键处理配置接口
 interface ArrowKeyConfig {
   key: string;
@@ -83,8 +81,6 @@ function handleArrowKey(config: ArrowKeyConfig): boolean {
   }
   return false;
 }
-
-
 
 // 处理Tab键的辅助函数
 function handleTabKey(

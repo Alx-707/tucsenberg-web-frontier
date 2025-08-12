@@ -1,8 +1,8 @@
 'use client';
 
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
-import { logger } from '@/lib/logger';
-import { PERFORMANCE_THRESHOLDS } from './constants';
+import { DEVICE_DEFAULTS, PERFORMANCE_THRESHOLDS } from './constants';
+import { WebVitalsObservers } from './observers';
 import type { DetailedWebVitals } from './types';
 
 /**
@@ -11,10 +11,11 @@ import type { DetailedWebVitals } from './types';
  */
 export class EnhancedWebVitalsCollector {
   private metrics: Partial<DetailedWebVitals> = {};
-  private observers: PerformanceObserver[] = [];
+  private webVitalsObservers: WebVitalsObservers;
   private isCollecting = false;
 
   constructor() {
+    this.webVitalsObservers = new WebVitalsObservers(this.metrics);
     this.initializeCollection();
   }
 
@@ -127,130 +128,61 @@ export class EnhancedWebVitalsCollector {
   }
 
   private collectWebVitals() {
-    // CLS (Cumulative Layout Shift)
-    this.observeLayoutShift();
-
-    // LCP (Largest Contentful Paint)
-    this.observeLargestContentfulPaint();
-
-    // FID (First Input Delay)
-    this.observeFirstInputDelay();
-
-    // FCP (First Contentful Paint)
-    this.observeFirstContentfulPaint();
-
-    // INP (Interaction to Next Paint) - 新指标
-    this.observeInteractionToNextPaint();
+    // 启动所有 Web Vitals 观察器
+    this.webVitalsObservers.startAllObservers();
   }
 
-  private observeLayoutShift() {
-    if (!('PerformanceObserver' in window)) return;
-
-    try {
-      const observer = new PerformanceObserver((list) => {
-        let clsValue = 0;
-        for (const entry of list.getEntries()) {
-          const layoutShift = entry as PerformanceEntry & {
-            hadRecentInput?: boolean;
-            value: number;
-          };
-          if (!layoutShift.hadRecentInput) {
-            clsValue += layoutShift.value;
-          }
-        }
-        this.metrics.cls = (this.metrics.cls || 0) + clsValue;
-      });
-
-      observer.observe({ type: 'layout-shift', buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      logger.warn('Failed to observe layout shift', { error });
-    }
+  /**
+   * 获取默认的资源时间信息
+   */
+  private getDefaultResourceTiming() {
+    return {
+      totalResources: 0,
+      slowResources: [],
+      totalSize: 0,
+      totalDuration: 0,
+    };
   }
 
-  private observeLargestContentfulPaint() {
-    if (!('PerformanceObserver' in window)) return;
-
-    try {
-      const observer = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        if (lastEntry) {
-          this.metrics.lcp = lastEntry.startTime;
-        }
-      });
-
-      observer.observe({ type: 'largest-contentful-paint', buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      logger.warn('Failed to observe LCP', { error });
-    }
+  /**
+   * 获取默认的连接信息
+   */
+  private getDefaultConnection() {
+    return {
+      effectiveType: 'unknown' as const,
+      downlink: 0,
+      rtt: 0,
+      saveData: false,
+    };
   }
 
-  private observeFirstInputDelay() {
-    if (!('PerformanceObserver' in window)) return;
-
-    try {
-      const observer = new PerformanceObserver((list) => {
-        // eslint-disable-next-line no-unreachable-loop
-        for (const entry of list.getEntries()) {
-          const firstInput = entry as PerformanceEntry & {
-            processingStart: number;
-          };
-          this.metrics.fid = firstInput.processingStart - firstInput.startTime;
-          break; // 只需要第一次输入
-        }
-      });
-
-      observer.observe({ type: 'first-input', buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      logger.warn('Failed to observe FID', { error });
-    }
+  /**
+   * 获取默认的设备信息
+   */
+  private getDefaultDevice() {
+    return {
+      memory:
+        (navigator as Navigator & { deviceMemory?: number }).deviceMemory ||
+        DEVICE_DEFAULTS.MEMORY_GB,
+      cores: navigator.hardwareConcurrency || DEVICE_DEFAULTS.CPU_CORES,
+      userAgent: navigator.userAgent,
+      viewport: {
+        width: window.innerWidth || DEVICE_DEFAULTS.VIEWPORT_WIDTH,
+        height: window.innerHeight || DEVICE_DEFAULTS.VIEWPORT_HEIGHT,
+      },
+    };
   }
 
-  private observeFirstContentfulPaint() {
-    if (!('PerformanceObserver' in window)) return;
-
-    try {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          if (entry.name === 'first-contentful-paint') {
-            this.metrics.fcp = entry.startTime;
-            break;
-          }
-        }
-      });
-
-      observer.observe({ type: 'paint', buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      logger.warn('Failed to observe FCP', { error });
-    }
-  }
-
-  private observeInteractionToNextPaint() {
-    if (!('PerformanceObserver' in window)) return;
-
-    try {
-      const observer = new PerformanceObserver((list) => {
-        let maxINP = 0;
-        for (const entry of list.getEntries()) {
-          const interaction = entry as PerformanceEntry & {
-            duration: number;
-          };
-          if (interaction.duration > maxINP) {
-            maxINP = interaction.duration;
-          }
-        }
-        this.metrics.inp = maxINP;
-      });
-
-      observer.observe({ type: 'event', buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      logger.warn('Failed to observe INP', { error });
-    }
+  /**
+   * 获取默认的页面信息
+   */
+  private getDefaultPage() {
+    return {
+      url: '',
+      referrer: '',
+      title: '',
+      timestamp: Date.now(),
+    };
   }
 
   public getDetailedMetrics(): DetailedWebVitals {
@@ -265,33 +197,11 @@ export class EnhancedWebVitalsCollector {
       domContentLoaded: this.metrics.domContentLoaded || 0,
       loadComplete: this.metrics.loadComplete || 0,
       firstPaint: this.metrics.firstPaint || 0,
-      resourceTiming: this.metrics.resourceTiming || {
-        totalResources: 0,
-        slowResources: [],
-        totalSize: 0,
-        totalDuration: 0,
-      },
-      connection: this.metrics.connection || {
-        effectiveType: 'unknown',
-        downlink: 0,
-        rtt: 0,
-        saveData: false,
-      },
-      device: this.metrics.device || {
-        memory: (navigator as any).deviceMemory || 4,
-        cores: navigator.hardwareConcurrency || 4,
-        userAgent: navigator.userAgent,
-        viewport: {
-          width: window.innerWidth || 1920,
-          height: window.innerHeight || 1080
-        },
-      },
-      page: this.metrics.page || {
-        url: '',
-        referrer: '',
-        title: '',
-        timestamp: Date.now(),
-      },
+      resourceTiming:
+        this.metrics.resourceTiming || this.getDefaultResourceTiming(),
+      connection: this.metrics.connection || this.getDefaultConnection(),
+      device: this.metrics.device || this.getDefaultDevice(),
+      page: this.metrics.page || this.getDefaultPage(),
     };
   }
 
@@ -362,7 +272,10 @@ export class EnhancedWebVitalsCollector {
     issues: string[],
     recommendations: string[],
   ): void {
-    if (resourceTiming?.slowResources && resourceTiming.slowResources.length > 0) {
+    if (
+      resourceTiming?.slowResources &&
+      resourceTiming.slowResources.length > 0
+    ) {
       issues.push(
         `发现 ${resourceTiming.slowResources.length} 个加载缓慢的资源`,
       );
@@ -403,8 +316,14 @@ export class EnhancedWebVitalsCollector {
     }
 
     // 慢速资源评分
-    const { MAX_SLOW_RESOURCES_PENALTY: MAX_SLOW_RESOURCES, SLOW_RESOURCE_PENALTY } = WEB_VITALS_CONSTANTS;
-    if (metrics.resourceTiming?.slowResources && metrics.resourceTiming.slowResources.length > MAX_SLOW_RESOURCES) {
+    const {
+      MAX_SLOW_RESOURCES_PENALTY: MAX_SLOW_RESOURCES,
+      SLOW_RESOURCE_PENALTY,
+    } = WEB_VITALS_CONSTANTS;
+    if (
+      metrics.resourceTiming?.slowResources &&
+      metrics.resourceTiming.slowResources.length > MAX_SLOW_RESOURCES
+    ) {
       score -= SLOW_RESOURCE_PENALTY;
     }
 
@@ -474,8 +393,7 @@ export class EnhancedWebVitalsCollector {
   }
 
   public cleanup() {
-    this.observers.forEach((observer) => observer.disconnect());
-    this.observers = [];
+    this.webVitalsObservers.cleanup();
     this.isCollecting = false;
   }
 }

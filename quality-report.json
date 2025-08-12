@@ -1,0 +1,102 @@
+{
+  "timestamp": "2025-08-11T10:17:18.443Z",
+  "project": "tucsenberg-web-frontier",
+  "summary": {
+    "overallScore": 45,
+    "totalChecks": 10,
+    "passedChecks": 4,
+    "failedChecks": 6
+  },
+  "categories": {
+    "codeQuality": {
+      "score": 25,
+      "details": [
+        {
+          "check": "TypeScript严格类型检查",
+          "command": "pnpm type-check:strict",
+          "status": "PASS",
+          "output": "> tucsenberg-web-frontier@0.1.0 type-check:strict /Users/Data/Warehouse/Focus/tucsenberg-web-frontier\n> tsc --noEmit --strict --noUnusedLocals --noUnusedParameters"
+        },
+        {
+          "check": "ESLint代码质量检查",
+          "command": "pnpm lint:strict",
+          "status": "FAIL",
+          "error": "Command failed: pnpm lint:strict"
+        },
+        {
+          "check": "Prettier代码格式检查",
+          "command": "pnpm format:check",
+          "status": "FAIL",
+          "error": "Command failed: pnpm format:check"
+        },
+        {
+          "check": "代码重复度检查",
+          "command": "pnpm duplication:check",
+          "status": "FAIL",
+          "error": "Command failed: pnpm duplication:check"
+        }
+      ]
+    },
+    "security": {
+      "score": 0,
+      "details": [
+        {
+          "check": "安全漏洞扫描",
+          "command": "pnpm security:check",
+          "status": "FAIL",
+          "error": "Command failed: pnpm security:check"
+        },
+        {
+          "check": "依赖安全审计",
+          "command": "pnpm audit --audit-level moderate",
+          "status": "FAIL",
+          "error": "Command failed: pnpm audit --audit-level moderate"
+        }
+      ]
+    },
+    "performance": {
+      "score": 100,
+      "details": [
+        {
+          "check": "包大小检查",
+          "command": "pnpm size:check",
+          "status": "PASS",
+          "output": "> tucsenberg-web-frontier@0.1.0 size:check /Users/Data/Warehouse/Focus/tucsenberg-web-frontier\n> size-limit\n\n  \n  Main App Bundle (First Load JS)\n  Size limit:   50 kB\n  Size:         1.04 kB with all dependencies, minified and brotlied\n  Loading time: 21 ms   on slow 3G\n  \n  Framework Bundle\n  Size limit:   130 kB\n  Size:         49.55 kB with all dependencies, minified and brotlied\n  Loading time: 968 ms   on slow 3G\n  \n  Main Bundle\n  Size limit:   40 kB\n  Size:         1.98 kB with all dependencies, minified and brotlied\n  Loading time: 39 ms   on slow 3G\n  \n  Locale Page Bundle\n  Size limit:   15 kB\n  Size:         4.68 kB with all dependencies, minified and brotlied\n  Loading time: 92 ms   on slow 3G\n  \n  Total CSS Bundle\n  Size limit:   50 kB\n  Size:         12.77 kB with all dependencies, minified and brotlied\n  Loading time: 250 ms   on slow 3G\n  \n  Shared Chunks (excluding framework)\n  Size limit:   225 kB\n  Size:         221.82 kB with all dependencies, minified and brotlied\n  Loading time: 4.4 s     on slow 3G\n  \n  Polyfills Bundle\n  Size limit:   50 kB\n  Size:         35.16 kB with all dependencies, minified and brotlied\n  Loading time: 687 ms   on slow 3G\n  \n  Webpack Runtime\n  Size limit:   10 kB\n  Size:         1.84 kB with all dependencies, minified and brotlied\n  Loading time: 36 ms   on slow 3G"
+        },
+        {
+          "check": "性能审计",
+          "command": "timeout 10s pnpm perf:audit || echo \"Performance audit completed\"",
+          "status": "PASS",
+          "output": "Performance audit completed"
+        }
+      ]
+    },
+    "architecture": {
+      "score": 100,
+      "details": [
+        {
+          "check": "架构一致性验证",
+          "command": "pnpm arch:validate",
+          "status": "PASS",
+          "output": "> tucsenberg-web-frontier@0.1.0 arch:validate /Users/Data/Warehouse/Focus/tucsenberg-web-frontier\n> pnpm arch:check && pnpm circular:check\n\n\n> tucsenberg-web-frontier@0.1.0 arch:check /Users/Data/Warehouse/Focus/tucsenberg-web-frontier\n> dependency-cruiser src --config .dependency-cruiser.js\n\n\n  warn no-orphans: src/types/content.ts\n  warn no-orphans: src/testing/utils/theme-test-utilities.ts\n  warn no-orphans: src/testing/templates/component-test-template.ts\n  warn no-orphans: src/test/utils.tsx\n  warn no-orphans: src/test/setup.ts\n  warn no-orphans: src/test/mock-templates.tsx\n  warn no-orphans: src/services/url-generator-cjs.js\n  warn no-orphans: src/lib/utils.ts\n  warn no-orphans: src/lib/tech-stack-data.ts\n  warn no-orphans: src/lib/site-config.ts\n  warn no-orphans: src/hooks/use-reduced-motion.ts\n  warn no-orphans: src/hooks/use-performance-monitor.ts\n  warn no-orphans: src/hooks/use-keyboard-navigation.ts\n  warn no-orphans: src/hooks/use-breakpoint.ts\n  warn no-orphans: src/features/dashboard/index.ts\n  warn no-orphans: src/features/auth/index.ts\n  warn no-orphans: src/constants/test-performance-constants.ts\n  warn no-orphans: src/constants/test-app-constants.ts\n  warn no-orphans: src/constants/performance-constants.ts\n  warn no-orphans: src/config/paths.ts\n  warn no-orphans: src/components/ui/social-icons.tsx\n  warn no-orphans: src/components/theme-provider.tsx\n  warn no-orphans: src/components/loading-spinner.tsx\n  warn no-orphans: src/components/layout/__tests__/test-utils.ts\n  warn no-orphans: src/components/i18n/translation-fallback.tsx\n  warn no-orphans: src/components/__tests__/theme-toggle/setup.tsx\n  warn no-orphans: src/app/page.tsx\n  warn no-orphans: src/app/error-test/page.tsx\n  warn no-orphans: src/app/[locale]/test-footer/page.tsx\n\nx 29 dependency violations (0 errors, 29 warnings). 254 modules, 394 dependencies cruised.\n\n\n> tucsenberg-web-frontier@0.1.0 circular:check /Users/Data/Warehouse/Focus/tucsenberg-web-frontier\n> madge --circular --extensions ts,tsx src\n\nProcessed 238 files (1.5s) (71 warnings)"
+        }
+      ]
+    },
+    "testing": {
+      "score": 0,
+      "details": [
+        {
+          "check": "单元测试执行",
+          "command": "pnpm test",
+          "status": "FAIL",
+          "error": "spawnSync /bin/sh ETIMEDOUT"
+        }
+      ]
+    }
+  },
+  "recommendations": [
+    "建议改进代码质量：修复ESLint警告，优化TypeScript类型定义",
+    "建议加强安全措施：更新依赖包，修复安全漏洞",
+    "建议增加测试覆盖率：编写更多单元测试和集成测试"
+  ]
+}

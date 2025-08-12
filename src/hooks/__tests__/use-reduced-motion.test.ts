@@ -1,5 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { useReducedMotion } from '../use-reduced-motion';
 
 // Mock matchMedia
@@ -124,7 +125,7 @@ describe('useReducedMotion', () => {
   it('should handle server-side rendering gracefully', () => {
     // Mock matchMedia to return null (SSR behavior)
     const originalMatchMedia = global.window.matchMedia;
-    global.window.matchMedia = vi.fn(() => null);
+    global.window.matchMedia = vi.fn(() => null as any);
 
     const { result } = renderHook(() => useReducedMotion());
 
@@ -140,7 +141,7 @@ describe('useReducedMotion', () => {
     const originalMatchMedia = global.window.matchMedia;
 
     // Mock window without matchMedia
-    global.window.matchMedia = undefined;
+    global.window.matchMedia = undefined as any;
 
     const { result } = renderHook(() => useReducedMotion());
 
@@ -198,7 +199,7 @@ describe('useReducedMotion', () => {
 
     expect(result.current).toBe(true);
     // matchMedia is called in both useState initializer and useEffect
-    expect(mockMatchMedia).toHaveBeenCalledTimes(2);
+    expect(mockMatchMedia).toHaveBeenCalledTimes(TEST_BASE_NUMBERS.SMALL_COUNT);
   });
 
   it('should handle edge case where addEventListener is not available', () => {

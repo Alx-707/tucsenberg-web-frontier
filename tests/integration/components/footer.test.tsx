@@ -166,7 +166,10 @@ describe('Footer Integration Tests', () => {
         'footer.sections.legal.links.terms': 'Terms of Service',
         'footer.sections.social.title': 'Follow Us',
       };
-      return translations[key] || key;
+      // eslint-disable-next-line security/detect-object-injection
+      return (
+        (Object.hasOwn(translations, key) ? translations[key] : null) || key
+      );
     });
 
     mockUseLocale.mockReturnValue('en');
@@ -317,7 +320,12 @@ describe('Footer Integration Tests', () => {
           'footer.sections.legal.links.terms': '服务条款',
           'footer.social.title': '关注我们',
         };
-        return chineseTranslations[key] || key;
+        // eslint-disable-next-line security/detect-object-injection
+        return (
+          (Object.hasOwn(chineseTranslations, key)
+            ? chineseTranslations[key]
+            : null) || key
+        );
       });
 
       render(<Footer />);

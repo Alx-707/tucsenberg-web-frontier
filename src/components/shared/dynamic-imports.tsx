@@ -6,9 +6,9 @@
  * 为非关键组件提供懒加载功能，优化初始包大小
  * 第五阶段性能优化：代码分割和图片优化
  */
-import React, { Suspense } from 'react';
-import dynamic from 'next/dynamic';
 import { LoadingSpinner } from '@/components/loading-spinner';
+import dynamic from 'next/dynamic';
+import React, { Suspense } from 'react';
 
 // 加载状态组件
 function ComponentLoadingFallback() {
@@ -87,6 +87,111 @@ export const DynamicThemePerformanceMonitor = dynamic(
     })),
   {
     loading: () => null, // 监控组件不显示加载状态
+    ssr: false,
+  },
+);
+
+/**
+ * React Scan Provider - 动态导入
+ * 原因：开发工具组件，仅开发环境使用，约1KB
+ */
+export const DynamicReactScanProvider = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanProvider,
+    })),
+  {
+    loading: () => null, // 开发工具不显示加载状态
+    ssr: false, // 仅客户端运行
+  },
+);
+
+/**
+ * React Scan 指示器 - 动态导入
+ * 原因：开发工具UI组件，仅开发环境使用
+ */
+export const DynamicReactScanIndicator = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanIndicator,
+    })),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * React Scan 控制面板 - 动态导入
+ * 原因：开发工具控制组件，仅开发环境使用
+ */
+export const DynamicReactScanControlPanel = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanControlPanel,
+    })),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 开发工具控制器 - 动态导入
+ * 统一管理所有开发工具的显示和布局
+ */
+export const DynamicDevToolsController = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-controller').then((mod) => ({
+      default: mod.DevToolsController,
+    })),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 开发工具状态指示器 - 动态导入
+ * 显示当前活跃的开发工具数量
+ */
+export const DynamicDevToolsStatusIndicator = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-controller').then((mod) => ({
+      default: mod.DevToolsStatusIndicator,
+    })),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * React Scan 演示组件 - 动态导入
+ * 原因：开发工具演示组件，仅开发环境使用
+ */
+export const DynamicReactScanDemo = dynamic(
+  () =>
+    import('../dev-tools/react-scan-demo').then((mod) => ({
+      default: mod.ReactScanDemo,
+    })),
+  {
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * React Scan 压力测试组件 - 动态导入
+ * 原因：开发工具测试组件，仅开发环境使用
+ */
+export const DynamicReactScanStressTest = dynamic(
+  () =>
+    import('../dev-tools/react-scan-demo').then((mod) => ({
+      default: mod.ReactScanStressTest,
+    })),
+  {
+    loading: () => <ComponentLoadingFallback />,
     ssr: false,
   },
 );

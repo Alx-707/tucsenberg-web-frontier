@@ -1,7 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from '@/components/layout/header';
-import '../setup';
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock child components
 vi.mock('@/components/layout/language-switcher', () => ({
@@ -178,7 +177,7 @@ describe('Header Integration Tests', () => {
       const container = header.querySelector('.container');
 
       expect(container).toBeInTheDocument();
-      expect(header).toContainElement(container!);
+      expect(header).toContainElement(container as HTMLElement);
 
       // All components should be within the container
       const logo = screen.getByTestId('logo');
@@ -210,12 +209,7 @@ describe('Header Integration Tests', () => {
 
   describe('Error Handling', () => {
     it('should render gracefully with undefined props', () => {
-      render(
-        <Header
-          className={undefined}
-          variant={undefined as any}
-        />,
-      );
+      render(<Header />);
 
       const header = screen.getByRole('banner');
       expect(header).toBeInTheDocument();

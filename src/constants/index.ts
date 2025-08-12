@@ -15,7 +15,11 @@ export * from './test-constants';
 // 安全相关常量
 export * from './security-constants';
 
+// SEO相关常量
+export * from './seo-constants';
+
 // 重新导出主要常量对象以便于使用
 export { APP_CONSTANTS } from './app-constants';
-export { TEST_CONSTANTS } from './test-constants';
 export { SECURITY_CONSTANTS } from './security-constants';
+export { SEO_CONSTANTS } from './seo-constants';
+export { TEST_CONSTANTS } from './test-constants';

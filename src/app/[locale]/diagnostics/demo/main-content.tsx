@@ -1,5 +1,11 @@
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { AnalysisResults, LogDisplay, MetricsGrid } from './components';
 import { TestResults } from './utils';
 
@@ -15,7 +21,9 @@ function OverallScore({ testResults }: OverallScoreProps) {
     AVERAGE: 50,
   } as const;
 
-  const getScoreVariant = (score: number): 'default' | 'secondary' | 'destructive' => {
+  const getScoreVariant = (
+    score: number,
+  ): 'default' | 'secondary' | 'destructive' => {
     if (score >= SCORE_THRESHOLDS.EXCELLENT) return 'default';
     if (score >= SCORE_THRESHOLDS.GOOD) return 'secondary';
     return 'destructive';
@@ -40,7 +48,10 @@ function OverallScore({ testResults }: OverallScoreProps) {
       <CardContent>
         <div className='flex items-center gap-4'>
           <div className='text-4xl font-bold'>{testResults.analysis.score}</div>
-          <Badge variant={getScoreVariant(testResults.analysis.score)} className='text-lg px-3 py-1'>
+          <Badge
+            variant={getScoreVariant(testResults.analysis.score)}
+            className='px-3 py-1 text-lg'
+          >
             {getScoreLabel(testResults.analysis.score)}
           </Badge>
         </div>

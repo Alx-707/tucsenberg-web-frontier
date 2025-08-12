@@ -1,20 +1,28 @@
+import {
+    TEST_COUNT_CONSTANTS,
+    TEST_SAMPLE_CONSTANTS,
+} from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  TEST_COUNT_CONSTANTS,
-  TEST_SAMPLE_CONSTANTS,
-} from '@/constants/test-constants';
-import {
-  useEnhancedTranslations,
-  useI18nPerformance,
+    useEnhancedTranslations,
+    useI18nPerformance,
 } from '../use-enhanced-translations';
 
-// Mock functions
-const mockT = vi.fn();
-const mockTRich = vi.fn();
-const mockTHas = vi.fn();
-const mockUseTranslations = vi.fn();
-const mockUseLocale = vi.fn();
+// Hoisted mock functions
+const {
+  mockT,
+  mockTRich,
+  mockTHas,
+  mockUseTranslations,
+  mockUseLocale,
+} = vi.hoisted(() => ({
+  mockT: vi.fn(),
+  mockTRich: vi.fn(),
+  mockTHas: vi.fn(),
+  mockUseTranslations: vi.fn(),
+  mockUseLocale: vi.fn(),
+}));
 
 // Mock next-intl
 vi.mock('next-intl', () => ({

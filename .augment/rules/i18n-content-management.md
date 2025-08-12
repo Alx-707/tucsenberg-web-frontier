@@ -1,6 +1,6 @@
 ---
 type: "auto"
-description: "next-intl i18n with strictMessageTypeSafety, messages/[locale].json, getRequestConfig, Providers composition, ICU message arguments, TinaCMS + MDX content, en/zh synchronization, Front Matter validation, Git-based CMS"
+description: "next-intl i18n with strictMessageTypeSafety, messages/[locale].json, getRequestConfig, Providers composition, ICU message arguments, MDX content management, en/zh synchronization, Front Matter validation, Git-based workflow"
 ---
 
 # Internationalization & Content Management
@@ -73,32 +73,30 @@ export default getRequestConfig(async ({ locale }) => ({
 
 ## Content Management Guidelines
 
-### Hybrid CMS: TinaCMS + MDX System
+### File-System Based MDX Content Management
 
-#### TinaCMS Visual Editing (Primary for Content Editors)
+#### MDX Direct Editing (Primary Approach)
 
-- Use **TinaCMS 2.8.2+** as the primary visual content management system
-- **Git-based workflow** - all changes automatically committed to version control
-- **Real-time preview** - WYSIWYG editing with instant visual feedback
-- **Type-safe schema** - TypeScript-first content validation and structure
-- **Multi-language support** - unified interface for managing en/zh content
-- **Team collaboration** - role-based permissions and conflict prevention
-
-#### MDX Direct Editing (For Developers)
-
-- Use **MDX files** for complex technical content requiring custom components
-- Store MDX files in `content/` directory with language-specific subdirectories
-- Implement **frontmatter validation** using Zod schemas
+- Use **MDX files** stored in `content/` directory with language-specific subdirectories
+- Implement **frontmatter validation** using Zod schemas for type safety
 - Use **@next/mdx** for native Next.js 15 MDX rendering with custom components
 - **Git-based workflow** - version control integrated content management
 - **No database architecture** - simplified deployment and maintenance
 
+#### Content Management Features
+
+- **Direct file editing** - Edit MDX files directly in your preferred editor
+- **Type-safe validation** - TypeScript interfaces ensure content structure integrity
+- **Multi-language support** - Organized directory structure for en/zh content
+- **Custom components** - Embed React components directly in Markdown content
+- **Front Matter processing** - Metadata handling with gray-matter parser
+
 #### Content Management Strategy
 
-- **Simple content** (blog posts, pages): Use TinaCMS visual editor
-- **Complex content** (technical docs, custom components): Direct MDX editing
-- **Both approaches** use the same file structure and frontmatter schema
-- **Seamless integration** - TinaCMS reads/writes standard MDX files
+- **All content types** use MDX files with consistent frontmatter schema
+- **Blog posts and pages** stored in organized directory structure
+- **Custom components** available for rich content experiences
+- **Version control integration** - All content changes tracked in Git
 
 ### Content Directory Structure
 
@@ -124,69 +122,49 @@ content/
 - **Content validation**: TypeScript interfaces ensure data integrity
 - **Multi-language sync**: Enforced synchronization between en/zh versions
 
-### TinaCMS Configuration Standards
+### MDX Content Configuration Standards
 
-#### Schema Definition Requirements
+#### Front Matter Schema Definition
 
 ```typescript
-// tina/config.ts - Multi-language schema configuration
-export default defineConfig({
-  collections: [
-    {
-      name: 'posts',
-      path: 'content/posts',
-      format: 'mdx',
-      fields: [
-        // Language identification (required)
-        {
-          type: 'string',
-          name: 'locale',
-          label: 'Language',
-          options: ['en', 'zh'],
-          required: true,
-        },
-        // Standard frontmatter fields
-        {
-          type: 'string',
-          name: 'title',
-          label: 'Title',
-          isTitle: true,
-          required: true,
-        },
-        // SEO configuration object
-        {
-          type: 'object',
-          name: 'seo',
-          label: 'SEO Settings',
-          fields: [
-            { type: 'string', name: 'title', label: 'SEO Title' },
-            { type: 'string', name: 'description', label: 'SEO Description' },
-            { type: 'string', name: 'keywords', label: 'Keywords', list: true },
-          ],
-        },
-        // Rich text content
-        {
-          type: 'rich-text',
-          name: 'body',
-          label: 'Content',
-          isBody: true,
-        },
-      ],
-      ui: {
-        filename: {
-          slugify: (values) => `${values.locale}/${values.slug}`,
-        },
-      },
-    },
-  ],
-});
+// src/types/content.ts - Content type definitions
+export interface PostFrontMatter {
+  title: string;
+  description: string;
+  slug: string;
+  locale: 'en' | 'zh';
+  publishedAt: string;
+  author?: string;
+  tags?: string[];
+  categories?: string[];
+  featured?: boolean;
+  draft?: boolean;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+  };
+}
+
+export interface PageFrontMatter {
+  title: string;
+  description: string;
+  slug: string;
+  locale: 'en' | 'zh';
+  lastModified?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+  };
+}
 ```
 
 #### Multi-language Content Management Rules
 
-- **Locale field mandatory** - Every content item must have a `locale` field
-- **Consistent schema** - Same field structure across all language versions
-- **File path mapping** - Automatic mapping to `content/[collection]/[locale]/[slug].mdx`
+- **Locale field mandatory** - Every content item must have a `locale` field in frontmatter
+- **Consistent schema** - Same frontmatter structure across all language versions
+- **File path mapping** - Manual organization in `content/[collection]/[locale]/[slug].mdx`
 - **Synchronized updates** - Changes in one language should prompt updates in others
 
 ### Data Management Services

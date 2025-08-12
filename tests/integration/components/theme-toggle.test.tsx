@@ -59,7 +59,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       <div onClick={() => onOpenChange?.(!open)}>{children}</div>
     </div>
   ),
-  DropdownMenuTrigger: ({ children, asChild }: any) => (
+  DropdownMenuTrigger: ({ children, asChild: _asChild }: any) => (
     <div data-testid='dropdown-trigger'>{children}</div>
   ),
   DropdownMenuContent: ({
@@ -178,7 +178,7 @@ describe('ThemeToggle Integration Tests', () => {
       const darkMenuItem = darkMenuItems[darkMenuItems.length - 1]; // Get the last one (from the open menu)
       expect(darkMenuItem).toBeInTheDocument();
 
-      await user.click(darkMenuItem);
+      await user.click(darkMenuItem!);
       expect(mockUseThemeToggle.handleThemeChange).toHaveBeenCalledWith(
         'dark',
         expect.any(Object),

@@ -1,5 +1,18 @@
-import { logger } from '@/lib/logger';
+import { ALERT_SYSTEM_CONSTANTS } from '@/constants/performance-constants';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import {
+  extractCoreMetrics,
+  formatMetricValue,
+  getDefaultConnection,
+  getDefaultDevice,
+  getDefaultPage,
+  getDefaultResourceTiming,
+} from './alert-helpers';
+import {
+  sendConsoleAlerts,
+  sendWebhookNotification,
+  storeAlerts,
+} from './alert-notifications';
 import type {
   DetailedWebVitals,
   PerformanceAlertConfig,
@@ -57,10 +70,19 @@ export class PerformanceAlertSystem {
   /**
    * 配置预警系统
    */
-  configure(config: Partial<PerformanceAlertConfig> & { notifications?: any; webhook?: string }): void {
+  configure(
+    config: Partial<PerformanceAlertConfig> & {
+      notifications?: {
+        console?: boolean;
+        storage?: boolean;
+        webhook?: string;
+      };
+      webhook?: string;
+    },
+  ): void {
     // 处理测试中的notifications配置
     if ('notifications' in config) {
-      const notifications = config.notifications;
+      const { notifications } = config;
       if (notifications) {
         this.config.channels = {
           ...this.config.channels,
@@ -75,7 +97,8 @@ export class PerformanceAlertSystem {
       }
 
       // 移除notifications属性，避免类型错误
-      const { notifications: _, ...restConfig } = config;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+      const { notifications: _notifications, ...restConfig } = config;
       this.config = { ...this.config, ...restConfig };
     } else {
       this.config = { ...this.config, ...config };
@@ -154,7 +177,7 @@ export class PerformanceAlertSystem {
         alerts.push({
           type: 'metric',
           severity: 'critical',
-          message: `🔴 ${name} 严重超标: ${this.formatMetricValue(key, value)} (阈值: ${this.formatMetricValue(key, thresholds.critical)})`,
+          message: `🔴 ${name} 严重超标: ${formatMetricValue(key, value)} (阈值: ${formatMetricValue(key, thresholds.critical)})`,
           metric: key,
           value,
           threshold: thresholds.critical,
@@ -163,7 +186,7 @@ export class PerformanceAlertSystem {
         alerts.push({
           type: 'metric',
           severity: 'warning',
-          message: `🟡 ${name} 超出警告线: ${this.formatMetricValue(key, value)} (阈值: ${this.formatMetricValue(key, thresholds.warning)})`,
+          message: `🟡 ${name} 超出警告线: ${formatMetricValue(key, value)} (阈值: ${formatMetricValue(key, thresholds.warning)})`,
           metric: key,
           value,
           threshold: thresholds.warning,
@@ -217,14 +240,14 @@ export class PerformanceAlertSystem {
     // 添加到历史记录
     alerts.forEach((alert) => {
       const historyEntry = {
-        id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `alert-${Date.now()}-${Math.random().toString(ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE).substr(ALERT_SYSTEM_CONSTANTS.RANDOM_ID_START, ALERT_SYSTEM_CONSTANTS.RANDOM_ID_LENGTH)}`,
         timestamp: Date.now(),
         severity: alert.severity,
         message: alert.message,
         level: alert.severity, // 为了兼容测试
-        metric: alert.metric,
-        value: alert.value,
-        threshold: alert.threshold,
+        ...(alert.metric && { metric: alert.metric }),
+        ...(alert.value !== undefined && { value: alert.value }),
+        ...(alert.threshold !== undefined && { threshold: alert.threshold }),
       };
       this.alertHistory.push(historyEntry);
     });
@@ -236,19 +259,19 @@ export class PerformanceAlertSystem {
 
     // 控制台通知
     if (this.config.channels.console) {
-      this.sendConsoleAlerts(alerts);
+      sendConsoleAlerts(alerts);
     }
 
     // 存储通知
     if (this.config.channels.storage) {
-      this.storeAlerts(alerts);
+      storeAlerts(alerts);
     }
 
     // 回调通知
     if (this.config.channels.callback) {
       alerts.forEach((alert) => {
         const performanceAlert = {
-          id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          id: `alert-${Date.now()}-${Math.random().toString(ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE).substr(ALERT_SYSTEM_CONSTANTS.RANDOM_ID_START, ALERT_SYSTEM_CONSTANTS.RANDOM_ID_LENGTH)}`,
           timestamp: Date.now(),
           severity: alert.severity,
           metric: alert.metric || 'unknown',
@@ -256,7 +279,8 @@ export class PerformanceAlertSystem {
           threshold: alert.threshold || 0,
           message: alert.message,
           url: typeof window !== 'undefined' ? window.location.href : '',
-          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
+          userAgent:
+            typeof navigator !== 'undefined' ? navigator.userAgent : '',
           context: {},
         };
         this.config.channels.callback!(performanceAlert);
@@ -265,107 +289,9 @@ export class PerformanceAlertSystem {
   }
 
   /**
-   * 发送控制台预警
-   */
-  private sendConsoleAlerts(
-    alerts: Array<{
-      type: 'metric' | 'regression';
-      severity: 'warning' | 'critical';
-      message: string;
-      metric?: string;
-      value?: number;
-      threshold?: number;
-    }>,
-  ): void {
-    // 直接使用console.warn以确保在测试环境中可以被Mock
-    console.warn('🚨 性能预警系统', {
-      alertCount: alerts.length,
-      alerts: alerts.map((alert) => ({
-        type: alert.type,
-        severity: alert.severity,
-        message: alert.message,
-        metric: alert.metric,
-        value: alert.value,
-        threshold: alert.threshold,
-      })),
-    });
-
-    alerts.forEach((alert) => {
-      if (alert.severity === 'critical') {
-        console.warn(alert.message, {
-          type: alert.type,
-          metric: alert.metric,
-          value: alert.value,
-          threshold: alert.threshold,
-        });
-      } else {
-        console.warn(alert.message, {
-          type: alert.type,
-          metric: alert.metric,
-          value: alert.value,
-          threshold: alert.threshold,
-        });
-      }
-    });
-  }
-
-  /**
-   * 存储预警到本地存储
-   */
-  private storeAlerts(
-    alerts: Array<{
-      type: 'metric' | 'regression';
-      severity: 'warning' | 'critical';
-      message: string;
-      metric?: string;
-      value?: number;
-      threshold?: number;
-    }>,
-  ): void {
-    try {
-      const storedAlerts = JSON.parse(
-        localStorage.getItem('performance-alerts') || '[]',
-      );
-      const newAlerts = alerts.map((alert) => ({
-        ...alert,
-        timestamp: Date.now(),
-        id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      }));
-
-      storedAlerts.push(...newAlerts);
-
-      // 只保留最近100个预警
-      if (storedAlerts.length > 100) {
-        storedAlerts.splice(0, storedAlerts.length - 100);
-      }
-
-      localStorage.setItem('performance-alerts', JSON.stringify(storedAlerts));
-    } catch (error) {
-      logger.error('Failed to store alerts', { error });
-    }
-  }
-
-  /**
-   * 格式化指标值
-   */
-  private formatMetricValue(metric: string, value: number): string {
-    switch (metric) {
-      case 'cls':
-        return value.toFixed(WEB_VITALS_CONSTANTS.DECIMAL_PLACES_THREE);
-      case 'fid':
-      case 'lcp':
-      case 'fcp':
-      case 'ttfb':
-        return `${Math.round(value)}ms`;
-      default:
-        return value.toString();
-    }
-  }
-
-  /**
    * 检查指标并触发警报 (测试方法)
    */
-  checkMetrics(metrics: any): void {
+  checkMetrics(metrics: Record<string, number>): void {
     if (!this.config.enabled) return;
 
     const alerts: Array<{
@@ -376,7 +302,9 @@ export class PerformanceAlertSystem {
       value?: number;
     }> = [];
 
-    this.checkMetricThresholds(metrics, alerts);
+    // 安全地转换 Record<string, number> 为 DetailedWebVitals 兼容格式
+    const detailedMetrics = this.convertToDetailedWebVitals(metrics);
+    this.checkMetricThresholds(detailedMetrics, alerts);
 
     if (alerts.length > 0) {
       this.sendAlerts(alerts);
@@ -386,7 +314,11 @@ export class PerformanceAlertSystem {
   /**
    * 发送单个警报 (测试方法)
    */
-  sendAlert(severity: 'warning' | 'critical', message: string, data?: any): Promise<void> {
+  sendAlert(
+    severity: 'warning' | 'critical',
+    message: string,
+    data?: Record<string, unknown>,
+  ): Promise<void> {
     const alert = {
       type: 'metric' as const,
       severity,
@@ -395,8 +327,9 @@ export class PerformanceAlertSystem {
     };
 
     // 直接添加到历史记录，不通过sendAlerts避免重复
+    const alertId = this.generateAlertId();
     const historyEntry = {
-      id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: alertId,
       timestamp: Date.now(),
       severity,
       message,
@@ -412,12 +345,12 @@ export class PerformanceAlertSystem {
 
     // 直接发送通知，不通过sendAlerts避免重复添加历史
     if (this.config.channels.console) {
-      this.sendConsoleAlerts([alert]);
+      sendConsoleAlerts([alert]);
     }
 
     // 处理webhook通知
     if (this.config.channels?.webhook) {
-      return this.sendWebhookNotification(alert);
+      return sendWebhookNotification(alert, this.config.channels.webhook);
     }
 
     return Promise.resolve();
@@ -454,45 +387,31 @@ export class PerformanceAlertSystem {
   }
 
   /**
-   * 发送Webhook通知
+   * 生成唯一的警报ID
    */
-  private async sendWebhookNotification(alert: {
-    type: 'metric' | 'regression';
-    severity: 'warning' | 'critical';
-    message: string;
-    metric?: string;
-    value?: number;
-    threshold?: number;
-  }): Promise<void> {
-    if (!this.config.channels?.webhook) {
-      return;
-    }
+  private generateAlertId(): string {
+    const timestamp = Date.now();
+    const randomPart = Math.random()
+      .toString(ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE)
+      .substr(
+        ALERT_SYSTEM_CONSTANTS.RANDOM_ID_START,
+        ALERT_SYSTEM_CONSTANTS.RANDOM_ID_LENGTH,
+      );
+    return `alert-${timestamp}-${randomPart}`;
+  }
 
-    try {
-      const payload = {
-        alert: {
-          id: `alert-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          timestamp: Date.now(),
-          severity: alert.severity,
-          metric: alert.metric || 'unknown',
-          value: alert.value || 0,
-          threshold: alert.threshold || 0,
-          message: alert.message,
-          url: typeof window !== 'undefined' && window.location ? window.location.href : '',
-          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
-          context: {},
-        },
-      };
-
-      await fetch(this.config.channels.webhook, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-    } catch (error) {
-      logger.error('Failed to send webhook notification', { error });
-    }
+  /**
+   * 安全地将 Record<string, number> 转换为 DetailedWebVitals 格式
+   */
+  private convertToDetailedWebVitals(
+    metrics: Record<string, number>,
+  ): DetailedWebVitals {
+    return {
+      ...extractCoreMetrics(metrics),
+      resourceTiming: getDefaultResourceTiming(),
+      connection: getDefaultConnection(),
+      device: getDefaultDevice(),
+      page: getDefaultPage(),
+    };
   }
 }

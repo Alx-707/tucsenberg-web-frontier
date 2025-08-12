@@ -227,6 +227,44 @@ export const ANIMATION_DURATIONS = {
   COUNTER: BASE_NUMBERS.TWO * TIME_UNITS.SECOND,
 } as const;
 
+// ==================== Web Vitals 报警系统常量 ====================
+
+/** Web Vitals 报警系统常量 */
+export const ALERT_SYSTEM_CONSTANTS = {
+  /** 随机ID生成基数 */
+  RANDOM_ID_BASE: 36,
+  /** 随机ID截取起始位置 */
+  RANDOM_ID_START: 2,
+  /** 随机ID截取长度 */
+  RANDOM_ID_LENGTH: 9,
+} as const;
+
+/** Web Vitals 基线管理常量 */
+export const BASELINE_CONSTANTS = {
+  /** CLS 基线阈值 */
+  CLS_BASELINE: 0.25,
+  /** CLS 基线天数 */
+  CLS_BASELINE_DAYS: 30,
+  /** FID 基线阈值 */
+  FID_BASELINE: 0.1,
+  /** FID 基线天数 */
+  FID_BASELINE_DAYS: 15,
+  /** LCP 基线阈值 */
+  LCP_BASELINE: 4000,
+  /** LCP 基线天数 */
+  LCP_BASELINE_DAYS: 30,
+  /** TTFB 基线阈值 */
+  TTFB_BASELINE: 2500,
+  /** TTFB 基线天数 */
+  TTFB_BASELINE_DAYS: 15,
+  /** INP 基线阈值 */
+  INP_BASELINE: 300,
+  /** INP 基线天数 */
+  INP_BASELINE_DAYS: 30,
+  /** INP 基线额外天数 */
+  INP_BASELINE_EXTRA_DAYS: 15,
+} as const;
+
 // ==================== 导出所有常量 ====================
 
 /** 性能常量集合 */

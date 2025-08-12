@@ -1,7 +1,6 @@
+import Home from '@/app/[locale]/page';
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Home from '@/app/[locale]/page';
-import '../setup';
 
 // Mock home page components
 vi.mock('@/components/home/call-to-action', () => ({

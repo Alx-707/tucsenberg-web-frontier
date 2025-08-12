@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TranslationManagerConfig } from '@/types/translation-manager';
+import { TEST_CONTENT_LIMITS } from '@/constants/test-constants';
 import { TranslationManager } from '../translation-manager';
 
 // 测试常量定义
@@ -267,13 +268,13 @@ describe('TranslationManager', () => {
       const mockFs = vi.mocked(fs);
 
       // Mock translations with overly long text
-      const longText = 'A'.repeat(250); // 250 characters, exceeds 200 limit
+      const longText = 'A'.repeat(TEST_CONTENT_LIMITS.MEDIUM_TEXT_MAX); // 250 characters, exceeds 200 limit
       mockFs.readFileSync.mockImplementation((filePath) => {
         if (String(filePath).includes('en.json')) {
           return JSON.stringify({
             common: {
               hello: 'Hello',
-              longMessage: longText
+              longMessage: longText,
             },
           });
         }

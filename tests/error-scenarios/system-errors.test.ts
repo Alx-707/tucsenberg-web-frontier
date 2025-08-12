@@ -39,7 +39,12 @@ class SystemErrorSimulator {
       ENOSPC: 'ENOSPC: no space left on device',
     };
 
-    const error = new Error(errorMessages[errorType]);
+    // eslint-disable-next-line security/detect-object-injection
+    const error = new Error(
+      Object.hasOwn(errorMessages, errorType)
+        ? errorMessages[errorType]
+        : 'Unknown error',
+    );
     (error as any).code = errorType;
     (error as any).errno = -2;
     return error;
@@ -190,7 +195,9 @@ class ErrorHandler {
 
     this.errorLog.forEach(({ error }) => {
       const type = error.constructor.name;
-      byType[type] = (byType[type] || 0) + 1;
+      // eslint-disable-next-line security/detect-object-injection
+      byType[type] =
+        ((Object.hasOwn(byType, type) ? byType[type] : null) || 0) + 1;
     });
 
     return { total, byType };
@@ -307,7 +314,7 @@ describe('System Error and Exception Handling Tests', () => {
       await new Promise((resolve) => setTimeout(resolve, 10));
 
       expect(unhandledRejections).toHaveLength(1);
-      expect(unhandledRejections[0].reason.message).toBe(
+      expect(unhandledRejections[0]?.reason.message).toBe(
         'Unhandled async error',
       );
 
@@ -527,7 +534,7 @@ describe('System Error and Exception Handling Tests', () => {
             return errorHandler.handleSystemError(caught);
           }
           // Convert to Error
-          const error = new Error(String(caught.message || caught));
+          const error = new Error(String((caught as any)?.message || caught));
           return errorHandler.handleSystemError(error);
         }
       };
