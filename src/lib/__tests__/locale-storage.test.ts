@@ -1,10 +1,10 @@
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
-import { Locale } from '@/types/i18n';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Locale } from '@/types/i18n';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import {
-    LocaleDetectionHistory,
-    LocaleStorageManager,
-    UserLocalePreference,
+  LocaleDetectionHistory,
+  LocaleStorageManager,
+  UserLocalePreference,
 } from '../locale-storage';
 
 // Mock constants
@@ -308,7 +308,7 @@ describe('LocaleStorageManager', () => {
       // addDetectionRecord is private, testing through public interface
       const history = LocaleStorageManager.getDetectionHistory();
       expect(history).toBeDefined();
-      expect(Array.isArray(history.detections)).toBe(true);
+      expect(Array.isArray(history?.detections)).toBe(true);
     });
 
     it('should create new history when none exists', () => {
@@ -346,7 +346,7 @@ describe('LocaleStorageManager', () => {
       // addDetectionRecord is private, testing through public interface
       const history = LocaleStorageManager.getDetectionHistory();
       expect(history).toBeDefined();
-      expect(Array.isArray(history.detections)).toBe(true);
+      expect(Array.isArray(history?.detections)).toBe(true);
     });
   });
 

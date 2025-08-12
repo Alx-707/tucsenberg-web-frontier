@@ -1,8 +1,8 @@
 'use client';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AccessibilityManager } from '@/lib/accessibility';
 import { logger } from '@/lib/logger';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Intersection Observer Hook 配置选项
@@ -102,13 +102,16 @@ function createObserver(
   fallbackToVisible: () => void,
 ): (() => void) | null {
   try {
-    const observer = new IntersectionObserver((entries) => {
-      handleIntersection(entries, observer);
-    }, {
-      threshold: config.threshold,
-      rootMargin: config.rootMargin,
-      root: config.root || null,
-    });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        handleIntersection(entries, observer);
+      },
+      {
+        threshold: config.threshold,
+        rootMargin: config.rootMargin,
+        root: config.root || null,
+      },
+    );
 
     observer.observe(element);
 
@@ -203,7 +206,15 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
       createObserver(element, handleIntersection, config, fallbackToVisible) ||
       undefined
     );
-  }, [element, threshold, rootMargin, triggerOnce, root, handleIntersection, prefersReducedMotion]);
+  }, [
+    element,
+    threshold,
+    rootMargin,
+    triggerOnce,
+    root,
+    handleIntersection,
+    prefersReducedMotion,
+  ]);
 
   return {
     ref: callbackRef,

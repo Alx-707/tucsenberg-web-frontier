@@ -7,7 +7,6 @@ import type {
     MockSwitchPattern,
     ThemeAnalyticsPrivate,
 } from '@/types/test-types';
-import * as Sentry from '@sentry/nextjs';
 import { vi } from 'vitest';
 import {
     DEBUG_CONSTANTS,
@@ -17,17 +16,9 @@ import {
     PERFORMANCE_CONSTANTS,
     TIME_CONSTANTS,
 } from '../../../constants/app-constants';
-import { ThemeAnalytics } from '../../theme-analytics';
+import { ThemeAnalytics, type ThemeAnalyticsConfig } from '../../theme-analytics';
 
-// Mock Sentry
-vi.mock('@sentry/nextjs', () => ({
-  setTag: vi.fn(),
-  setUser: vi.fn(),
-  addBreadcrumb: vi.fn(),
-  setMeasurement: vi.fn(),
-  setContext: vi.fn(),
-  captureMessage: vi.fn(),
-}));
+// Note: Sentry is mocked in the test file using vi.hoisted
 
 // Mock crypto for secure random
 export const mockGetRandomValues = vi.fn();
@@ -92,6 +83,17 @@ Object.defineProperty(global, 'navigator', {
   writable: true,
 });
 
+// Mock window
+export const mockWindow = {
+  innerWidth: 0,
+  innerHeight: 0,
+};
+
+Object.defineProperty(global, 'window', {
+  value: mockWindow,
+  writable: true,
+});
+
 // Mock document.startViewTransition
 export const mockStartViewTransition = vi.fn();
 if (!document.startViewTransition) {
@@ -109,10 +111,10 @@ if (!document.startViewTransition) {
 export function setupThemeAnalyticsTest() {
   vi.clearAllMocks();
 
-  // Reset mockGetRandomValues to default behavior
+  // Reset mockGetRandomValues to default behavior (100% sampling for tests)
   mockGetRandomValues.mockReset();
   mockGetRandomValues.mockImplementation((array) => {
-    array[0] = DEBUG_CONSTANTS.HEX_LARGE_NUMBER / DEBUG_CONSTANTS.SMALL_COUNT; // 5% value for consistent testing
+    array[0] = 0; // 0% value ensures 100% sampling (0 < any positive sampleRate)
     return array;
   });
 
@@ -146,6 +148,10 @@ export function setupThemeAnalyticsTest() {
     },
   });
 
+  // Reset window mock
+  mockWindow.innerWidth = 0;
+  mockWindow.innerHeight = 0;
+
   // Reset startViewTransition mock
   mockStartViewTransition.mockReset();
   mockStartViewTransition.mockImplementation((callback) => {
@@ -153,25 +159,17 @@ export function setupThemeAnalyticsTest() {
     return Promise.resolve();
   });
 
-  // Reset Sentry mocks
-  vi.mocked(Sentry.setTag).mockClear();
-  vi.mocked(Sentry.setUser).mockClear();
-  vi.mocked(Sentry.addBreadcrumb).mockClear();
-  vi.mocked(Sentry.setMeasurement).mockClear();
-  vi.mocked(Sentry.setContext).mockClear();
-  vi.mocked(Sentry.captureMessage).mockClear();
+  // Note: Sentry mocks are cleared by vi.clearAllMocks() above
 }
 
 // Helper function to create analytics instance with default config
-export function createAnalyticsInstance(config?: any): ThemeAnalytics {
+export function createAnalyticsInstance(config?: Partial<ThemeAnalyticsConfig>): ThemeAnalytics {
   return new ThemeAnalytics({
-    enableSentry: true,
-    enableLocalStorage: true,
-    enablePerformanceTracking: true,
-    samplingRate: THEME_ANALYTICS_CONSTANTS.SAMPLING_RATE_FULL,
-    maxDataPoints: THEME_ANALYTICS_CONSTANTS.MAX_DATA_POINTS_DEFAULT,
-    performanceThreshold:
-      THEME_ANALYTICS_CONSTANTS.PERFORMANCE_THRESHOLD_DEFAULT,
+    enabled: true,
+    performanceThreshold: THEME_ANALYTICS_CONSTANTS.PERFORMANCE_THRESHOLD_DEFAULT,
+    sampleRate: THEME_ANALYTICS_CONSTANTS.SAMPLING_RATE_FULL,
+    enableDetailedTracking: true,
+    enableUserBehaviorAnalysis: true,
     ...config,
   });
 }

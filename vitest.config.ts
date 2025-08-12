@@ -41,7 +41,7 @@ export default defineConfig({
     // 覆盖率配置
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      reporter: ['text', 'json', 'json-summary'],
       reportsDirectory: './coverage',
       exclude: [
         'node_modules/',
@@ -58,6 +58,43 @@ export default defineConfig({
         'scripts/**',
         '**/__mocks__/**',
         '**/test-utils/**',
+        // 排除配置文件，避免污染覆盖率
+        'next.config.ts',
+        'tailwind.config.js',
+        'postcss.config.mjs',
+        'eslint.config.mjs',
+        'playwright.config.ts',
+        'next-sitemap.config.js',
+        'commitlint.config.js',
+        'translation.config.js',
+        'tsconfig.json',
+        'vitest.config.ts',
+        'lefthook.yml',
+        'semgrep.yml',
+        'mdx-components.tsx',
+        'middleware.ts',
+        'instrumentation.ts',
+        'instrumentation-client.ts',
+        'sentry.*.config.ts',
+        // 排除自动生成的文件
+
+        'content/config/**',
+        '**/*.tsbuildinfo',
+        // 排除报告和文档目录
+        'reports/**',
+        'docs/**',
+        'test-results/**',
+        // 排除配置目录
+        'config/**',
+        // 排除开发工具 - 仅开发环境使用，不需要测试覆盖率
+        'src/components/dev-tools/**',
+        'src/app/**/dev-tools/**',
+        'src/app/**/react-scan-demo/**',
+        'src/app/**/diagnostics/**',
+        'src/lib/dev-tools-positioning.ts',
+        'src/lib/performance-monitoring-coordinator.ts',
+        'src/lib/react-scan-config.ts',
+        'src/constants/dev-tools.ts',
       ],
       thresholds: {
         // 全局目标：企业级标准

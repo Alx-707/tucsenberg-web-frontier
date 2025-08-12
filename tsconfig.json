@@ -55,5 +55,36 @@
     ]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+
+    // === 开发工具豁免 - 仅开发环境使用，不影响生产代码质量 ===
+    // 开发者工具面板和调试插件
+    "src/components/dev-tools/**/*.{ts,tsx}",
+    "src/app/[locale]/dev-tools/**/*.{ts,tsx}",
+    "src/app/[locale]/react-scan-demo/**/*.{ts,tsx}",
+    "src/app/[locale]/diagnostics/**/*.{ts,tsx}",
+    "src/lib/dev-tools-positioning.ts",
+    "src/lib/performance-monitoring-coordinator.ts",
+    "src/lib/react-scan-config.ts",
+
+    // 测试文件和测试工具
+    "**/__tests__/**/*.{ts,tsx}",
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+    "src/test/**/*.{ts,tsx}",
+    "src/testing/**/*.{ts,tsx}",
+    "tests/**/*.{ts,tsx}",
+    "__mocks__/**/*.{ts,tsx,js}",
+
+    // 构建脚本和配置文件
+    "scripts/**/*.{ts,js}",
+    "config/**/*.{ts,js}",
+    "*.config.{ts,js,mjs}",
+    "instrumentation*.ts",
+
+    // 开发环境特定常量
+    "src/constants/dev-tools.ts",
+    "src/constants/test-*.ts"
+  ]
 }

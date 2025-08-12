@@ -63,7 +63,7 @@ class WebEvalAgentTester {
       this.addTestResult(
         '开发服务器检查',
         isRunning,
-        isRunning ? `服务器运行在 ${this.baseUrl}` : '服务器未响应'
+        isRunning ? `服务器运行在 ${this.baseUrl}` : '服务器未响应',
       );
 
       return isRunning;
@@ -82,21 +82,25 @@ class WebEvalAgentTester {
     try {
       // 检查 Playwright 包
       const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-      const hasPlaywright = packageJson.devDependencies &&
-        (packageJson.devDependencies['@playwright/test'] || packageJson.devDependencies['playwright']);
+      const hasPlaywright =
+        packageJson.devDependencies &&
+        (packageJson.devDependencies['@playwright/test'] ||
+          packageJson.devDependencies['playwright']);
 
       this.addTestResult(
         'Playwright 包安装检查',
         hasPlaywright,
-        hasPlaywright ? 'Playwright 已安装' : 'Playwright 未安装'
+        hasPlaywright ? 'Playwright 已安装' : 'Playwright 未安装',
       );
 
       // 检查 Playwright 配置文件
-      const hasConfig = fs.existsSync('playwright.config.ts') || fs.existsSync('playwright.config.js');
+      const hasConfig =
+        fs.existsSync('playwright.config.ts') ||
+        fs.existsSync('playwright.config.js');
       this.addTestResult(
         'Playwright 配置文件检查',
         hasConfig,
-        hasConfig ? '配置文件存在' : '配置文件不存在'
+        hasConfig ? '配置文件存在' : '配置文件不存在',
       );
 
       // 检查测试目录
@@ -104,7 +108,7 @@ class WebEvalAgentTester {
       this.addTestResult(
         'E2E 测试目录检查',
         hasTestDir,
-        hasTestDir ? '测试目录存在' : '测试目录不存在'
+        hasTestDir ? '测试目录存在' : '测试目录不存在',
       );
 
       return hasPlaywright && hasConfig && hasTestDir;
@@ -132,7 +136,7 @@ class WebEvalAgentTester {
       this.addTestResult(
         'Playwright 基础测试',
         passed,
-        `通过: ${testResults.stats.passed}, 失败: ${testResults.stats.failed}`
+        `通过: ${testResults.stats.passed}, 失败: ${testResults.stats.failed}`,
       );
 
       return passed;
@@ -195,14 +199,16 @@ class WebEvalAgentTester {
       `;
 
       fs.writeFileSync('/tmp/web-eval-test.js', testScript);
-      const result = execSync('node /tmp/web-eval-test.js', { encoding: 'utf8' });
+      const result = execSync('node /tmp/web-eval-test.js', {
+        encoding: 'utf8',
+      });
       const data = JSON.parse(result.trim());
 
       const passed = data.title && data.responseCount > 0;
       this.addTestResult(
         'Web Eval Agent 兼容性测试',
         passed,
-        `页面标题: ${data.title}, 网络请求: ${data.responseCount}, 控制台日志: ${data.consoleLogCount}`
+        `页面标题: ${data.title}, 网络请求: ${data.responseCount}, 控制台日志: ${data.consoleLogCount}`,
       );
 
       // 清理临时文件
@@ -210,7 +216,12 @@ class WebEvalAgentTester {
 
       return passed;
     } catch (error) {
-      this.addTestResult('Web Eval Agent 兼容性测试', false, '兼容性测试失败', error);
+      this.addTestResult(
+        'Web Eval Agent 兼容性测试',
+        false,
+        '兼容性测试失败',
+        error,
+      );
       return false;
     }
   }
@@ -310,7 +321,9 @@ class WebEvalAgentTester {
     const successRate = ((summary.passed / summary.total) * 100).toFixed(1);
 
     console.log(`\n🎯 测试完成!`);
-    console.log(`   成功率: ${successRate}% (${summary.passed}/${summary.total})`);
+    console.log(
+      `   成功率: ${successRate}% (${summary.passed}/${summary.total})`,
+    );
 
     return summary.failed === 0;
   }
@@ -319,7 +332,8 @@ class WebEvalAgentTester {
 // 如果直接运行此脚本
 if (require.main === module) {
   const tester = new WebEvalAgentTester();
-  tester.runAllTests()
+  tester
+    .runAllTests()
     .then((success) => {
       process.exit(success ? 0 : 1);
     })

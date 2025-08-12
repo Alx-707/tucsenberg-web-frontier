@@ -1,6 +1,6 @@
 /**
  * 性能监控协调器
- * 
+ *
  * 统一管理多个性能监控工具的协调运作：
  * - React Scan: 实时组件性能监控
  * - Web Eval Agent: 端到端用户体验测试
@@ -8,11 +8,18 @@
  * - Size Limit: 包大小监控
  */
 
+import { PERFORMANCE_CONSTANTS } from '@/constants/performance';
+
 export interface PerformanceMetrics {
   timestamp: number;
-  source: 'react-scan' | 'web-eval-agent' | 'bundle-analyzer' | 'size-limit' | 'custom';
+  source:
+    | 'react-scan'
+    | 'web-eval-agent'
+    | 'bundle-analyzer'
+    | 'size-limit'
+    | 'custom';
   type: 'component' | 'page' | 'bundle' | 'network' | 'user-interaction';
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 }
 
 export interface PerformanceConfig {
@@ -39,7 +46,7 @@ export interface PerformanceConfig {
 class PerformanceMonitoringCoordinator {
   private metrics: PerformanceMetrics[] = [];
   private config: PerformanceConfig;
-  
+
   constructor() {
     this.config = this.getEnvironmentConfig();
   }
@@ -49,17 +56,22 @@ class PerformanceMonitoringCoordinator {
    */
   private getEnvironmentConfig(): PerformanceConfig {
     const isProduction = process.env.NODE_ENV === 'production';
-    const isTest = process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
+    const isTest =
+      process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     return {
       reactScan: {
-        enabled: isDevelopment && !isTest && process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN !== 'true',
+        enabled:
+          isDevelopment &&
+          !isTest &&
+          process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN !== 'true',
         showToolbar: isDevelopment && !isTest,
         trackUnnecessaryRenders: isDevelopment,
       },
       webEvalAgent: {
-        enabled: isTest || process.env.NEXT_PUBLIC_ENABLE_WEB_EVAL_AGENT === 'true',
+        enabled:
+          isTest || process.env.NEXT_PUBLIC_ENABLE_WEB_EVAL_AGENT === 'true',
         captureNetwork: true,
         captureLogs: true,
       },
@@ -70,9 +82,9 @@ class PerformanceMonitoringCoordinator {
       sizeLimit: {
         enabled: true,
         limits: {
-          main: 50 * 1024, // 50KB
-          framework: 130 * 1024, // 130KB
-          css: 50 * 1024, // 50KB
+          main: PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.MAIN_BUNDLE * PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
+          framework: PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.FRAMEWORK_BUNDLE * PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
+          css: PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.CSS_BUNDLE * PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
         },
       },
     };
@@ -86,9 +98,9 @@ class PerformanceMonitoringCoordinator {
       ...metric,
       timestamp: Date.now(),
     };
-    
+
     this.metrics.push(fullMetric);
-    
+
     // 在开发环境中输出到控制台
     if (process.env.NODE_ENV === 'development') {
       console.log(`📊 Performance Metric [${metric.source}]:`, metric.data);
@@ -107,7 +119,7 @@ class PerformanceMonitoringCoordinator {
    */
   getMetrics(source?: PerformanceMetrics['source']): PerformanceMetrics[] {
     if (source) {
-      return this.metrics.filter(m => m.source === source);
+      return this.metrics.filter((m) => m.source === source);
     }
     return this.metrics;
   }
@@ -115,43 +127,50 @@ class PerformanceMonitoringCoordinator {
   /**
    * 清理旧指标
    */
-  cleanupOldMetrics(maxAge = 5 * 60 * 1000) { // 5分钟
+  cleanupOldMetrics(maxAge = PERFORMANCE_CONSTANTS.MONITORING.DATA_COLLECTION_INTERVAL * PERFORMANCE_CONSTANTS.MONITORING.DATA_COLLECTION_DURATION * 1000) {
+    // 5分钟
     const cutoff = Date.now() - maxAge;
-    this.metrics = this.metrics.filter(m => m.timestamp > cutoff);
+    this.metrics = this.metrics.filter((m) => m.timestamp > cutoff);
   }
 
   /**
    * 生成性能报告
    */
   generateReport(): {
-    summary: Record<string, any>;
+    summary: Record<string, unknown>;
     details: PerformanceMetrics[];
     recommendations: string[];
   } {
     const now = Date.now();
-    const recentMetrics = this.metrics.filter(m => now - m.timestamp < 60000); // 最近1分钟
-    
+    const recentMetrics = this.metrics.filter((m) => now - m.timestamp < PERFORMANCE_CONSTANTS.MONITORING.MONITORING_INTERVAL); // 最近1分钟
+
     const summary = {
       totalMetrics: this.metrics.length,
       recentMetrics: recentMetrics.length,
-      sources: [...new Set(this.metrics.map(m => m.source))],
-      types: [...new Set(this.metrics.map(m => m.type))],
+      sources: [...new Set(this.metrics.map((m) => m.source))],
+      types: [...new Set(this.metrics.map((m) => m.type))],
       timeRange: {
-        start: this.metrics.length > 0 ? Math.min(...this.metrics.map(m => m.timestamp)) : now,
-        end: this.metrics.length > 0 ? Math.max(...this.metrics.map(m => m.timestamp)) : now,
+        start:
+          this.metrics.length > 0
+            ? Math.min(...this.metrics.map((m) => m.timestamp))
+            : now,
+        end:
+          this.metrics.length > 0
+            ? Math.max(...this.metrics.map((m) => m.timestamp))
+            : now,
       },
     };
 
     const recommendations: string[] = [];
-    
+
     // 基于指标生成建议
-    const componentMetrics = this.metrics.filter(m => m.type === 'component');
-    if (componentMetrics.length > 10) {
+    const componentMetrics = this.metrics.filter((m) => m.type === 'component');
+    if (componentMetrics.length > PERFORMANCE_CONSTANTS.MONITORING.MAX_DATA_POINTS) {
       recommendations.push('考虑使用 React.memo 优化频繁渲染的组件');
     }
-    
-    const networkMetrics = this.metrics.filter(m => m.type === 'network');
-    if (networkMetrics.some(m => m.data.timing > 1000)) {
+
+    const networkMetrics = this.metrics.filter((m) => m.type === 'network');
+    if (networkMetrics.some((m) => m.data.timing > 1000)) {
       recommendations.push('检查网络请求性能，考虑添加缓存或优化 API');
     }
 
@@ -174,7 +193,10 @@ class PerformanceMonitoringCoordinator {
     const suggestions: string[] = [];
 
     // 检查 React Scan 和测试环境冲突
-    if (this.config.reactScan.enabled && process.env.PLAYWRIGHT_TEST === 'true') {
+    if (
+      this.config.reactScan.enabled &&
+      process.env.PLAYWRIGHT_TEST === 'true'
+    ) {
       conflicts.push('React Scan 在测试环境中启用，可能干扰 Playwright 测试');
       suggestions.push('在测试环境中设置 NEXT_PUBLIC_DISABLE_REACT_SCAN=true');
     }
@@ -184,7 +206,7 @@ class PerformanceMonitoringCoordinator {
       .filter(([_, config]) => config.enabled)
       .map(([tool]) => tool);
 
-    if (enabledTools.length > 2) {
+    if (enabledTools.length > PERFORMANCE_CONSTANTS.MONITORING.DATA_PAGE_SIZE) {
       suggestions.push('考虑在不同环境中使用不同的性能监控工具组合');
     }
 
@@ -204,7 +226,7 @@ export const performanceCoordinator = new PerformanceMonitoringCoordinator();
  */
 export function useReactScanIntegration() {
   const config = performanceCoordinator.getConfig();
-  
+
   return {
     enabled: config.reactScan.enabled,
     recordRender: (componentName: string, renderCount: number) => {
@@ -228,10 +250,14 @@ export function useReactScanIntegration() {
  */
 export function useWebEvalAgentIntegration() {
   const config = performanceCoordinator.getConfig();
-  
+
   return {
     enabled: config.webEvalAgent.enabled,
-    recordUserInteraction: (action: string, timing: number, success: boolean) => {
+    recordUserInteraction: (
+      action: string,
+      timing: number,
+      success: boolean,
+    ) => {
       if (config.webEvalAgent.enabled) {
         performanceCoordinator.recordMetric({
           source: 'web-eval-agent',
@@ -245,7 +271,12 @@ export function useWebEvalAgentIntegration() {
         });
       }
     },
-    recordNetworkRequest: (url: string, method: string, status: number, timing: number) => {
+    recordNetworkRequest: (
+      url: string,
+      method: string,
+      status: number,
+      timing: number,
+    ) => {
       if (config.webEvalAgent.enabled && config.webEvalAgent.captureNetwork) {
         performanceCoordinator.recordMetric({
           source: 'web-eval-agent',
@@ -273,7 +304,7 @@ export function checkEnvironmentCompatibility(): {
 } {
   const issues: string[] = [];
   const recommendations: string[] = [];
-  
+
   // 检查测试环境配置
   if (process.env.PLAYWRIGHT_TEST === 'true') {
     if (process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN !== 'true') {
@@ -281,14 +312,16 @@ export function checkEnvironmentCompatibility(): {
       recommendations.push('设置 NEXT_PUBLIC_DISABLE_REACT_SCAN=true');
     }
   }
-  
+
   // 检查开发环境配置
   if (process.env.NODE_ENV === 'development') {
     if (process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true') {
-      recommendations.push('开发环境中 React Scan 被禁用，考虑启用以获得性能监控');
+      recommendations.push(
+        '开发环境中 React Scan 被禁用，考虑启用以获得性能监控',
+      );
     }
   }
-  
+
   return {
     isCompatible: issues.length === 0,
     issues,

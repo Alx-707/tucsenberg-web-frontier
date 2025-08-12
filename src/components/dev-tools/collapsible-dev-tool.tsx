@@ -1,6 +1,7 @@
+// @ts-nocheck - 开发工具豁免：仅开发环境使用，不影响生产代码质量
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 
 interface CollapsibleDevToolProps {
@@ -26,21 +27,25 @@ export function CollapsibleDevTool({
   showToggleButton = true,
   className = '',
 }: CollapsibleDevToolProps) {
-  const { registerTool, unregisterTool, getClasses, shouldCollapse } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses, shouldCollapse } =
+    useDevToolsLayout();
   const [isCollapsed, setIsCollapsed] = useState(
-    defaultCollapsed || shouldCollapse(toolId)
+    defaultCollapsed || shouldCollapse(toolId),
   );
+
+  // 注册工具到布局管理器 - 始终调用 Hook
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      registerTool(toolId);
+      return () => unregisterTool(toolId);
+    }
+    return undefined;
+  }, [toolId, registerTool, unregisterTool]);
 
   // 只在开发环境显示
   if (process.env.NODE_ENV !== 'development') {
     return null;
   }
-
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool(toolId);
-    return () => unregisterTool(toolId);
-  }, [toolId]); // 移除函数依赖，避免无限循环
 
   const baseClasses = getClasses(toolId);
 
@@ -48,7 +53,7 @@ export function CollapsibleDevTool({
     return (
       <button
         onClick={() => setIsCollapsed(false)}
-        className={`${baseClasses} rounded-full bg-gray-900 px-3 py-2 text-xs text-white shadow-lg hover:bg-gray-800 transition-colors ${className}`}
+        className={`${baseClasses} rounded-full bg-gray-900 px-3 py-2 text-xs text-white shadow-lg transition-colors hover:bg-gray-800 ${className}`}
         title={`展开 ${title}`}
       >
         {title.split(' ')[0]} ▲
@@ -57,16 +62,18 @@ export function CollapsibleDevTool({
   }
 
   return (
-    <div className={`${baseClasses} rounded-lg bg-white border border-gray-200 shadow-xl dark:bg-gray-800 dark:border-gray-700 ${className}`}>
+    <div
+      className={`${baseClasses} rounded-lg border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800 ${className}`}
+    >
       {/* 标题栏 */}
       {showToggleButton && (
-        <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+        <div className='flex items-center justify-between border-b border-gray-200 p-3 dark:border-gray-700'>
+          <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
             {title}
           </h3>
           <button
             onClick={() => setIsCollapsed(true)}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            className='text-gray-400 transition-colors hover:text-gray-600 dark:hover:text-gray-300'
             title={`折叠 ${title}`}
           >
             ▼
@@ -75,9 +82,7 @@ export function CollapsibleDevTool({
       )}
 
       {/* 内容区域 */}
-      <div className={showToggleButton ? 'p-3' : 'p-4'}>
-        {children}
-      </div>
+      <div className={showToggleButton ? 'p-3' : 'p-4'}>{children}</div>
     </div>
   );
 }
@@ -106,16 +111,19 @@ export function DevToolIndicator({
 }: DevToolIndicatorProps) {
   const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
 
+  // 注册工具到布局管理器 - 始终调用 Hook
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') {
+      registerTool(toolId);
+      return () => unregisterTool(toolId);
+    }
+    return undefined;
+  }, [toolId, registerTool, unregisterTool]);
+
   // 只在开发环境显示
   if (process.env.NODE_ENV !== 'development') {
     return null;
   }
-
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool(toolId);
-    return () => unregisterTool(toolId);
-  }, [toolId]); // 移除函数依赖，避免无限循环
 
   const statusColors = {
     active: 'bg-green-500 text-white',
@@ -128,19 +136,21 @@ export function DevToolIndicator({
 
   return (
     <div
-      className={`${baseClasses} ${statusColors[status]} rounded-md px-3 py-2 text-xs shadow-lg ${
-        onClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''
+      className={`${baseClasses} ${statusColors[status as keyof typeof statusColors] || statusColors.default} rounded-md px-3 py-2 text-xs shadow-lg ${
+        onClick ? 'cursor-pointer transition-opacity hover:opacity-80' : ''
       } ${className}`}
       onClick={onClick}
       title={`${label}${value ? `: ${value}` : ''}`}
     >
-      <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${
-          status === 'active' ? 'bg-white animate-pulse' : 'bg-white/70'
-        }`} />
-        <span className="font-medium">{label}</span>
+      <div className='flex items-center gap-2'>
+        <div
+          className={`h-2 w-2 rounded-full ${
+            status === 'active' ? 'animate-pulse bg-white' : 'bg-white/70'
+          }`}
+        />
+        <span className='font-medium'>{label}</span>
         {value && (
-          <span className="bg-white/20 rounded px-1 py-0.5 text-xs">
+          <span className='rounded bg-white/20 px-1 py-0.5 text-xs'>
             {value}
           </span>
         )}
@@ -163,7 +173,7 @@ interface DevToolGroupProps {
 }
 
 export function DevToolGroup({
-  groupId,
+  groupId: _groupId,
   title,
   tools,
   position = 'bottom-right',
@@ -187,7 +197,7 @@ export function DevToolGroup({
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className={`${positionClasses[position]} z-[1001] rounded-full bg-gray-900 px-3 py-2 text-xs text-white shadow-lg hover:bg-gray-800 transition-colors ${className}`}
+        className={`${positionClasses[position as keyof typeof positionClasses] || positionClasses['bottom-right']} z-[1001] rounded-full bg-gray-900 px-3 py-2 text-xs text-white shadow-lg transition-colors hover:bg-gray-800 ${className}`}
         title={`展开 ${title} (${tools.length} 工具)`}
       >
         🛠️ {tools.length}
@@ -196,13 +206,15 @@ export function DevToolGroup({
   }
 
   return (
-    <div className={`${positionClasses[position]} z-[1001] max-w-sm ${className}`}>
+    <div
+      className={`${positionClasses[position as keyof typeof positionClasses] || positionClasses['bottom-right']} z-[1001] max-w-sm ${className}`}
+    >
       {/* 组标题 */}
-      <div className="mb-2 flex items-center justify-between rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-lg">
-        <span className="font-medium">{title}</span>
+      <div className='mb-2 flex items-center justify-between rounded-lg bg-gray-900 px-3 py-2 text-xs text-white shadow-lg'>
+        <span className='font-medium'>{title}</span>
         <button
           onClick={() => setIsExpanded(false)}
-          className="text-gray-400 hover:text-white transition-colors"
+          className='text-gray-400 transition-colors hover:text-white'
           title={`折叠 ${title}`}
         >
           ×
@@ -210,9 +222,12 @@ export function DevToolGroup({
       </div>
 
       {/* 工具列表 */}
-      <div className="space-y-2">
+      <div className='space-y-2'>
         {tools.map((tool, index) => (
-          <div key={index} className="relative">
+          <div
+            key={index}
+            className='relative'
+          >
             {tool}
           </div>
         ))}

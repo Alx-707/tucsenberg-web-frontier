@@ -8,14 +8,14 @@
 
 // 导入UI相关常量
 import {
-    TEST_CONTENT_LIMITS,
-    TEST_SAMPLE_CONSTANTS,
-    TEST_SCREEN_CONSTANTS,
-    TEST_SPECIAL_CONSTANTS,
+  TEST_CONTENT_LIMITS,
+  TEST_SAMPLE_CONSTANTS,
+  TEST_SCREEN_CONSTANTS,
+  TEST_SPECIAL_CONSTANTS,
 } from './test-ui-constants';
 import {
-    TEST_WEB_VITALS_DIAGNOSTICS,
-    WEB_VITALS_CONSTANTS,
+  TEST_WEB_VITALS_DIAGNOSTICS,
+  WEB_VITALS_CONSTANTS,
 } from './test-web-vitals-constants';
 
 // ==================== 应用特定测试常量 ====================
@@ -473,15 +473,14 @@ export const TEST_CONSTANTS = {
 
 // 导出常用的测试常量以便直接使用
 export {
-    TEST_CONTENT_LIMITS,
-    TEST_SAMPLE_CONSTANTS,
-    TEST_SCREEN_CONSTANTS,
-    TEST_SPECIAL_CONSTANTS
+  TEST_CONTENT_LIMITS,
+  TEST_SAMPLE_CONSTANTS,
+  TEST_SCREEN_CONSTANTS,
+  TEST_SPECIAL_CONSTANTS,
 } from './test-ui-constants';
 
 // 导出Web Vitals相关常量
 export {
-    TEST_WEB_VITALS_DIAGNOSTICS,
-    WEB_VITALS_CONSTANTS
+  TEST_WEB_VITALS_DIAGNOSTICS,
+  WEB_VITALS_CONSTANTS,
 } from './test-web-vitals-constants';
-

@@ -39,7 +39,6 @@ class SystemErrorSimulator {
       ENOSPC: 'ENOSPC: no space left on device',
     };
 
-    // eslint-disable-next-line security/detect-object-injection
     const error = new Error(
       Object.hasOwn(errorMessages, errorType)
         ? errorMessages[errorType]
@@ -195,7 +194,7 @@ class ErrorHandler {
 
     this.errorLog.forEach(({ error }) => {
       const type = error.constructor.name;
-      // eslint-disable-next-line security/detect-object-injection
+
       byType[type] =
         ((Object.hasOwn(byType, type) ? byType[type] : null) || 0) + 1;
     });

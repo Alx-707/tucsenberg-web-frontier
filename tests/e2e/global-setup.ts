@@ -1,5 +1,9 @@
 import { chromium, FullConfig } from '@playwright/test';
-import { removeInterferingElements, setupTestEnvironment, waitForStablePage } from './test-environment-setup';
+import {
+  removeInterferingElements,
+  setupTestEnvironment,
+  waitForStablePage,
+} from './test-environment-setup';
 
 async function globalSetup(config: FullConfig) {
   console.log('🚀 Starting global setup for Playwright tests...');
@@ -14,7 +18,8 @@ async function globalSetup(config: FullConfig) {
 
   try {
     // Wait for the development server to be ready
-    const baseURL = config.projects[0].use.baseURL || 'http://localhost:3000';
+    const baseURL =
+      config.projects?.[0]?.use?.baseURL || 'http://localhost:3000';
     console.log(`⏳ Waiting for server at ${baseURL}...`);
 
     await page.goto(baseURL, { waitUntil: 'networkidle' });
@@ -29,7 +34,6 @@ async function globalSetup(config: FullConfig) {
 
     // Perform any global setup tasks here
     // For example: login, seed data, etc.
-
   } catch (error) {
     console.error('❌ Global setup failed:', error);
     throw error;

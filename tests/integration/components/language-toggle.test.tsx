@@ -134,7 +134,7 @@ describe('LanguageToggle Integration Tests', () => {
         english: 'English',
         chinese: '中文',
       };
-      // eslint-disable-next-line security/detect-object-injection
+
       return (
         (Object.hasOwn(translations, key) ? translations[key] : null) || key
       );

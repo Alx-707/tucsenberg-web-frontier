@@ -40,8 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# TinaCMS
-.tina/__generated__
+# Environment files
 .env.local
 
 # Auto-generated reports and task status

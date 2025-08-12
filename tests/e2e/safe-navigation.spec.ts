@@ -1,5 +1,9 @@
 import { expect, test } from '@playwright/test';
-import { removeInterferingElements, safeClick, waitForStablePage } from './test-environment-setup';
+import {
+  removeInterferingElements,
+  safeClick,
+  waitForStablePage,
+} from './test-environment-setup';
 
 test.describe('Safe Navigation Tests', () => {
   test.beforeEach(async ({ page }) => {
@@ -24,7 +28,7 @@ test.describe('Safe Navigation Tests', () => {
   test('should navigate between pages safely', async ({ page }) => {
     // 检查桌面端导航链接
     const desktopAboutLink = page.locator('a[href*="/about"]:visible').first();
-    const desktopLinkExists = await desktopAboutLink.count() > 0;
+    const desktopLinkExists = (await desktopAboutLink.count()) > 0;
 
     if (desktopLinkExists) {
       console.log('🖥️  Testing desktop navigation...');
@@ -35,20 +39,29 @@ test.describe('Safe Navigation Tests', () => {
 
       // 检查 URL 是否包含 about（考虑国际化路由）
       const currentUrl = page.url();
-      const hasAboutInUrl = currentUrl.includes('/about') || currentUrl.includes('/en/about') || currentUrl.includes('/zh/about');
+      const hasAboutInUrl =
+        currentUrl.includes('/about') ||
+        currentUrl.includes('/en/about') ||
+        currentUrl.includes('/zh/about');
 
       if (hasAboutInUrl) {
         console.log('✅ Navigation completed successfully');
       } else {
-        console.log(`ℹ️  Navigation clicked but URL didn't change as expected: ${currentUrl}`);
+        console.log(
+          `ℹ️  Navigation clicked but URL didn't change as expected: ${currentUrl}`,
+        );
         // 不强制失败，因为可能是单页应用或其他导航方式
       }
     } else {
-      console.log('ℹ️  Desktop about link not visible, checking mobile navigation...');
+      console.log(
+        'ℹ️  Desktop about link not visible, checking mobile navigation...',
+      );
 
       // 在移动端，About 链接可能在菜单中
-      const mobileMenuButton = page.locator('button[aria-label*="menu"]').first();
-      const mobileMenuExists = await mobileMenuButton.count() > 0;
+      const mobileMenuButton = page
+        .locator('button[aria-label*="menu"]')
+        .first();
+      const mobileMenuExists = (await mobileMenuButton.count()) > 0;
 
       if (mobileMenuExists) {
         console.log('📱 Testing mobile navigation via menu...');
@@ -56,8 +69,10 @@ test.describe('Safe Navigation Tests', () => {
         await page.waitForTimeout(300); // 等待菜单动画
 
         // 现在查找菜单中的 About 链接
-        const mobileAboutLink = page.locator('a[href*="/about"]:visible').first();
-        const mobileAboutExists = await mobileAboutLink.count() > 0;
+        const mobileAboutLink = page
+          .locator('a[href*="/about"]:visible')
+          .first();
+        const mobileAboutExists = (await mobileAboutLink.count()) > 0;
 
         if (mobileAboutExists) {
           const success = await safeClick(page, 'a[href*="/about"]:visible');
@@ -67,7 +82,9 @@ test.describe('Safe Navigation Tests', () => {
           console.log('ℹ️  About link not found in mobile menu either');
         }
       } else {
-        console.log('ℹ️  No navigation options found, skipping navigation test');
+        console.log(
+          'ℹ️  No navigation options found, skipping navigation test',
+        );
       }
     }
   });
@@ -150,7 +167,9 @@ test.describe('Safe Navigation Tests', () => {
 
       // 记录初始主题
       const initialTheme = await page.evaluate(() => {
-        return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        return document.documentElement.classList.contains('dark')
+          ? 'dark'
+          : 'light';
       });
 
       // 安全点击主题切换按钮
@@ -162,7 +181,9 @@ test.describe('Safe Navigation Tests', () => {
 
       // 验证主题是否改变
       const newTheme = await page.evaluate(() => {
-        return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        return document.documentElement.classList.contains('dark')
+          ? 'dark'
+          : 'light';
       });
 
       console.log(`🎨 Theme changed from ${initialTheme} to ${newTheme}`);
@@ -210,7 +231,9 @@ test.describe('Safe Navigation Tests', () => {
       // 等待可能的页面跳转或下拉菜单
       await page.waitForTimeout(500);
 
-      console.log(`🌐 Language switcher clicked, URL: ${initialUrl} -> ${page.url()}`);
+      console.log(
+        `🌐 Language switcher clicked, URL: ${initialUrl} -> ${page.url()}`,
+      );
       console.log('✅ Language switcher interaction completed');
     } else {
       console.log('ℹ️  Language switcher not found or not visible');
@@ -235,7 +258,7 @@ test.describe('Safe Navigation Tests', () => {
 
     // 检查控制台是否有 React Scan 相关消息
     const consoleLogs: string[] = [];
-    page.on('console', msg => {
+    page.on('console', (msg) => {
       consoleLogs.push(msg.text());
     });
 
@@ -244,9 +267,10 @@ test.describe('Safe Navigation Tests', () => {
     await page.waitForLoadState('networkidle');
 
     // 检查是否有 React Scan 禁用消息
-    const reactScanLogs = consoleLogs.filter(log =>
-      log.includes('React Scan disabled') ||
-      log.includes('NEXT_PUBLIC_DISABLE_REACT_SCAN=true')
+    const reactScanLogs = consoleLogs.filter(
+      (log) =>
+        log.includes('React Scan disabled') ||
+        log.includes('NEXT_PUBLIC_DISABLE_REACT_SCAN=true'),
     );
 
     if (reactScanLogs.length > 0) {

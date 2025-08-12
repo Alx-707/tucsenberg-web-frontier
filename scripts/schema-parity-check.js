@@ -15,12 +15,12 @@ class SchemaParityChecker {
     this.zodSchemas = null;
   }
 
-  async checkParity() {
-    console.log('🔍 开始Schema对等性检查...\n');
+  async run() {
+    console.log('🔍 开始MDX内容Schema对等性检查...\n');
 
     try {
-      // 读取TinaCMS配置
-      await this.loadTinaConfig();
+      // 读取MDX内容配置
+      await this.loadContentConfig();
 
       // 读取Zod schemas
       await this.loadZodSchemas();
@@ -36,23 +36,22 @@ class SchemaParityChecker {
     }
   }
 
-  async loadTinaConfig() {
-    const configPath = 'tina/config.ts';
+  async loadContentConfig() {
+    const configPath = 'content/config/content.json';
     if (!fs.existsSync(configPath)) {
-      throw new Error('TinaCMS配置文件不存在');
+      throw new Error('MDX内容配置文件不存在');
     }
 
-    // 简化处理：读取配置文件内容
+    // 读取MDX内容配置
     const configContent = fs.readFileSync(configPath, 'utf8');
-    console.log('✅ TinaCMS配置已加载');
+    this.contentConfig = JSON.parse(configContent);
+    console.log('✅ MDX内容配置已加载');
 
-    // 这里应该解析TinaCMS配置，简化示例
-    this.tinaConfig = {
-      collections: [
-        { name: 'pages', fields: ['title', 'description', 'seo'] },
-        { name: 'posts', fields: ['title', 'description', 'publishedAt'] },
-        { name: 'case-studies', fields: ['title', 'description', 'client'] },
-      ],
+    // 定义内容类型和必需字段
+    this.contentTypes = {
+      posts: ['title', 'description', 'slug', 'locale', 'publishedAt'],
+      pages: ['title', 'description', 'slug', 'locale'],
+      documents: ['title', 'description', 'slug', 'locale', 'fileUrl'],
     };
   }
 
@@ -74,43 +73,38 @@ class SchemaParityChecker {
   }
 
   async performParityCheck() {
-    console.log('🔄 执行对等性检查...\n');
+    console.log('🔄 执行MDX内容schema对等性检查...\n');
 
-    // 检查每个collection
-    for (const collection of this.tinaConfig.collections) {
-      const schemaName = `${collection.name.slice(0, -1)}Schema`; // pages -> pageSchema
+    // 检查每个内容类型
+    for (const [contentType, requiredFields] of Object.entries(this.contentTypes)) {
+      const schemaName = `${contentType.slice(0, -1)}Schema`; // posts -> postSchema
       const zodSchema = this.zodSchemas[schemaName];
 
       if (!zodSchema) {
         this.issues.push({
           type: 'missing_schema',
-          collection: collection.name,
+          contentType: contentType,
           message: `缺少对应的Zod schema: ${schemaName}`,
         });
         continue;
       }
 
-      // 检查字段对等性
-      for (const field of collection.fields) {
+      // 检查必需字段
+      for (const field of requiredFields) {
         if (!zodSchema.includes(field)) {
           this.issues.push({
             type: 'missing_field',
-            collection: collection.name,
+            contentType: contentType,
             field: field,
-            message: `Zod schema中缺少字段: ${field}`,
+            message: `Zod schema中缺少必需字段: ${field}`,
           });
         }
       }
 
-      // 检查额外字段
+      // 检查额外字段（可选，仅警告）
       for (const field of zodSchema) {
-        if (!collection.fields.includes(field)) {
-          this.issues.push({
-            type: 'extra_field',
-            collection: collection.name,
-            field: field,
-            message: `Zod schema中存在额外字段: ${field}`,
-          });
+        if (!requiredFields.includes(field)) {
+          console.log(`ℹ️  ${contentType} schema包含额外字段: ${field}`);
         }
       }
     }
@@ -136,7 +130,7 @@ class SchemaParityChecker {
       console.log('');
     });
 
-    console.log('⚠️ 请先解决这些问题再移除TinaCMS');
+    console.log('⚠️ 请先解决这些MDX内容schema问题');
     process.exit(1);
   }
 }
@@ -144,7 +138,7 @@ class SchemaParityChecker {
 // 运行检查
 if (require.main === module) {
   const checker = new SchemaParityChecker();
-  checker.checkParity();
+  checker.run();
 }
 
 module.exports = SchemaParityChecker;

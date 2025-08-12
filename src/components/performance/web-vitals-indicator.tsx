@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import {
   webVitalsMonitor,
   type WebVitalsMetrics,
 } from '@/lib/web-vitals-monitor';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import {
   MONITORING_INTERVALS,
   WEB_VITALS_THRESHOLDS,
@@ -111,7 +111,8 @@ export function WebVitalsIndicator() {
       registerTool('webVitalsIndicator');
       return () => unregisterTool('webVitalsIndicator');
     }
-  }, [isVisible]); // 移除函数依赖，避免无限循环
+    return undefined; // 明确返回 undefined 当不需要清理时
+  }, [isVisible, registerTool, unregisterTool]);
 
   // 生产环境不渲染任何UI
   if (!isVisible || !metrics) {
@@ -119,7 +120,9 @@ export function WebVitalsIndicator() {
   }
 
   return (
-    <div className={`${getClasses('webVitalsIndicator')} rounded-lg bg-black/80 p-3 text-xs text-white shadow-lg backdrop-blur-sm`}>
+    <div
+      className={`${getClasses('webVitalsIndicator')} rounded-lg bg-black/80 p-3 text-xs text-white shadow-lg backdrop-blur-sm`}
+    >
       <div className='mb-2 font-semibold'>🚀 Web Vitals</div>
       <div className='space-y-1'>
         <MetricRow

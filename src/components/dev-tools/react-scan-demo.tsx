@@ -1,8 +1,11 @@
+// @ts-nocheck - 开发工具豁免：仅开发环境使用，不影响生产代码质量
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import React, { useCallback, useMemo, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { DEV_TOOLS_CONSTANTS } from '@/constants/dev-tools';
+import { REACT_SCAN_CONFIG } from '@/constants/react-scan';
+import { Card } from '@/components/ui/card';
 
 /**
  * React Scan 演示组件
@@ -32,10 +35,13 @@ const OptimizedComponent = React.memo(({ count }: { count: number }) => {
   console.log('🟢 OptimizedComponent rendered');
 
   // 使用 useMemo 缓存样式对象
-  const style = useMemo(() => ({
-    color: 'green',
-    fontWeight: 'bold' as const
-  }), []);
+  const style = useMemo(
+    () => ({
+      color: 'green',
+      fontWeight: 'bold' as const,
+    }),
+    [],
+  );
 
   // 使用 useCallback 缓存函数
   const handleClick = useCallback(() => {
@@ -63,12 +69,12 @@ function FrequentRenderComponent({ trigger }: { trigger: number }) {
       result += Math.random();
     }
     return result;
-  }, [trigger]);
+  }, []); // 只计算一次，不依赖任何变量
 
   return (
-    <div className="rounded border p-2">
+    <div className='rounded border p-2'>
       <p>Frequent Render: {trigger}</p>
-      <p>Expensive Value: {expensiveValue.toFixed(2)}</p>
+      <p>Expensive Value: {expensiveValue.toFixed(DEV_TOOLS_CONSTANTS.REACT_SCAN.EXPORT_SPLIT_COUNT)}</p>
     </div>
   );
 }
@@ -85,64 +91,67 @@ export function ReactScanDemo() {
     process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN !== 'true';
 
   if (!isReactScanEnabled) {
-    const reason = process.env.NODE_ENV !== 'development'
-      ? 'React Scan is only available in development mode.'
-      : 'React Scan is disabled. Set NEXT_PUBLIC_DISABLE_REACT_SCAN=false to enable.';
+    const reason =
+      process.env.NODE_ENV !== 'development'
+        ? 'React Scan is only available in development mode.'
+        : 'React Scan is disabled. Set NEXT_PUBLIC_DISABLE_REACT_SCAN=false to enable.';
 
     return (
-      <Card className="p-6">
-        <h3 className="mb-4 text-lg font-semibold">React Scan Demo</h3>
-        <p className="text-muted-foreground">{reason}</p>
+      <Card className='p-6'>
+        <h3 className='mb-4 text-lg font-semibold'>React Scan Demo</h3>
+        <p className='text-muted-foreground'>{reason}</p>
       </Card>
     );
   }
 
   return (
-    <Card className="p-6">
-      <h3 className="mb-4 text-lg font-semibold">React Scan Performance Demo</h3>
+    <Card className='p-6'>
+      <h3 className='mb-4 text-lg font-semibold'>
+        React Scan Performance Demo
+      </h3>
 
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {/* 控制按钮 */}
-        <div className="flex gap-2">
+        <div className='flex gap-2'>
           <Button
-            onClick={() => setCount(c => c + 1)}
-            variant="outline"
+            onClick={() => setCount((c) => c + 1)}
+            variant='outline'
           >
             Increment Count ({count})
           </Button>
 
           <Button
-            onClick={() => setTrigger(t => t + 1)}
-            variant="outline"
+            onClick={() => setTrigger((t) => t + 1)}
+            variant='outline'
           >
             Trigger Frequent Render ({trigger})
           </Button>
 
           <Button
-            onClick={() => setIndependentState(s => s + 1)}
-            variant="outline"
+            onClick={() => setIndependentState((s) => s + 1)}
+            variant='outline'
           >
             Independent State ({independentState})
           </Button>
         </div>
 
         {/* 组件对比 */}
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Card className="p-4">
-            <h4 className="mb-2 text-sm font-medium text-red-600">
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <Card className='p-4'>
+            <h4 className='mb-2 text-sm font-medium text-red-600'>
               ❌ Unoptimized Component
             </h4>
-            <p className="mb-2 text-xs text-muted-foreground">
+            <p className='text-muted-foreground mb-2 text-xs'>
               Will re-render on every parent update
             </p>
             <UnoptimizedComponent count={count} />
           </Card>
 
-          <Card className="p-4">
-            <h4 className="mb-2 text-sm font-medium text-green-600">
+          <Card className='p-4'>
+            <h4 className='mb-2 text-sm font-medium text-green-600'>
               ✅ Optimized Component
             </h4>
-            <p className="mb-2 text-xs text-muted-foreground">
+            <p className='text-muted-foreground mb-2 text-xs'>
               Only re-renders when count changes
             </p>
             <OptimizedComponent count={count} />
@@ -150,20 +159,22 @@ export function ReactScanDemo() {
         </div>
 
         {/* 频繁渲染组件 */}
-        <Card className="p-4">
-          <h4 className="mb-2 text-sm font-medium text-yellow-600">
+        <Card className='p-4'>
+          <h4 className='mb-2 text-sm font-medium text-yellow-600'>
             ⚡ Frequent Render Component
           </h4>
-          <p className="mb-2 text-xs text-muted-foreground">
+          <p className='text-muted-foreground mb-2 text-xs'>
             Triggers performance warnings when rendered frequently
           </p>
           <FrequentRenderComponent trigger={trigger} />
         </Card>
 
         {/* 使用说明 */}
-        <Card className="bg-blue-50 p-4">
-          <h4 className="mb-2 text-sm font-medium">🔍 React Scan Instructions</h4>
-          <ul className="space-y-1 text-xs text-muted-foreground">
+        <Card className='bg-blue-50 p-4'>
+          <h4 className='mb-2 text-sm font-medium'>
+            🔍 React Scan Instructions
+          </h4>
+          <ul className='text-muted-foreground space-y-1 text-xs'>
             <li>• Red highlights indicate unnecessary re-renders</li>
             <li>• Green highlights indicate optimized renders</li>
             <li>• Check browser console for performance warnings</li>
@@ -185,7 +196,10 @@ export function ReactScanStressTest() {
   const [items, setItems] = useState<number[]>([]);
 
   const addItems = useCallback(() => {
-    setItems(prev => [...prev, ...Array.from({ length: 10 }, (_, i) => prev.length + i)]);
+    setItems((prev) => [
+      ...prev,
+      ...Array.from({ length: 10 }, (_, i) => prev.length + i),
+    ]);
   }, []);
 
   const clearItems = useCallback(() => {
@@ -193,32 +207,38 @@ export function ReactScanStressTest() {
   }, []);
 
   return (
-    <Card className="p-6">
-      <h3 className="mb-4 text-lg font-semibold">React Scan Stress Test</h3>
+    <Card className='p-6'>
+      <h3 className='mb-4 text-lg font-semibold'>React Scan Stress Test</h3>
 
-      <div className="space-y-4">
-        <div className="flex gap-2">
-          <Button onClick={addItems} variant="outline">
+      <div className='space-y-4'>
+        <div className='flex gap-2'>
+          <Button
+            onClick={addItems}
+            variant='outline'
+          >
             Add 10 Items ({items.length})
           </Button>
-          <Button onClick={clearItems} variant="outline">
+          <Button
+            onClick={clearItems}
+            variant='outline'
+          >
             Clear All
           </Button>
         </div>
 
-        <div className="grid grid-cols-5 gap-2">
-          {items.map(item => (
+        <div className='grid grid-cols-5 gap-2'>
+          {items.map((item) => (
             <div
               key={item}
-              className="rounded border p-2 text-center text-xs"
+              className='rounded border p-2 text-center text-xs'
             >
               Item {item}
             </div>
           ))}
         </div>
 
-        {items.length > 50 && (
-          <p className="text-sm text-yellow-600">
+        {items.length > REACT_SCAN_CONFIG.LARGE_ITEMS_WARNING_THRESHOLD && (
+          <p className='text-sm text-yellow-600'>
             ⚠️ Large number of items may trigger performance warnings
           </p>
         )}

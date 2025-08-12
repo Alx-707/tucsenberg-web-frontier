@@ -126,7 +126,7 @@ describe('ErrorBoundary Error Handling Tests', () => {
         retry: 'Try Again',
         errorMessage: 'Something went wrong. Please try refreshing the page.',
       };
-      // eslint-disable-next-line security/detect-object-injection
+
       return (
         (Object.hasOwn(translations, key) ? translations[key] : null) || key
       );

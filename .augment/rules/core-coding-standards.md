@@ -13,7 +13,7 @@ description: "Foundational coding standards and AI decision framework for Tucsen
   - **Quality/Complexity**: `quality-and-complexity.md` (function limits, refactor-first)
   - **Next.js/React**: `nextjs-architecture.md` (RSC patterns, App Router)
   - **UI/Design**: `ui-design-system.md` (shadcn/ui, SEO, Tailwind)
-  - **i18n/Content**: `i18n-content-management.md` (next-intl, TinaCMS, MDX)
+  - **i18n/Content**: `i18n-content-management.md` (next-intl, MDX content management)
   - **Services**: `service-integration.md` (Resend, Analytics, State)
   - **CI/CD**: `eslint-cicd-integration.md` (ESLint, pre-commit, GitHub Actions)
 - Conflict resolution priority: 1) Core constraints (this file), 2) Satellite rules (topic-specific)
@@ -44,7 +44,7 @@ description: "Foundational coding standards and AI decision framework for Tucsen
 
 - **Architecture patterns**: See `nextjs-architecture.md` for RSC/Client boundaries
 - **UI components**: See `ui-design-system.md` for shadcn/ui and SEO patterns
-- **Internationalization**: See `i18n-content-management.md` for next-intl and TinaCMS setup
+- **Internationalization**: See `i18n-content-management.md` for next-intl and MDX content management setup
 - **Service integrations**: See `service-integration.md` for Resend and Analytics
 - **CI/CD setup**: See `eslint-cicd-integration.md` for complete pipeline
 
@@ -148,47 +148,47 @@ BREAKING CHANGE: The authentication flow now requires OAuth2.
 Previous session-based auth is no longer supported.
 ```
 
-## 规则适应与实际配置差距处理
+## Rule Adaptation and Configuration Gap Management
 
-### 当前已知差距与解决方案
+### Current Known Gaps and Solutions
 
-#### **组件结构差距**
-- **规则要求**: `src/components/{server,client,shared}/` 三层结构
-- **实际实现**: `src/components/{layout,ui,theme}/` 功能分组结构
-- **适应策略**:
-  - 短期：保持现有结构，在组件内部明确标注Server/Client性质
-  - 长期：新组件按理想结构创建，现有组件逐步迁移
+#### **Component Structure Gap**
+- **Rule Requirement**: `src/components/{server,client,shared}/` three-tier structure
+- **Actual Implementation**: `src/components/{layout,ui,theme,contact,i18n,performance}/` functional grouping structure
+- **Adaptation Strategy**:
+  - Short-term: Maintain existing structure, clearly annotate Server/Client nature within components
+  - Long-term: Create new components following ideal structure, gradually migrate existing components
 
-#### **路径别名差距**
-- **规则要求**: 单一 `@/*` 别名
-- **历史实现**: 多个细分别名 (`@/components/*`, `@/lib/*` 等)
-- **当前状态**: ✅ 已统一为 `@/*` 别名
-- **维护要求**: 避免重新引入多个别名
+#### **Path Alias Configuration**
+- **Rule Requirement**: Single `@/*` alias
+- **Historical Implementation**: Multiple granular aliases (`@/components/*`, `@/lib/*`, etc.)
+- **Current Status**: ✅ Unified to `@/*` alias
+- **Maintenance Requirement**: Avoid reintroducing multiple aliases
 
-#### **测试配置差距**
-- **规则要求**: 完整的Mock配置和环境变量处理
-- **历史问题**: Mock配置不完整，环境变量处理错误
-- **当前状态**: ✅ 已修复Mock配置，使用vi.stubEnv处理环境变量
-- **维护要求**: 新增测试时遵循完善的Mock模板
+#### **Testing Configuration**
+- **Rule Requirement**: Complete Mock configuration and environment variable handling
+- **Historical Issues**: Incomplete Mock configuration, incorrect environment variable handling
+- **Current Status**: ✅ Fixed Mock configuration, using vi.stubEnv for environment variables
+- **Maintenance Requirement**: Follow comprehensive Mock templates when adding new tests
 
-### 规则文件更新策略
+### Rule File Update Strategy
 
-1. **技术错误修复**: 立即修正规则文件中的技术错误（如错误的ESLint规则名）
-2. **配置同步**: 定期同步规则文件与实际工作配置
-3. **渐进式改进**: 允许实际项目结构与理想规则存在差距，但要有明确的迁移路径
-4. **文档化差距**: 在规则文件中明确记录当前差距和适应策略
+1. **Technical Error Fixes**: Immediately correct technical errors in rule files (e.g., incorrect ESLint rule names)
+2. **Configuration Sync**: Regularly synchronize rule files with actual working configurations
+3. **Progressive Improvement**: Allow gaps between actual project structure and ideal rules, but maintain clear migration paths
+4. **Document Gaps**: Clearly record current gaps and adaptation strategies in rule files
 
-## 日志记录规范
+## Logging Standards
 
-### 生产环境日志策略
+### Production Environment Logging Strategy
 
-**核心原则**：
-- **禁止console.log**: 生产代码中不允许使用console.log进行调试输出
-- **结构化日志**: 使用统一的日志格式和结构化数据
-- **上下文信息**: 错误日志必须包含足够的上下文信息用于问题诊断
-- **环境区分**: 开发环境允许console.error/warn，生产环境使用专业日志服务
+**Core Principles**:
+- **Prohibit console.log**: Production code must not use console.log for debug output
+- **Structured logging**: Use unified log format and structured data
+- **Context information**: Error logs must contain sufficient context for problem diagnosis
+- **Environment distinction**: Development environment allows console.error/warn, production uses professional logging services
 
-### 推荐的日志实现
+### Recommended Logging Implementation
 
 ```typescript
 // src/lib/logger.ts
@@ -217,7 +217,7 @@ export const logger: Logger = {
     };
 
     if (process.env.NODE_ENV === 'production') {
-      // 发送到监控服务 (Vercel Analytics, Sentry等)
+      // Send to monitoring service (Vercel Analytics, Sentry, etc.)
       console.error(JSON.stringify(logEntry));
     } else {
       console.error(message, context);
@@ -252,7 +252,7 @@ export const logger: Logger = {
   },
 };
 
-// 使用示例
+// Usage example
 logger.error('User authentication failed', {
   userId: user.id,
   attemptCount: 3,
@@ -260,35 +260,35 @@ logger.error('User authentication failed', {
 });
 ```
 
-### ESLint配置
+### ESLint Configuration
 
 ```javascript
-// eslint.config.mjs - 日志记录规则配置
+// eslint.config.mjs - Logging rules configuration
 {
   rules: {
     'no-console': ['error', {
-      allow: ['error', 'warn'] // 仅允许错误和警告级别
+      allow: ['error', 'warn'] // Only allow error and warning levels
     }],
   }
 },
 
-// 脚本文件例外配置
+// Script files exception configuration
 {
   name: 'scripts-config',
   files: ['scripts/**/*.{js,ts}', 'config/**/*.{js,ts}'],
   rules: {
-    'no-console': 'off', // 构建脚本允许console输出
+    'no-console': 'off', // Build scripts allow console output
   }
 }
 ```
 
-### 使用指导
+### Usage Guidelines
 
-**✅ 正确做法**：
+**✅ Correct Usage**:
 ```typescript
 import { logger } from '@/lib/logger';
 
-// 错误处理
+// Error handling
 try {
   await processPayment(paymentData);
 } catch (error) {
@@ -300,7 +300,7 @@ try {
   throw error;
 }
 
-// 警告信息
+// Warning information
 if (user.subscriptionExpired) {
   logger.warn('User subscription expired', {
     userId: user.id,
@@ -309,19 +309,19 @@ if (user.subscriptionExpired) {
 }
 ```
 
-**❌ 错误做法**：
+**❌ Incorrect Usage**:
 ```typescript
-// 不要在生产代码中使用
-console.log('Debug info:', data); // 违反no-console规则
-console.info('User logged in');   // 违反no-console规则
+// Don't use in production code
+console.log('Debug info:', data); // Violates no-console rule
+console.info('User logged in');   // Violates no-console rule
 
-// 不要缺少上下文信息
-logger.error('Something went wrong'); // 缺少上下文
+// Don't lack context information
+logger.error('Something went wrong'); // Missing context
 ```
 
-### 监控集成
+### Monitoring Integration
 
-**Vercel Analytics集成**：
+**Vercel Analytics Integration**:
 ```typescript
 // src/lib/analytics-logger.ts
 import { track } from '@vercel/analytics';

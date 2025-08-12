@@ -65,7 +65,8 @@ const useWebVitalsInitialization = (
 
   useEffect(() => {
     // 在测试环境中也允许初始化，但使用更短的延迟
-    const delay = process.env.NODE_ENV === 'test' ? 0 : TEST_APP_CONSTANTS.TIMEOUT_BASE;
+    const delay =
+      process.env.NODE_ENV === 'test' ? 0 : TEST_APP_CONSTANTS.TIMEOUT_BASE;
 
     // 延迟生成初始报告
     const timer = setTimeout(() => {
@@ -309,112 +310,98 @@ function useDataManagement(
   return { clearHistory };
 }
 
-export function useWebVitalsDiagnostics() {
-  // 在测试环境中，使用简化但功能完整的实现
-  if (process.env.NODE_ENV === 'test') {
-    // 使用实际的数据持久化hooks，但简化错误处理
-    const { loadHistoricalData, saveToStorage } = useWebVitalsDataPersistence();
+/**
+ * 测试环境专用的 Web Vitals 诊断实现
+ */
+function useTestWebVitalsDiagnostics(
+  state: WebVitalsDiagnosticsState,
+  setState: React.Dispatch<React.SetStateAction<WebVitalsDiagnosticsState>>,
+  loadHistoricalData: () => DiagnosticReport[],
+  saveToStorage: (_reports: DiagnosticReport[]) => void,
+) {
+  const refreshDiagnostics = useCallback(() => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-    // 获取初始数据
-    const initialHistoricalReports = useMemo(
-      () => {
-        try {
-          return loadHistoricalData();
-        } catch {
-          return [];
-        }
-      },
-      [loadHistoricalData],
-    );
+    try {
+      const report = enhancedWebVitalsCollector.generateDiagnosticReport();
+      const newReport = {
+        timestamp: Date.now(),
+        vitals: report.metrics,
+        score: report.analysis.score,
+        issues: report.analysis.issues,
+        recommendations: report.analysis.recommendations,
+        pageUrl: typeof window !== 'undefined' ? window.location.href : '',
+        userAgent:
+          typeof window !== 'undefined' ? window.navigator.userAgent : '',
+      };
 
-    const [state, setState] = useState<WebVitalsDiagnosticsState>({
-      currentReport: null,
-      historicalReports: initialHistoricalReports,
-      isLoading: true, // 某些测试期望初始loading状态为true
-      error: null,
-    });
+      const historicalReports = loadHistoricalData();
+      const updatedReports = [newReport, ...historicalReports];
 
-    // 简化的刷新函数，但保持基本功能
-    const testRefreshDiagnostics = useCallback(async () => {
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setState({
+        currentReport: newReport,
+        historicalReports: updatedReports,
+        isLoading: false,
+        error: null,
+      });
 
-      try {
-        // 尝试调用实际的报告生成逻辑
-        const report = enhancedWebVitalsCollector.generateDiagnosticReport();
-        const newReport = {
-          timestamp: Date.now(),
-          vitals: report.metrics,
-          score: report.analysis.score,
-          issues: report.analysis.issues,
-          recommendations: report.analysis.recommendations,
-          pageUrl: typeof window !== 'undefined' ? window.location.href : '',
-          userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : '',
-        };
-
-        const historicalReports = loadHistoricalData();
-        const updatedReports = [newReport, ...historicalReports];
-
-        setState({
-          currentReport: newReport,
-          historicalReports: updatedReports,
-          isLoading: false,
-          error: null,
-        });
-
-        saveToStorage(updatedReports);
-      } catch (error) {
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        }));
-      }
-    }, [loadHistoricalData, saveToStorage]);
-
-    // 分析功能
-    const testGetPerformanceTrends = useCallback(() => {
-      return calculatePerformanceTrends(state.historicalReports);
-    }, [state.historicalReports]);
-
-    const testGetPageComparison = useCallback(() => {
-      return calculatePageComparison(state.historicalReports);
-    }, [state.historicalReports]);
-
-    // 导出功能
-    const testExportReport = useCallback(() => {
-      // 测试环境中的简化实现
-    }, []);
-
-    // 清除历史功能
-    const testClearHistory = useCallback(() => {
+      saveToStorage(updatedReports);
+    } catch (error) {
       setState((prev) => ({
         ...prev,
-        currentReport: null, // 清除当前报告
-        historicalReports: [],
+        isLoading: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
       }));
-      localStorage.removeItem('webVitalsDiagnostics');
-    }, []);
+    }
+  }, [setState, loadHistoricalData, saveToStorage]);
 
-    // 直接返回测试对象
-    return {
-      ...state,
-      refreshDiagnostics: testRefreshDiagnostics,
-      getPerformanceTrends: testGetPerformanceTrends,
-      getPageComparison: testGetPageComparison,
-      exportReport: testExportReport,
-      clearHistory: testClearHistory,
-    };
-  }
+  const getPerformanceTrends = useCallback(() => {
+    return calculatePerformanceTrends(state.historicalReports);
+  }, [state.historicalReports]);
 
-  // 生产环境的完整实现
-  // 数据持久化hooks
+  const getPageComparison = useCallback(() => {
+    return calculatePageComparison(state.historicalReports);
+  }, [state.historicalReports]);
+
+  const exportReport = useCallback(() => {
+    // 测试环境中的简化实现
+  }, []);
+
+  const clearHistory = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      currentReport: null,
+      historicalReports: [],
+    }));
+    localStorage.removeItem('webVitalsDiagnostics');
+  }, [setState]);
+
+  return {
+    refreshDiagnostics,
+    getPerformanceTrends,
+    getPageComparison,
+    exportReport,
+    clearHistory,
+  };
+}
+
+export function useWebVitalsDiagnostics() {
+  const isTestEnvironment = process.env.NODE_ENV === 'test';
+
+  // 所有 Hooks 都在顶层调用
   const { loadHistoricalData, saveToStorage } = useWebVitalsDataPersistence();
 
-  // 获取初始数据
-  const initialHistoricalReports = useMemo(
-    () => loadHistoricalData(),
-    [loadHistoricalData],
-  );
+  // 获取初始数据 - 测试环境使用简化的错误处理
+  const initialHistoricalReports = useMemo(() => {
+    if (isTestEnvironment) {
+      try {
+        return loadHistoricalData();
+      } catch {
+        return [];
+      }
+    }
+    return loadHistoricalData();
+  }, [loadHistoricalData, isTestEnvironment]);
 
   const [state, setState] = useState<WebVitalsDiagnosticsState>({
     currentReport: null,
@@ -423,36 +410,50 @@ export function useWebVitalsDiagnostics() {
     error: null,
   });
 
-  // 刷新诊断数据
-  const { refreshDiagnostics } = useWebVitalsRefresh(
+  // 生产环境的 Hooks - 始终调用但在测试环境中不使用
+  const { refreshDiagnostics: prodRefreshDiagnostics } = useWebVitalsRefresh(
     setState,
     loadHistoricalData,
     saveToStorage,
   );
 
-  // 分析功能
-  const { getPerformanceTrends, getPageComparison } =
-    useAnalysisFunctions(state);
+  const {
+    getPerformanceTrends: prodGetPerformanceTrends,
+    getPageComparison: prodGetPageComparison,
+  } = useAnalysisFunctions(state);
 
-  // 报告导出功能
-  const { exportReport } = useReportExport(
+  const { exportReport: prodExportReport } = useReportExport(
     state,
-    getPerformanceTrends,
-    getPageComparison,
+    prodGetPerformanceTrends,
+    prodGetPageComparison,
   );
 
-  // 数据管理功能
-  const { clearHistory } = useDataManagement(setState);
+  const { clearHistory: prodClearHistory } = useDataManagement(setState);
 
-  // 初始化和自动刷新
-  useWebVitalsInitialization(loadHistoricalData, refreshDiagnostics);
+  useWebVitalsInitialization(loadHistoricalData, prodRefreshDiagnostics);
+
+  // 测试环境的简化实现
+  const testImplementation = useTestWebVitalsDiagnostics(
+    state,
+    setState,
+    loadHistoricalData,
+    saveToStorage,
+  );
+
+  // 根据环境返回相应的实现
+  if (isTestEnvironment) {
+    return {
+      ...state,
+      ...testImplementation,
+    };
+  }
 
   return createDiagnosticsReturn({
     state,
-    refreshDiagnostics,
-    getPerformanceTrends,
-    getPageComparison,
-    exportReport,
-    clearHistory,
+    refreshDiagnostics: prodRefreshDiagnostics,
+    getPerformanceTrends: prodGetPerformanceTrends,
+    getPageComparison: prodGetPageComparison,
+    exportReport: prodExportReport,
+    clearHistory: prodClearHistory,
   });
 }

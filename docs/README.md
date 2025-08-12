@@ -35,22 +35,20 @@
 ## 🔗 重要链接
 
 ### 开发环境
-- **中文管理入口**：`localhost:3000/admin`
-- **TinaCMS 编辑器**：`localhost:4001/admin/index.html`
-- **GraphQL 查询**：`localhost:4001/graphql`
 - **英文网站预览**：`localhost:3000/en`
 - **中文网站预览**：`localhost:3000/zh`
+- **开发服务器**：`localhost:3000`
 
 ### 外部资源
-- [TinaCMS 官方文档](https://tina.io/docs/)
 - [Next.js 15 文档](https://nextjs.org/docs)
 - [MDX 语法指南](https://mdxjs.com/docs/)
+- [gray-matter 文档](https://github.com/jonschlinkert/gray-matter)
 
 ## 📝 文档贡献
 
 ### 如何更新文档
-1. 直接编辑 Markdown 文件
-2. 使用 TinaCMS 管理界面（如果配置了页面集合）
+1. 直接编辑 Markdown 或 MDX 文件
+2. 使用 Git 工作流进行版本控制
 3. 提交 Pull Request 进行审核
 
 ### 文档规范
@@ -76,4 +74,4 @@
 
 **欢迎使用 Tucsenberg Web Frontier！** 🎉
 
-如果您是第一次使用，建议从 [TinaCMS 快速入门指南](./tinacms-quick-start.md) 开始。
+如果您是第一次使用，建议从 [技术栈文档](./technology/技术栈.md) 开始了解 MDX 内容管理系统。

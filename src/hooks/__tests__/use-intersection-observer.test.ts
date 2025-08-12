@@ -1,9 +1,9 @@
-import { TEST_SCREEN_CONSTANTS } from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TEST_SCREEN_CONSTANTS } from '@/constants/test-constants';
 import {
-    useIntersectionObserver,
-    useIntersectionObserverWithDelay,
+  useIntersectionObserver,
+  useIntersectionObserverWithDelay,
 } from '../use-intersection-observer';
 
 // Mock dependencies

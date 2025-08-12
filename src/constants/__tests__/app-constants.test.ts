@@ -1,28 +1,28 @@
-import {
-    TEST_APP_CONSTANTS,
-    TEST_DELAY_VALUES,
-    TEST_PERCENTAGE_VALUES,
-    TEST_PERFORMANCE_TIMESTAMPS,
-    TEST_TIME_CALCULATIONS,
-} from '@/constants/test-app-constants';
-import {
-    TEST_ANGLE_CONSTANTS,
-    TEST_CONTENT_LIMITS,
-    TEST_COUNT_CONSTANTS,
-    TEST_OPACITY_CONSTANTS,
-    TEST_SPECIAL_CONSTANTS,
-} from '@/constants/test-constants';
 import { describe, expect, it } from 'vitest';
 import {
-    APP_CONSTANTS,
-    CONTENT_LIMITS,
-    DEBUG_CONSTANTS,
-    DELAY_CONSTANTS,
-    OPACITY_CONSTANTS,
-    PAGINATION_CONSTANTS,
-    PERCENTAGE_CONSTANTS,
-    PERFORMANCE_CONSTANTS,
-    TIME_CONSTANTS,
+  TEST_APP_CONSTANTS,
+  TEST_DELAY_VALUES,
+  TEST_PERCENTAGE_VALUES,
+  TEST_PERFORMANCE_TIMESTAMPS,
+  TEST_TIME_CALCULATIONS,
+} from '@/constants/test-app-constants';
+import {
+  TEST_ANGLE_CONSTANTS,
+  TEST_CONTENT_LIMITS,
+  TEST_COUNT_CONSTANTS,
+  TEST_OPACITY_CONSTANTS,
+  TEST_SPECIAL_CONSTANTS,
+} from '@/constants/test-constants';
+import {
+  APP_CONSTANTS,
+  CONTENT_LIMITS,
+  DEBUG_CONSTANTS,
+  DELAY_CONSTANTS,
+  OPACITY_CONSTANTS,
+  PAGINATION_CONSTANTS,
+  PERCENTAGE_CONSTANTS,
+  PERFORMANCE_CONSTANTS,
+  TIME_CONSTANTS,
 } from '../app-constants';
 
 describe('app-constants', () => {
@@ -58,7 +58,9 @@ describe('app-constants', () => {
       expect(TIME_CONSTANTS.SECOND).toBeLessThan(TIME_CONSTANTS.MINUTE);
       expect(TIME_CONSTANTS.MINUTE).toBeLessThan(TIME_CONSTANTS.HOUR);
       expect(TIME_CONSTANTS.HOUR).toBeLessThan(TIME_CONSTANTS.FULL_DAY);
-      expect(TIME_CONSTANTS.FULL_DAY).toBeLessThan(TIME_CONSTANTS.TWENTY_FIVE_HOURS);
+      expect(TIME_CONSTANTS.FULL_DAY).toBeLessThan(
+        TIME_CONSTANTS.TWENTY_FIVE_HOURS,
+      );
     });
 
     it('should be readonly', () => {

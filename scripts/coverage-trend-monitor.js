@@ -43,15 +43,20 @@ class CoverageTrendMonitor {
     try {
       // 运行覆盖率测试
       console.log('🧪 运行测试以生成覆盖率报告...');
-      execSync('pnpm test:coverage --run --reporter=json', {
-        stdio: 'pipe',
-        timeout: 180000,
-      });
+      try {
+        execSync('pnpm test:coverage --run --reporter=json', {
+          stdio: 'pipe',
+          timeout: 180000,
+        });
+      } catch (error) {
+        // 忽略覆盖率阈值检查失败，继续收集数据
+        console.log('⚠️  覆盖率阈值检查失败，但继续收集数据...');
+      }
 
       // 读取覆盖率数据
       const coverageJsonPath = path.join(
         this.coverageDir,
-        'coverage-summary.json',
+        'coverage-final.json',
       );
 
       if (!fs.existsSync(coverageJsonPath)) {

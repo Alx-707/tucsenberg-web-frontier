@@ -1,3 +1,8 @@
+import type { ReactNode } from 'react';
+import { notFound } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { generateJSONLD } from '@/lib/structured-data';
 import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import {
@@ -13,11 +18,6 @@ import {
 } from '@/components/shared/dynamic-imports';
 import { ThemeProvider } from '@/components/theme-provider';
 import { routing } from '@/i18n/routing';
-import { generateJSONLD } from '@/lib/structured-data';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import type { ReactNode } from 'react';
 import '../globals.css';
 import { getFontClassNames } from './layout-fonts';
 import { generateLocaleMetadata } from './layout-metadata';
@@ -58,33 +58,33 @@ export default async function LocaleLayout({
     >
       {/* JSON-LD 结构化数据 */}
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: generateJSONLD(organizationData),
         }}
       />
       <script
-        type="application/ld+json"
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
           __html: generateJSONLD(websiteData),
         }}
       />
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-          >
-            {/* React Scan 性能监控 - 动态导入（默认禁用） */}
-            <DynamicReactScanProvider>
-              {/* I18n性能优化组件 - 动态导入 */}
-              <DynamicTranslationPreloader />
+      <NextIntlClientProvider messages={messages}>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+        >
+          {/* React Scan 性能监控 - 动态导入（默认禁用） */}
+          <DynamicReactScanProvider>
+            {/* I18n性能优化组件 - 动态导入 */}
+            <DynamicTranslationPreloader />
 
-              {/* 主题性能监控组件 - 动态导入 */}
-              <DynamicThemePerformanceMonitor />
+            {/* 主题性能监控组件 - 动态导入 */}
+            <DynamicThemePerformanceMonitor />
 
-              {/* Web Vitals 性能监控 - 动态导入 */}
-              <DevelopmentWebVitalsIndicator />
+            {/* Web Vitals 性能监控 - 动态导入 */}
+            <DevelopmentWebVitalsIndicator />
 
             {/* 导航栏 */}
             <Header />
@@ -95,23 +95,23 @@ export default async function LocaleLayout({
             {/* 页脚 */}
             <Footer />
 
-              {/* 开发环境性能指示器 - 动态导入 */}
-              <DevelopmentPerformanceMonitor />
+            {/* 开发环境性能指示器 - 动态导入 */}
+            <DevelopmentPerformanceMonitor />
 
-              {/* React Scan 状态指示器 - 动态导入 */}
-              <DynamicReactScanIndicator />
+            {/* React Scan 状态指示器 - 动态导入 */}
+            <DynamicReactScanIndicator />
 
-              {/* React Scan 控制面板 - 动态导入 */}
-              <DynamicReactScanControlPanel />
+            {/* React Scan 控制面板 - 动态导入 */}
+            <DynamicReactScanControlPanel />
 
-              {/* 开发工具控制器 - 统一管理所有开发工具 */}
-              <DynamicDevToolsController />
+            {/* 开发工具控制器 - 统一管理所有开发工具 */}
+            <DynamicDevToolsController />
 
-              {/* 开发工具状态指示器 */}
-              <DynamicDevToolsStatusIndicator />
-            </DynamicReactScanProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+            {/* 开发工具状态指示器 */}
+            <DynamicDevToolsStatusIndicator />
+          </DynamicReactScanProvider>
+        </ThemeProvider>
+      </NextIntlClientProvider>
     </div>
   );
 }

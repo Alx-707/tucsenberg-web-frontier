@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
+import { REACT_SCAN_CONFIG } from '@/constants/react-scan';
 
 /**
  * React Scan Provider
@@ -28,34 +29,39 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
     }
 
     // 检查是否明确禁用
-    const explicitlyDisabled = process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
+    const explicitlyDisabled =
+      process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
 
     if (explicitlyDisabled) {
-      console.log('🔍 React Scan disabled by NEXT_PUBLIC_DISABLE_REACT_SCAN=true');
+      console.log(
+        '🔍 React Scan disabled by NEXT_PUBLIC_DISABLE_REACT_SCAN=true',
+      );
       return;
     }
 
-    let reactScanInstance: any = null;
+    // let reactScanInstance: any = null; // TODO: Use when needed
     let isReactScanEnabled = true;
 
     // 动态导入并初始化 React Scan
     const initReactScan = async () => {
       try {
-        const { scan, setOptions, getOptions } = await import('react-scan');
+        const { scan, setOptions } = await import('react-scan');
 
         // 初始化 React Scan
-        reactScanInstance = scan({
+        scan({
           enabled: true,
           showToolbar: true,
           log: false, // 避免控制台噪音，保持日志清洁
-          trackUnnecessaryRenders: true, // 检测不必要的渲染
+          // trackUnnecessaryRenders: true, // 检测不必要的渲染 - 该选项不存在
           animationSpeed: 'fast',
 
           // 自定义回调 - 与现有性能监控系统集成
           onRender: (fiber, renders) => {
             // 可以在这里集成到现有的性能监控系统
-            if (renders.length > 5) {
-              console.warn(`🐌 Component ${fiber.type?.name || 'Unknown'} rendered ${renders.length} times`);
+            if (renders.length > REACT_SCAN_CONFIG.RENDER_WARNING_THRESHOLD) {
+              console.warn(
+                `🐌 Component ${fiber.type?.name || 'Unknown'} rendered ${renders.length} times`,
+              );
             }
           },
         });
@@ -63,7 +69,11 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
         // 自定义快捷键处理器
         const handleKeyDown = (event: KeyboardEvent) => {
           // 检查 Ctrl+Shift+X 组合键
-          if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'x') {
+          if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            event.key.toLowerCase() === 'x'
+          ) {
             event.preventDefault();
 
             try {
@@ -109,8 +119,8 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
                     if (notification.parentNode) {
                       notification.parentNode.removeChild(notification);
                     }
-                  }, 300);
-                }, 3000);
+                  }, REACT_SCAN_CONFIG.NOTIFICATION_FADE_DURATION);
+                }, REACT_SCAN_CONFIG.NOTIFICATION_DISPLAY_DURATION);
               }
             } catch (error) {
               console.warn('Failed to toggle React Scan:', error);
@@ -121,16 +131,21 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
         // 注册全局键盘事件监听器
         document.addEventListener('keydown', handleKeyDown, { capture: true });
 
-        console.log('🔍 React Scan initialized - Performance monitoring active');
+        console.log(
+          '🔍 React Scan initialized - Performance monitoring active',
+        );
         console.log('💡 Press Ctrl+Shift+X to toggle React Scan');
 
         // 返回清理函数
         return () => {
-          document.removeEventListener('keydown', handleKeyDown, { capture: true });
+          document.removeEventListener('keydown', handleKeyDown, {
+            capture: true,
+          });
         };
       } catch (error) {
         console.warn('Failed to initialize React Scan:', error);
-        return () => {}; // 返回空清理函数
+        // eslint-disable-next-line no-empty-function
+        return () => {}; // 返回空清理函数，错误情况下无需清理
       }
     };
 
@@ -141,7 +156,8 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
     });
 
     // 组件卸载时清理
-    return () => {
+    // eslint-disable-next-line consistent-return
+    return () => { // useEffect 清理函数
       if (cleanup) {
         cleanup();
       }
@@ -160,6 +176,19 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
 export function ReactScanIndicator() {
   const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
 
+  // 检查是否明确禁用
+  const explicitlyDisabled =
+    process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
+
+  // 注册工具到布局管理器 - 始终调用 Hook
+  useEffect(() => {
+    if (!explicitlyDisabled && process.env.NODE_ENV === 'development') {
+      registerTool('reactScanIndicator');
+      return () => unregisterTool('reactScanIndicator');
+    }
+    return undefined;
+  }, [explicitlyDisabled, registerTool, unregisterTool]);
+
   // 生产环境不显示
   if (process.env.NODE_ENV === 'production') {
     return null;
@@ -170,22 +199,15 @@ export function ReactScanIndicator() {
     return null;
   }
 
-  // 检查是否明确禁用
-  const explicitlyDisabled = process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
-
   if (explicitlyDisabled) {
     return null;
   }
 
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool('reactScanIndicator');
-    return () => unregisterTool('reactScanIndicator');
-  }, []); // 移除函数依赖，避免无限循环
-
   return (
-    <div className={`${getClasses('reactScanIndicator')} flex items-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-xs text-white shadow-lg`}>
-      <div className="h-2 w-2 animate-pulse rounded-full bg-white"></div>
+    <div
+      className={`${getClasses('reactScanIndicator')} flex items-center gap-2 rounded-md bg-blue-500 px-3 py-2 text-xs text-white shadow-lg`}
+    >
+      <div className='h-2 w-2 animate-pulse rounded-full bg-white'></div>
       <span>🔍 React Scan Active</span>
     </div>
   );
@@ -198,7 +220,20 @@ export function ReactScanIndicator() {
  * 自动跟随开发环境启用，生产环境不显示
  */
 export function ReactScanControlPanel() {
-  const { registerTool, unregisterTool, getClasses, shouldCollapse } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+
+  // 检查是否明确禁用
+  const explicitlyDisabled =
+    process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
+
+  // 注册工具到布局管理器 - 始终调用 Hook
+  useEffect(() => {
+    if (!explicitlyDisabled && process.env.NODE_ENV === 'development') {
+      registerTool('reactScanControlPanel');
+      return () => unregisterTool('reactScanControlPanel');
+    }
+    return undefined;
+  }, [explicitlyDisabled, registerTool, unregisterTool]);
 
   // 生产环境不显示
   if (process.env.NODE_ENV === 'production') {
@@ -210,24 +245,20 @@ export function ReactScanControlPanel() {
     return null;
   }
 
-  // 检查是否明确禁用
-  const explicitlyDisabled = process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
-
   if (explicitlyDisabled) {
     return null;
   }
 
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool('reactScanControlPanel');
-    return () => unregisterTool('reactScanControlPanel');
-  }, []); // 移除函数依赖，避免无限循环
-
   return (
-    <div className={`${getClasses('reactScanControlPanel')} rounded-lg bg-gray-900 p-4 text-white shadow-xl`}>
-      <h3 className="mb-2 text-sm font-semibold">React Scan Controls</h3>
-      <div className="space-y-2 text-xs">
-        <div>• Press <kbd className="rounded bg-gray-700 px-1">Ctrl+Shift+X</kbd> to toggle scanning</div>
+    <div
+      className={`${getClasses('reactScanControlPanel')} rounded-lg bg-gray-900 p-4 text-white shadow-xl`}
+    >
+      <h3 className='mb-2 text-sm font-semibold'>React Scan Controls</h3>
+      <div className='space-y-2 text-xs'>
+        <div>
+          • Press <kbd className='rounded bg-gray-700 px-1'>Ctrl+Shift+X</kbd>{' '}
+          to toggle scanning
+        </div>
         <div>• Red highlights = unnecessary renders</div>
         <div>• Green highlights = optimized renders</div>
         <div>• Use toolbar to inspect components</div>

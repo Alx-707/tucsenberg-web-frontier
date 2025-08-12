@@ -11,8 +11,8 @@ class QualityMonitor {
   constructor() {
     this.system = new ComprehensiveQualitySystem();
     this.thresholds = {
-      critical: 60,  // 低于60分发送紧急通知
-      warning: 80    // 低于80分发送警告通知
+      critical: 60, // 低于60分发送紧急通知
+      warning: 80, // 低于80分发送警告通知
     };
   }
 
@@ -30,7 +30,6 @@ class QualityMonitor {
       } else {
         console.log('✅ 质量监控：项目质量良好');
       }
-
     } catch (error) {
       console.error('❌ 质量监控失败:', error.message);
       await this.sendErrorAlert(error);

@@ -15,7 +15,7 @@ console.log('🔍 Testing React Scan Integration...\n');
 const results = {
   passed: 0,
   failed: 0,
-  tests: []
+  tests: [],
 };
 
 function test(name, condition, message) {
@@ -23,7 +23,7 @@ function test(name, condition, message) {
   results.tests.push({
     name,
     passed,
-    message: passed ? '✅ PASS' : `❌ FAIL: ${message}`
+    message: passed ? '✅ PASS' : `❌ FAIL: ${message}`,
   });
 
   if (passed) {
@@ -39,12 +39,14 @@ test(
   () => {
     try {
       const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-      return packageJson.devDependencies && packageJson.devDependencies['react-scan'];
+      return (
+        packageJson.devDependencies && packageJson.devDependencies['react-scan']
+      );
     } catch (error) {
       return false;
     }
   },
-  'react-scan not found in devDependencies'
+  'react-scan not found in devDependencies',
 );
 
 // 测试 2: 检查开发脚本是否配置
@@ -58,7 +60,7 @@ test(
       return false;
     }
   },
-  'dev:no-scan script not found in package.json'
+  'dev:no-scan script not found in package.json',
 );
 
 // 测试 3: 检查配置文件是否存在
@@ -67,7 +69,7 @@ test(
   () => {
     return fs.existsSync('src/lib/react-scan-config.ts');
   },
-  'src/lib/react-scan-config.ts not found'
+  'src/lib/react-scan-config.ts not found',
 );
 
 // 测试 4: 检查 Provider 组件是否存在
@@ -76,7 +78,7 @@ test(
   () => {
     return fs.existsSync('src/components/dev-tools/react-scan-provider.tsx');
   },
-  'src/components/dev-tools/react-scan-provider.tsx not found'
+  'src/components/dev-tools/react-scan-provider.tsx not found',
 );
 
 // 测试 5: 检查环境变量配置
@@ -90,7 +92,7 @@ test(
       return false;
     }
   },
-  'NEXT_PUBLIC_DISABLE_REACT_SCAN not found in .env.example'
+  'NEXT_PUBLIC_DISABLE_REACT_SCAN not found in .env.example',
 );
 
 // 测试 6: 检查动态导入配置
@@ -98,13 +100,16 @@ test(
   'Dynamic imports configured',
   () => {
     try {
-      const dynamicImports = fs.readFileSync('src/components/shared/dynamic-imports.tsx', 'utf8');
+      const dynamicImports = fs.readFileSync(
+        'src/components/shared/dynamic-imports.tsx',
+        'utf8',
+      );
       return dynamicImports.includes('DynamicReactScanProvider');
     } catch (error) {
       return false;
     }
   },
-  'DynamicReactScanProvider not found in dynamic-imports.tsx'
+  'DynamicReactScanProvider not found in dynamic-imports.tsx',
 );
 
 // 测试 7: 检查布局集成
@@ -118,7 +123,7 @@ test(
       return false;
     }
   },
-  'DynamicReactScanProvider not found in layout.tsx'
+  'DynamicReactScanProvider not found in layout.tsx',
 );
 
 // 测试 8: 检查文档是否存在
@@ -127,14 +132,14 @@ test(
   () => {
     return fs.existsSync('docs/development/react-scan.md');
   },
-  'docs/development/react-scan.md not found'
+  'docs/development/react-scan.md not found',
 );
 
 // 输出测试结果
 console.log('Test Results:');
 console.log('='.repeat(50));
 
-results.tests.forEach(test => {
+results.tests.forEach((test) => {
   console.log(`${test.message} ${test.name}`);
 });
 
@@ -147,7 +152,9 @@ if (results.failed === 0) {
   console.log('\n🎉 All tests passed! React Scan is properly integrated.');
   console.log('\n📝 Next steps:');
   console.log('1. Run: pnpm dev (React Scan auto-enabled in development)');
-  console.log('2. To disable: set NEXT_PUBLIC_DISABLE_REACT_SCAN=true in .env.local');
+  console.log(
+    '2. To disable: set NEXT_PUBLIC_DISABLE_REACT_SCAN=true in .env.local',
+  );
   console.log('3. Open your browser and look for the React Scan indicators');
 } else {
   console.log('\n⚠️  Some tests failed. Please check the configuration.');
@@ -168,7 +175,10 @@ try {
   }
 
   // 检查 Provider 配置
-  const providerContent = fs.readFileSync('src/components/dev-tools/react-scan-provider.tsx', 'utf8');
+  const providerContent = fs.readFileSync(
+    'src/components/dev-tools/react-scan-provider.tsx',
+    'utf8',
+  );
   if (providerContent.includes('onRender')) {
     console.log('✅ Custom render callback configured');
   } else {
@@ -181,7 +191,6 @@ try {
   } else {
     console.log('⚠️  Status indicator component not found');
   }
-
 } catch (error) {
   console.log('⚠️  Error reading configuration files:', error.message);
 }

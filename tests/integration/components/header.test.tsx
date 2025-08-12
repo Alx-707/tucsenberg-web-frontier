@@ -1,6 +1,6 @@
-import { Header } from '@/components/layout/header';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { Header } from '@/components/layout/header';
 
 // Mock child components
 vi.mock('@/components/layout/language-switcher', () => ({

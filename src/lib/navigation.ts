@@ -4,8 +4,8 @@
  * This module provides navigation configuration, route definitions,
  * and utility functions for the responsive navigation system.
  */
-import { LOCALES_CONFIG } from '@/config/paths';
 import type { Locale } from '@/types/i18n';
+import { LOCALES_CONFIG } from '@/config/paths';
 
 // Navigation item interface
 export interface NavigationItem {
@@ -78,8 +78,12 @@ export function isActivePath(currentPath: string, itemPath: string): boolean {
 
   // Ensure we match complete path segments, not partial matches
   // Add trailing slash to both paths for comparison to avoid partial matches
-  const normalizedCurrentPath = cleanCurrentPath.endsWith('/') ? cleanCurrentPath : cleanCurrentPath + '/';
-  const normalizedItemPath = cleanItemPath.endsWith('/') ? cleanItemPath : cleanItemPath + '/';
+  const normalizedCurrentPath = cleanCurrentPath.endsWith('/')
+    ? cleanCurrentPath
+    : `${cleanCurrentPath}/`;
+  const normalizedItemPath = cleanItemPath.endsWith('/')
+    ? cleanItemPath
+    : `${cleanItemPath}/`;
 
   return normalizedCurrentPath.startsWith(normalizedItemPath);
 }

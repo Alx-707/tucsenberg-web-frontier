@@ -6,9 +6,9 @@
  * 为非关键组件提供懒加载功能，优化初始包大小
  * 第五阶段性能优化：代码分割和图片优化
  */
-import { LoadingSpinner } from '@/components/loading-spinner';
-import dynamic from 'next/dynamic';
 import React, { Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import { LoadingSpinner } from '@/components/loading-spinner';
 
 // 加载状态组件
 function ComponentLoadingFallback() {

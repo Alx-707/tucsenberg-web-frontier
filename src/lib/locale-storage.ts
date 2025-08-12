@@ -66,18 +66,17 @@ class CookieManager {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
       const [cookieName, ...cookieValueParts] = cookie.trim().split('=');
-      if (cookieName === name) {
-        const cookieValue = cookieValueParts.join('=');
-        if (cookieValue) {
-          try {
-            return decodeURIComponent(cookieValue);
-          } catch {
-            // 静默处理URI解码错误
-            if (process.env.NODE_ENV === 'development') {
-              // console.warn('Failed to decode cookie value:', error);
-            }
-            return null;
-          }
+      if (cookieName !== name) continue;
+
+      const cookieValue = cookieValueParts.join('=');
+      if (!cookieValue) return null;
+
+      try {
+        return decodeURIComponent(cookieValue);
+      } catch {
+        // 静默处理URI解码错误
+        if (process.env.NODE_ENV === 'development') {
+          // console.warn('Failed to decode cookie value:', error);
         }
         return null;
       }
@@ -324,11 +323,11 @@ export class LocaleStorageManager {
       hasPreference: Boolean(preference),
       hasOverride: Boolean(override),
       currentLocale: override || preference?.locale || null,
-      detectionCount: history.detections.length,
-      lastDetection: history.detections[history.detections.length - 1] || null,
+      detectionCount: history?.detections.length || 0,
+      lastDetection: history?.detections[history.detections.length - 1] || null,
       storageSize: {
         preference: preference ? JSON.stringify(preference).length : 0,
-        history: JSON.stringify(history).length,
+        history: history ? JSON.stringify(history).length : 0,
       },
     };
   }

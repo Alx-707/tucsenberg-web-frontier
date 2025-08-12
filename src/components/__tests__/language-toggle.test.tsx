@@ -1,6 +1,6 @@
-import { fireEvent, render } from '@/test/utils';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render } from '@/test/utils';
 import { LanguageToggle } from '../language-toggle';
 
 // Hoisted mock functions
@@ -72,9 +72,19 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenuTrigger: ({ children, asChild, ...props }: any) => {
     if (asChild) {
       // When asChild is true, render children directly with props
-      return React.cloneElement(children, { ...props, 'data-testid': 'language-dropdown-trigger' });
+      return React.cloneElement(children, {
+        ...props,
+        'data-testid': 'language-dropdown-trigger',
+      });
     }
-    return <div data-testid='language-dropdown-trigger' {...props}>{children}</div>;
+    return (
+      <div
+        data-testid='language-dropdown-trigger'
+        {...props}
+      >
+        {children}
+      </div>
+    );
   },
   DropdownMenuItem: ({ children, onClick, asChild, ...props }: any) => {
     if (asChild) {
@@ -83,11 +93,11 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
         ...children.props,
         ...props,
         'data-testid': 'language-dropdown-item',
-        onClick: (e: any) => {
+        'onClick': (e: any) => {
           // Call both the original onClick and the DropdownMenuItem onClick
           if (children.props.onClick) children.props.onClick(e);
           if (onClick) onClick(e);
-        }
+        },
       });
     }
     return (
@@ -181,11 +191,15 @@ describe('LanguageToggle Component', () => {
     it('should render language toggle button', () => {
       render(<LanguageToggle />);
 
-      const button = document.querySelector('[data-testid="language-dropdown-trigger"]');
+      const button = document.querySelector(
+        '[data-testid="language-dropdown-trigger"]',
+      );
       expect(button).toBeInTheDocument();
 
       // 组件实际使用的是 Languages 图标，不是 Globe
-      const languagesIcon = document.querySelector('[data-testid="languages-icon"]');
+      const languagesIcon = document.querySelector(
+        '[data-testid="languages-icon"]',
+      );
       expect(languagesIcon).toBeInTheDocument();
     });
 
@@ -227,7 +241,9 @@ describe('LanguageToggle Component', () => {
       vi.clearAllMocks();
 
       // First open the dropdown menu
-      const trigger = document.querySelector('[data-testid="language-dropdown-trigger"]');
+      const trigger = document.querySelector(
+        '[data-testid="language-dropdown-trigger"]',
+      );
       expect(trigger).toBeInTheDocument();
       fireEvent.click(trigger!);
 
@@ -246,7 +262,9 @@ describe('LanguageToggle Component', () => {
       render(<LanguageToggle />);
 
       // First open the dropdown menu
-      const trigger = document.querySelector('[data-testid="language-dropdown-trigger"]');
+      const trigger = document.querySelector(
+        '[data-testid="language-dropdown-trigger"]',
+      );
       expect(trigger).toBeInTheDocument();
       fireEvent.click(trigger!);
 
@@ -271,7 +289,9 @@ describe('LanguageToggle Component', () => {
       render(<LanguageToggle />);
 
       // First open the dropdown menu
-      const trigger = document.querySelector('[data-testid="language-dropdown-trigger"]');
+      const trigger = document.querySelector(
+        '[data-testid="language-dropdown-trigger"]',
+      );
       expect(trigger).toBeInTheDocument();
       fireEvent.click(trigger!);
 
@@ -298,7 +318,9 @@ describe('LanguageToggle Component', () => {
     it('should have proper ARIA attributes', () => {
       render(<LanguageToggle />);
 
-      const button = document.querySelector('[data-testid="language-dropdown-trigger"]');
+      const button = document.querySelector(
+        '[data-testid="language-dropdown-trigger"]',
+      );
       expect(button).toBeInTheDocument();
 
       const englishItem = document.querySelector('a[data-locale="en"]');

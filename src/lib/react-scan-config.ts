@@ -5,6 +5,8 @@
  * 只在开发环境启用，不影响生产构建
  */
 
+import React from 'react';
+
 export interface ReactScanConfig {
   enabled: boolean;
   showToolbar: boolean;
@@ -33,7 +35,8 @@ export const shouldEnableReactScan = (): boolean => {
   }
 
   // 开发环境：检查是否明确禁用
-  const explicitlyDisabled = process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
+  const explicitlyDisabled =
+    process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true';
 
   // 开发环境默认启用，除非明确禁用
   return !explicitlyDisabled;
@@ -62,7 +65,9 @@ export const initReactScan = async (config: Partial<ReactScanConfig> = {}) => {
   if (!shouldEnable) {
     // 在开发环境显示禁用信息
     if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 React Scan disabled (set NEXT_PUBLIC_DISABLE_REACT_SCAN=false to enable)');
+      console.log(
+        '🔍 React Scan disabled (set NEXT_PUBLIC_DISABLE_REACT_SCAN=false to enable)',
+      );
     }
     return;
   }
@@ -91,7 +96,11 @@ export const initReactScan = async (config: Partial<ReactScanConfig> = {}) => {
  *
  * 用于在 React 组件中初始化 React Scan
  */
-export const ReactScanWrapper = ({ children }: { children: React.ReactNode }) => {
+export const ReactScanWrapper = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   if (typeof window !== 'undefined') {
     // 客户端初始化
     initReactScan();

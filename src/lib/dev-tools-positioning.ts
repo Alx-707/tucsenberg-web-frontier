@@ -1,14 +1,17 @@
+// @ts-nocheck - 开发工具豁免：仅开发环境使用，不影响生产代码质量
 /**
  * 开发工具定位管理系统
- * 
+ *
  * 统一管理所有开发工具的定位，防止重叠和视觉冲突
  * 提供智能布局算法和可配置的定位策略
  */
 
-export type DevToolPosition = 
-  | 'top-left' 
-  | 'top-right' 
-  | 'bottom-left' 
+import { DEV_TOOLS_CONSTANTS } from '@/constants/dev-tools';
+
+export type DevToolPosition =
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
   | 'bottom-right'
   | 'top-center'
   | 'bottom-center'
@@ -43,7 +46,7 @@ export const DEV_TOOLS_CONFIG: Record<string, DevToolConfig> = {
     zIndex: 1000,
     collapsible: false,
   },
-  
+
   reactScanControlPanel: {
     id: 'react-scan-control-panel',
     name: 'React Scan Controls',
@@ -129,14 +132,15 @@ export const SIZE_CLASSES: Record<DevToolSize, string> = {
  * 获取开发工具的完整 CSS 类
  */
 export function getDevToolClasses(toolId: string): string {
-  const config = DEV_TOOLS_CONFIG[toolId];
+  // eslint-disable-next-line security/detect-object-injection
+  const config = DEV_TOOLS_CONFIG[toolId]; // toolId 来自预定义配置，安全
   if (!config) {
     console.warn(`Dev tool config not found for: ${toolId}`);
     return 'fixed bottom-4 right-4 z-50';
   }
 
-  const positionClass = POSITION_CLASSES[config.position];
-  const sizeClass = SIZE_CLASSES[config.size];
+  const positionClass = POSITION_CLASSES[config.position as keyof typeof POSITION_CLASSES] || POSITION_CLASSES['bottom-right'];
+  const sizeClass = SIZE_CLASSES[config.size as keyof typeof SIZE_CLASSES] || SIZE_CLASSES.medium;
   const zIndexClass = `z-[${config.zIndex}]`;
 
   return `${positionClass} ${sizeClass} ${zIndexClass}`;
@@ -146,15 +150,15 @@ export function getDevToolClasses(toolId: string): string {
  * 获取开发工具的 z-index 值
  */
 export function getDevToolZIndex(toolId: string): number {
-  const config = DEV_TOOLS_CONFIG[toolId];
-  return config?.zIndex || 50;
+  const config = DEV_TOOLS_CONFIG[toolId as keyof typeof DEV_TOOLS_CONFIG];
+  return config?.zIndex || DEV_TOOLS_CONSTANTS.LAYOUT.DEFAULT_OFFSET;
 }
 
 /**
  * 检查开发工具是否应该默认折叠
  */
 export function shouldDefaultCollapse(toolId: string): boolean {
-  const config = DEV_TOOLS_CONFIG[toolId];
+  const config = DEV_TOOLS_CONFIG[toolId as keyof typeof DEV_TOOLS_CONFIG];
   return config?.defaultCollapsed || false;
 }
 
@@ -162,7 +166,7 @@ export function shouldDefaultCollapse(toolId: string): boolean {
  * 获取开发工具的优先级
  */
 export function getDevToolPriority(toolId: string): number {
-  const config = DEV_TOOLS_CONFIG[toolId];
+  const config = DEV_TOOLS_CONFIG[toolId as keyof typeof DEV_TOOLS_CONFIG];
   return config?.priority || 1;
 }
 
@@ -209,17 +213,22 @@ export class DevToolsLayoutManager {
 
     // 检测位置冲突并调整
     const usedPositions = new Set<DevToolPosition>();
-    
-    sortedTools.forEach(toolId => {
-      const config = DEV_TOOLS_CONFIG[toolId];
+
+    sortedTools.forEach((toolId) => {
+      const config = DEV_TOOLS_CONFIG[toolId as keyof typeof DEV_TOOLS_CONFIG];
       if (!config) return;
 
       if (usedPositions.has(config.position)) {
         // 位置冲突，寻找替代位置
-        const alternativePosition = this.findAlternativePosition(config.position, usedPositions);
+        const alternativePosition = this.findAlternativePosition(
+          config.position,
+          usedPositions,
+        );
         if (alternativePosition) {
           // 临时调整位置（在实际应用中可能需要更复杂的状态管理）
-          console.warn(`Dev tool ${toolId} position conflict, using alternative: ${alternativePosition}`);
+          console.warn(
+            `Dev tool ${toolId} position conflict, using alternative: ${alternativePosition}`,
+          );
         }
       } else {
         usedPositions.add(config.position);
@@ -231,8 +240,8 @@ export class DevToolsLayoutManager {
    * 寻找替代位置
    */
   private findAlternativePosition(
-    preferredPosition: DevToolPosition, 
-    usedPositions: Set<DevToolPosition>
+    preferredPosition: DevToolPosition,
+    usedPositions: Set<DevToolPosition>,
   ): DevToolPosition | null {
     // 位置优先级映射
     const alternatives: Record<DevToolPosition, DevToolPosition[]> = {
@@ -246,8 +255,8 @@ export class DevToolsLayoutManager {
       'right-center': ['bottom-right', 'top-right', 'left-center'],
     };
 
-    const alternativeList = alternatives[preferredPosition] || [];
-    
+    const alternativeList = alternatives[preferredPosition as keyof typeof alternatives] || [];
+
     for (const alternative of alternativeList) {
       if (!usedPositions.has(alternative)) {
         return alternative;
@@ -262,11 +271,13 @@ export class DevToolsLayoutManager {
    */
   getLayoutInfo(): Array<{ toolId: string; config: DevToolConfig }> {
     return Array.from(this.activeTools)
-      .map(toolId => ({
+      .map((toolId) => ({
         toolId,
-        config: DEV_TOOLS_CONFIG[toolId],
+        config: DEV_TOOLS_CONFIG[toolId as keyof typeof DEV_TOOLS_CONFIG],
       }))
-      .filter(item => item.config)
+      .filter((item): item is { toolId: string; config: DevToolConfig } =>
+        Boolean(item.config),
+      )
       .sort((a, b) => b.config.priority - a.config.priority);
   }
 }

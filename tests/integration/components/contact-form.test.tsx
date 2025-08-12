@@ -128,7 +128,7 @@ describe('ContactForm Integration Tests', () => {
         'validation.firstNameTooShort': 'First name is too short',
         'validation.lastNameTooShort': 'Last name is too short',
       };
-      // eslint-disable-next-line security/detect-object-injection
+
       return (
         (Object.hasOwn(translations, key) ? translations[key] : null) || key
       );

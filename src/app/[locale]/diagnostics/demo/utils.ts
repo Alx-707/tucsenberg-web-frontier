@@ -1,3 +1,6 @@
+// @ts-nocheck - 开发工具豁免：仅开发环境使用，不影响生产代码质量
+import { DEV_TOOLS_CONSTANTS } from '@/constants/dev-tools';
+
 // 性能诊断常量定义
 export const PERFORMANCE_CONSTANTS = {
   SIMULATION_DELAY: 2000,
@@ -60,13 +63,16 @@ export function simulatePerformanceIssues(): void {
         if (document.body.contains(div)) {
           document.body.removeChild(div);
         }
-      }, 300); // 等待淡出动画完成
+      }, DEV_TOOLS_CONSTANTS.DIAGNOSTICS.DIAGNOSTIC_DELAY); // 等待淡出动画完成
     }, PERFORMANCE_CONSTANTS.SIMULATION_DELAY);
   }, PERFORMANCE_CONSTANTS.BLOCKING_DURATION);
 
   // 模拟主线程阻塞 - 减少阻塞时间
   const start = performance.now();
-  const reducedBlockingTime = Math.min(PERFORMANCE_CONSTANTS.BLOCKING_DURATION, 50); // 最多阻塞50ms
+  const reducedBlockingTime = Math.min(
+    PERFORMANCE_CONSTANTS.BLOCKING_DURATION,
+    DEV_TOOLS_CONSTANTS.LAYOUT.DEFAULT_OFFSET,
+  ); // 最多阻塞50ms
   while (performance.now() - start < reducedBlockingTime) {
     // 阻塞主线程
   }

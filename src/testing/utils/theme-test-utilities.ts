@@ -87,12 +87,10 @@ export class ThemeTestUtils {
    * 创建View Transitions API Mock
    */
   static createViewTransitionsMock(): any {
-    return vi
-      .fn()
-      .mockImplementation((callback?: () => void) => {
-        callback?.();
-        return Promise.resolve();
-      });
+    return vi.fn().mockImplementation((callback?: () => void) => {
+      callback?.();
+      return Promise.resolve();
+    });
   }
 
   /**
@@ -373,4 +371,3 @@ class ThemeTestMockFactory {
  * 导出所有工具
  */
 export { ThemeTestUtils as default, ThemeTestAssertions, ThemeTestMockFactory };
-

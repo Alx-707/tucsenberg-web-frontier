@@ -1,13 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // Import after mocks
 import {
-  generateArticleSchema,
-  generateBreadcrumbSchema,
-  generateFAQSchema,
-  generateLocalBusinessSchema,
-  generateLocalizedStructuredData,
-  generateProductSchema,
-  generateStructuredData,
+    generateArticleSchema,
+    generateBreadcrumbSchema,
+    generateFAQSchema,
+    generateJSONLD,
+    generateLocalBusinessSchema,
+    generateLocalizedStructuredData,
+    generateProductSchema,
+    generateStructuredData,
 } from '../structured-data';
 
 // 测试常量定义
@@ -19,10 +20,12 @@ const TEST_COUNTS = {
 } as const;
 
 // Use vi.hoisted to ensure proper mock setup
-const { mockGetTranslations, mockGenerateCanonicalURL } = vi.hoisted(() => ({
-  mockGetTranslations: vi.fn(),
-  mockGenerateCanonicalURL: vi.fn(),
-}));
+const { mockGetTranslations, mockGenerateCanonicalURL, mockRecordError } =
+  vi.hoisted(() => ({
+    mockGetTranslations: vi.fn(),
+    mockGenerateCanonicalURL: vi.fn(),
+    mockRecordError: vi.fn(),
+  }));
 
 vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
@@ -37,6 +40,7 @@ vi.mock('@/lib/i18n-performance', () => ({
     getInstance: () => ({
       trackTranslationUsage: vi.fn(),
     }),
+    recordError: mockRecordError,
   },
 }));
 
@@ -413,6 +417,164 @@ describe('Structured Data Generation', () => {
       const data = await generateStructuredData('home', 'en');
 
       expect(data).toHaveLength(TEST_COUNTS.FALLBACK_STRUCTURED_DATA); // Organization + Website (fallback)
+    });
+  });
+
+  describe('generateJSONLD', () => {
+    it('should generate valid JSON-LD string', () => {
+      const testData = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'Test Organization',
+      };
+
+      const result = generateJSONLD(testData);
+
+      expect(result).toBe(JSON.stringify(testData, null, 2));
+      expect(() => JSON.parse(result)).not.toThrow();
+    });
+
+    it('should handle complex nested objects', () => {
+      const complexData = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'author': {
+          '@type': 'Person',
+          'name': 'John Doe',
+        },
+        'publisher': {
+          '@type': 'Organization',
+          'name': 'Test Publisher',
+          'logo': {
+            '@type': 'ImageObject',
+            'url': 'https://example.com/logo.png',
+          },
+        },
+      };
+
+      const result = generateJSONLD(complexData);
+
+      expect(result).toContain('"@context": "https://schema.org"');
+      expect(result).toContain('"@type": "Article"');
+      expect(result).toContain('"name": "John Doe"');
+      expect(() => JSON.parse(result)).not.toThrow();
+    });
+
+    it('should handle null and undefined values', () => {
+      const dataWithNulls = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        'name': 'Test',
+        'description': null,
+        'url': undefined,
+      };
+
+      const result = generateJSONLD(dataWithNulls);
+
+      expect(() => JSON.parse(result)).not.toThrow();
+      const parsed = JSON.parse(result);
+      expect(parsed.description).toBeNull();
+      expect(parsed).not.toHaveProperty('url');
+    });
+
+    it('should handle empty objects and arrays', () => {
+      const emptyData = {};
+      const result = generateJSONLD(emptyData);
+
+      expect(result).toBe('{}');
+      expect(() => JSON.parse(result)).not.toThrow();
+    });
+  });
+
+  describe('generateLocalizedStructuredData - Error Handling', () => {
+    beforeEach(() => {
+      // Reset mocks
+      vi.clearAllMocks();
+    });
+
+    it('should handle translation errors gracefully', async () => {
+      // Mock getTranslations to throw an error
+      const mockGetTranslationsError = vi.mocked(
+        await import('next-intl/server'),
+      ).getTranslations;
+      mockGetTranslationsError.mockRejectedValueOnce(
+        new Error('Translation failed'),
+      );
+
+      const result = await generateLocalizedStructuredData(
+        'en',
+        'Organization',
+        {},
+      );
+
+      expect(result).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+      });
+    });
+
+    it('should handle unknown structured data types', async () => {
+      const result = await generateLocalizedStructuredData(
+        'en',
+        'UnknownType' as any,
+        {},
+      );
+
+      expect(result).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'UnknownType',
+      });
+    });
+
+    it('should handle non-Error exceptions', async () => {
+      // Mock getTranslations to throw a non-Error object
+      const mockGetTranslationsString = vi.mocked(
+        await import('next-intl/server'),
+      ).getTranslations;
+      mockGetTranslationsString.mockRejectedValueOnce('String error');
+
+      const result = await generateLocalizedStructuredData(
+        'en',
+        'Organization',
+        {},
+      );
+
+      expect(result).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+      });
+    });
+
+    it('should record errors in I18nPerformanceMonitor', async () => {
+      // Mock getTranslations to throw an Error
+      mockGetTranslations.mockRejectedValueOnce(
+        new Error('Translation failed'),
+      );
+
+      await generateLocalizedStructuredData('en', 'Organization', {});
+
+      expect(mockRecordError).toHaveBeenCalled();
+    });
+  });
+
+  describe('BreadcrumbList Generation', () => {
+    it('should generate breadcrumb structured data', async () => {
+      const breadcrumbData = {
+        items: [
+          { name: 'Home', url: '/', position: 1 },
+          { name: 'Products', url: '/products', position: 2 },
+          { name: 'Category', url: '/products/category', position: 3 },
+        ],
+      };
+
+      const result = await generateLocalizedStructuredData(
+        'en',
+        'BreadcrumbList',
+        breadcrumbData,
+      );
+
+      expect(result['@type']).toBe('BreadcrumbList');
+      expect(result['@context']).toBe('https://schema.org');
     });
   });
 });

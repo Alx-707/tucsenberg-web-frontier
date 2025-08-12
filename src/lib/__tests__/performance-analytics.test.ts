@@ -1,11 +1,9 @@
-import {
-    WEB_VITALS_CONSTANTS
-} from '@/constants/test-constants';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import {
-    PerformanceAlertSystem,
-    PerformanceBaselineManager,
-    PerformanceRegressionDetector,
+  PerformanceAlertSystem,
+  PerformanceBaselineManager,
+  PerformanceRegressionDetector,
 } from '../enhanced-web-vitals';
 
 // Mock logger
@@ -586,12 +584,12 @@ describe('PerformanceAlertSystem', () => {
     it('should send console notifications when enabled', async () => {
       alertSystem.configure({
         enabled: true,
-        channels: { console: true },
+        channels: { console: true, storage: false },
       });
 
       // Mock logger.error instead of console.warn for critical alerts
       const { logger } = await vi.importMock('@/lib/logger');
-      const loggerSpy = vi.mocked(logger.error);
+      const loggerSpy = vi.mocked((logger as any).error);
 
       (alertSystem as any).sendAlert('critical', 'Test alert message', {
         metric: 'cls',

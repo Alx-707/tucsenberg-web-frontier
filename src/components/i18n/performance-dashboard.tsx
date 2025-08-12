@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import {
   evaluatePerformance,
   PERFORMANCE_TARGETS,
 } from '@/lib/i18n-performance';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import { useI18nPerformance } from '@/hooks/use-enhanced-translations';
 
 interface PerformanceMetrics {
@@ -27,7 +27,7 @@ export function I18nPerformanceDashboard() {
   useEffect(() => {
     registerTool('i18nPerformanceDashboard');
     return () => unregisterTool('i18nPerformanceDashboard');
-  }, []); // 移除函数依赖，避免无限循环
+  }, [registerTool, unregisterTool]);
 
   useEffect(() => {
     const updateMetrics = () => {
@@ -51,7 +51,9 @@ export function I18nPerformanceDashboard() {
   const evaluation = evaluatePerformance(metrics);
 
   return (
-    <div className={`${getClasses('i18nPerformanceDashboard')} rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800`}>
+    <div
+      className={`${getClasses('i18nPerformanceDashboard')} rounded-lg border border-gray-200 bg-white p-4 shadow-lg dark:border-gray-700 dark:bg-gray-800`}
+    >
       <div className='mb-3 flex items-center justify-between'>
         <h3 className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
           I18n Performance
@@ -185,7 +187,7 @@ export function I18nPerformanceIndicator() {
   useEffect(() => {
     registerTool('i18nPerformanceIndicator');
     return () => unregisterTool('i18nPerformanceIndicator');
-  }, []); // 移除函数依赖，避免无限循环
+  }, [registerTool, unregisterTool]);
 
   useEffect(() => {
     const updateMetrics = () => {
@@ -197,7 +199,7 @@ export function I18nPerformanceIndicator() {
     const interval = setInterval(updateMetrics, 10000); // 每10秒更新
 
     return () => clearInterval(interval);
-  }, []); // 移除函数依赖，避免无限循环
+  }, [getMetrics]);
 
   if (!metrics) return null;
 

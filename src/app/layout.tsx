@@ -1,5 +1,5 @@
-import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
 import './globals.css';
 
 interface RootLayoutProps {
@@ -8,7 +8,9 @@ interface RootLayoutProps {
 
 // 基础 metadata 配置
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001',
+  ),
   title: 'Tucsenberg Web Frontier',
   description: 'Modern B2B Enterprise Web Platform with Next.js 15',
 };

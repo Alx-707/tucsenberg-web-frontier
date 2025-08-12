@@ -1,9 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  EnhancedWebVitalsCollector,
-  PERFORMANCE_THRESHOLDS,
-} from '@/lib/enhanced-web-vitals';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import {
+    EnhancedWebVitalsCollector,
+    PERFORMANCE_THRESHOLDS
+} from '@/lib/enhanced-web-vitals';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Use vi.hoisted to ensure proper mock setup
 const {
@@ -52,6 +52,48 @@ vi.mock('../web-vitals', async () => {
       startCollection: vi.fn(),
       stopCollection: vi.fn(),
       getMetrics: vi.fn(),
+      getDetailedMetrics: vi.fn(() => ({
+        cls: 0.1,
+        fid: 50,
+        lcp: 2000,
+        fcp: 1500,
+        ttfb: 200,
+        inp: 100,
+        page: { url: 'test', referrer: '', title: 'Test', timestamp: Date.now() },
+        device: { memory: 8, cores: 4, platform: 'test' },
+        network: { effectiveType: '4g', downlink: 10, rtt: 50 },
+        navigation: { type: 'navigate', redirectCount: 0 },
+        resources: { slow: [], total: 0 },
+        timing: { domContentLoaded: 1000, load: 2000 },
+      })),
+      generateDiagnosticReport: vi.fn(() => ({
+        metrics: {
+          cls: 0.1,
+          fid: 50,
+          lcp: 2000,
+          fcp: 1500,
+          ttfb: 200,
+          inp: 100,
+          page: { url: 'test', referrer: '', title: 'Test', timestamp: Date.now() },
+          device: { memory: 8, cores: 4, platform: 'test' },
+          network: { effectiveType: '4g', downlink: 10, rtt: 50 },
+          navigation: { type: 'navigate', redirectCount: 0 },
+          resources: { slow: [], total: 0 },
+          timing: { domContentLoaded: 1000, load: 2000 },
+        },
+        analysis: {
+          issues: [],
+          recommendations: [],
+          score: 85,
+        },
+      })),
+    },
+    performanceMonitoringManager: {
+      initialize: vi.fn(),
+      performFullMonitoring: vi.fn(() => ({ status: 'success' })),
+    },
+    performanceAlertSystem: {
+      configure: vi.fn(),
     },
   };
 });
@@ -534,6 +576,138 @@ describe('enhanced-web-vitals', () => {
       expect(report).toHaveProperty('metrics');
       expect(report).toHaveProperty('analysis');
       expect(report.analysis).toHaveProperty('score');
+    });
+  });
+
+  describe('Module Exports Coverage', () => {
+    it('should export all classes correctly', () => {
+      // Test class exports
+      expect(EnhancedWebVitalsCollector).toBeDefined();
+      expect(typeof EnhancedWebVitalsCollector).toBe('function');
+    });
+
+    it('should export constants correctly', () => {
+      expect(PERFORMANCE_THRESHOLDS).toBeDefined();
+      expect(typeof PERFORMANCE_THRESHOLDS).toBe('object');
+    });
+
+    it('should allow creating instances from exported classes', () => {
+      // Test that we can create instances
+      expect(() => new EnhancedWebVitalsCollector()).not.toThrow();
+    });
+  });
+
+  describe('Convenience Functions', () => {
+    it('should test initializePerformanceMonitoring with default config', async () => {
+      const { initializePerformanceMonitoring } = await import('@/lib/enhanced-web-vitals');
+
+      const result = initializePerformanceMonitoring();
+
+      expect(result).toHaveProperty('monitoringManager');
+      expect(result).toHaveProperty('alertSystem');
+    });
+
+    it('should test initializePerformanceMonitoring with custom config', async () => {
+      const { initializePerformanceMonitoring } = await import('@/lib/enhanced-web-vitals');
+
+      const config = {
+        enableAlerts: true,
+        alertThresholds: {
+          cls: { warning: 0.05, critical: 0.15 },
+          lcp: { warning: 2000, critical: 3500 },
+        },
+      };
+
+      const result = initializePerformanceMonitoring(config);
+
+      expect(result).toHaveProperty('monitoringManager');
+      expect(result).toHaveProperty('alertSystem');
+    });
+
+    it('should test generatePerformanceDiagnostics', async () => {
+      const { generatePerformanceDiagnostics } = await import('@/lib/enhanced-web-vitals');
+
+      const diagnostics = generatePerformanceDiagnostics();
+
+      expect(diagnostics).toBeDefined();
+      expect(diagnostics).toHaveProperty('metrics');
+      expect(diagnostics).toHaveProperty('analysis');
+    });
+
+    it('should test performFullPerformanceMonitoring without buildInfo', async () => {
+      const { performFullPerformanceMonitoring } = await import('@/lib/enhanced-web-vitals');
+
+      const result = performFullPerformanceMonitoring();
+
+      expect(result).toBeDefined();
+    });
+
+    it('should test performFullPerformanceMonitoring with buildInfo', async () => {
+      const { performFullPerformanceMonitoring } = await import('@/lib/enhanced-web-vitals');
+
+      const buildInfo = {
+        version: '1.0.0',
+        commit: 'abc123',
+        branch: 'main',
+        timestamp: Date.now(),
+      };
+
+      const result = performFullPerformanceMonitoring(buildInfo);
+
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('Re-export Coverage', () => {
+    it('should test all re-exported instances', async () => {
+      const {
+        enhancedWebVitalsCollector,
+        performanceAlertSystem,
+        performanceMonitoringManager,
+        performanceBaselineManager,
+        performanceRegressionDetector,
+        monitoringManager,
+        webVitalsCollector,
+      } = await import('@/lib/enhanced-web-vitals');
+
+      // Test that all instances are defined
+      expect(enhancedWebVitalsCollector).toBeDefined();
+      expect(performanceAlertSystem).toBeDefined();
+      expect(performanceMonitoringManager).toBeDefined();
+      expect(performanceBaselineManager).toBeDefined();
+      expect(performanceRegressionDetector).toBeDefined();
+
+      // Test aliases
+      expect(monitoringManager).toBeDefined();
+      expect(webVitalsCollector).toBeDefined();
+
+      // Test that aliases point to the same instances
+      expect(monitoringManager).toBe(performanceMonitoringManager);
+      expect(webVitalsCollector).toBe(enhancedWebVitalsCollector);
+    });
+
+    it('should test all re-exported classes', async () => {
+      const {
+        PerformanceAlertSystem,
+        PerformanceBaselineManager,
+        EnhancedWebVitalsCollector: ImportedEnhancedWebVitalsCollector,
+        PerformanceMonitoringManager,
+        PerformanceRegressionDetector,
+      } = await import('@/lib/enhanced-web-vitals');
+
+      // Test that all classes are constructors
+      expect(typeof PerformanceAlertSystem).toBe('function');
+      expect(typeof PerformanceBaselineManager).toBe('function');
+      expect(typeof ImportedEnhancedWebVitalsCollector).toBe('function');
+      expect(typeof PerformanceMonitoringManager).toBe('function');
+      expect(typeof PerformanceRegressionDetector).toBe('function');
+
+      // Test that we can create instances
+      expect(() => new PerformanceAlertSystem()).not.toThrow();
+      expect(() => new PerformanceBaselineManager()).not.toThrow();
+      expect(() => new ImportedEnhancedWebVitalsCollector()).not.toThrow();
+      expect(() => new PerformanceMonitoringManager()).not.toThrow();
+      expect(() => new PerformanceRegressionDetector()).not.toThrow();
     });
   });
 });

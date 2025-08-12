@@ -261,7 +261,6 @@ export interface UseFormatterReturn {
 
 // 路由国际化类型
 export interface LocalizedPathnames {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   [_key: string]: string | { [_locale in Locale]: string };
 }
 

@@ -1,0 +1,663 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+// Mock Sentry with vi.hoisted to ensure it's mocked before module imports
+const mockSentry = vi.hoisted(() => ({
+  setTag: vi.fn(),
+  setUser: vi.fn(),
+  addBreadcrumb: vi.fn(),
+  setMeasurement: vi.fn(),
+  setContext: vi.fn(),
+  captureMessage: vi.fn(),
+}));
+
+vi.mock('@sentry/nextjs', () => mockSentry);
+
+// Mock environment variables - Set to production to enable global instance
+vi.stubEnv('NODE_ENV', 'production');
+
+import * as Sentry from '@sentry/nextjs';
+import { recordThemePreference, recordThemeSwitch, sendThemeReport, ThemeAnalytics, themeAnalytics } from '../theme-analytics';
+import {
+    cleanupThemeAnalyticsTest,
+    createAnalyticsInstance,
+    mockGetRandomValues,
+    setupThemeAnalyticsTest,
+} from './theme-analytics/setup';
+
+describe('ThemeAnalytics', () => {
+  beforeEach(() => {
+    setupThemeAnalyticsTest();
+  });
+
+  afterEach(() => {
+    cleanupThemeAnalyticsTest();
+  });
+
+  describe('Constructor and Configuration', () => {
+    it('should initialize with default config in production', () => {
+      const analytics = new ThemeAnalytics();
+      expect(analytics.getCurrentTheme()).toBe('system');
+      expect(vi.mocked(Sentry.setTag)).toHaveBeenCalledWith('feature', 'theme-analytics');
+    });
+
+    it('should initialize with custom config', () => {
+      const customConfig = {
+        enabled: false,
+        performanceThreshold: 200,
+        sampleRate: 0.5,
+        enableDetailedTracking: false,
+        enableUserBehaviorAnalysis: false,
+      };
+
+      const analytics = new ThemeAnalytics(customConfig);
+      expect(analytics.getCurrentTheme()).toBe('system');
+      // Sentry.setTag should not be called when disabled
+      expect(vi.mocked(Sentry.setTag)).not.toHaveBeenCalled();
+    });
+
+    it('should initialize with development environment', () => {
+      vi.stubEnv('NODE_ENV', 'development');
+      const analytics = new ThemeAnalytics();
+      expect(analytics.getCurrentTheme()).toBe('system');
+      // Should not call Sentry.setTag in development when enabled defaults to false
+      expect(vi.mocked(Sentry.setTag)).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getCurrentTheme', () => {
+    it('should return current theme', () => {
+      const analytics = new ThemeAnalytics();
+      expect(analytics.getCurrentTheme()).toBe('system');
+    });
+  });
+
+  describe('recordThemeSwitch', () => {
+    it('should record theme switch when enabled and sampled', () => {
+      // Mock sampling to always return true
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0; // 0% value ensures sampling
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+      const startTime = 1000;
+      const endTime = 1150;
+
+      analytics.recordThemeSwitch('light', 'dark', startTime, endTime, true);
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme-performance',
+        message: 'Theme switched from light to dark',
+        level: 'info',
+        data: {
+          duration: 150,
+          supportsViewTransitions: true,
+          viewport: { width: 0, height: 0 },
+        },
+      });
+    });
+
+    it('should not record when disabled', () => {
+      const analytics = createAnalyticsInstance({ enabled: false });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).not.toHaveBeenCalled();
+    });
+
+    it('should not record when not sampled', () => {
+      // Mock sampling to always return false
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0xffffffff; // Max value ensures no sampling
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 0.1 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).not.toHaveBeenCalled();
+    });
+
+    it('should report performance issue when threshold exceeded', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0; // Ensure sampling
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        performanceThreshold: 100
+      });
+
+      // Switch duration of 200ms exceeds threshold of 100ms
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1200);
+
+      expect(vi.mocked(Sentry.captureMessage)).toHaveBeenCalledWith(
+        'Slow theme switch detected: 200ms',
+        'warning'
+      );
+
+      expect(vi.mocked(Sentry.setContext)).toHaveBeenCalledWith('theme-performance-issue', {
+        duration: 200,
+        threshold: 100,
+        fromTheme: 'light',
+        toTheme: 'dark',
+        supportsViewTransitions: false,
+        viewport: { width: 0, height: 0 },
+      });
+    });
+
+    it('should handle viewport size when window is available', () => {
+      // Mock window object
+      Object.defineProperty(global, 'window', {
+        value: {
+          innerWidth: 1920,
+          innerHeight: 1080,
+        },
+        writable: true,
+      });
+
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme-performance',
+        message: 'Theme switched from light to dark',
+        level: 'info',
+        data: {
+          duration: 100,
+          supportsViewTransitions: false,
+          viewport: { width: 1920, height: 1080 },
+        },
+      });
+
+      // Cleanup
+      delete (global as any).window;
+    });
+
+    it('should analyze switch patterns when behavior analysis enabled', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        enableUserBehaviorAnalysis: true
+      });
+
+      // Record multiple switches to test pattern analysis
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+      analytics.recordThemeSwitch('light', 'dark', 2000, 2100); // Same pattern
+      analytics.recordThemeSwitch('dark', 'light', 3000, 3100); // Different pattern
+
+      // Verify Sentry calls were made (pattern analysis is internal)
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledTimes(3);
+    });
+  });
+
+  describe('recordThemePreference', () => {
+    it('should record theme preference when enabled', () => {
+      const analytics = createAnalyticsInstance();
+      analytics.recordThemePreference('dark');
+
+      expect(analytics.getCurrentTheme()).toBe('dark');
+      expect(vi.mocked(Sentry.setUser)).toHaveBeenCalledWith({
+        themePreference: 'dark',
+      });
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme',
+        message: 'Theme preference set to dark',
+        level: 'info',
+        data: {
+          theme: 'dark',
+          timestamp: expect.any(Number),
+        },
+      });
+    });
+
+    it('should not record when disabled', () => {
+      const analytics = createAnalyticsInstance({ enabled: false });
+      analytics.recordThemePreference('dark');
+
+      expect(analytics.getCurrentTheme()).toBe('system'); // Should remain default when disabled
+      expect(vi.mocked(Sentry.setUser)).not.toHaveBeenCalled();
+      expect(vi.mocked(Sentry.addBreadcrumb)).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getPerformanceSummary', () => {
+    it('should return empty summary when no metrics', () => {
+      const analytics = new ThemeAnalytics();
+      const summary = analytics.getPerformanceSummary();
+
+      expect(summary).toEqual({
+        avgSwitchTime: 0,
+        maxSwitchTime: 0,
+        minSwitchTime: 0,
+        totalSwitches: 0,
+        slowSwitches: 0,
+        viewTransitionsUsage: 0,
+      });
+    });
+
+    it('should calculate correct summary with metrics', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0; // Ensure sampling
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        performanceThreshold: 100
+      });
+
+      // Record switches with different durations
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1050, true);  // 50ms, fast
+      analytics.recordThemeSwitch('dark', 'light', 2000, 2200, false); // 200ms, slow
+      analytics.recordThemeSwitch('light', 'system', 3000, 3075, true); // 75ms, fast
+
+      const summary = analytics.getPerformanceSummary();
+
+      expect(summary.totalSwitches).toBe(3);
+      expect(summary.avgSwitchTime).toBeCloseTo((50 + 200 + 75) / 3, 2);
+      expect(summary.maxSwitchTime).toBe(200);
+      expect(summary.minSwitchTime).toBe(50);
+      expect(summary.slowSwitches).toBe(1); // Only 200ms exceeds 100ms threshold
+      expect(summary.viewTransitionsUsage).toBe(2); // Two switches used view transitions
+    });
+  });
+
+  describe('getUsageStatistics', () => {
+    it('should return empty array when no usage stats', () => {
+      const analytics = new ThemeAnalytics();
+      const stats = analytics.getUsageStatistics();
+      expect(stats).toEqual([]);
+    });
+
+    it('should return sorted usage statistics', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+
+      // Record multiple switches to build usage stats
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+      analytics.recordThemeSwitch('light', 'dark', 2000, 2100);
+      analytics.recordThemeSwitch('dark', 'system', 3000, 3100);
+
+      const stats = analytics.getUsageStatistics();
+
+      expect(stats).toHaveLength(2); // 'dark' and 'system'
+      expect(stats[0]?.theme).toBe('dark'); // Most used (2 times)
+      expect(stats[0]?.count).toBe(2);
+      expect(stats[1]?.theme).toBe('system'); // Less used (1 time)
+      expect(stats[1]?.count).toBe(1);
+    });
+  });
+
+  describe('sendPerformanceReport', () => {
+    it('should send performance report when enabled', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+
+      // Add some metrics first
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      analytics.sendPerformanceReport();
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme-analytics',
+        message: 'Theme performance report',
+        level: 'info',
+        data: {
+          performance: expect.any(Object),
+          usage: expect.any(Array),
+          patterns: expect.any(Array),
+          sessionDuration: expect.any(Number),
+        },
+      });
+
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith(
+        'theme.avg_switch_time',
+        100,
+        'millisecond'
+      );
+    });
+
+    it('should not send report when disabled', () => {
+      const analytics = createAnalyticsInstance({ enabled: false });
+      analytics.sendPerformanceReport();
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).not.toHaveBeenCalled();
+      expect(vi.mocked(Sentry.setMeasurement)).not.toHaveBeenCalled();
+    });
+
+    it('should send all performance measurements', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+
+      // Add metrics with view transitions
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100, true);
+      analytics.recordThemeSwitch('dark', 'system', 2000, 2150, false);
+
+      analytics.sendPerformanceReport();
+
+      // Verify all measurements are sent
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith('theme.avg_switch_time', 125, 'millisecond');
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith('theme.max_switch_time', 150, 'millisecond');
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith('theme.total_switches', 2, 'none');
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith('theme.slow_switches_ratio', 0, 'ratio');
+      expect(vi.mocked(Sentry.setMeasurement)).toHaveBeenCalledWith('theme.view_transitions_usage', 0.5, 'ratio');
+    });
+  });
+
+  describe('Sampling Logic', () => {
+    it('should use crypto.getRandomValues when available', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0x7fffffff; // 50% value
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 0.6 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(mockGetRandomValues).toHaveBeenCalled();
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalled(); // Should sample at 50% with 60% rate
+    });
+
+    it('should fallback to Math.random when crypto unavailable', () => {
+      // Remove crypto mock
+      delete (global as any).crypto;
+
+      const mathRandomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.05); // 5%
+
+      const analytics = createAnalyticsInstance({ sampleRate: 0.1 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(mathRandomSpy).toHaveBeenCalled();
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalled(); // Should sample at 5% with 10% rate
+
+      mathRandomSpy.mockRestore();
+    });
+  });
+
+  describe('Data Cleanup', () => {
+    it('should cleanup old performance metrics', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+
+      // Mock Date.now to simulate old data
+      const originalDateNow = Date.now;
+      const baseTime = 1000000;
+      vi.spyOn(Date, 'now').mockReturnValue(baseTime);
+
+      // Record old metric
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      // Advance time by more than 24 hours
+      const hoursInDay = 24;
+      const minutesInHour = 60;
+      const secondsInMinute = 60;
+      const millisecondsInSecond = 1000;
+      const oneDayPlus = hoursInDay * minutesInHour * secondsInMinute * millisecondsInSecond + 1000;
+
+      Date.now = vi.fn().mockReturnValue(baseTime + oneDayPlus);
+
+      // Record new metric (this should trigger cleanup)
+      analytics.recordThemeSwitch('dark', 'light', 2000, 2100);
+
+      const summary = analytics.getPerformanceSummary();
+      expect(summary.totalSwitches).toBe(1); // Old metric should be cleaned up
+
+      Date.now = originalDateNow;
+    });
+
+    it('should limit metrics to maximum count', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+
+      // Record more than 1000 metrics
+      for (let i = 0; i < 1005; i++) {
+        analytics.recordThemeSwitch('light', 'dark', i * 1000, i * 1000 + 100);
+      }
+
+      const summary = analytics.getPerformanceSummary();
+      expect(summary.totalSwitches).toBe(1000); // Should be limited to 1000
+    });
+  });
+
+  describe('Global Instance and Convenience Functions', () => {
+    it('should export global instance', () => {
+      expect(themeAnalytics).toBeInstanceOf(ThemeAnalytics);
+    });
+
+    it('should export bound convenience functions', () => {
+      expect(typeof recordThemeSwitch).toBe('function');
+      expect(typeof recordThemePreference).toBe('function');
+      expect(typeof sendThemeReport).toBe('function');
+    });
+
+    it('should call methods on global instance', () => {
+      // Completely reset global instance configuration for testing
+      (themeAnalytics as any).config = {
+        enabled: true,
+        performanceThreshold: 100,
+        sampleRate: 1.0, // 100% sampling
+        enableDetailedTracking: true,
+        enableUserBehaviorAnalysis: true,
+      };
+
+      // Test that convenience function works by checking the result
+      const initialMetricsCount = (themeAnalytics as any).performanceMetrics.length;
+
+      // Call convenience function
+      recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      // Verify that the global instance was affected
+      const finalMetricsCount = (themeAnalytics as any).performanceMetrics.length;
+      expect(finalMetricsCount).toBe(initialMetricsCount + 1);
+
+      // Verify the recorded data
+      const lastMetric = (themeAnalytics as any).performanceMetrics[finalMetricsCount - 1];
+      expect(lastMetric.fromTheme).toBe('light');
+      expect(lastMetric.toTheme).toBe('dark');
+      expect(lastMetric.switchDuration).toBe(100); // 1100 - 1000
+    });
+
+    it('should call recordThemePreference on global instance', () => {
+      // Configure global instance for testing
+      (themeAnalytics as any).config = {
+        enabled: true,
+        performanceThreshold: 100,
+        sampleRate: 1.0, // 100% sampling
+        enableDetailedTracking: true,
+        enableUserBehaviorAnalysis: true,
+      };
+
+      // Set initial state
+      (themeAnalytics as any).currentTheme = 'light';
+
+      // Call convenience function
+      recordThemePreference('dark');
+
+      // Verify state was updated
+      expect((themeAnalytics as any).currentTheme).toBe('dark');
+    });
+
+    it('should call sendPerformanceReport on global instance', () => {
+      // Configure global instance for testing
+      (themeAnalytics as any).config = {
+        enabled: true,
+        performanceThreshold: 100,
+        sampleRate: 1.0, // 100% sampling
+        enableDetailedTracking: true,
+        enableUserBehaviorAnalysis: true,
+      };
+
+      // Add test data to ensure there's something to report
+      (themeAnalytics as any).performanceMetrics = [{
+        fromTheme: 'light',
+        toTheme: 'dark',
+        switchDuration: 150,
+        timestamp: Date.now(),
+        supportsViewTransitions: false,
+        viewportSize: { width: 1024, height: 768 },
+      }];
+
+      // Call convenience function
+      sendThemeReport();
+
+      // Verify Sentry was called (through mock)
+      expect(mockSentry.addBreadcrumb).toHaveBeenCalled();
+    });
+  });
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should handle navigator unavailable', () => {
+      // Remove navigator mock
+      delete (global as any).navigator;
+
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme-performance',
+        message: 'Theme switched from light to dark',
+        level: 'info',
+        data: {
+          duration: 100,
+          supportsViewTransitions: false,
+          viewport: { width: 0, height: 0 },
+        },
+      });
+    });
+
+    it('should handle zero duration switches', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1000); // Same start and end time
+
+      const summary = analytics.getPerformanceSummary();
+      expect(summary.avgSwitchTime).toBe(0);
+      expect(summary.minSwitchTime).toBe(0);
+      expect(summary.maxSwitchTime).toBe(0);
+    });
+
+    it('should handle negative duration switches', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({ sampleRate: 1.0 });
+      analytics.recordThemeSwitch('light', 'dark', 1100, 1000); // End before start
+
+      const summary = analytics.getPerformanceSummary();
+      expect(summary.avgSwitchTime).toBe(-100);
+      expect(summary.minSwitchTime).toBe(-100);
+    });
+
+    it('should handle disabled behavior analysis', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        enableUserBehaviorAnalysis: false
+      });
+
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      // Should still record performance metrics
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalledWith({
+        category: 'theme-performance',
+        message: 'Theme switched from light to dark',
+        level: 'info',
+        data: {
+          duration: 100,
+          supportsViewTransitions: false,
+          viewport: { width: 0, height: 0 },
+        },
+      });
+    });
+
+    it('should handle disabled detailed tracking', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        enableDetailedTracking: false
+      });
+
+      analytics.recordThemeSwitch('light', 'dark', 1000, 1100);
+
+      // Should still work normally
+      expect(vi.mocked(Sentry.addBreadcrumb)).toHaveBeenCalled();
+    });
+
+    it('should handle multiple rapid switches', () => {
+      mockGetRandomValues.mockImplementation((array) => {
+        array[0] = 0;
+        return array;
+      });
+
+      const analytics = createAnalyticsInstance({
+        sampleRate: 1.0,
+        performanceThreshold: 50,
+        enableUserBehaviorAnalysis: true
+      });
+
+      // Simulate rapid theme switches
+      const themes = ['light', 'dark', 'system'];
+      for (let i = 0; i < 10; i++) {
+        const from = themes[i % themes.length];
+        const to = themes[(i + 1) % themes.length];
+        analytics.recordThemeSwitch(from!, to!, i * 100, i * 100 + 25 + i * 5);
+      }
+
+      const summary = analytics.getPerformanceSummary();
+      expect(summary.totalSwitches).toBe(10);
+      expect(summary.avgSwitchTime).toBeGreaterThan(0);
+
+      const stats = analytics.getUsageStatistics();
+      expect(stats.length).toBeGreaterThan(0);
+    });
+  });
+});

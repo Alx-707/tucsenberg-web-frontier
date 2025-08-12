@@ -1,15 +1,15 @@
 'use client';
 
+import { Component, type ErrorInfo, type ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
-import { useTranslations } from 'next-intl';
-import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;

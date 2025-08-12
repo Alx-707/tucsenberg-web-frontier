@@ -1,8 +1,8 @@
-import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import {
-    EnhancedWebVitalsCollector,
-    enhancedWebVitalsCollector,
+  EnhancedWebVitalsCollector,
+  enhancedWebVitalsCollector,
 } from '../enhanced-web-vitals';
 import { DEVICE_DEFAULTS } from '../web-vitals/constants';
 

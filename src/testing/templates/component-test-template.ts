@@ -7,8 +7,8 @@
  */
 
 import '@testing-library/jest-dom';
-import { fireEvent } from '@testing-library/react';
 import React from 'react';
+import { fireEvent } from '@testing-library/react';
 
 // 测试常量定义
 const TEST_CONSTANTS = {

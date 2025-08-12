@@ -256,75 +256,73 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
   # 文章内容
   ```
 
-## TinaCMS内容管理系统
+## MDX内容管理系统
 
 ### 依赖包配置
 
-- **必须安装**: `@tinacms/cli@^1.10.2` (开发依赖)
-- **必须安装**: `@tinacms/mdx@^1.8.1` (开发依赖)
-- **必须安装**: `tinacms@^2.8.2` (生产依赖)
-- **禁止**: 修改TinaCMS版本号，除非有明确的升级需求
+- **必须安装**: `@next/mdx@^15.4.6` - Next.js原生MDX支持
+- **必须安装**: `@mdx-js/loader@^3.1.0` - MDX文件加载器
+- **必须安装**: `@mdx-js/react@^3.1.0` - React组件嵌入支持
+- **必须安装**: `gray-matter@^4.0.3` - Front Matter解析库
+- **必须安装**: `@types/mdx@^2.0.13` - MDX TypeScript类型定义
+- **禁止**: 修改核心MDX版本号，除非有明确的升级需求
 
 ### 配置文件结构
 
-- **核心配置**: `tina/config.ts` - TinaCMS主配置文件
-- **生成文件**: `tina/__generated__/` - 自动生成的类型和配置
-- **性能配置**: `tina/performance.ts` - 缓存和优化配置
-- **禁止修改**: 自动生成的文件，仅修改源配置
-
-### 环境变量要求
-
-- **必须配置**: `TINA_CLIENT_ID` - TinaCMS客户端ID
-- **必须配置**: `TINA_TOKEN` - TinaCMS访问令牌
-- **可选配置**: `TINA_BRANCH` - Git分支名称（默认main）
-- **安全要求**: 敏感变量必须放在.env.local，禁止提交到Git
+- **核心配置**: `next.config.ts` - Next.js MDX集成配置
+- **内容配置**: `content/config/content.json` - 内容管理全局配置
+- **类型定义**: `src/types/content.ts` - TypeScript接口定义
+- **解析器**: `src/lib/content-parser.ts` - MDX文件解析函数
+- **查询器**: `src/lib/content-query.ts` - 内容查询和获取函数
+- **工具函数**: `src/lib/content-utils.ts` - 路径验证和配置工具
 
 ### 开发命令标准
 
-- **启动TinaCMS**: `pnpm run tina:dev` - 启动完整开发环境
-- **仅Next.js**: `pnpm run dev` - 仅启动Next.js服务器
-- **配置检查**: `pnpm run tina:audit` - 验证TinaCMS配置
-- **类型生成**: `pnpm run tina:build` - 重新生成TypeScript类型
+- **启动开发环境**: `pnpm dev` - 启动Next.js开发服务器
+- **构建生产版本**: `pnpm build` - 构建静态站点
+- **内容完整性检查**: `pnpm run content:check` - 验证内容文件完整性
+- **类型检查**: `pnpm run type-check` - 验证TypeScript类型
+- **内容同步检查**: `node scripts/content-integrity-check.js` - 多语言同步验证
 
 ### 多语言内容管理配置
 
 - **内容路径**: 必须按语言分目录存储
   - 英文内容: `content/posts/en/` 和 `content/pages/en/`
   - 中文内容: `content/posts/zh/` 和 `content/pages/zh/`
-- **语言字段**: 必须在Schema中定义locale字段
+  - 文档文件: `content/documents/en/` 和 `content/documents/zh/`
+- **语言字段**: 必须在Front Matter中定义locale字段
 - **文件命名**: 使用相同slug，不同语言目录
 - **同步要求**: 修改一种语言内容时，必须同时更新另一种语言
 
-### TinaCMS Schema配置标准
+### MDX Front Matter配置标准
 
-- **集合定义**: 必须包含posts和pages两个集合
-- **字段类型**: 严格定义所有字段类型和验证规则
-- **语言支持**: 每个集合必须包含locale字段
-- **SEO配置**: 必须包含完整的SEO字段对象
+- **必需字段**: title, description, slug, locale, publishedAt
+- **可选字段**: author, tags, categories, featured, draft, seo
+- **类型安全**: 使用TypeScript接口验证元数据完整性
 - **示例**:
 
   ```typescript
-  // ✅ 正确：TinaCMS集合配置
-  {
-    name: 'posts',
-    label: 'Blog Posts',
-    path: 'content/posts',
-    format: 'mdx',
-    match: { include: '{en,zh}/**/*' },
-    fields: [
-      {
-        type: 'string',
-        name: 'locale',
-        label: 'Language',
-        options: [
-          { value: 'en', label: 'English' },
-          { value: 'zh', label: '中文' }
-        ],
-        required: true
-      },
-      // 其他字段...
-    ]
-  }
+  // ✅ 正确：MDX Front Matter配置
+  ---
+  title: 'Article Title'
+  description: 'Article description for SEO'
+  slug: 'article-slug'
+  locale: 'en'
+  publishedAt: '2024-01-01'
+  author: 'Author Name'
+  tags: ['tag1', 'tag2']
+  categories: ['category1']
+  featured: false
+  draft: false
+  seo:
+    title: 'Custom SEO Title'
+    description: 'Custom SEO Description'
+    keywords: ['keyword1', 'keyword2']
+  ---
+
+  # Article Content
+
+  Your MDX content with React components...
   ```
 
 ### 内容管理规则
@@ -333,15 +331,26 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 - **Front Matter验证**: 使用TypeScript接口验证元数据完整性
 - **多语言同步**: 英中文内容必须保持结构一致性
 - **文件命名规范**: 使用kebab-case命名，保持语言目录对应
+- **Git工作流**: 内容变更通过Git版本控制，触发自动部署
+- **无数据库架构**: 简化部署流程，所有内容存储在文件系统中
 
 ### 媒体文件管理
 
 - **存储路径**: 必须使用`public/images/`目录
 - **文件格式**: 支持JPG、PNG、WebP格式
-- **大小限制**: 单文件≤5MB
+- **大小限制**: 图片文件≤5MB，文档文件≤20MB
 - **命名规范**: 使用kebab-case英文命名
-- **组织结构**: 按功能分子目录（blog/、pages/、og/等）
+- **组织结构**: 按功能分子目录（blog/、pages/、og/、documents/等）
 - **引用方式**: 在MDX文件中使用相对路径引用图片
+
+### 内容解析和查询API
+
+- **解析函数**: `parseContentFile()` - 解析单个MDX文件
+- **查询函数**: `getAllPosts()`, `getAllPages()` - 获取内容列表
+- **单项查询**: `getPostBySlug()`, `getPageBySlug()` - 获取特定内容
+- **统计信息**: `getContentStats()` - 获取内容统计数据
+- **路径验证**: `validateFilePath()` - 安全路径验证
+- **配置获取**: `getContentConfig()` - 获取全局配置
 
 ## 质量检查流程
 
@@ -499,6 +508,41 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 - **useEffect优化**: 避免在事件处理中使用useEffect，直接调用事件处理函数
 - **组件Props**: 使用条件展开传递可选属性，确保类型安全
 - **性能优化**: 使用React.memo、useCallback稳定函数引用
+
+### React Hooks 使用规范
+
+- **调用顺序**: Hooks 必须在组件顶层、相同顺序调用，禁止条件性调用
+- **依赖完整**: useEffect/useMemo/useCallback 依赖数组必须包含所有使用的变量
+- **修复策略**: 条件逻辑移入 Hook 内部；复杂场景拆分独立组件
+- **ESLint规则**: `react-hooks/rules-of-hooks: error`, `react-hooks/exhaustive-deps: error`
+- **示例**:
+  ```typescript
+  // ✅ 正确：Hooks 在组件顶层调用
+  function Component({ condition }: { condition: boolean }) {
+    const [state, setState] = useState(0);
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+      if (condition) {
+        // 条件逻辑在 Hook 内部
+        fetchData().then(setData);
+      }
+    }, [condition]); // 完整依赖数组
+
+    return <div>{data}</div>;
+  }
+
+  // ❌ 错误：条件性调用 Hooks
+  function BadComponent({ condition }: { condition: boolean }) {
+    const [state, setState] = useState(0);
+
+    if (condition) {
+      const [conditionalState, setConditionalState] = useState(''); // 错误
+    }
+
+    return <div>{state}</div>;
+  }
+  ```
 
 ### AI编码导入保护策略
 
@@ -831,24 +875,35 @@ import { debugLog } from './debug'; // Temporary debugging
 - **测试隔离**: 生产代码禁止导入测试文件
 - **依赖层次**: 遵循清晰的依赖方向
 
-### 日志和调试
+### 日志和调试规范
 
 - **生产环境**: 必须使用结构化日志，禁止console语句
-- **开发环境**: 可以使用console.warn进行调试
+- **开发环境**: 仅允许console.error和console.warn，禁止console.log
 - **日志格式**: 使用@/lib/logger进行结构化日志记录
+- **ESLint规则**: `no-console: ['error', { allow: ['error', 'warn'] }]`
+- **脚本文件例外**: scripts/和config/目录允许console输出
 - **示例**:
 
   ```typescript
   // ✅ 正确：结构化日志
   import { logger } from '@/lib/logger';
 
-  logger.info('Processing content', {
-    contentId: content.id,
-    type: content.type,
+  logger.error('Payment processing failed', {
+    userId: user.id,
+    paymentId: payment.id,
+    errorCode: error.code,
   });
 
-  // ❌ 错误：生产环境console
-  console.log('Processing content');
+  // ✅ 正确：开发环境警告
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('User subscription expired', { userId: user.id });
+  }
+
+  // ❌ 错误：生产环境console.log
+  console.log('Processing content'); // 违反no-console规则
+
+  // ❌ 错误：缺少上下文信息
+  logger.error('Something went wrong'); // 缺少上下文
   ```
 
 ### 质量标准总结

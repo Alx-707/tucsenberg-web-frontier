@@ -3,7 +3,14 @@ type: "auto"
 description: "Next.js 15 App Router, React Server Components (RSC) vs Client Components, Vercel deployment, Turbopack dev, SWC build, @next/bundle-analyzer, CSP & security headers, Sentry, CI/CD with pnpm"
 ---
 
-# Next.js 15 Architecture Guidelines
+# Next.js 15 Architecture
+
+## React Hooks 规范
+
+- **调用顺序**: Hooks 必须在组件顶层、相同顺序调用，禁止条件性调用
+- **依赖完整**: useEffect/useMemo/useCallback 依赖数组必须包含所有使用的变量
+- **修复策略**: 条件逻辑移入 Hook 内部；复杂场景拆分独立组件
+- **ESLint**: `react-hooks/rules-of-hooks: error`, `react-hooks/exhaustive-deps: error` Guidelines
 
 ## Project Structure Constraints
 

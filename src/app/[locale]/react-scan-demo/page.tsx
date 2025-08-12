@@ -25,16 +25,16 @@ export default async function ReactScanDemoPage({
   const t = await getTranslations({ locale, namespace: 'ReactScanDemo' });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="mb-6 text-3xl font-bold">{t('title')}</h1>
-        <p className="mb-8 text-lg text-gray-600">{t('description')}</p>
+    <div className='container mx-auto px-4 py-8'>
+      <div className='mx-auto max-w-4xl'>
+        <h1 className='mb-6 text-3xl font-bold'>{t('title')}</h1>
+        <p className='mb-8 text-lg text-gray-600'>{t('description')}</p>
 
-        <div className="mb-8 rounded-lg bg-blue-50 p-6">
-          <h2 className="mb-4 text-xl font-semibold text-blue-900">
+        <div className='mb-8 rounded-lg bg-blue-50 p-6'>
+          <h2 className='mb-4 text-xl font-semibold text-blue-900'>
             {t('instructions.title')}
           </h2>
-          <ul className="space-y-2 text-blue-800">
+          <ul className='space-y-2 text-blue-800'>
             <li>• {t('instructions.step1')}</li>
             <li>• {t('instructions.step2')}</li>
             <li>• {t('instructions.step3')}</li>

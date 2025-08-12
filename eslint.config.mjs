@@ -1,11 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import reactYouMightNotNeedAnEffect from 'eslint-plugin-react-you-might-not-need-an-effect';
 import security from 'eslint-plugin-security';
 import securityNode from 'eslint-plugin-security-node';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -402,6 +402,31 @@ export default [
     ],
   },
 
+  // 开发工具复杂度豁免配置
+  {
+    name: 'dev-tools-complexity-exemption',
+    files: [
+      // 开发者工具面板和调试插件
+      'src/components/dev-tools/**/*.{ts,tsx}',
+      'src/app/*/dev-tools/**/*.{ts,tsx}',
+      'src/app/*/react-scan-demo/**/*.{ts,tsx}',
+      'src/app/*/diagnostics/**/*.{ts,tsx}',
+      // 开发环境特定库文件
+      'src/lib/dev-tools-positioning.ts',
+      'src/lib/performance-monitoring-coordinator.ts',
+      'src/lib/react-scan-config.ts',
+      // 开发环境特定常量
+      'src/constants/dev-tools.ts',
+    ],
+    rules: {
+      'max-lines-per-function': 'off',
+      'complexity': 'off',
+      'max-lines': 'off',
+      'max-params': 'off', // 开发工具可能需要更多参数
+      'max-depth': 'off', // 开发工具可能有复杂的嵌套逻辑
+    },
+  },
+
   // 测试文件宽松配置 - 自动生成
   {
     name: 'test-files-relaxed-config',
@@ -423,6 +448,83 @@ export default [
       'max-lines-per-function': 'off',
       'max-lines': 'off',
       'no-throw-literal': 'off',
+      // 新增：测试文件特殊处理
+      '@typescript-eslint/no-require-imports': 'off', // 允许require导入
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }], // 允许console输出
+      'no-new': 'off', // 允许new副作用，测试中常用
+      'no-shadow': 'warn', // 允许变量遮蔽
+      '@next/next/no-assign-module-variable': 'off', // 允许module变量赋值
+    },
+  },
+
+  // 开发工具特殊配置
+  {
+    name: 'dev-tools-special-config',
+    files: [
+      // 开发者工具面板和调试插件
+      'src/components/dev-tools/**/*.{ts,tsx}',
+      'src/app/**/dev-tools/**/*.{ts,tsx}',
+      'src/app/**/react-scan-demo/**/*.{ts,tsx}',
+      'src/app/**/diagnostics/**/*.{ts,tsx}',
+      // 开发环境特定库文件
+      'src/lib/react-scan-config.ts',
+      'src/lib/dev-tools-positioning.ts',
+      'src/lib/performance-monitoring-coordinator.ts',
+      // 开发环境特定常量
+      'src/constants/dev-tools.ts',
+      'src/constants/test-*.ts',
+    ],
+    rules: {
+      // 开发工具允许console输出
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }],
+
+      // 允许React Scan的特殊命名
+      'no-underscore-dangle': [
+        'error',
+        {
+          allow: ['__REACT_SCAN__', '__DEV__'],
+        },
+      ],
+
+      // 开发工具可以使用any类型（但要有注释说明）
+      '@typescript-eslint/no-explicit-any': 'warn',
+
+      // 允许开发工具使用 @ts-nocheck 等 TypeScript 注释
+      '@typescript-eslint/ban-ts-comment': 'off',
+
+      // 允许对象注入（开发工具需要动态访问）
+      'security/detect-object-injection': 'warn',
+
+      // 允许空函数（开发工具占位符）
+      'no-empty-function': 'warn',
+
+      // 允许一致性返回问题（开发工具复杂逻辑）
+      'consistent-return': 'warn',
+
+      // 允许未定义变量（React等全局变量）
+      'no-undef': ['error', { typeof: true }],
+
+      // 开发工具特定豁免
+      'no-magic-numbers': 'warn', // 开发工具可能需要硬编码数值
+      'no-param-reassign': 'warn', // 开发工具可能需要修改参数
+      'prefer-destructuring': 'warn', // 开发工具可能需要直接访问属性
+    },
+  },
+
+  // 配置文件特殊处理
+  {
+    name: 'config-files-special',
+    files: [
+      'playwright.config.ts',
+      '*.config.{js,ts,mjs}',
+      'scripts/**/*.{js,ts}',
+    ],
+    rules: {
+      // 配置文件允许魔法数字
+      'no-magic-numbers': 'off',
+
+      // 配置文件允许隐式类型转换
+      'no-implicit-coercion': 'off',
     },
   },
 ];

@@ -1,20 +1,23 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// 4. 导入测试常量和被测试的模块
+import {
+  TEST_COUNT_CONSTANTS,
+  TEST_WEB_VITALS_DIAGNOSTICS,
+} from '@/constants/test-constants';
+import { useWebVitalsDiagnostics } from '../use-web-vitals-diagnostics';
 
 // 1. 直接Mock模块 - 移到文件顶部确保在所有导入前执行
 vi.mock('@/lib/enhanced-web-vitals', () => ({
   enhancedWebVitalsCollector: {
     generateDiagnosticReport: vi.fn(),
-    getMetrics: vi.fn(),
-    reset: vi.fn(),
+    getDetailedMetrics: vi.fn(),
+    cleanup: vi.fn(),
   },
 }));
 
 // 2. 使用vi.hoisted确保Mock函数在模块导入前设置
-const {
-  mockLocalStorage,
-  mockConsoleWarn,
-} = vi.hoisted(() => ({
+const { mockLocalStorage, mockConsoleWarn } = vi.hoisted(() => ({
   mockLocalStorage: {
     getItem: vi.fn(),
     setItem: vi.fn(),
@@ -47,26 +50,25 @@ Object.defineProperty(global, 'window', {
   writable: true,
 });
 
-// 4. 导入测试常量和被测试的模块
-import {
-    TEST_COUNT_CONSTANTS,
-    TEST_WEB_VITALS_DIAGNOSTICS
-} from '@/constants/test-constants';
-import { useWebVitalsDiagnostics } from '../use-web-vitals-diagnostics';
-
 // Mock验证函数
 const verifyMockSetup = async () => {
-  const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
+  const { enhancedWebVitalsCollector } = await import(
+    '@/lib/enhanced-web-vitals'
+  );
 
   // 验证Mock函数是否正确设置
-  expect(vi.isMockFunction(enhancedWebVitalsCollector.generateDiagnosticReport)).toBe(true);
-  expect(vi.isMockFunction(enhancedWebVitalsCollector.getMetrics)).toBe(true);
-  expect(vi.isMockFunction(enhancedWebVitalsCollector.reset)).toBe(true);
+  expect(
+    vi.isMockFunction(enhancedWebVitalsCollector.generateDiagnosticReport),
+  ).toBe(true);
+  expect(vi.isMockFunction(enhancedWebVitalsCollector.getDetailedMetrics)).toBe(
+    true,
+  );
+  expect(vi.isMockFunction(enhancedWebVitalsCollector.cleanup)).toBe(true);
 
   // 验证Mock函数可以被调用
   expect(enhancedWebVitalsCollector.generateDiagnosticReport).toBeDefined();
-  expect(enhancedWebVitalsCollector.getMetrics).toBeDefined();
-  expect(enhancedWebVitalsCollector.reset).toBeDefined();
+  expect(enhancedWebVitalsCollector.getDetailedMetrics).toBeDefined();
+  expect(enhancedWebVitalsCollector.cleanup).toBeDefined();
 };
 
 // 辅助函数：验证Hook返回值的完整性
@@ -132,10 +134,14 @@ describe('useWebVitalsDiagnostics', () => {
     vi.useFakeTimers();
 
     // 3. 获取Mock实例并设置默认行为
-    const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-    enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue(mockGenerateReportResult);
-    enhancedWebVitalsCollector.getMetrics.mockReturnValue({});
-    enhancedWebVitalsCollector.reset.mockImplementation(() => {});
+    const { enhancedWebVitalsCollector } = await import(
+      '@/lib/enhanced-web-vitals'
+    );
+    (
+      enhancedWebVitalsCollector.generateDiagnosticReport as any
+    ).mockReturnValue(mockGenerateReportResult);
+    (enhancedWebVitalsCollector.getDetailedMetrics as any).mockReturnValue({});
+    (enhancedWebVitalsCollector.cleanup as any).mockImplementation(() => {});
 
     // 4. 设置浏览器API Mock的默认行为
     mockLocalStorage.getItem.mockReturnValue(null);
@@ -150,10 +156,14 @@ describe('useWebVitalsDiagnostics', () => {
     vi.clearAllMocks();
 
     // 获取Mock实例并重新设置默认行为
-    const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-    enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue(mockGenerateReportResult);
-    enhancedWebVitalsCollector.getMetrics.mockReturnValue({});
-    enhancedWebVitalsCollector.reset.mockImplementation(() => {});
+    const { enhancedWebVitalsCollector } = await import(
+      '@/lib/enhanced-web-vitals'
+    );
+    (
+      enhancedWebVitalsCollector.generateDiagnosticReport as any
+    ).mockReturnValue(mockGenerateReportResult);
+    (enhancedWebVitalsCollector.getDetailedMetrics as any).mockReturnValue({});
+    (enhancedWebVitalsCollector.cleanup as any).mockImplementation(() => {});
 
     // 重置浏览器API Mock
     mockLocalStorage.getItem.mockReturnValue(null);
@@ -239,8 +249,12 @@ describe('useWebVitalsDiagnostics', () => {
       });
 
       // 验证Mock被调用
-      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-      expect(enhancedWebVitalsCollector.generateDiagnosticReport).toHaveBeenCalled();
+      const { enhancedWebVitalsCollector } = await import(
+        '@/lib/enhanced-web-vitals'
+      );
+      expect(
+        enhancedWebVitalsCollector.generateDiagnosticReport,
+      ).toHaveBeenCalled();
 
       // 验证结果
       expect(result.current.currentReport).toBeTruthy();
@@ -275,8 +289,12 @@ describe('useWebVitalsDiagnostics', () => {
       await resetMocksToDefault();
 
       // 设置错误Mock
-      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-      enhancedWebVitalsCollector.generateDiagnosticReport.mockImplementation(() => {
+      const { enhancedWebVitalsCollector } = await import(
+        '@/lib/enhanced-web-vitals'
+      );
+      (
+        enhancedWebVitalsCollector.generateDiagnosticReport as any
+      ).mockImplementation(() => {
         throw new Error('Report generation failed');
       });
 
@@ -301,8 +319,12 @@ describe('useWebVitalsDiagnostics', () => {
       await resetMocksToDefault();
 
       // 设置错误Mock
-      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-      enhancedWebVitalsCollector.generateDiagnosticReport.mockImplementation(() => {
+      const { enhancedWebVitalsCollector } = await import(
+        '@/lib/enhanced-web-vitals'
+      );
+      (
+        enhancedWebVitalsCollector.generateDiagnosticReport as any
+      ).mockImplementation(() => {
         throw new Error('String error');
       });
 
@@ -488,8 +510,12 @@ describe('useWebVitalsDiagnostics', () => {
       await resetMocksToDefault();
 
       // 设置Mock返回零值，确保新生成的报告也是零值
-      const { enhancedWebVitalsCollector } = await import('@/lib/enhanced-web-vitals');
-      enhancedWebVitalsCollector.generateDiagnosticReport.mockReturnValue({
+      const { enhancedWebVitalsCollector } = await import(
+        '@/lib/enhanced-web-vitals'
+      );
+      (
+        enhancedWebVitalsCollector.generateDiagnosticReport as any
+      ).mockReturnValue({
         ...mockGenerateReportResult,
         metrics: {
           ...mockGenerateReportResult.metrics,
