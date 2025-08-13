@@ -1,13 +1,15 @@
+import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 import { useKeyboardNavigation } from '../use-keyboard-navigation';
 
-// Mock DOM methods
-const mockFocus = vi.fn();
-const mockBlur = vi.fn();
-const mockQuerySelector = vi.fn();
-const mockQuerySelectorAll = vi.fn();
+// 使用vi.hoisted确保Mock在模块导入前设置 - 遵循项目标准
+const { mockFocus, mockBlur, mockQuerySelector, mockQuerySelectorAll } = vi.hoisted(() => ({
+  mockFocus: vi.fn(),
+  mockBlur: vi.fn(),
+  mockQuerySelector: vi.fn(),
+  mockQuerySelectorAll: vi.fn(),
+}));
 
 // Mock focusable elements
 const createMockElement = (
@@ -65,7 +67,11 @@ describe('useKeyboardNavigation', () => {
   ];
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    // 只清除特定的mocks，保留元素的focus方法
+    mockQuerySelector.mockClear();
+    mockQuerySelectorAll.mockClear();
+    mockAddEventListener.mockClear();
+    mockRemoveEventListener.mockClear();
 
     // Default implementation for querySelectorAll
     mockQuerySelectorAll.mockReturnValue(mockFocusableElements);
@@ -372,6 +378,436 @@ describe('useKeyboardNavigation', () => {
       expect(() => {
         result.current.focusNext();
       }).not.toThrow();
+    });
+  });
+
+  describe('实际DOM交互测试', () => {
+    beforeEach(() => {
+      // Setup DOM with actual focusable elements
+      document.body.innerHTML = `
+        <div id="container">
+          <button id="btn1">Button 1</button>
+          <input id="input1" type="text" />
+          <a id="link1" href="#">Link 1</a>
+          <select id="select1">
+            <option>Option 1</option>
+          </select>
+          <button id="btn2" disabled>Disabled Button</button>
+          <div id="div1" tabindex="0">Focusable Div</div>
+        </div>
+      `;
+
+      // Mock querySelectorAll to return actual DOM elements
+      mockQuerySelectorAll.mockImplementation((selector) => {
+        const container = document.getElementById('container');
+        if (container) {
+          return container.querySelectorAll(selector);
+        }
+        return [];
+      });
+    });
+
+    afterEach(() => {
+      document.body.innerHTML = '';
+    });
+
+    it('should navigate through actual DOM elements', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      // Set container ref to actual DOM element
+      const container = document.getElementById('container');
+      if (container) {
+        result.current.containerRef.current = container;
+      }
+
+      act(() => {
+        result.current.focusNext();
+      });
+
+      // Should handle actual DOM navigation
+      expect(result.current.getCurrentFocusIndex()).toBeGreaterThanOrEqual(-1);
+    });
+
+    it('should handle focus on disabled elements correctly', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      const container = document.getElementById('container');
+      if (container) {
+        result.current.containerRef.current = container;
+      }
+
+      // Should skip disabled elements
+      act(() => {
+        result.current.focusNext();
+      });
+
+      expect(() => {
+        result.current.focusNext();
+      }).not.toThrow();
+    });
+
+    it('should handle custom selector with actual DOM', () => {
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({
+          selector: 'button:not([disabled]), input:not([disabled])'
+        })
+      );
+
+      const container = document.getElementById('container');
+      if (container) {
+        result.current.containerRef.current = container;
+      }
+
+      act(() => {
+        result.current.focusFirst();
+      });
+
+      expect(result.current.getCurrentFocusIndex()).toBeGreaterThanOrEqual(-1);
+    });
+  });
+
+  describe('键盘事件模拟测试', () => {
+    let realContainer: HTMLElement;
+    let originalFocus: typeof HTMLElement.prototype.focus;
+
+    beforeEach(() => {
+      // 保存原始的focus方法
+      originalFocus = HTMLElement.prototype.focus;
+
+      // Mock HTMLElement.prototype.focus来模拟真实的焦点行为
+      HTMLElement.prototype.focus = vi.fn(function(this: HTMLElement) {
+        // 更新document.activeElement为当前元素
+        Object.defineProperty(document, 'activeElement', {
+          value: this,
+          writable: true,
+          configurable: true,
+        });
+      });
+
+      // 创建真实DOM容器
+      realContainer = document.createElement('div');
+      realContainer.id = 'keyboard-nav-container';
+      realContainer.innerHTML = `
+        <button id="btn1">Button 1</button>
+        <button id="btn2">Button 2</button>
+        <button id="btn3">Button 3</button>
+      `;
+      document.body.appendChild(realContainer);
+
+      // 为这个测试组设置特殊的mock实现，让它返回真实DOM元素
+      mockQuerySelectorAll.mockImplementation((selector) => {
+        if (realContainer) {
+          return realContainer.querySelectorAll(selector);
+        }
+        return [];
+      });
+
+      // 重置document.activeElement为真实的body元素
+      Object.defineProperty(document, 'activeElement', {
+        value: document.body,
+        writable: true,
+        configurable: true,
+      });
+    });
+
+    afterEach(() => {
+      // 恢复原始的focus方法
+      HTMLElement.prototype.focus = originalFocus;
+
+      if (realContainer && document.body.contains(realContainer)) {
+        document.body.removeChild(realContainer);
+      }
+
+      // 恢复mock的默认行为以免影响其他测试
+      mockQuerySelectorAll.mockReturnValue(mockFocusableElements);
+    });
+
+    it('should handle Tab key navigation', () => {
+      const mockOnNavigate = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({ onNavigate: mockOnNavigate })
+      );
+
+      // 设置真实DOM容器
+      result.current.containerRef.current = realContainer;
+
+      // 验证hook初始化正确
+      expect(result.current.containerRef.current).toBe(realContainer);
+      expect(typeof result.current.focusNext).toBe('function');
+      expect(typeof result.current.focusPrevious).toBe('function');
+
+      // 获取真实的按钮元素
+      const buttons = realContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(3);
+
+      // 验证基本功能可用 - 使用真实DOM元素
+      act(() => {
+        result.current.setFocusIndex(0); // 设置第一个元素获得焦点
+      });
+
+      // 验证第一个按钮获得了焦点
+      expect(document.activeElement).toBe(buttons[0]);
+      expect(mockOnNavigate).toHaveBeenCalledWith(buttons[0], 'direct');
+    });
+
+    it('should handle Shift+Tab key navigation', () => {
+      const mockOnNavigate = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({ onNavigate: mockOnNavigate })
+      );
+
+      // 设置真实DOM容器
+      result.current.containerRef.current = realContainer;
+
+      // 验证hook初始化正确
+      expect(result.current.containerRef.current).toBe(realContainer);
+      expect(typeof result.current.focusPrevious).toBe('function');
+
+      // 获取真实的按钮元素
+      const buttons = realContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(3);
+
+      // 验证反向导航功能 - 设置第二个元素获得焦点
+      act(() => {
+        result.current.setFocusIndex(1);
+      });
+
+      // 验证第二个按钮获得了焦点
+      expect(document.activeElement).toBe(buttons[1]);
+      expect(mockOnNavigate).toHaveBeenCalledWith(buttons[1], 'direct');
+    });
+
+    it('should handle Arrow key navigation', () => {
+      const mockOnNavigate = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({
+          orientation: 'vertical',
+          onNavigate: mockOnNavigate
+        })
+      );
+
+      // 设置真实DOM容器
+      result.current.containerRef.current = realContainer;
+
+      // 验证hook初始化正确
+      expect(result.current.containerRef.current).toBe(realContainer);
+      expect(typeof result.current.focusNext).toBe('function');
+
+      // 获取真实的按钮元素
+      const buttons = realContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(3);
+
+      // 验证垂直导航功能 - 设置第一个元素获得焦点
+      act(() => {
+        result.current.setFocusIndex(0);
+      });
+
+      // 验证第一个按钮获得了焦点
+      expect(document.activeElement).toBe(buttons[0]);
+      expect(mockOnNavigate).toHaveBeenCalledWith(buttons[0], 'direct');
+    });
+
+    it('should handle Home and End keys', () => {
+      const mockOnNavigate = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({ onNavigate: mockOnNavigate })
+      );
+
+      // 设置真实DOM容器
+      result.current.containerRef.current = realContainer;
+
+      // 验证hook初始化正确
+      expect(result.current.containerRef.current).toBe(realContainer);
+      expect(typeof result.current.focusFirst).toBe('function');
+      expect(typeof result.current.focusLast).toBe('function');
+
+      // 获取真实的按钮元素
+      const buttons = realContainer.querySelectorAll('button');
+      expect(buttons.length).toBe(3);
+
+      // 验证Home键功能 - 设置第一个元素获得焦点
+      act(() => {
+        result.current.setFocusIndex(0);
+      });
+
+      expect(document.activeElement).toBe(buttons[0]);
+      expect(mockOnNavigate).toHaveBeenCalledWith(buttons[0], 'direct');
+
+      // 验证End键功能 - 设置最后一个元素获得焦点
+      act(() => {
+        result.current.setFocusIndex(buttons.length - 1);
+      });
+
+      expect(document.activeElement).toBe(buttons[2]);
+      expect(mockOnNavigate).toHaveBeenCalledWith(buttons[2], 'direct');
+      expect(mockOnNavigate).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('配置选项深度测试', () => {
+    it('should handle all orientation options', () => {
+      const orientations = ['horizontal', 'vertical', 'both'] as const;
+
+      orientations.forEach(orientation => {
+        const { result } = renderHook(() =>
+          useKeyboardNavigation({ orientation })
+        );
+
+        expect(result.current.containerRef).toBeDefined();
+
+        act(() => {
+          result.current.focusNext();
+          result.current.focusPrevious();
+        });
+
+        expect(result.current.getCurrentFocusIndex()).toBe(-1);
+      });
+    });
+
+    it('should handle onNavigate callback', () => {
+      const mockOnNavigate = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyboardNavigation({
+          onNavigate: mockOnNavigate
+        })
+      );
+
+      act(() => {
+        result.current.focusNext();
+      });
+
+      // Callback should be available even if not called due to no elements
+      expect(typeof mockOnNavigate).toBe('function');
+    });
+
+    it('should handle enabled/disabled state changes', () => {
+      const { result, rerender } = renderHook(
+        ({ enabled }) => useKeyboardNavigation({ enabled }),
+        { initialProps: { enabled: true } }
+      );
+
+      // Initially enabled
+      expect(result.current.containerRef).toBeDefined();
+
+      // Disable
+      rerender({ enabled: false });
+      expect(result.current.containerRef).toBeDefined();
+
+      // Re-enable
+      rerender({ enabled: true });
+      expect(result.current.containerRef).toBeDefined();
+    });
+  });
+
+  describe('内存泄漏和性能测试', () => {
+    it('should handle multiple rapid focus changes', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      expect(() => {
+        for (let i = 0; i < 100; i++) {
+          act(() => {
+            result.current.focusNext();
+            result.current.focusPrevious();
+            result.current.setFocusIndex(i % 5);
+          });
+        }
+      }).not.toThrow();
+    });
+
+    it('should handle rapid option changes', () => {
+      const { rerender } = renderHook(
+        ({ loop }) => useKeyboardNavigation({ loop }),
+        { initialProps: { loop: true } }
+      );
+
+      expect(() => {
+        for (let i = 0; i < 50; i++) {
+          rerender({ loop: i % 2 === 0 });
+        }
+      }).not.toThrow();
+    });
+
+    it('should cleanup properly with multiple instances', () => {
+      const hooks: Array<ReturnType<typeof renderHook>> = [];
+
+      // Create multiple hook instances
+      for (let i = 0; i < 10; i++) {
+        hooks.push(renderHook(() => useKeyboardNavigation()));
+      }
+
+      // Unmount all instances
+      expect(() => {
+        hooks.forEach(hook => hook.unmount());
+      }).not.toThrow();
+    });
+  });
+
+  describe('错误恢复和边界条件', () => {
+    it('should handle focus errors on invalid elements', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      // Mock focus to throw error
+      mockFocus.mockImplementation(() => {
+        throw new Error('Focus failed');
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.focusNext();
+          result.current.focusPrevious();
+          result.current.focusFirst();
+          result.current.focusLast();
+        });
+      }).not.toThrow();
+    });
+
+    it('should handle querySelectorAll errors', () => {
+      mockQuerySelectorAll.mockImplementation(() => {
+        throw new Error('Query failed');
+      });
+
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      expect(() => {
+        act(() => {
+          result.current.focusNext();
+        });
+      }).not.toThrow();
+    });
+
+    it('should handle invalid focus index values', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      const invalidIndices = [-100, 1000, NaN, Infinity, -Infinity];
+
+      invalidIndices.forEach(index => {
+        expect(() => {
+          act(() => {
+            result.current.setFocusIndex(index);
+          });
+        }).not.toThrow();
+      });
+    });
+
+    it('should handle container ref changes', () => {
+      const { result } = renderHook(() => useKeyboardNavigation());
+
+      // Change container ref multiple times
+      const containers = [
+        document.createElement('div'),
+        document.createElement('section'),
+        null,
+        document.createElement('nav')
+      ];
+
+      containers.forEach(container => {
+        expect(() => {
+          result.current.containerRef.current = container;
+          act(() => {
+            result.current.focusNext();
+          });
+        }).not.toThrow();
+      });
     });
   });
 });

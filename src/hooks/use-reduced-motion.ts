@@ -8,30 +8,40 @@ import { useEffect, useState } from 'react';
  */
 export function useReducedMotion(): boolean {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-    // SSR or missing matchMedia support
-    if (typeof window === 'undefined' || !window.matchMedia) {
+    // SSR or missing window support
+    if (typeof window === 'undefined') {
       return false;
     }
 
     try {
+      // Safe window access - check if window and matchMedia exist
+      if (!window || typeof window.matchMedia !== 'function') {
+        return false;
+      }
+
       const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       // Handle case where matchMedia returns null (some SSR scenarios)
       return mediaQuery?.matches ?? false;
     } catch {
-      // Fallback for any matchMedia errors
+      // Fallback for any matchMedia errors or window access issues
       return false;
     }
   });
 
   useEffect(() => {
     // Check if we're in the browser and matchMedia is available
-    if (typeof window === 'undefined' || !window.matchMedia) {
+    if (typeof window === 'undefined') {
       return undefined;
     }
 
     let mediaQuery: MediaQueryList | null = null;
 
     try {
+      // Safe window access - double check window exists and has matchMedia
+      if (!window || typeof window.matchMedia !== 'function') {
+        return undefined;
+      }
+
       // Create media query
       mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -40,24 +50,36 @@ export function useReducedMotion(): boolean {
         return undefined;
       }
 
-      // Create event listener
+      // Create event listener with enhanced malformed event handling
       const handleChange = (event: MediaQueryListEvent) => {
-        setPrefersReducedMotion(event.matches);
+        // Handle malformed events gracefully - check for event existence and matches property
+        if (event && typeof event === 'object' && typeof event.matches === 'boolean') {
+          setPrefersReducedMotion(event.matches);
+        } else {
+          // Fallback: re-query the media query if event is malformed
+          try {
+            if (mediaQuery && typeof mediaQuery.matches === 'boolean') {
+              setPrefersReducedMotion(mediaQuery.matches);
+            }
+          } catch {
+            // Ignore errors in fallback
+          }
+        }
       };
 
       // Add listener if addEventListener is available
-      if (mediaQuery.addEventListener) {
+      if (mediaQuery.addEventListener && typeof mediaQuery.addEventListener === 'function') {
         mediaQuery.addEventListener('change', handleChange);
       }
 
       // Cleanup
       return () => {
-        if (mediaQuery?.removeEventListener) {
+        if (mediaQuery?.removeEventListener && typeof mediaQuery.removeEventListener === 'function') {
           mediaQuery.removeEventListener('change', handleChange);
         }
       };
     } catch {
-      // Fallback for any matchMedia errors
+      // Fallback for any matchMedia errors or window access issues
       return undefined;
     }
   }, []);

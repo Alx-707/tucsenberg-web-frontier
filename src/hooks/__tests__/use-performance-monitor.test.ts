@@ -1,6 +1,6 @@
+import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { usePerformanceMonitor } from '../use-performance-monitor';
 
 // Mock performance.memory
@@ -378,6 +378,285 @@ describe('usePerformanceMonitor', () => {
         renderTime: 0,
       });
       expect(result.current.error).toBe(null);
+    });
+  });
+
+  describe('内存监控深度测试', () => {
+    it('should handle memory API variations', () => {
+      const memoryVariations = [
+        { usedJSHeapSize: 0, totalJSHeapSize: 0, jsHeapSizeLimit: 0 },
+        { usedJSHeapSize: 1000000, totalJSHeapSize: 2000000, jsHeapSizeLimit: 4000000 },
+        { usedJSHeapSize: undefined, totalJSHeapSize: undefined, jsHeapSizeLimit: undefined },
+      ];
+
+      memoryVariations.forEach(memory => {
+        Object.defineProperty(global.performance, 'memory', {
+          writable: true,
+          value: memory,
+        });
+
+        const { result } = renderHook(() => usePerformanceMonitor());
+
+        act(() => {
+          result.current.startMonitoring();
+        });
+
+        expect(result.current.isMonitoring).toBe(true);
+      });
+    });
+
+    it('should handle performance.now errors', () => {
+      const originalNow = global.performance.now;
+
+      try {
+        global.performance.now = vi.fn(() => {
+          throw new Error('Performance.now error');
+        });
+
+        const { result } = renderHook(() => usePerformanceMonitor());
+
+        expect(() => {
+          act(() => {
+            result.current.startMonitoring();
+          });
+        }).not.toThrow();
+      } finally {
+        global.performance.now = originalNow;
+      }
+    });
+
+    it('should handle missing performance object', () => {
+      const originalPerformance = global.performance;
+
+      try {
+        // @ts-expect-error - Testing edge case
+        global.performance = undefined;
+
+        const { result } = renderHook(() => usePerformanceMonitor());
+
+        expect(() => {
+          act(() => {
+            result.current.startMonitoring();
+          });
+        }).not.toThrow();
+      } finally {
+        global.performance = originalPerformance;
+      }
+    });
+  });
+
+  describe('配置验证和错误处理', () => {
+    it('should handle invalid configuration gracefully', () => {
+      const invalidConfigs = [
+        { monitoringInterval: -1 },
+        { monitoringInterval: 0 },
+        { alertThresholds: null },
+        { enableAlerts: 'invalid' },
+      ];
+
+      invalidConfigs.forEach(config => {
+        expect(() => {
+          renderHook(() => usePerformanceMonitor(config as any));
+        }).not.toThrow();
+      });
+    });
+
+    it('should handle extremely high monitoring intervals', () => {
+      const { result } = renderHook(() =>
+        usePerformanceMonitor({
+          autoMonitoring: true,
+          monitoringInterval: 999999999,
+        })
+      );
+
+      expect(result.current.isMonitoring).toBe(true);
+    });
+
+    it('should handle configuration changes during monitoring', () => {
+      const { result, rerender } = renderHook(
+        ({ config }) => usePerformanceMonitor(config),
+        {
+          initialProps: {
+            config: { autoMonitoring: true, monitoringInterval: 1000 }
+          }
+        }
+      );
+
+      expect(result.current.isMonitoring).toBe(true);
+
+      // Change configuration
+      rerender({
+        config: { autoMonitoring: false, monitoringInterval: 2000 }
+      });
+
+      // Should handle configuration change gracefully
+      expect(() => {
+        act(() => {
+          result.current.refreshMetrics();
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('并发和竞态条件', () => {
+    it('should handle rapid start/stop cycles', () => {
+      const { result } = renderHook(() => usePerformanceMonitor());
+
+      expect(() => {
+        act(() => {
+          for (let i = 0; i < 10; i++) {
+            result.current.startMonitoring();
+            result.current.stopMonitoring();
+          }
+        });
+      }).not.toThrow();
+    });
+
+    it('should handle concurrent refresh calls', () => {
+      const { result } = renderHook(() => usePerformanceMonitor());
+
+      act(() => {
+        result.current.startMonitoring();
+      });
+
+      expect(() => {
+        act(() => {
+          // Simulate concurrent refresh calls
+          result.current.refreshMetrics();
+          result.current.refreshMetrics();
+          result.current.refreshMetrics();
+        });
+      }).not.toThrow();
+    });
+
+    it('should handle monitoring state changes during refresh', () => {
+      const { result } = renderHook(() => usePerformanceMonitor());
+
+      act(() => {
+        result.current.startMonitoring();
+      });
+
+      expect(() => {
+        act(() => {
+          result.current.refreshMetrics();
+          result.current.stopMonitoring();
+          result.current.refreshMetrics();
+        });
+      }).not.toThrow();
+    });
+  });
+
+  describe('性能警报系统边缘情况', () => {
+    it('should handle alert system with missing memory API', () => {
+      const originalMemory = global.performance.memory;
+      delete (global.performance as any).memory;
+
+      const { result } = renderHook(() => usePerformanceMonitor({
+        enableAlerts: true,
+        alertThresholds: {
+          memoryUsage: 1000000, // 1MB threshold
+        },
+      }));
+
+      act(() => {
+        result.current.startMonitoring();
+        const memoryUsage = result.current.measureMemoryUsage();
+        expect(memoryUsage).toBeUndefined();
+      });
+
+      // Restore memory property
+      Object.defineProperty(global.performance, 'memory', {
+        writable: true,
+        value: originalMemory,
+      });
+    });
+
+    it('should handle alert threshold edge cases', () => {
+      const { result } = renderHook(() => usePerformanceMonitor({
+        enableAlerts: true,
+        alertThresholds: {
+          loadTime: 0, // Zero threshold should trigger alerts
+          renderTime: Number.MAX_SAFE_INTEGER, // Very high threshold
+          memoryUsage: -1, // Negative threshold (invalid)
+        },
+      }));
+
+      act(() => {
+        result.current.startMonitoring();
+        result.current.measureLoadTime();
+        result.current.measureRenderTime(Date.now() - 100);
+      });
+
+      // Should handle edge cases without crashing
+      expect(result.current.isMonitoring).toBe(true);
+    });
+  });
+
+  describe('自动基线功能测试', () => {
+    it('should handle autoBaseline configuration', () => {
+      const { result } = renderHook(() => usePerformanceMonitor({
+        autoBaseline: true,
+        alertConfig: {
+          enabled: true,
+          thresholds: {
+            cls: { warning: 0.1, critical: 0.25 },
+            lcp: { warning: 2500, critical: 4000 },
+            fid: { warning: 100, critical: 300 },
+          },
+        },
+      }));
+
+      expect(result.current.performanceAlertSystem).toBeDefined();
+    });
+
+    it('should handle missing alertConfig with autoBaseline', () => {
+      const { result } = renderHook(() => usePerformanceMonitor({
+        autoBaseline: true,
+        // Missing alertConfig
+      }));
+
+      expect(result.current.performanceAlertSystem).toBeDefined();
+    });
+  });
+
+  describe('内存泄漏防护测试', () => {
+    it('should not accumulate alerts indefinitely', () => {
+      const { result } = renderHook(() => usePerformanceMonitor({
+        enableAlerts: true,
+        alertThresholds: {
+          loadTime: 0, // Always trigger alerts
+        },
+      }));
+
+      act(() => {
+        result.current.startMonitoring();
+
+        // Generate many alerts
+        for (let i = 0; i < 100; i++) {
+          result.current.measureLoadTime();
+        }
+      });
+
+      // Should have some alerts but not necessarily all 100
+      expect(result.current.alerts.length).toBeGreaterThan(0);
+      expect(result.current.alerts.length).toBeLessThan(200); // Reasonable upper bound
+    });
+
+    it('should handle alert clearing', () => {
+      const { result } = renderHook(() => usePerformanceMonitor({
+        enableAlerts: true,
+        alertThresholds: {
+          loadTime: 0,
+        },
+      }));
+
+      act(() => {
+        result.current.startMonitoring();
+        result.current.measureLoadTime();
+        result.current.clearAlerts();
+      });
+
+      expect(result.current.alerts).toEqual([]);
     });
   });
 });

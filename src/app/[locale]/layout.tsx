@@ -16,6 +16,7 @@ import {
   DynamicThemePerformanceMonitor,
   DynamicTranslationPreloader,
 } from '@/components/shared/dynamic-imports';
+import { EnterpriseAnalytics } from '@/components/monitoring/enterprise-analytics';
 import { ThemeProvider } from '@/components/theme-provider';
 import { routing } from '@/i18n/routing';
 import '../globals.css';
@@ -70,11 +71,12 @@ export default async function LocaleLayout({
         }}
       />
       <NextIntlClientProvider messages={messages}>
-        <ThemeProvider
-          attribute='class'
-          defaultTheme='system'
-          enableSystem
-        >
+        <EnterpriseAnalytics>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+          >
           {/* React Scan 性能监控 - 动态导入（默认禁用） */}
           <DynamicReactScanProvider>
             {/* I18n性能优化组件 - 动态导入 */}
@@ -95,6 +97,8 @@ export default async function LocaleLayout({
             {/* 页脚 */}
             <Footer />
 
+            {/* 企业级监控组件已集成到AnalyticsProvider中 */}
+
             {/* 开发环境性能指示器 - 动态导入 */}
             <DevelopmentPerformanceMonitor />
 
@@ -111,6 +115,7 @@ export default async function LocaleLayout({
             <DynamicDevToolsStatusIndicator />
           </DynamicReactScanProvider>
         </ThemeProvider>
+        </EnterpriseAnalytics>
       </NextIntlClientProvider>
     </div>
   );

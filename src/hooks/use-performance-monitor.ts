@@ -184,16 +184,34 @@ const createPerformanceMonitorReturn = (
 
 // 创建性能监控状态的辅助函数
 function usePerformanceMonitorState(options: UsePerformanceMonitorOptions) {
+  // Validate and sanitize options to handle null/undefined/invalid values
+  const safeOptions = options || {};
+
   const {
     enableAlerts = false,
-    alertThresholds = {
-      loadTime: 3000,
-      renderTime: 100,
-      memoryUsage:
-        PERFORMANCE_CONSTANTS.MEMORY_THRESHOLD_MB *
-        PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB, // 50MB
-    },
-  } = options;
+    alertThresholds = null,
+    autoMonitoring = false,
+    monitoringInterval = 1000,
+  } = safeOptions;
+
+  // Ensure alertThresholds is always a valid object
+  const validAlertThresholds = alertThresholds && typeof alertThresholds === 'object' ? {
+    loadTime: typeof alertThresholds.loadTime === 'number' ? alertThresholds.loadTime : 3000,
+    renderTime: typeof alertThresholds.renderTime === 'number' ? alertThresholds.renderTime : 100,
+    memoryUsage: typeof alertThresholds.memoryUsage === 'number' ? alertThresholds.memoryUsage :
+      PERFORMANCE_CONSTANTS.MEMORY_THRESHOLD_MB * PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB,
+  } : {
+    loadTime: 3000,
+    renderTime: 100,
+    memoryUsage:
+      PERFORMANCE_CONSTANTS.MEMORY_THRESHOLD_MB *
+      PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB, // 50MB
+  };
+
+  // Validate monitoring interval
+  const validMonitoringInterval = typeof monitoringInterval === 'number' && monitoringInterval > 0
+    ? monitoringInterval
+    : 1000;
 
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
@@ -223,7 +241,7 @@ function usePerformanceMonitorState(options: UsePerformanceMonitorOptions) {
 
   return {
     enableAlerts,
-    alertThresholds,
+    alertThresholds: validAlertThresholds,
     isMonitoring,
     setIsMonitoring,
     metrics,
@@ -235,6 +253,7 @@ function usePerformanceMonitorState(options: UsePerformanceMonitorOptions) {
     alertHistory,
     startTime,
     addAlert,
+    monitoringInterval: validMonitoringInterval,
   };
 }
 
@@ -252,7 +271,7 @@ function usePerformanceMeasurements(
       prev ? { ...prev, loadTime } : { loadTime, renderTime: 0 },
     );
 
-    if (enableAlerts && loadTime > alertThresholds.loadTime!) {
+    if (enableAlerts && typeof alertThresholds.loadTime === 'number' && loadTime >= alertThresholds.loadTime) {
       addAlert({
         level: 'warning',
         message: `Slow load time detected: ${loadTime}ms`,
@@ -270,7 +289,7 @@ function usePerformanceMeasurements(
         prev ? { ...prev, renderTime } : { loadTime: 0, renderTime },
       );
 
-      if (enableAlerts && renderTime > alertThresholds.renderTime!) {
+      if (enableAlerts && typeof alertThresholds.renderTime === 'number' && renderTime >= alertThresholds.renderTime) {
         addAlert({
           level: 'warning',
           message: `Slow render time detected: ${renderTime}ms`,
@@ -331,6 +350,7 @@ export function usePerformanceMonitor(
     alertHistory,
     startTime,
     addAlert,
+    monitoringInterval,
   } = state;
 
   const performanceAlertSystem: PerformanceAlertSystem =
@@ -360,6 +380,47 @@ export function usePerformanceMonitor(
       measureMemoryUsage();
     }
   }, [isMonitoring, measureLoadTime, measureMemoryUsage]);
+
+  // Auto monitoring initialization effect (only run once on mount)
+  useEffect(() => {
+    const safeOptions = options || {};
+    if (safeOptions.autoMonitoring) {
+      // Use setTimeout to delay auto-start until after initial render
+      const timer = setTimeout(() => {
+        setIsMonitoring(true);
+        setError(null);
+        startTime.current = Date.now();
+        setMetrics({
+          loadTime: 0,
+          renderTime: 0,
+        });
+      }, 0);
+
+      return () => clearTimeout(timer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run on mount to avoid infinite loops
+
+  // Auto monitoring interval effect
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (isMonitoring && monitoringInterval > 0) {
+      intervalId = setInterval(() => {
+        try {
+          refreshMetrics();
+        } catch (error) {
+          setError(error instanceof Error ? error.message : 'Unknown monitoring error');
+        }
+      }, monitoringInterval);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isMonitoring, monitoringInterval, refreshMetrics, setError]);
 
   useEffect(() => {
     // Measure initial load time

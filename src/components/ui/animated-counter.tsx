@@ -1,11 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import { forwardRef, useEffect, useState } from 'react';
-import { AccessibilityManager } from '@/lib/accessibility';
-import { cn } from '@/lib/utils';
 import { ANIMATION_DURATIONS } from '@/constants/performance-constants';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { AccessibilityManager } from '@/lib/accessibility';
+import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 /**
  * 缓动函数类型
@@ -171,7 +171,25 @@ export const AnimatedCounter = forwardRef<
       }
 
       setIsAnimating(true);
-      const startTime = performance.now();
+
+      // Check for performance.now availability
+      const getTime = () => {
+        if (typeof performance !== 'undefined' && performance.now) {
+          return performance.now();
+        }
+        return Date.now();
+      };
+
+      // Check for requestAnimationFrame availability
+      const scheduleFrame = (callback: FrameRequestCallback) => {
+        if (typeof requestAnimationFrame !== 'undefined') {
+          return requestAnimationFrame(callback);
+        }
+        // Fallback to setTimeout for environments without requestAnimationFrame
+        return setTimeout(() => callback(getTime()), 16) as unknown as number;
+      };
+
+      const startTime = getTime();
       const startValue = currentValue;
       const difference = to - startValue;
 
@@ -185,14 +203,14 @@ export const AnimatedCounter = forwardRef<
         setCurrentValue(newValue);
 
         if (progress < 1) {
-          requestAnimationFrame(updateValue);
+          scheduleFrame(updateValue);
         } else {
           setCurrentValue(to);
           setIsAnimating(false);
         }
       };
 
-      requestAnimationFrame(updateValue);
+      scheduleFrame(updateValue);
     }, [currentValue, to, duration, easing, isAnimating]);
 
     // 触发动画的条件
@@ -223,7 +241,15 @@ export const AnimatedCounter = forwardRef<
         )}
         {...props}
       >
-        {formatter(currentValue)}
+        {(() => {
+          try {
+            return formatter(currentValue);
+          } catch (error) {
+            // Fallback to default formatting if custom formatter throws
+            console.warn('AnimatedCounter: Formatter error, using fallback', error);
+            return Math.round(currentValue).toString();
+          }
+        })()}
       </span>
     );
   },

@@ -138,6 +138,14 @@ export const SITE_CONFIG = {
  * 获取本地化路径
  */
 export function getLocalizedPath(pageType: PageType, locale: Locale): string {
+  // 严格验证输入参数
+  if (pageType === null || pageType === undefined) {
+    throw new Error('Page type cannot be null or undefined');
+  }
+  if (locale === null || locale === undefined) {
+    throw new Error('Locale cannot be null or undefined');
+  }
+
   if (!Object.prototype.hasOwnProperty.call(PATHS_CONFIG, pageType)) {
     throw new Error(`Unknown page type: ${pageType}`);
   }
@@ -175,6 +183,14 @@ export function getPageTypeFromPath(
   path: string,
   locale: Locale,
 ): PageType | null {
+  // 严格验证输入参数
+  if (path === null || path === undefined) {
+    throw new Error('Path cannot be null or undefined');
+  }
+  if (locale === null || locale === undefined) {
+    throw new Error('Locale cannot be null or undefined');
+  }
+
   // 处理根路径
   if (path === '/' || path === '') {
     return 'home';

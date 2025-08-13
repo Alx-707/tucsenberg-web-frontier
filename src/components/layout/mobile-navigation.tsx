@@ -6,27 +6,27 @@
  */
 'use client';
 
-import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import {
-  isActivePath,
-  mobileNavigation,
-  NAVIGATION_ARIA,
-} from '@/lib/navigation';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from '@/components/ui/sheet';
 import { Link } from '@/i18n/routing';
+import {
+    isActivePath,
+    mobileNavigation,
+    NAVIGATION_ARIA,
+} from '@/lib/navigation';
+import { cn } from '@/lib/utils';
+import { Menu, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 /**
  * Mobile Navigation Component
@@ -61,8 +61,9 @@ export function MobileNavigation({ className }: MobileNavigationProps) {
             size='icon'
             className='relative'
             aria-label={NAVIGATION_ARIA.mobileMenuButton}
-            aria-expanded={isOpen}
+            aria-expanded={isOpen.toString()}
             aria-controls='mobile-navigation'
+            data-state={isOpen ? 'open' : 'closed'}
           >
             <Menu className='h-5 w-5' />
             <span className='sr-only'>
@@ -147,7 +148,8 @@ export function MobileMenuButton({
       className={cn('md:hidden', className)}
       onClick={onClick}
       aria-label={NAVIGATION_ARIA.mobileMenuButton}
-      aria-expanded={isOpen}
+      aria-expanded={isOpen.toString()}
+      data-state={isOpen ? 'open' : 'closed'}
     >
       {isOpen ? <X className='h-5 w-5' /> : <Menu className='h-5 w-5' />}
       <span className='sr-only'>

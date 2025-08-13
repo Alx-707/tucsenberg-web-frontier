@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  EnhancedLocaleSwitcher,
-  LocaleSwitcherWithInfo,
-  SimpleLocaleSwitcher,
+    EnhancedLocaleSwitcher,
+    LocaleSwitcherWithInfo,
+    SimpleLocaleSwitcher,
 } from '../enhanced-locale-switcher';
 
 // Mock next-intl
@@ -329,6 +329,21 @@ describe('EnhancedLocaleSwitcher', () => {
       render(<EnhancedLocaleSwitcher showDetectionInfo />);
 
       expect(screen.getByText('✓ User preference saved')).toBeInTheDocument();
+    });
+
+    it('uses fallback icon for unknown detection source', () => {
+      mockUseClientLocaleDetection.mockReturnValue({
+        detectClientLocale: vi.fn(() => ({
+          locale: 'en',
+          source: 'unknown-source', // This should trigger the fallback to Languages icon
+          confidence: 0.8,
+        })),
+      });
+
+      render(<EnhancedLocaleSwitcher showDetectionInfo />);
+
+      expect(screen.getByText('Detection Info')).toBeInTheDocument();
+      expect(screen.getByText('Source: unknown-source')).toBeInTheDocument();
     });
   });
 

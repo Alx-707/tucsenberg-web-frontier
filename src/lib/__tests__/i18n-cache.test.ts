@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Locale } from '@/types/i18n';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import type { Locale } from '@/types/i18n';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { i18nCache, I18nCacheManager } from '../i18n-cache';
 
 // Mock localStorage
@@ -331,6 +331,50 @@ describe('I18nCacheManager', () => {
         });
         expect(jsonErrorCacheManager).toBeDefined();
       }).not.toThrow();
+    });
+
+    it('should handle development environment error logging for load failures', () => {
+      // Mock development environment
+      vi.stubEnv('NODE_ENV', 'development');
+
+      // Mock localStorage to throw error
+      mockLocalStorage.getItem.mockImplementation(() => {
+        throw new Error('Storage error');
+      });
+
+      // This should trigger the development environment error handling branch (lines 207-210)
+      expect(() => {
+        const devErrorCacheManager = new I18nCacheManager({
+          enablePersistence: true,
+        });
+        expect(devErrorCacheManager).toBeDefined();
+      }).not.toThrow();
+
+      // Restore environment
+      vi.unstubAllEnvs();
+    });
+
+    it('should handle development environment error logging for save failures', async () => {
+      // Mock development environment
+      vi.stubEnv('NODE_ENV', 'development');
+
+      // Mock localStorage.setItem to throw error
+      mockLocalStorage.setItem.mockImplementation(() => {
+        throw new Error('Storage save error');
+      });
+
+      const devSaveErrorManager = new I18nCacheManager({
+        enablePersistence: true,
+      });
+
+      // Load some messages to trigger save, which should trigger the development environment error handling branch (lines 220-223)
+      await devSaveErrorManager.getMessages('en');
+
+      // Should not throw error even when save fails in development
+      expect(devSaveErrorManager.getCacheStats().size).toBeGreaterThan(0);
+
+      // Restore environment
+      vi.unstubAllEnvs();
     });
   });
 

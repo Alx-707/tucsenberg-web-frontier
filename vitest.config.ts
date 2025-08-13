@@ -38,11 +38,12 @@ export default defineConfig({
       'tests/e2e/**/*',
     ],
 
-    // 覆盖率配置
+    // 覆盖率配置 - 最简配置
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'json-summary'],
+      include: ['src/**/*.{js,jsx,ts,tsx}'],
       reportsDirectory: './coverage',
+      reporter: ['text', 'html'],
       exclude: [
         'node_modules/',
         '.next/',
@@ -189,8 +190,6 @@ export default defineConfig({
           statements: 95,
         },
       },
-      // 所有文件都需要覆盖率检查
-      all: true,
     },
 
     // 测试超时设置 - 优化超时时间

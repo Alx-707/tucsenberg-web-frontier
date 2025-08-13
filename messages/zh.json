@@ -307,17 +307,24 @@
   },
   "contact": {
     "form": {
-      "title": "发送消息",
+      "title": "联系我们",
+      "description": "与我们取得联系，我们很乐意听到您的声音。",
       "firstName": "名字",
       "lastName": "姓氏",
       "email": "邮箱地址",
       "company": "公司名称",
+      "phone": "电话号码",
+      "subject": "主题",
       "message": "消息内容",
       "firstNamePlaceholder": "请输入您的名字",
       "lastNamePlaceholder": "请输入您的姓氏",
       "emailPlaceholder": "your@email.com",
       "companyPlaceholder": "您的公司名称",
+      "phonePlaceholder": "+86 138 0000 0000",
+      "subjectPlaceholder": "我们可以为您提供什么帮助？",
       "messagePlaceholder": "请描述您的需求或问题...",
+      "acceptPrivacy": "我同意隐私政策和服务条款",
+      "marketingConsent": "我希望接收营销通讯",
       "submit": "发送消息",
       "submitting": "发送中...",
       "success": "谢谢！您的消息已成功发送。我们会尽快回复您。",
@@ -422,7 +429,29 @@
     "title": "图森堡网络前沿",
     "description": "基于Next.js 15、React 19和TypeScript的现代化B2B企业级网络平台",
     "siteName": "图森堡网络前沿",
-    "keywords": "Next.js, React, TypeScript, B2B, 企业级, 网络平台"
+    "keywords": "Next.js, React, TypeScript, B2B, 企业级, 网络平台",
+    "pages": {
+      "home": {
+        "title": "图森堡网络前沿 - 现代化B2B企业级平台",
+        "description": "使用Next.js 15、React 19、TypeScript构建现代化B2B应用，提供企业级功能。"
+      },
+      "about": {
+        "title": "关于我们 - 图森堡网络前沿",
+        "description": "了解我们为企业提供前沿B2B网络解决方案的使命。"
+      },
+      "contact": {
+        "title": "联系我们 - 图森堡网络前沿",
+        "description": "联系我们的团队获取企业解决方案和技术支持。"
+      },
+      "products": {
+        "title": "产品中心 - 图森堡网络前沿",
+        "description": "探索我们为现代企业提供的企业级产品和解决方案。"
+      },
+      "blog": {
+        "title": "技术博客 - 图森堡网络前沿",
+        "description": "来自我们开发团队的最新见解、教程和技术更新。"
+      }
+    }
   },
   "underConstruction": {
     "title": "建设中",

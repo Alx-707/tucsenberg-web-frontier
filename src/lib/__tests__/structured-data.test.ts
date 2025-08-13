@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // Import after mocks
 import {
-  generateArticleSchema,
-  generateBreadcrumbSchema,
-  generateFAQSchema,
-  generateJSONLD,
-  generateLocalBusinessSchema,
-  generateLocalizedStructuredData,
-  generateProductSchema,
-  generateStructuredData,
+    generateArticleSchema,
+    generateBreadcrumbSchema,
+    generateFAQSchema,
+    generateJSONLD,
+    generateLocalBusinessSchema,
+    generateLocalizedStructuredData,
+    generateProductSchema,
+    generateStructuredData,
 } from '../structured-data';
 
 // 测试常量定义
@@ -301,6 +301,37 @@ describe('Structured Data Generation', () => {
         },
       });
     });
+
+    it('should generate product schema without offers when no price provided', async () => {
+      const productData = {
+        name: 'Free Tool',
+        description: 'Open source utility',
+        image: '/tool-image.jpg',
+        brand: 'Tucsenberg',
+        sku: 'FREE-001',
+        // No price provided
+      };
+
+      const schema = await generateProductSchema(productData, 'en');
+
+      expect(schema).toEqual({
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        'name': 'Free Tool',
+        'description': 'Open source utility',
+        'image': ['/tool-image.jpg'],
+        'manufacturer': {
+          '@type': 'Organization',
+          'name': 'Tucsenberg',
+        },
+        'brand': {
+          '@type': 'Brand',
+          'name': 'Tucsenberg',
+        },
+        'sku': 'FREE-001',
+        'offers': undefined, // This should cover the undefined case on line 170
+      });
+    });
   });
 
   describe('generateFAQSchema', () => {
@@ -417,6 +448,175 @@ describe('Structured Data Generation', () => {
       const data = await generateStructuredData('home', 'en');
 
       expect(data).toHaveLength(TEST_COUNTS.FALLBACK_STRUCTURED_DATA); // Organization + Website (fallback)
+    });
+  });
+
+  describe('错误处理和边缘情况', () => {
+    it('should handle translation errors gracefully', async () => {
+      // Mock getTranslations to throw an error
+      mockGetTranslations.mockRejectedValueOnce(new Error('Translation error'));
+
+      const data = await generateLocalizedStructuredData('en', 'Organization', {});
+
+      // Should return basic structure even when translation fails
+      expect(data).toHaveProperty('@context', 'https://schema.org');
+      expect(data).toHaveProperty('@type', 'Organization');
+    });
+
+    it('should handle invalid structured data types', async () => {
+      const data = await generateLocalizedStructuredData('en', 'InvalidType' as any, {});
+
+      // Should return basic structure for unknown types
+      expect(data).toHaveProperty('@context', 'https://schema.org');
+      expect(data).toHaveProperty('@type', 'InvalidType');
+    });
+
+    it('should handle null and undefined data inputs', async () => {
+      const testCases = [
+        { type: 'Organization', data: null },
+        { type: 'WebSite', data: undefined },
+        { type: 'Article', data: {} },
+      ] as const;
+
+      for (const testCase of testCases) {
+        const data = await generateLocalizedStructuredData('en', testCase.type, testCase.data as any);
+
+        expect(data).toHaveProperty('@context', 'https://schema.org');
+        expect(data).toHaveProperty('@type', testCase.type);
+      }
+    });
+
+    it('should handle malformed article data', async () => {
+      const malformedData = {
+        title: 'Test Article',
+        description: 'Test Description',
+        publishedTime: '2023-01-01T00:00:00Z',
+        url: 'https://example.com/test',
+        invalidProperty: 'should be ignored',
+      };
+
+      const data = await generateLocalizedStructuredData('en', 'Article', malformedData);
+
+      expect(data).toHaveProperty('@context', 'https://schema.org');
+      expect(data).toHaveProperty('@type', 'Article');
+    });
+
+    it('should handle malformed product data', async () => {
+      const malformedData = {
+        name: '',
+        price: 'invalid-price',
+        currency: null,
+        availability: 'InvalidStatus',
+      };
+
+      const data = await generateLocalizedStructuredData('en', 'Product', malformedData);
+
+      expect(data).toHaveProperty('@context', 'https://schema.org');
+      expect(data).toHaveProperty('@type', 'Product');
+    });
+  });
+
+  describe('JSON-LD 生成测试', () => {
+    it('should generate valid JSON-LD string', () => {
+      const testData = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Test Organization',
+      };
+
+      const jsonLD = generateJSONLD(testData);
+
+      // Should be valid JSON
+      expect(() => JSON.parse(jsonLD)).not.toThrow();
+
+      // Should be properly formatted
+      expect(jsonLD).toContain('"@context"');
+      expect(jsonLD).toContain('"@type"');
+      expect(jsonLD).toContain('Test Organization');
+    });
+
+    it('should handle complex nested objects in JSON-LD', () => {
+      const complexData = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: '123 Main St',
+          addressLocality: 'City',
+        },
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            telephone: '+1-555-123-4567',
+            contactType: 'customer service',
+          },
+        ],
+      };
+
+      const jsonLD = generateJSONLD(complexData);
+
+      expect(() => JSON.parse(jsonLD)).not.toThrow();
+
+      const parsed = JSON.parse(jsonLD);
+      expect(parsed.address).toHaveProperty('@type', 'PostalAddress');
+      expect(parsed.contactPoint).toHaveLength(1);
+    });
+
+    it('should handle null and undefined values in JSON-LD', () => {
+      const dataWithNulls = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Test',
+        description: null,
+        url: undefined,
+      };
+
+      const jsonLD = generateJSONLD(dataWithNulls);
+
+      expect(() => JSON.parse(jsonLD)).not.toThrow();
+
+      const parsed = JSON.parse(jsonLD);
+      expect(parsed.description).toBeNull();
+      expect(parsed).not.toHaveProperty('url'); // undefined should be omitted
+    });
+  });
+
+  describe('性能和内存测试', () => {
+    it('should handle repeated generation efficiently', async () => {
+      const startTime = performance.now();
+
+      // Generate structured data multiple times
+      for (let i = 0; i < 100; i++) {
+        await generateStructuredData('home', 'en');
+        await generateLocalizedStructuredData('en', 'Organization', {});
+      }
+
+      const endTime = performance.now();
+      const duration = endTime - startTime;
+
+      // Should complete within reasonable time (less than 1000ms)
+      expect(duration).toBeLessThan(1000);
+    });
+
+    it('should not create memory leaks with repeated calls', async () => {
+      const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
+
+      // Perform many operations
+      for (let i = 0; i < 1000; i++) {
+        await generateLocalizedStructuredData('en', 'Organization', {});
+        generateJSONLD({ test: 'data' });
+      }
+
+      // Force garbage collection if available
+      if (global.gc) {
+        global.gc();
+      }
+
+      const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const memoryIncrease = finalMemory - initialMemory;
+
+      // Memory increase should be minimal (less than 5MB)
+      expect(memoryIncrease).toBeLessThan(5 * 1024 * 1024);
     });
   });
 

@@ -1,9 +1,9 @@
+import {
+    TEST_BASE_NUMBERS,
+    TEST_SCREEN_CONSTANTS,
+} from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  TEST_BASE_NUMBERS,
-  TEST_SCREEN_CONSTANTS,
-} from '@/constants/test-constants';
 import { useBreakpoint } from '../use-breakpoint';
 
 // Use vi.hoisted to ensure proper mock setup
@@ -438,6 +438,55 @@ describe('useBreakpoint', () => {
       // Verify specific breakpoint values
       expect(['sm', 'md', 'lg', 'xl', '2xl']).toContain(currentBreakpoint);
       expect(width).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  describe('极端边缘情况', () => {
+    it('should handle extremely large window dimensions', () => {
+      mockWindowDimensions.innerWidth = 999999;
+      mockWindowDimensions.innerHeight = 999999;
+
+      const { result } = renderHook(() => useBreakpoint());
+
+      expect(result.current.width).toBe(999999);
+      expect(result.current.currentBreakpoint).toBe('2xl');
+      expect(result.current.isAbove('xl')).toBe(true);
+    });
+
+    it('should handle zero window dimensions', () => {
+      mockWindowDimensions.innerWidth = 0;
+      mockWindowDimensions.innerHeight = 0;
+
+      const { result } = renderHook(() => useBreakpoint());
+
+      expect(result.current.width).toBe(0);
+      expect(result.current.currentBreakpoint).toBe('sm');
+      expect(result.current.isBelow('md')).toBe(true);
+    });
+
+    it('should handle rapid consecutive resize events', () => {
+      const { result } = renderHook(() => useBreakpoint());
+
+      // Simulate rapid resize events
+      const widths = [320, 768, 1024, 1280, 1920, 640];
+
+      widths.forEach(width => {
+        act(() => {
+          mockWindowDimensions.innerWidth = width;
+
+          // Get the registered resize handler and call it directly
+          const resizeHandler = mockAddEventListener.mock.calls.find(
+            (call) => call[0] === 'resize',
+          )?.[1];
+          if (resizeHandler) {
+            resizeHandler(new Event('resize'));
+          }
+        });
+      });
+
+      // Should handle the last width
+      expect(result.current.width).toBe(640);
+      expect(result.current.currentBreakpoint).toBe('sm');
     });
   });
 });

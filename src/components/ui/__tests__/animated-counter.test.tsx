@@ -1,16 +1,16 @@
-import React from 'react';
+import {
+    TEST_COUNT_CONSTANTS,
+    TEST_EASING_CONSTANTS,
+    TEST_SAMPLE_CONSTANTS,
+    TEST_TIMEOUT_CONSTANTS,
+} from '@/constants/test-constants';
 import { act, render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  TEST_COUNT_CONSTANTS,
-  TEST_EASING_CONSTANTS,
-  TEST_SAMPLE_CONSTANTS,
-  TEST_TIMEOUT_CONSTANTS,
-} from '@/constants/test-constants';
-import {
-  AnimatedCounter,
-  easingFunctions,
-  formatters,
+    AnimatedCounter,
+    easingFunctions,
+    formatters,
 } from '../animated-counter';
 
 // Mock dependencies
@@ -651,6 +651,111 @@ describe('AnimatedCounter Component', () => {
 
       // Should not cause errors
       expect(mockRequestAnimationFrame).toHaveBeenCalled();
+    });
+  });
+
+  describe('极端边缘情况', () => {
+    it('should handle Infinity values gracefully', () => {
+      render(
+        <AnimatedCounter
+          to={Infinity}
+          from={0}
+          autoStart
+          data-testid="counter"
+        />
+      );
+
+      const counter = screen.getByTestId('counter');
+      expect(counter).toBeInTheDocument();
+      // Should not crash with Infinity
+    });
+
+    it('should handle NaN values gracefully', () => {
+      render(
+        <AnimatedCounter
+          to={NaN}
+          from={0}
+          autoStart
+          data-testid="counter"
+        />
+      );
+
+      const counter = screen.getByTestId('counter');
+      expect(counter).toBeInTheDocument();
+      // Should not crash with NaN
+    });
+
+    it('should handle extremely small decimal values', () => {
+      render(
+        <AnimatedCounter
+          to={0.000001}
+          from={0}
+          formatter={formatters.decimal}
+          data-testid="counter"
+        />
+      );
+
+      const counter = screen.getByTestId('counter');
+      expect(counter).toHaveTextContent('0.0');
+    });
+
+    it('should handle custom formatter that throws error', () => {
+      const errorFormatter = () => {
+        throw new Error('Formatter error');
+      };
+
+      expect(() => {
+        render(
+          <AnimatedCounter
+            to={100}
+            from={0}
+            formatter={errorFormatter}
+            data-testid="counter"
+          />
+        );
+      }).not.toThrow();
+    });
+
+    it('should handle missing requestAnimationFrame', () => {
+      const originalRAF = global.requestAnimationFrame;
+
+      try {
+        // @ts-expect-error - Testing edge case
+        global.requestAnimationFrame = undefined;
+
+        expect(() => {
+          render(
+            <AnimatedCounter
+              to={100}
+              autoStart
+              data-testid="counter"
+            />
+          );
+        }).not.toThrow();
+      } finally {
+        global.requestAnimationFrame = originalRAF;
+      }
+    });
+
+    it('should handle missing performance.now', () => {
+      const originalPerformance = global.performance;
+
+      try {
+        // @ts-expect-error - Testing edge case
+        global.performance = undefined;
+
+        expect(() => {
+          render(
+            <AnimatedCounter
+              to={100}
+              autoStart
+              data-testid="counter"
+            />
+          );
+        }).not.toThrow();
+      } finally {
+        global.performance = originalPerformance;
+      }
     });
   });
 });

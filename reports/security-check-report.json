@@ -1,0 +1,100 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "name": "Environment template exists",
+      "passed": true,
+      "message": ".env.example file should exist as a template"
+    },
+    {
+      "name": "Environment validation exists",
+      "passed": true,
+      "message": "env.mjs file should exist for environment variable validation"
+    },
+    {
+      "name": "No sensitive data in .env.example",
+      "passed": true,
+      "message": ".env.example should not contain real sensitive data"
+    },
+    {
+      "name": "Security configuration exists",
+      "passed": true,
+      "message": "Security configuration file should exist"
+    },
+    {
+      "name": "Security headers configured",
+      "passed": true,
+      "message": "next.config.ts should use getSecurityHeaders function"
+    },
+    {
+      "name": "CSP configured",
+      "passed": true,
+      "message": "Content Security Policy should be configured"
+    },
+    {
+      "name": "CSP report endpoint exists",
+      "passed": true,
+      "message": "CSP report endpoint should exist for violation reporting"
+    },
+    {
+      "name": "Middleware includes security",
+      "passed": true,
+      "message": "Middleware should include security headers"
+    },
+    {
+      "name": "Environment validation package installed",
+      "passed": true,
+      "message": "@t3-oss/env-nextjs should be installed for environment validation"
+    },
+    {
+      "name": "Bot protection package installed",
+      "passed": true,
+      "message": "Turnstile package should be installed for bot protection"
+    },
+    {
+      "name": "Security linting installed",
+      "passed": true,
+      "message": "Security ESLint plugin should be installed"
+    },
+    {
+      "name": ".gitignore includes .env",
+      "passed": true,
+      "message": ".env should be in .gitignore"
+    },
+    {
+      "name": ".gitignore includes .env.local",
+      "passed": true,
+      "message": ".env.local should be in .gitignore"
+    },
+    {
+      "name": ".gitignore includes .env.*.local",
+      "passed": true,
+      "message": ".env.*.local should be in .gitignore"
+    },
+    {
+      "name": ".gitignore includes node_modules",
+      "passed": true,
+      "message": "node_modules should be in .gitignore"
+    },
+    {
+      "name": "Turnstile component exists",
+      "passed": true,
+      "message": "Turnstile component should exist for bot protection"
+    },
+    {
+      "name": "Turnstile verification endpoint exists",
+      "passed": true,
+      "message": "Turnstile verification endpoint should exist"
+    }
+  ],
+  "warnings": [
+    ".env.local exists - ensure it's not committed to version control",
+    "Sensitive file .env.local exists - ensure it's properly secured"
+  ],
+  "recommendations": [
+    "Regularly update dependencies to patch security vulnerabilities",
+    "Use strong, unique secrets in production",
+    "Enable security monitoring and alerting",
+    "Regularly review and update security configurations"
+  ]
+}

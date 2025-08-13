@@ -1,10 +1,10 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Locale } from '@/types/i18n';
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { Locale } from '@/types/i18n';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  LocaleDetectionHistory,
-  LocaleStorageManager,
-  UserLocalePreference,
+    LocaleDetectionHistory,
+    LocaleStorageManager,
+    UserLocalePreference,
 } from '../locale-storage';
 
 // Mock constants
@@ -436,6 +436,29 @@ describe('LocaleStorageManager', () => {
       expect(mockDocumentCookie.set).toHaveBeenCalledWith(
         expect.stringContaining('locale_preference=; expires='),
       );
+    });
+  });
+
+  describe('cookie decoding error handling', () => {
+    it('should handle cookie decoding errors in development environment', () => {
+      // Mock development environment
+      vi.stubEnv('NODE_ENV', 'development');
+
+      // Mock document.cookie with malformed encoded value that will cause decodeURIComponent to fail
+      Object.defineProperty(document, 'cookie', {
+        value: 'locale_preference=%E0%E1%E2', // Invalid UTF-8 sequence
+        writable: true,
+        configurable: true,
+      });
+
+      // This should trigger the development environment error handling branch (lines 78-80)
+      const result = LocaleStorageManager.getUserPreference();
+
+      // Should return null when decoding fails
+      expect(result).toBeNull();
+
+      // Restore environment
+      vi.unstubAllEnvs();
     });
   });
 

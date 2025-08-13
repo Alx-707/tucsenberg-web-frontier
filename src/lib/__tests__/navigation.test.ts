@@ -1,18 +1,18 @@
+import {
+    TEST_COUNT_CONSTANTS,
+    TEST_SCREEN_CONSTANTS,
+    TEST_TIMEOUT_CONSTANTS,
+} from '@/constants/test-constants';
 import { describe, expect, it, vi } from 'vitest';
 import {
-  TEST_COUNT_CONSTANTS,
-  TEST_SCREEN_CONSTANTS,
-  TEST_TIMEOUT_CONSTANTS,
-} from '@/constants/test-constants';
-import {
-  getLocalizedHref,
-  isActivePath,
-  mainNavigation,
-  mobileNavigation,
-  NAVIGATION_ANIMATIONS,
-  NAVIGATION_ARIA,
-  NAVIGATION_BREAKPOINTS,
-  type NavigationItem,
+    getLocalizedHref,
+    isActivePath,
+    mainNavigation,
+    mobileNavigation,
+    NAVIGATION_ANIMATIONS,
+    NAVIGATION_ARIA,
+    NAVIGATION_BREAKPOINTS,
+    type NavigationItem,
 } from '../navigation';
 
 // Use vi.hoisted to ensure proper mock setup
@@ -145,6 +145,13 @@ describe('navigation', () => {
     it('should not match partial path segments', () => {
       expect(isActivePath('/aboutus', '/about')).toBe(false);
       expect(isActivePath('/en/aboutus', '/about')).toBe(false);
+    });
+
+    it('should handle item paths that already end with slash', () => {
+      // This test covers line 85 where cleanItemPath already ends with '/'
+      expect(isActivePath('/about/team', '/about/')).toBe(true);
+      expect(isActivePath('/en/about/team', '/about/')).toBe(true);
+      expect(isActivePath('/zh/products/enterprise', '/products/')).toBe(true);
     });
   });
 

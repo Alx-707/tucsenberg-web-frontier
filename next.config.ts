@@ -4,6 +4,7 @@ import bundleAnalyzer from '@next/bundle-analyzer';
 import createMDX from '@next/mdx';
 import { withSentryConfig } from '@sentry/nextjs';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { getSecurityHeaders } from './src/config/security';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
@@ -69,31 +70,11 @@ const nextConfig: NextConfig = {
     // Note: This function is async to comply with Next.js API requirements
     // even though we're returning static configuration
     await Promise.resolve(); // Satisfy require-await ESLint rule
+
     return [
       {
         source: '/:path*',
-        headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-          // Basic CSP (adjust as needed)
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https:",
-              "font-src 'self' data: https:",
-              "connect-src 'self' https:",
-              "frame-ancestors 'none'",
-            ].join('; '),
-          },
-        ],
+        headers: getSecurityHeaders(),
       },
     ];
   },

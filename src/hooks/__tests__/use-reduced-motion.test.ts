@@ -1,6 +1,6 @@
+import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TEST_BASE_NUMBERS } from '@/constants/test-constants';
 import { useReducedMotion } from '../use-reduced-motion';
 
 // Mock matchMedia
@@ -19,8 +19,10 @@ describe('useReducedMotion', () => {
     // Reset mocks
     vi.clearAllMocks();
 
-    // Ensure window.matchMedia is available
-    global.window.matchMedia = mockMatchMedia;
+    // Ensure window.matchMedia is available (safe access)
+    if (global.window) {
+      global.window.matchMedia = mockMatchMedia;
+    }
   });
 
   afterEach(() => {
@@ -232,5 +234,80 @@ describe('useReducedMotion', () => {
     expect(() => {
       unmount();
     }).not.toThrow();
+  });
+
+  it('should handle malformed MediaQueryListEvent', () => {
+    let changeHandler: ((event: any) => void) | null = null;
+
+    const mockMediaQuery = {
+      matches: false,
+      addEventListener: vi.fn((_event, handler) => {
+        changeHandler = handler;
+      }),
+      removeEventListener: vi.fn(),
+    };
+
+    mockMatchMedia.mockReturnValue(mockMediaQuery);
+
+    const { result } = renderHook(() => useReducedMotion());
+
+    // Simulate malformed event
+    act(() => {
+      if (changeHandler) {
+        changeHandler({} as any); // Empty object instead of proper MediaQueryListEvent
+      }
+    });
+
+    // Should handle gracefully
+    expect(result.current).toBe(false);
+  });
+
+  it('should handle null MediaQueryList', () => {
+    mockMatchMedia.mockReturnValue(null);
+
+    expect(() => {
+      renderHook(() => useReducedMotion());
+    }).not.toThrow();
+  });
+
+  it('should handle MediaQueryList with missing properties', () => {
+    const incompleteMediaQuery = {
+      matches: true,
+      // Missing addEventListener and removeEventListener
+    };
+
+    mockMatchMedia.mockReturnValue(incompleteMediaQuery as any);
+
+    expect(() => {
+      renderHook(() => useReducedMotion());
+    }).not.toThrow();
+  });
+
+  it('should handle window object being undefined', () => {
+    // Create a minimal window mock that simulates SSR environment
+    const originalWindow = global.window;
+
+    try {
+      // Create a minimal window object without matchMedia to simulate SSR
+      Object.defineProperty(global, 'window', {
+        value: {
+          // Minimal properties that React Testing Library might need
+          document: {},
+          location: {},
+          navigator: {},
+          // Explicitly no matchMedia to simulate SSR
+        },
+        writable: true,
+        configurable: true,
+      });
+
+      const { result } = renderHook(() => useReducedMotion());
+
+      // Should default to false in SSR-like environment
+      expect(result.current).toBe(false);
+    } finally {
+      // Restore original window
+      global.window = originalWindow;
+    }
   });
 });

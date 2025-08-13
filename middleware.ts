@@ -1,7 +1,8 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { OPACITY_CONSTANTS } from './src/constants/app-constants';
 import { routing } from './src/i18n/routing';
+import { generateNonce, getSecurityHeaders } from './src/config/security';
 
 // 置信度常量
 const HIGH_CONFIDENCE = OPACITY_CONSTANTS.VERY_HIGH_OPACITY;
@@ -93,6 +94,9 @@ function detectLocaleFromHeaders(request: NextRequest) {
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
+  // Generate nonce for CSP
+  const nonce = generateNonce();
+
   // 执行简化的语言检测
   const detectionResult = detectLocaleFromHeaders(request);
 
@@ -110,6 +114,9 @@ export default function middleware(request: NextRequest) {
     detectionResult.confidence.toString(),
   );
 
+  // Add security nonce to request headers
+  enhancedRequest.headers.set('x-csp-nonce', nonce);
+
   if (detectionResult.country) {
     enhancedRequest.headers.set('x-detected-country', detectionResult.country);
   }
@@ -121,7 +128,20 @@ export default function middleware(request: NextRequest) {
   }
 
   // 调用原始的 next-intl 中间件
-  return intlMiddleware(enhancedRequest as NextRequest);
+  const response = intlMiddleware(enhancedRequest as NextRequest);
+
+  // Add security headers to response
+  if (response) {
+    const securityHeaders = getSecurityHeaders(nonce);
+    securityHeaders.forEach(({ key, value }) => {
+      response.headers.set(key, value);
+    });
+
+    // Add nonce to response for client-side access
+    response.headers.set('x-csp-nonce', nonce);
+  }
+
+  return response;
 }
 
 export const config = {
