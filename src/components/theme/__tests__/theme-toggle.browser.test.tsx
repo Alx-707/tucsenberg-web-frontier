@@ -71,9 +71,7 @@ const mockSetTheme = vi.fn();
 const mockTheme = vi.fn(() => 'light');
 
 vi.mock('next-themes', () => ({
-  ThemeProvider: ({ children }: any) => (
-    <div>{children}</div>
-  ),
+  ThemeProvider: ({ children }: any) => <div>{children}</div>,
   useTheme: () => ({
     theme: mockTheme(),
     setTheme: mockSetTheme,
