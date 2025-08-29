@@ -169,6 +169,51 @@ vi.stubEnv('NODE_ENV', 'test');
 vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://tucsenberg.com');
 vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', 'tucsenberg.vercel.app');
 
+// Mock server-side environment variables for API testing
+vi.stubEnv('TURNSTILE_SECRET_KEY', 'test-secret-key');
+vi.stubEnv('RESEND_API_KEY', 'test-resend-key');
+vi.stubEnv('AIRTABLE_API_KEY', 'test-airtable-key');
+vi.stubEnv('AIRTABLE_BASE_ID', 'test-base-id');
+vi.stubEnv('AIRTABLE_TABLE_NAME', 'test-table');
+vi.stubEnv('EMAIL_FROM', 'test@example.com');
+vi.stubEnv('EMAIL_REPLY_TO', 'reply@example.com');
+vi.stubEnv('CSP_REPORT_URI', 'https://example.com/csp-report');
+vi.stubEnv('ADMIN_TOKEN', 'test-admin-token');
+
+// Mock @t3-oss/env-nextjs to prevent server-side environment variable access errors
+vi.mock('../../env.mjs', () => ({
+  env: {
+    NODE_ENV: 'test',
+    TURNSTILE_SECRET_KEY: 'test-secret-key',
+    RESEND_API_KEY: 'test-resend-key',
+    AIRTABLE_API_KEY: 'test-airtable-key',
+    AIRTABLE_BASE_ID: 'test-base-id',
+    AIRTABLE_TABLE_NAME: 'test-table',
+    EMAIL_FROM: 'test@example.com',
+    EMAIL_REPLY_TO: 'reply@example.com',
+    CSP_REPORT_URI: 'https://example.com/csp-report',
+    ADMIN_TOKEN: 'test-admin-token',
+    NEXT_PUBLIC_SITE_URL: 'https://tucsenberg.com',
+    NEXT_PUBLIC_VERCEL_URL: 'tucsenberg.vercel.app',
+  },
+}));
+
+// Mock validations module for API tests
+vi.mock('../lib/validations', () => ({
+  contactFormSchema: {
+    extend: vi.fn(() => ({
+      safeParse: vi.fn(() => ({
+        success: true,
+        data: {},
+      })),
+    })),
+    safeParse: vi.fn(() => ({
+      success: true,
+      data: {},
+    })),
+  },
+}));
+
 // Mock requestAnimationFrame for animations
 globalThis.requestAnimationFrame = vi.fn((cb) => {
   setTimeout(cb, 0);
@@ -237,6 +282,9 @@ if (typeof document !== 'undefined') {
 beforeEach(() => {
   // Reset all mocks before each test
   vi.clearAllMocks();
+
+  // Set up environment variables for API tests
+  vi.stubEnv('ADMIN_API_TOKEN', 'test-admin-token');
 
   // Reset DOM - 安全的DOM重置
   if (typeof document !== 'undefined' && document.body) {

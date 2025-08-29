@@ -48,7 +48,7 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{js,jsx,ts,tsx}'],
       reportsDirectory: './coverage',
-      reporter: ['text', 'html'],
+      reporter: ['text', 'html', 'json-summary'],
       exclude: [
         'node_modules/',
         '.next/',

@@ -185,8 +185,8 @@ export default defineConfig({
     'process.env.BROWSER_TEST': '"true"',
   },
 
-  // JSX配置 - 浏览器环境需要注入React
+  // JSX配置 - 移除自动注入避免冲突
   esbuild: {
-    jsxInject: `import React from 'react'`,
+    jsx: 'automatic',
   },
 });

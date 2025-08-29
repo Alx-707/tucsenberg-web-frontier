@@ -1,0 +1,3249 @@
+{
+  "timestamp": "2025-08-20T15:19:08.375Z",
+  "summary": {
+    "totalComponents": 72,
+    "coveredComponents": 66,
+    "uncoveredComponents": 6,
+    "averageCoverage": 38.890034722222225
+  },
+  "categories": {
+    "ui": {
+      "total": 18,
+      "covered": 18,
+      "uncovered": 0,
+      "averageCoverage": 74.13833333333334,
+      "components": [
+        {
+          "name": "animated-counter-helpers",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter-helpers.tsx",
+          "relativePath": "ui/animated-counter-helpers.tsx",
+          "size": 5399,
+          "coverage": {
+            "lines": 28.16,
+            "branches": 100,
+            "functions": 13.33,
+            "statements": 28.16,
+            "average": 42.4125
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "animated-counter",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter.tsx",
+          "relativePath": "ui/animated-counter.tsx",
+          "size": 7499,
+          "coverage": {
+            "lines": 94.04,
+            "branches": 86.48,
+            "functions": 100,
+            "statements": 94.04,
+            "average": 93.64
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "badge",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/badge.tsx",
+          "relativePath": "ui/badge.tsx",
+          "size": 1150,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "button",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/button.tsx",
+          "relativePath": "ui/button.tsx",
+          "size": 2132,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "card",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/card.tsx",
+          "relativePath": "ui/card.tsx",
+          "size": 2001,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "carousel",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/carousel.tsx",
+          "relativePath": "ui/carousel.tsx",
+          "size": 6453,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "checkbox",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/checkbox.tsx",
+          "relativePath": "ui/checkbox.tsx",
+          "size": 1063,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "dropdown-menu",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/dropdown-menu.tsx",
+          "relativePath": "ui/dropdown-menu.tsx",
+          "size": 8469,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "input",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/input.tsx",
+          "relativePath": "ui/input.tsx",
+          "size": 971,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "label",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/label.tsx",
+          "relativePath": "ui/label.tsx",
+          "size": 617,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "navigation-menu",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/navigation-menu.tsx",
+          "relativePath": "ui/navigation-menu.tsx",
+          "size": 6687,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "prose",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/prose.tsx",
+          "relativePath": "ui/prose.tsx",
+          "size": 1642,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "separator",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/separator.tsx",
+          "relativePath": "ui/separator.tsx",
+          "size": 606,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "sheet",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/sheet.tsx",
+          "relativePath": "ui/sheet.tsx",
+          "size": 4212,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "social-icons",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/social-icons.tsx",
+          "relativePath": "ui/social-icons.tsx",
+          "size": 3732,
+          "coverage": {
+            "lines": 100,
+            "branches": 93.75,
+            "functions": 100,
+            "statements": 100,
+            "average": 98.4375
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "tabs",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/tabs.tsx",
+          "relativePath": "ui/tabs.tsx",
+          "size": 1979,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "textarea",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/textarea.tsx",
+          "relativePath": "ui/textarea.tsx",
+          "size": 764,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "toaster",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/toaster.tsx",
+          "relativePath": "ui/toaster.tsx",
+          "size": 1323,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        }
+      ]
+    },
+    "layout": {
+      "total": 7,
+      "covered": 7,
+      "uncovered": 0,
+      "averageCoverage": 75.60071428571429,
+      "components": [
+        {
+          "name": "footer",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/footer.tsx",
+          "relativePath": "layout/footer.tsx",
+          "size": 4747,
+          "coverage": {
+            "lines": 91.3,
+            "branches": 88.88,
+            "functions": 100,
+            "statements": 91.3,
+            "average": 92.87
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "header",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/header.tsx",
+          "relativePath": "layout/header.tsx",
+          "size": 2704,
+          "coverage": {
+            "lines": 100,
+            "branches": 90,
+            "functions": 100,
+            "statements": 100,
+            "average": 97.5
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "index",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/index.ts",
+          "relativePath": "layout/index.ts",
+          "size": 629,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "language-switcher",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/language-switcher.tsx",
+          "relativePath": "layout/language-switcher.tsx",
+          "size": 6972,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "logo",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/logo.tsx",
+          "relativePath": "layout/logo.tsx",
+          "size": 2754,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "main-navigation",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/main-navigation.tsx",
+          "relativePath": "layout/main-navigation.tsx",
+          "size": 3728,
+          "coverage": {
+            "lines": 100,
+            "branches": 94.11,
+            "functions": 100,
+            "statements": 100,
+            "average": 98.5275
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "mobile-navigation",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/mobile-navigation.tsx",
+          "relativePath": "layout/mobile-navigation.tsx",
+          "size": 4573,
+          "coverage": {
+            "lines": 99,
+            "branches": 88.23,
+            "functions": 75,
+            "statements": 99,
+            "average": 90.3075
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        }
+      ]
+    },
+    "home": {
+      "total": 12,
+      "covered": 12,
+      "uncovered": 0,
+      "averageCoverage": 33.125,
+      "components": [
+        {
+          "name": "call-to-action",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/call-to-action.tsx",
+          "relativePath": "home/call-to-action.tsx",
+          "size": 8831,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        },
+        {
+          "name": "component-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/component-showcase.tsx",
+          "relativePath": "home/component-showcase.tsx",
+          "size": 2830,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "hero-section",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/hero-section.tsx",
+          "relativePath": "home/hero-section.tsx",
+          "size": 5977,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "project-overview",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx",
+          "relativePath": "home/project-overview.tsx",
+          "size": 9001,
+          "coverage": {
+            "lines": 100,
+            "branches": 90,
+            "functions": 100,
+            "statements": 100,
+            "average": 97.5
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "badge-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/badge-showcase.tsx",
+          "relativePath": "home/showcase/badge-showcase.tsx",
+          "size": 1306,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "button-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/button-showcase.tsx",
+          "relativePath": "home/showcase/button-showcase.tsx",
+          "size": 1233,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "form-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/form-showcase.tsx",
+          "relativePath": "home/showcase/form-showcase.tsx",
+          "size": 1253,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "index",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/index.ts",
+          "relativePath": "home/showcase/index.ts",
+          "size": 322,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "interactive-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/interactive-showcase.tsx",
+          "relativePath": "home/showcase/interactive-showcase.tsx",
+          "size": 1996,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "responsive-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/responsive-showcase.tsx",
+          "relativePath": "home/showcase/responsive-showcase.tsx",
+          "size": 1781,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "theme-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/theme-showcase.tsx",
+          "relativePath": "home/showcase/theme-showcase.tsx",
+          "size": 2183,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "tech-stack-section",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/tech-stack-section.tsx",
+          "relativePath": "home/tech-stack-section.tsx",
+          "size": 7667,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        }
+      ]
+    },
+    "i18n": {
+      "total": 6,
+      "covered": 6,
+      "uncovered": 0,
+      "averageCoverage": 58.333333333333336,
+      "components": [
+        {
+          "name": "enhanced-locale-switcher",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/enhanced-locale-switcher.tsx",
+          "relativePath": "i18n/enhanced-locale-switcher.tsx",
+          "size": 9221,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "format-helpers",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/format-helpers.tsx",
+          "relativePath": "i18n/format-helpers.tsx",
+          "size": 5889,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "locale-detection-demo",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/locale-detection-demo.tsx",
+          "relativePath": "i18n/locale-detection-demo.tsx",
+          "size": 6802,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "performance-dashboard",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/performance-dashboard.tsx",
+          "relativePath": "i18n/performance-dashboard.tsx",
+          "size": 7196,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "translation-fallback",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-fallback.tsx",
+          "relativePath": "i18n/translation-fallback.tsx",
+          "size": 5169,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "translation-preloader",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-preloader.tsx",
+          "relativePath": "i18n/translation-preloader.tsx",
+          "size": 7088,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        }
+      ]
+    },
+    "theme": {
+      "total": 3,
+      "covered": 3,
+      "uncovered": 0,
+      "averageCoverage": 83.33333333333333,
+      "components": [
+        {
+          "name": "theme-menu-item",
+          "category": "theme",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-menu-item.tsx",
+          "relativePath": "theme/theme-menu-item.tsx",
+          "size": 1554,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "theme-performance-monitor",
+          "category": "theme",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-performance-monitor.tsx",
+          "relativePath": "theme/theme-performance-monitor.tsx",
+          "size": 2684,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "theme-toggle-button",
+          "category": "theme",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-toggle-button.tsx",
+          "relativePath": "theme/theme-toggle-button.tsx",
+          "size": 1715,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        }
+      ]
+    },
+    "shared": {
+      "total": 4,
+      "covered": 4,
+      "uncovered": 0,
+      "averageCoverage": 62.5,
+      "components": [
+        {
+          "name": "animated-icon",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/animated-icon.tsx",
+          "relativePath": "shared/animated-icon.tsx",
+          "size": 3371,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "dynamic-imports",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/dynamic-imports.tsx",
+          "relativePath": "shared/dynamic-imports.tsx",
+          "size": 8429,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        },
+        {
+          "name": "progress-indicator",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/progress-indicator.tsx",
+          "relativePath": "shared/progress-indicator.tsx",
+          "size": 3889,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "under-construction",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/under-construction.tsx",
+          "relativePath": "shared/under-construction.tsx",
+          "size": 3653,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "other",
+            "priority": 6,
+            "targetCoverage": 50,
+            "description": "其他组件"
+          }
+        }
+      ]
+    },
+    "forms": {
+      "total": 3,
+      "covered": 3,
+      "uncovered": 0,
+      "averageCoverage": 33.333333333333336,
+      "components": [
+        {
+          "name": "contact-form-container",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-container.tsx",
+          "relativePath": "forms/contact-form-container.tsx",
+          "size": 6881,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "contact-form-fields",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-fields.tsx",
+          "relativePath": "forms/contact-form-fields.tsx",
+          "size": 8597,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "contact-form",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form.tsx",
+          "relativePath": "forms/contact-form.tsx",
+          "size": 317,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        }
+      ]
+    },
+    "contact": {
+      "total": 1,
+      "covered": 1,
+      "uncovered": 0,
+      "averageCoverage": 50,
+      "components": [
+        {
+          "name": "contact-form",
+          "category": "contact",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/contact/contact-form.tsx",
+          "relativePath": "contact/contact-form.tsx",
+          "size": 299,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        }
+      ]
+    },
+    "examples": {
+      "total": 2,
+      "covered": 2,
+      "uncovered": 0,
+      "averageCoverage": 50,
+      "components": [
+        {
+          "name": "ui-showcase-sections",
+          "category": "examples",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase-sections.tsx",
+          "relativePath": "examples/ui-showcase-sections.tsx",
+          "size": 6327,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        },
+        {
+          "name": "ui-showcase",
+          "category": "examples",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase.tsx",
+          "relativePath": "examples/ui-showcase.tsx",
+          "size": 3150,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        }
+      ]
+    }
+  },
+  "priorities": {
+    "coreUI": {
+      "priority": 1,
+      "description": "核心UI组件 - 用户交互频繁",
+      "components": [
+        {
+          "name": "badge-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/badge-showcase.tsx",
+          "relativePath": "home/showcase/badge-showcase.tsx",
+          "size": 1306,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "button-showcase",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/button-showcase.tsx",
+          "relativePath": "home/showcase/button-showcase.tsx",
+          "size": 1233,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "theme-toggle-button",
+          "category": "theme",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-toggle-button.tsx",
+          "relativePath": "theme/theme-toggle-button.tsx",
+          "size": 1715,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "badge",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/badge.tsx",
+          "relativePath": "ui/badge.tsx",
+          "size": 1150,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "button",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/button.tsx",
+          "relativePath": "ui/button.tsx",
+          "size": 2132,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "card",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/card.tsx",
+          "relativePath": "ui/card.tsx",
+          "size": 2001,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "dropdown-menu",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/dropdown-menu.tsx",
+          "relativePath": "ui/dropdown-menu.tsx",
+          "size": 8469,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "input",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/input.tsx",
+          "relativePath": "ui/input.tsx",
+          "size": 971,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "label",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/label.tsx",
+          "relativePath": "ui/label.tsx",
+          "size": 617,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "navigation-menu",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/navigation-menu.tsx",
+          "relativePath": "ui/navigation-menu.tsx",
+          "size": 6687,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "separator",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/separator.tsx",
+          "relativePath": "ui/separator.tsx",
+          "size": 606,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "sheet",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/sheet.tsx",
+          "relativePath": "ui/sheet.tsx",
+          "size": 4212,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        },
+        {
+          "name": "tabs",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/tabs.tsx",
+          "relativePath": "ui/tabs.tsx",
+          "size": 1979,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "coreUI",
+            "priority": 1,
+            "targetCoverage": 90,
+            "description": "核心UI组件 - 用户交互频繁"
+          }
+        }
+      ],
+      "targetCoverage": 90,
+      "total": 13,
+      "covered": 13,
+      "uncovered": 0,
+      "averageCoverage": 84.61538461538461
+    },
+    "layout": {
+      "priority": 2,
+      "description": "布局组件 - 页面结构关键",
+      "components": [
+        {
+          "name": "footer",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/footer.tsx",
+          "relativePath": "layout/footer.tsx",
+          "size": 4747,
+          "coverage": {
+            "lines": 91.3,
+            "branches": 88.88,
+            "functions": 100,
+            "statements": 91.3,
+            "average": 92.87
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "header",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/header.tsx",
+          "relativePath": "layout/header.tsx",
+          "size": 2704,
+          "coverage": {
+            "lines": 100,
+            "branches": 90,
+            "functions": 100,
+            "statements": 100,
+            "average": 97.5
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "main-navigation",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/main-navigation.tsx",
+          "relativePath": "layout/main-navigation.tsx",
+          "size": 3728,
+          "coverage": {
+            "lines": 100,
+            "branches": 94.11,
+            "functions": 100,
+            "statements": 100,
+            "average": 98.5275
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        },
+        {
+          "name": "mobile-navigation",
+          "category": "layout",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/mobile-navigation.tsx",
+          "relativePath": "layout/mobile-navigation.tsx",
+          "size": 4573,
+          "coverage": {
+            "lines": 99,
+            "branches": 88.23,
+            "functions": 75,
+            "statements": 99,
+            "average": 90.3075
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "layout",
+            "priority": 2,
+            "targetCoverage": 85,
+            "description": "布局组件 - 页面结构关键"
+          }
+        }
+      ],
+      "targetCoverage": 85,
+      "total": 4,
+      "covered": 4,
+      "uncovered": 0,
+      "averageCoverage": 94.80125000000001
+    },
+    "business": {
+      "priority": 3,
+      "description": "业务组件 - 功能实现重要",
+      "components": [
+        {
+          "name": "contact-form",
+          "category": "contact",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/contact/contact-form.tsx",
+          "relativePath": "contact/contact-form.tsx",
+          "size": 299,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "contact-form-container",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-container.tsx",
+          "relativePath": "forms/contact-form-container.tsx",
+          "size": 6881,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "contact-form-fields",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-fields.tsx",
+          "relativePath": "forms/contact-form-fields.tsx",
+          "size": 8597,
+          "coverage": {
+            "lines": 0,
+            "branches": 0,
+            "functions": 0,
+            "statements": 0,
+            "average": 0
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "contact-form",
+          "category": "forms",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form.tsx",
+          "relativePath": "forms/contact-form.tsx",
+          "size": 317,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "hero-section",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/hero-section.tsx",
+          "relativePath": "home/hero-section.tsx",
+          "size": 5977,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "project-overview",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/project-overview.tsx",
+          "relativePath": "home/project-overview.tsx",
+          "size": 9001,
+          "coverage": {
+            "lines": 100,
+            "branches": 90,
+            "functions": 100,
+            "statements": 100,
+            "average": 97.5
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "tech-stack-section",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/tech-stack-section.tsx",
+          "relativePath": "home/tech-stack-section.tsx",
+          "size": 7667,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "enhanced-locale-switcher",
+          "category": "i18n",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/enhanced-locale-switcher.tsx",
+          "relativePath": "i18n/enhanced-locale-switcher.tsx",
+          "size": 9221,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "theme-menu-item",
+          "category": "theme",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-menu-item.tsx",
+          "relativePath": "theme/theme-menu-item.tsx",
+          "size": 1554,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        },
+        {
+          "name": "theme-toggle",
+          "category": "root",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme-toggle.tsx",
+          "relativePath": "theme-toggle.tsx",
+          "size": 2805,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 55.55,
+            "statements": 100,
+            "average": 88.8875
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "business",
+            "priority": 3,
+            "targetCoverage": 80,
+            "description": "业务组件 - 功能实现重要"
+          }
+        }
+      ],
+      "targetCoverage": 80,
+      "total": 10,
+      "covered": 10,
+      "uncovered": 0,
+      "averageCoverage": 73.63875
+    },
+    "utility": {
+      "priority": 4,
+      "description": "工具组件 - 辅助功能",
+      "components": [
+        {
+          "name": "animated-icon",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/animated-icon.tsx",
+          "relativePath": "shared/animated-icon.tsx",
+          "size": 3371,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "progress-indicator",
+          "category": "shared",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/progress-indicator.tsx",
+          "relativePath": "shared/progress-indicator.tsx",
+          "size": 3889,
+          "coverage": {
+            "lines": 100,
+            "branches": 100,
+            "functions": 100,
+            "statements": 100,
+            "average": 100
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "animated-counter-helpers",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter-helpers.tsx",
+          "relativePath": "ui/animated-counter-helpers.tsx",
+          "size": 5399,
+          "coverage": {
+            "lines": 28.16,
+            "branches": 100,
+            "functions": 13.33,
+            "statements": 28.16,
+            "average": 42.4125
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "animated-counter",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter.tsx",
+          "relativePath": "ui/animated-counter.tsx",
+          "size": 7499,
+          "coverage": {
+            "lines": 94.04,
+            "branches": 86.48,
+            "functions": 100,
+            "statements": 94.04,
+            "average": 93.64
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        },
+        {
+          "name": "social-icons",
+          "category": "ui",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/social-icons.tsx",
+          "relativePath": "ui/social-icons.tsx",
+          "size": 3732,
+          "coverage": {
+            "lines": 100,
+            "branches": 93.75,
+            "functions": 100,
+            "statements": 100,
+            "average": 98.4375
+          },
+          "hasCoverage": true,
+          "hasTests": true,
+          "priority": {
+            "category": "utility",
+            "priority": 4,
+            "targetCoverage": 75,
+            "description": "工具组件 - 辅助功能"
+          }
+        }
+      ],
+      "targetCoverage": 75,
+      "total": 5,
+      "covered": 5,
+      "uncovered": 0,
+      "averageCoverage": 86.898
+    },
+    "showcase": {
+      "priority": 5,
+      "description": "展示组件 - 演示用途",
+      "components": [
+        {
+          "name": "ui-showcase-sections",
+          "category": "examples",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase-sections.tsx",
+          "relativePath": "examples/ui-showcase-sections.tsx",
+          "size": 6327,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        },
+        {
+          "name": "ui-showcase",
+          "category": "examples",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase.tsx",
+          "relativePath": "examples/ui-showcase.tsx",
+          "size": 3150,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        },
+        {
+          "name": "call-to-action",
+          "category": "home",
+          "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/call-to-action.tsx",
+          "relativePath": "home/call-to-action.tsx",
+          "size": 8831,
+          "coverage": {
+            "lines": 0,
+            "branches": 100,
+            "functions": 100,
+            "statements": 0,
+            "average": 50
+          },
+          "hasCoverage": true,
+          "hasTests": false,
+          "priority": {
+            "category": "showcase",
+            "priority": 5,
+            "targetCoverage": 60,
+            "description": "展示组件 - 演示用途"
+          }
+        }
+      ],
+      "targetCoverage": 60,
+      "total": 3,
+      "covered": 3,
+      "uncovered": 0,
+      "averageCoverage": 50
+    }
+  },
+  "uncoveredComponents": [
+    {
+      "name": "collapsible-dev-tool",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/collapsible-dev-tool.tsx",
+      "relativePath": "dev-tools/collapsible-dev-tool.tsx",
+      "size": 6527,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "dev-tools-controller",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/dev-tools-controller.tsx",
+      "relativePath": "dev-tools/dev-tools-controller.tsx",
+      "size": 8088,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "react-scan-analyzer",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/react-scan-analyzer.tsx",
+      "relativePath": "dev-tools/react-scan-analyzer.tsx",
+      "size": 18328,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "react-scan-demo",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/react-scan-demo.tsx",
+      "relativePath": "dev-tools/react-scan-demo.tsx",
+      "size": 7309,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "react-scan-guide",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/react-scan-guide.tsx",
+      "relativePath": "dev-tools/react-scan-guide.tsx",
+      "size": 16769,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "react-scan-provider",
+      "category": "dev-tools",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/dev-tools/react-scan-provider.tsx",
+      "relativePath": "dev-tools/react-scan-provider.tsx",
+      "size": 8425,
+      "coverage": null,
+      "hasCoverage": false,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    }
+  ],
+  "lowCoverageComponents": [
+    {
+      "name": "contact-form",
+      "category": "contact",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/contact/contact-form.tsx",
+      "relativePath": "contact/contact-form.tsx",
+      "size": 299,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "business",
+        "priority": 3,
+        "targetCoverage": 80,
+        "description": "业务组件 - 功能实现重要"
+      }
+    },
+    {
+      "name": "error-boundary",
+      "category": "root",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/error-boundary.tsx",
+      "relativePath": "error-boundary.tsx",
+      "size": 3236,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "ui-showcase-sections",
+      "category": "examples",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase-sections.tsx",
+      "relativePath": "examples/ui-showcase-sections.tsx",
+      "size": 6327,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "showcase",
+        "priority": 5,
+        "targetCoverage": 60,
+        "description": "展示组件 - 演示用途"
+      }
+    },
+    {
+      "name": "ui-showcase",
+      "category": "examples",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/examples/ui-showcase.tsx",
+      "relativePath": "examples/ui-showcase.tsx",
+      "size": 3150,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "showcase",
+        "priority": 5,
+        "targetCoverage": 60,
+        "description": "展示组件 - 演示用途"
+      }
+    },
+    {
+      "name": "contact-form-container",
+      "category": "forms",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-container.tsx",
+      "relativePath": "forms/contact-form-container.tsx",
+      "size": 6881,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "business",
+        "priority": 3,
+        "targetCoverage": 80,
+        "description": "业务组件 - 功能实现重要"
+      }
+    },
+    {
+      "name": "contact-form-fields",
+      "category": "forms",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form-fields.tsx",
+      "relativePath": "forms/contact-form-fields.tsx",
+      "size": 8597,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "business",
+        "priority": 3,
+        "targetCoverage": 80,
+        "description": "业务组件 - 功能实现重要"
+      }
+    },
+    {
+      "name": "contact-form",
+      "category": "forms",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/forms/contact-form.tsx",
+      "relativePath": "forms/contact-form.tsx",
+      "size": 317,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "business",
+        "priority": 3,
+        "targetCoverage": 80,
+        "description": "业务组件 - 功能实现重要"
+      }
+    },
+    {
+      "name": "call-to-action",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/call-to-action.tsx",
+      "relativePath": "home/call-to-action.tsx",
+      "size": 8831,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "showcase",
+        "priority": 5,
+        "targetCoverage": 60,
+        "description": "展示组件 - 演示用途"
+      }
+    },
+    {
+      "name": "component-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/component-showcase.tsx",
+      "relativePath": "home/component-showcase.tsx",
+      "size": 2830,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "badge-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/badge-showcase.tsx",
+      "relativePath": "home/showcase/badge-showcase.tsx",
+      "size": 1306,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "coreUI",
+        "priority": 1,
+        "targetCoverage": 90,
+        "description": "核心UI组件 - 用户交互频繁"
+      }
+    },
+    {
+      "name": "button-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/button-showcase.tsx",
+      "relativePath": "home/showcase/button-showcase.tsx",
+      "size": 1233,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "coreUI",
+        "priority": 1,
+        "targetCoverage": 90,
+        "description": "核心UI组件 - 用户交互频繁"
+      }
+    },
+    {
+      "name": "form-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/form-showcase.tsx",
+      "relativePath": "home/showcase/form-showcase.tsx",
+      "size": 1253,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "index",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/index.ts",
+      "relativePath": "home/showcase/index.ts",
+      "size": 322,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "interactive-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/interactive-showcase.tsx",
+      "relativePath": "home/showcase/interactive-showcase.tsx",
+      "size": 1996,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "responsive-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/responsive-showcase.tsx",
+      "relativePath": "home/showcase/responsive-showcase.tsx",
+      "size": 1781,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "theme-showcase",
+      "category": "home",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/home/showcase/theme-showcase.tsx",
+      "relativePath": "home/showcase/theme-showcase.tsx",
+      "size": 2183,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "format-helpers",
+      "category": "i18n",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/format-helpers.tsx",
+      "relativePath": "i18n/format-helpers.tsx",
+      "size": 5889,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "locale-detection-demo",
+      "category": "i18n",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/locale-detection-demo.tsx",
+      "relativePath": "i18n/locale-detection-demo.tsx",
+      "size": 6802,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "performance-dashboard",
+      "category": "i18n",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/performance-dashboard.tsx",
+      "relativePath": "i18n/performance-dashboard.tsx",
+      "size": 7196,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "translation-fallback",
+      "category": "i18n",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-fallback.tsx",
+      "relativePath": "i18n/translation-fallback.tsx",
+      "size": 5169,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "translation-preloader",
+      "category": "i18n",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/i18n/translation-preloader.tsx",
+      "relativePath": "i18n/translation-preloader.tsx",
+      "size": 7088,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "index",
+      "category": "layout",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/index.ts",
+      "relativePath": "layout/index.ts",
+      "size": 629,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "language-switcher",
+      "category": "layout",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/language-switcher.tsx",
+      "relativePath": "layout/language-switcher.tsx",
+      "size": 6972,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "logo",
+      "category": "layout",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/layout/logo.tsx",
+      "relativePath": "layout/logo.tsx",
+      "size": 2754,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "loading-spinner",
+      "category": "root",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/loading-spinner.tsx",
+      "relativePath": "loading-spinner.tsx",
+      "size": 1070,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "enterprise-analytics",
+      "category": "monitoring",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/monitoring/enterprise-analytics.tsx",
+      "relativePath": "monitoring/enterprise-analytics.tsx",
+      "size": 7558,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "web-vitals-indicator",
+      "category": "performance",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/performance/web-vitals-indicator.tsx",
+      "relativePath": "performance/web-vitals-indicator.tsx",
+      "size": 5278,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "web-vitals-monitor",
+      "category": "performance",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/performance/web-vitals-monitor.tsx",
+      "relativePath": "performance/web-vitals-monitor.tsx",
+      "size": 1435,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "turnstile",
+      "category": "security",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/security/turnstile.tsx",
+      "relativePath": "security/turnstile.tsx",
+      "size": 4113,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "dynamic-imports",
+      "category": "shared",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/dynamic-imports.tsx",
+      "relativePath": "shared/dynamic-imports.tsx",
+      "size": 8429,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "under-construction",
+      "category": "shared",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/shared/under-construction.tsx",
+      "relativePath": "shared/under-construction.tsx",
+      "size": 3653,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "theme-performance-monitor",
+      "category": "theme",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme/theme-performance-monitor.tsx",
+      "relativePath": "theme/theme-performance-monitor.tsx",
+      "size": 2684,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "theme-provider",
+      "category": "root",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/theme-provider.tsx",
+      "relativePath": "theme-provider.tsx",
+      "size": 760,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "animated-counter-helpers",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/animated-counter-helpers.tsx",
+      "relativePath": "ui/animated-counter-helpers.tsx",
+      "size": 5399,
+      "coverage": {
+        "lines": 28.16,
+        "branches": 100,
+        "functions": 13.33,
+        "statements": 28.16,
+        "average": 42.4125
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "utility",
+        "priority": 4,
+        "targetCoverage": 75,
+        "description": "工具组件 - 辅助功能"
+      }
+    },
+    {
+      "name": "carousel",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/carousel.tsx",
+      "relativePath": "ui/carousel.tsx",
+      "size": 6453,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "checkbox",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/checkbox.tsx",
+      "relativePath": "ui/checkbox.tsx",
+      "size": 1063,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "prose",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/prose.tsx",
+      "relativePath": "ui/prose.tsx",
+      "size": 1642,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "textarea",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/textarea.tsx",
+      "relativePath": "ui/textarea.tsx",
+      "size": 764,
+      "coverage": {
+        "lines": 0,
+        "branches": 0,
+        "functions": 0,
+        "statements": 0,
+        "average": 0
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    },
+    {
+      "name": "toaster",
+      "category": "ui",
+      "fullPath": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/src/components/ui/toaster.tsx",
+      "relativePath": "ui/toaster.tsx",
+      "size": 1323,
+      "coverage": {
+        "lines": 0,
+        "branches": 100,
+        "functions": 100,
+        "statements": 0,
+        "average": 50
+      },
+      "hasCoverage": true,
+      "hasTests": false,
+      "priority": {
+        "category": "other",
+        "priority": 6,
+        "targetCoverage": 50,
+        "description": "其他组件"
+      }
+    }
+  ],
+  "recommendations": [
+    {
+      "type": "warning",
+      "priority": "medium",
+      "title": "重要组件覆盖率过低",
+      "description": "3个重要组件覆盖率低于40%",
+      "components": [
+        "contact-form-fields (0.0%)",
+        "badge-showcase (0.0%)",
+        "button-showcase (0.0%)"
+      ],
+      "action": "增加测试用例以提高覆盖率"
+    },
+    {
+      "type": "info",
+      "priority": "low",
+      "title": "home分类覆盖率偏低",
+      "description": "home分类平均覆盖率33.1%，低于50%目标",
+      "action": "重点关注home分类的测试补充"
+    },
+    {
+      "type": "info",
+      "priority": "low",
+      "title": "forms分类覆盖率偏低",
+      "description": "forms分类平均覆盖率33.3%，低于50%目标",
+      "action": "重点关注forms分类的测试补充"
+    },
+    {
+      "type": "goal",
+      "priority": "medium",
+      "title": "组件整体覆盖率提升计划",
+      "description": "当前组件平均覆盖率38.9%，目标60%",
+      "action": "按优先级逐步补充测试用例，预计需要新增50-80个测试用例"
+    }
+  ],
+  "priorityTasks": [
+    {
+      "category": "coreUI",
+      "priority": 1,
+      "description": "核心UI组件 - 用户交互频繁",
+      "targetCoverage": 90,
+      "uncoveredCount": 0,
+      "lowCoverageCount": 2,
+      "uncoveredComponents": [],
+      "lowCoverageComponents": [
+        {
+          "name": "badge-showcase",
+          "currentCoverage": "0.0"
+        },
+        {
+          "name": "button-showcase",
+          "currentCoverage": "0.0"
+        }
+      ],
+      "estimatedEffort": {
+        "newTests": 0,
+        "additionalTests": 8,
+        "totalTests": 8,
+        "estimatedHours": 4,
+        "estimatedDays": 1
+      }
+    },
+    {
+      "category": "business",
+      "priority": 3,
+      "description": "业务组件 - 功能实现重要",
+      "targetCoverage": 80,
+      "uncoveredCount": 0,
+      "lowCoverageCount": 4,
+      "uncoveredComponents": [],
+      "lowCoverageComponents": [
+        {
+          "name": "contact-form",
+          "currentCoverage": "50.0"
+        },
+        {
+          "name": "contact-form-container",
+          "currentCoverage": "50.0"
+        },
+        {
+          "name": "contact-form-fields",
+          "currentCoverage": "0.0"
+        },
+        {
+          "name": "contact-form",
+          "currentCoverage": "50.0"
+        }
+      ],
+      "estimatedEffort": {
+        "newTests": 0,
+        "additionalTests": 16,
+        "totalTests": 16,
+        "estimatedHours": 8,
+        "estimatedDays": 1
+      }
+    },
+    {
+      "category": "utility",
+      "priority": 4,
+      "description": "工具组件 - 辅助功能",
+      "targetCoverage": 75,
+      "uncoveredCount": 0,
+      "lowCoverageCount": 1,
+      "uncoveredComponents": [],
+      "lowCoverageComponents": [
+        {
+          "name": "animated-counter-helpers",
+          "currentCoverage": "42.4"
+        }
+      ],
+      "estimatedEffort": {
+        "newTests": 0,
+        "additionalTests": 4,
+        "totalTests": 4,
+        "estimatedHours": 2,
+        "estimatedDays": 1
+      }
+    },
+    {
+      "category": "showcase",
+      "priority": 5,
+      "description": "展示组件 - 演示用途",
+      "targetCoverage": 60,
+      "uncoveredCount": 0,
+      "lowCoverageCount": 3,
+      "uncoveredComponents": [],
+      "lowCoverageComponents": [
+        {
+          "name": "ui-showcase-sections",
+          "currentCoverage": "50.0"
+        },
+        {
+          "name": "ui-showcase",
+          "currentCoverage": "50.0"
+        },
+        {
+          "name": "call-to-action",
+          "currentCoverage": "50.0"
+        }
+      ],
+      "estimatedEffort": {
+        "newTests": 0,
+        "additionalTests": 12,
+        "totalTests": 12,
+        "estimatedHours": 6,
+        "estimatedDays": 1
+      }
+    }
+  ]
+}
