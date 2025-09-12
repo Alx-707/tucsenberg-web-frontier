@@ -11,10 +11,10 @@ import { afterEach, beforeEach, vi } from 'vitest';
 
 declare module 'vitest' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface Assertion<T = any> extends TestingLibraryMatchers<T, void> {}
+  interface Assertion<T = unknown> extends TestingLibraryMatchers<T, void> {}
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface AsymmetricMatchersContaining
-    extends TestingLibraryMatchers<any, void> {}
+    extends TestingLibraryMatchers<unknown, void> {}
 }
 
 // Mock Next.js router
@@ -162,7 +162,7 @@ Object.defineProperty(MockPerformanceObserver, 'supportedEntryTypes', {
   configurable: true,
 });
 
-globalThis.PerformanceObserver = MockPerformanceObserver as any;
+globalThis.PerformanceObserver = MockPerformanceObserver as unknown;
 
 // Mock environment variables - 使用vi.stubEnv而不是直接修改process.env
 vi.stubEnv('NODE_ENV', 'test');
@@ -219,7 +219,7 @@ globalThis.requestAnimationFrame = vi.fn((cb) => {
   setTimeout(cb, 0);
   return 1;
 });
-globalThis.cancelAnimationFrame = vi.fn((id) => clearTimeout(id as any));
+globalThis.cancelAnimationFrame = vi.fn((id) => clearTimeout(id as unknown));
 
 // Mock localStorage and sessionStorage
 const createStorageMock = () => {
@@ -320,7 +320,7 @@ afterEach(() => {
 // Console error suppression for known issues
 const originalError = console.error;
 beforeEach(() => {
-  console.error = (...args: any[]) => {
+  console.error = (...args: unknown[]) => {
     if (
       typeof args[0] === 'string' &&
       (args[0].includes('Warning: ReactDOM.render is deprecated') ||

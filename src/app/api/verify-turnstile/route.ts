@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+;
 import { env } from '../../../../env.mjs';
+import { logger } from '@/lib/logger';
 
 interface TurnstileVerificationRequest {
   token: string;
@@ -88,10 +90,9 @@ async function verifyWithCloudflare(
   );
 
   if (!verificationResponse.ok) {
-    console.error(
-      'Turnstile verification request failed:',
-      verificationResponse.status,
-    );
+    logger.error('Turnstile verification request failed', {
+      status: verificationResponse.status,
+    });
     return NextResponse.json(
       {
         success: false,
@@ -113,7 +114,7 @@ function handleVerificationResult(
   clientIP: string,
 ) {
   // Log verification attempt (for monitoring)
-  console.warn('Turnstile verification:', {
+  logger.warn('Turnstile verification', {
     success: result.success,
     hostname: result.hostname,
     challenge_ts: result.challenge_ts,
@@ -123,7 +124,7 @@ function handleVerificationResult(
   });
 
   if (!result.success) {
-    console.warn('Turnstile verification failed:', {
+    logger.warn('Turnstile verification failed', {
       errorCodes: result['error-codes'],
       clientIP,
       timestamp: new Date().toISOString(),
@@ -193,7 +194,7 @@ export async function POST(request: NextRequest) {
     // Handle verification result
     return handleVerificationResult(result, clientIP);
   } catch (error) {
-    console.error('Error verifying Turnstile token:', error);
+    logger.error('Error verifying Turnstile token', { error: error as Error });
 
     return NextResponse.json(
       {

@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+;
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET, POST } from '../route';
 
@@ -43,17 +44,31 @@ vi.mock('@/lib/logger', () => ({
   logger: mockLogger,
 }));
 
-vi.mock('@/lib/validations', () => ({
-  contactFormSchema: {
-    extend: vi.fn().mockReturnValue({
-      safeParse: vi.fn(),
-    }),
-  },
-  validationHelpers: {
-    ...mockValidationHelpers,
-    isSpamContent: vi.fn().mockReturnValue(false),
-  },
-}));
+vi.mock('@/lib/validations', () => {
+  const mockSafeParse = vi.fn();
+  const mockExtend = vi.fn().mockReturnValue({
+    safeParse: mockSafeParse,
+    parse: vi.fn(),
+    parseAsync: vi.fn(),
+    _def: {},
+    _type: undefined as any,
+  });
+
+  return {
+    contactFormSchema: {
+      extend: mockExtend,
+      safeParse: mockSafeParse,
+      parse: vi.fn(),
+      parseAsync: vi.fn(),
+      _def: {},
+      _type: undefined as any,
+    },
+    validationHelpers: {
+      ...mockValidationHelpers,
+      isSpamContent: vi.fn().mockReturnValue(false),
+    },
+  };
+});
 
 // Mock environment variables
 vi.mock('../../../../env.mjs', () => ({
@@ -101,12 +116,17 @@ describe('Contact API Route', () => {
     it('应该成功处理有效的表单提交', async () => {
       // Mock successful validation - use the global mock from setup.ts
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockReturnValue({
           success: true,
           data: validFormData,
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       // Mock successful service responses
       mockAirtableService.createContact.mockResolvedValue({ id: 'record-123' });
@@ -139,14 +159,19 @@ describe('Contact API Route', () => {
     it('应该处理无效的表单数据', async () => {
       // Mock validation failure - use the global mock from setup.ts
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockReturnValue({
           success: false,
           error: {
             errors: [{ path: ['email'], message: 'Invalid email' }],
           },
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',
@@ -178,12 +203,17 @@ describe('Contact API Route', () => {
 
       // 第一次请求应该成功 - use the global mock from setup.ts
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockReturnValue({
           success: true,
           data: validFormData,
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
@@ -213,12 +243,17 @@ describe('Contact API Route', () => {
     it('应该处理Turnstile验证失败', async () => {
       // Mock successful form validation but failed Turnstile verification
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockReturnValue({
           success: true,
           data: validFormData,
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       // Mock failed Turnstile verification
       global.fetch = vi.fn().mockResolvedValue({
@@ -249,12 +284,17 @@ describe('Contact API Route', () => {
 
       // Mock successful validation - use the global mock from setup.ts
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockReturnValue({
           success: true,
           data: validFormData,
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
@@ -391,11 +431,16 @@ describe('Contact API Route', () => {
 
       // Mock validation error - use the global mock from setup.ts
       const mockValidations = await import('@/lib/validations');
-      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue({
+      const mockExtendedSchema = {
         safeParse: vi.fn().mockImplementation(() => {
           throw new Error('Validation error');
         }),
-      });
+        parse: vi.fn(),
+        parseAsync: vi.fn(),
+        _def: {},
+        _type: undefined as any,
+      };
+      vi.mocked(mockValidations.contactFormSchema.extend).mockReturnValue(mockExtendedSchema as any);
 
       const request = new NextRequest('http://localhost:3000/api/contact', {
         method: 'POST',

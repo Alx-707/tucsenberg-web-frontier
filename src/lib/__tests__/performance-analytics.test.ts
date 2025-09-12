@@ -113,7 +113,7 @@ describe('PerformanceBaselineManager', () => {
     },
   };
 
-  const mockDetailedWebVitals: any = {
+  const mockDetailedWebVitals: unknown = {
     cls: 0.1,
     fid: 100,
     lcp: 2500,
@@ -164,7 +164,7 @@ describe('PerformanceBaselineManager', () => {
 
   describe('基准数据管理', () => {
     it('should save baseline to localStorage', () => {
-      baselineManager.saveBaseline(mockDetailedWebVitals as any);
+      baselineManager.saveBaseline(mockDetailedWebVitals as unknown);
 
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         'performance-baselines',
@@ -250,7 +250,7 @@ describe('PerformanceBaselineManager', () => {
       baselineManager.saveBaseline({
         ...mockBaseline,
         id: 'new-baseline',
-      } as any);
+      } as unknown);
 
       // Should limit to 100 baselines
       const setItemCall = mockLocalStorage.setItem.mock.calls.find(
@@ -272,7 +272,7 @@ describe('PerformanceBaselineManager', () => {
       };
 
       expect(() => {
-        baselineManager.saveBaseline(invalidBaseline as any);
+        baselineManager.saveBaseline(invalidBaseline as unknown);
       }).not.toThrow(); // Should handle gracefully
     });
 
@@ -297,7 +297,7 @@ describe('PerformanceBaselineManager', () => {
 describe('PerformanceRegressionDetector', () => {
   let detector: InstanceType<typeof PerformanceRegressionDetector>;
 
-  const mockCurrentMetrics: any = {
+  const mockCurrentMetrics: unknown = {
     cls: 0.15, // Regression from baseline
     lcp: 3000, // Regression from baseline
     fid: 120, // Slight regression
@@ -325,7 +325,7 @@ describe('PerformanceRegressionDetector', () => {
     slowResources: [],
   };
 
-  const mockBaseline: any = {
+  const mockBaseline: unknown = {
     id: 'test-baseline',
     timestamp: Date.now() - WEB_VITALS_CONSTANTS.MILLISECONDS_PER_DAY,
     page: '/page',
@@ -372,7 +372,7 @@ describe('PerformanceRegressionDetector', () => {
       expect(result.regressions.length).toBeGreaterThan(0);
 
       const clsRegression = result.regressions.find(
-        (r: any) => r.metric === 'cls',
+        (r: unknown) => r.metric === 'cls',
       );
       expect(clsRegression).toBeDefined();
       expect(clsRegression?.severity).toBe('critical');
@@ -401,7 +401,7 @@ describe('PerformanceRegressionDetector', () => {
       );
 
       const clsRegression = result.regressions.find(
-        (r: any) => r.metric === 'cls',
+        (r: unknown) => r.metric === 'cls',
       );
       expect(clsRegression?.changePercent).toBeCloseTo(
         WEB_VITALS_CONSTANTS.TEST_PERCENTAGE_FIFTY,
@@ -419,7 +419,7 @@ describe('PerformanceRegressionDetector', () => {
       const result = detector.detectRegression(severeMetrics, mockBaseline);
 
       const clsRegression = result.regressions.find(
-        (r: any) => r.metric === 'cls',
+        (r: unknown) => r.metric === 'cls',
       );
       expect(clsRegression?.severity).toBe('critical');
     });
@@ -430,7 +430,7 @@ describe('PerformanceRegressionDetector', () => {
         metrics: {
           cls: 0.1,
           // Missing other metrics
-        } as any,
+        } as unknown,
       };
 
       expect(() => {
@@ -500,17 +500,17 @@ describe('PerformanceAlertSystem', () => {
         },
       };
 
-      alertSystem.configure(customConfig as any);
+      alertSystem.configure(customConfig as unknown);
 
       // Should not throw and should accept configuration
-      expect(() => alertSystem.configure(customConfig as any)).not.toThrow();
+      expect(() => alertSystem.configure(customConfig as unknown)).not.toThrow();
     });
 
     it('should handle invalid configuration gracefully', () => {
       const invalidConfig = {
         enabled: 'not-boolean',
         thresholds: 'not-object',
-      } as any;
+      } as unknown;
 
       expect(() => {
         alertSystem.configure(invalidConfig);
@@ -538,7 +538,7 @@ describe('PerformanceAlertSystem', () => {
       loggerErrorSpy.mockClear();
       loggerWarnSpy.mockClear();
 
-      (alertSystem as any).checkMetrics(poorMetrics as any);
+      (alertSystem as unknown).checkMetrics(poorMetrics as unknown);
 
       // 由于这些指标都超过了critical阈值，应该调用logger.error
       expect(loggerErrorSpy).toHaveBeenCalled();
@@ -556,7 +556,7 @@ describe('PerformanceAlertSystem', () => {
 
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      (alertSystem as any).checkMetrics(goodMetrics as any);
+      (alertSystem as unknown).checkMetrics(goodMetrics as unknown);
 
       expect(consoleSpy).not.toHaveBeenCalled();
       consoleSpy.mockRestore();
@@ -573,7 +573,7 @@ describe('PerformanceAlertSystem', () => {
 
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-      (alertSystem as any).checkMetrics(poorMetrics as any);
+      (alertSystem as unknown).checkMetrics(poorMetrics as unknown);
 
       expect(consoleSpy).not.toHaveBeenCalled();
       consoleSpy.mockRestore();
@@ -589,9 +589,9 @@ describe('PerformanceAlertSystem', () => {
 
       // Mock logger.error instead of console.warn for critical alerts
       const { logger } = await vi.importMock('@/lib/logger');
-      const loggerSpy = vi.mocked((logger as any).error);
+      const loggerSpy = vi.mocked((logger as unknown).error);
 
-      (alertSystem as any).sendAlert('critical', 'Test alert message', {
+      (alertSystem as unknown).sendAlert('critical', 'Test alert message', {
         metric: 'cls',
         value: 0.5,
       });
@@ -618,7 +618,7 @@ describe('PerformanceAlertSystem', () => {
         },
       });
 
-      await (alertSystem as any).sendAlert('warning', 'Test webhook alert', {
+      await (alertSystem as unknown).sendAlert('warning', 'Test webhook alert', {
         metric: 'lcp',
         value: 3500,
       });
@@ -645,7 +645,7 @@ describe('PerformanceAlertSystem', () => {
       });
 
       await expect(
-        (alertSystem as any).sendAlert('critical', 'Test alert', {
+        (alertSystem as unknown).sendAlert('critical', 'Test alert', {
           metric: 'cls',
           value: 0.5,
         }),
@@ -655,16 +655,16 @@ describe('PerformanceAlertSystem', () => {
 
   describe('警报历史记录', () => {
     it('should track alert history', () => {
-      (alertSystem as any).sendAlert('warning', 'Test alert 1', {
+      (alertSystem as unknown).sendAlert('warning', 'Test alert 1', {
         metric: 'cls',
         value: 0.2,
       });
-      (alertSystem as any).sendAlert('critical', 'Test alert 2', {
+      (alertSystem as unknown).sendAlert('critical', 'Test alert 2', {
         metric: 'lcp',
         value: 5000,
       });
 
-      const history = (alertSystem as any).getAlertHistory();
+      const history = (alertSystem as unknown).getAlertHistory();
 
       expect(history).toHaveLength(WEB_VITALS_CONSTANTS.TEST_COUNT_TWO);
       expect(history[0]?.level).toBe('warning');
@@ -674,28 +674,28 @@ describe('PerformanceAlertSystem', () => {
     it('should limit alert history size', () => {
       // Send many alerts
       for (let i = 0; i < WEB_VITALS_CONSTANTS.TEST_ALERT_HISTORY_LIMIT; i++) {
-        (alertSystem as any).sendAlert('warning', `Alert ${i}`, {
+        (alertSystem as unknown).sendAlert('warning', `Alert ${i}`, {
           metric: 'cls',
           value: 0.2,
         });
       }
 
-      const history = (alertSystem as any).getAlertHistory();
+      const history = (alertSystem as unknown).getAlertHistory();
 
       expect(history.length).toBeLessThanOrEqual(100); // Should limit to 100
     });
 
     it('should clear alert history', () => {
-      (alertSystem as any).sendAlert('warning', 'Test alert', {
+      (alertSystem as unknown).sendAlert('warning', 'Test alert', {
         metric: 'cls',
         value: 0.2,
       });
 
-      expect((alertSystem as any).getAlertHistory()).toHaveLength(1);
+      expect((alertSystem as unknown).getAlertHistory()).toHaveLength(1);
 
-      (alertSystem as any).clearHistory();
+      (alertSystem as unknown).clearHistory();
 
-      expect((alertSystem as any).getAlertHistory()).toHaveLength(0);
+      expect((alertSystem as unknown).getAlertHistory()).toHaveLength(0);
     });
   });
 });

@@ -6,7 +6,8 @@
  */
 import fs from 'fs';
 import path from 'path';
-import { ContentConfig, ContentError } from '@/types/content';
+import type { ContentConfig } from '@/types/content';
+import { ContentError } from '@/types/content';
 import { logger } from '@/lib/logger';
 
 // Content directory paths

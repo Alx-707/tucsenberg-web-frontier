@@ -145,7 +145,10 @@ function extractKeys(obj: Record<string, unknown>, prefix = ''): string[] {
  * 获取嵌套对象的值
  */
 function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
-  return path.split('.').reduce((current: any, key) => current?.[key], obj);
+  return path.split('.').reduce((current: Record<string, unknown> | unknown, key) =>
+    (current && typeof current === 'object' && current !== null && !Array.isArray(current))
+      ? (current as Record<string, unknown>)[key]
+      : undefined, obj);
 }
 
 /**

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { TranslationManagerConfig } from '@/types/translation-manager';
+import type { TranslationManagerConfig } from '@/types/translation-manager';
 import { TEST_CONTENT_LIMITS } from '@/constants/test-constants';
 import { TranslationManager } from '../translation-manager';
 
@@ -12,7 +12,7 @@ const TEST_PERIODS = {
 vi.mock('fs', async (importOriginal) => {
   const actual = await importOriginal();
   return {
-    ...(actual as any),
+    ...(actual as unknown),
     existsSync: vi.fn(),
     readFileSync: vi.fn(),
     writeFileSync: vi.fn(),
@@ -22,7 +22,7 @@ vi.mock('fs', async (importOriginal) => {
 vi.mock('path', async (importOriginal) => {
   const actual = await importOriginal();
   return {
-    ...(actual as any),
+    ...(actual as unknown),
     join: vi.fn((...args) => args.join('/')),
     resolve: vi.fn((...args) => args.join('/')),
   };
@@ -185,7 +185,7 @@ describe('TranslationManager', () => {
     });
 
     it('should fallback to default locale when translation missing', () => {
-      const translation = manager.getTranslation('common.hello', 'fr' as any);
+      const translation = manager.getTranslation('common.hello', 'fr' as unknown);
       expect(translation).toBe('Hello');
     });
 
@@ -258,7 +258,7 @@ describe('TranslationManager', () => {
       const report = await manager.validateTranslationQuality('zh');
 
       const missingIssues = report.issues.filter(
-        (issue) => issue.type === 'missing',
+        (issue: any) => issue.type === 'missing',
       );
       expect(missingIssues.length).toBeGreaterThan(0);
     });
@@ -285,7 +285,7 @@ describe('TranslationManager', () => {
       const report = await manager.validateTranslationQuality('en');
 
       const lengthIssues = report.issues.filter(
-        (issue) => issue.type === 'length',
+        (issue: any) => issue.type === 'length',
       );
       expect(lengthIssues.length).toBeGreaterThan(0);
     });
@@ -331,12 +331,12 @@ describe('TranslationManager', () => {
     });
 
     it('should validate all locales', async () => {
-      const reports = await manager.validateAllLocales();
+      const reports = await (manager as any).validateAllLocales();
 
       expect(Array.isArray(reports)).toBe(true);
       expect(reports.length).toBe(mockConfig.locales.length);
 
-      reports.forEach((report) => {
+      reports.forEach((report: any) => {
         expect(report).toHaveProperty('locale');
         expect(report).toHaveProperty('score');
       });
@@ -344,7 +344,7 @@ describe('TranslationManager', () => {
 
     it('should generate quality trend report', async () => {
       // Mock historical data
-      const trend = await manager.getQualityTrend(
+      const trend = await (manager as any).getQualityTrend(
         'en',
         TEST_PERIODS.QUALITY_TREND_DAYS,
       );
@@ -379,7 +379,7 @@ describe('TranslationManager', () => {
     it('should handle invalid locale gracefully', () => {
       const translation = manager.getTranslation(
         'common.hello',
-        'invalid' as any,
+        'invalid' as unknown,
       );
       expect(typeof translation).toBe('string');
     });
@@ -390,8 +390,8 @@ describe('TranslationManager', () => {
     });
 
     it('should handle null/undefined keys', () => {
-      const translation1 = manager.getTranslation(null as any, 'en');
-      const translation2 = manager.getTranslation(undefined as any, 'en');
+      const translation1 = manager.getTranslation(null as unknown, 'en');
+      const translation2 = manager.getTranslation(undefined as unknown, 'en');
 
       expect(typeof translation1).toBe('string');
       expect(typeof translation2).toBe('string');

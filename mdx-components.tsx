@@ -1,6 +1,7 @@
-import React from 'react';
-import Image, { ImageProps } from 'next/image';
 import type { MDXComponents } from 'mdx/types';
+import type { ImageProps } from 'next/image';
+import Image from 'next/image';
+import React from 'react';
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any

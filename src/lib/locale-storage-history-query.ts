@@ -1,0 +1,457 @@
+/**
+ * 语言检测历史查询和过滤
+ * Locale Detection History Query and Filtering
+ *
+ * 负责历史记录的查询、过滤和搜索功能
+ */
+
+'use client';
+
+import type { Locale } from '@/types/i18n';
+;
+import type {
+  LocaleDetectionRecord,
+  LocaleSource,
+} from './locale-storage-types';
+import { getDetectionHistory } from './locale-storage-history-core';
+
+// ==================== 基础查询功能 ====================
+
+/**
+ * 获取最近的检测记录
+ * Get recent detections
+ */
+export function getRecentDetections(limit: number = 10): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  return historyResult.data.history.slice(0, limit);
+}
+
+/**
+ * 按来源获取检测记录
+ * Get detections by source
+ */
+export function getDetectionsBySource(source: string): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  return historyResult.data.history.filter(record => record.source === source);
+}
+
+/**
+ * 按语言获取检测记录
+ * Get detections by locale
+ */
+export function getDetectionsByLocale(locale: Locale): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  return historyResult.data.history.filter(record => record.locale === locale);
+}
+
+/**
+ * 按时间范围获取检测记录
+ * Get detections by time range
+ */
+export function getDetectionsByTimeRange(
+  startTime: number,
+  endTime: number
+): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  return historyResult.data.history.filter(
+    record => record.timestamp >= startTime && record.timestamp <= endTime
+  );
+}
+
+/**
+ * 按置信度范围获取检测记录
+ * Get detections by confidence range
+ */
+export function getDetectionsByConfidence(
+  minConfidence: number,
+  maxConfidence: number = 1.0
+): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  return historyResult.data.history.filter(
+    record => record.confidence >= minConfidence && record.confidence <= maxConfidence
+  );
+}
+
+// ==================== 高级查询功能 ====================
+
+/**
+ * 查询条件接口
+ * Query conditions interface
+ */
+export interface QueryConditions {
+  locale?: Locale;
+  source?: string;
+  startTime?: number;
+  endTime?: number;
+  minConfidence?: number;
+  maxConfidence?: number;
+  limit?: number;
+  offset?: number;
+  sortBy?: 'timestamp' | 'confidence' | 'locale' | 'source';
+  sortOrder?: 'asc' | 'desc';
+}
+
+/**
+ * 复合查询检测记录
+ * Complex query for detection records
+ */
+export function queryDetections(conditions: QueryConditions): {
+  records: LocaleDetectionRecord[];
+  totalCount: number;
+  hasMore: boolean;
+} {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return {
+      records: [],
+      totalCount: 0,
+      hasMore: false,
+    };
+  }
+
+  let records = historyResult.data.history;
+
+  // 应用过滤条件
+  if (conditions.locale) {
+    records = records.filter(record => record.locale === conditions.locale);
+  }
+
+  if (conditions.source) {
+    records = records.filter(record => record.source === conditions.source);
+  }
+
+  if (conditions.startTime !== undefined) {
+    records = records.filter(record => record.timestamp >= conditions.startTime!);
+  }
+
+  if (conditions.endTime !== undefined) {
+    records = records.filter(record => record.timestamp <= conditions.endTime!);
+  }
+
+  if (conditions.minConfidence !== undefined) {
+    records = records.filter(record => record.confidence >= conditions.minConfidence!);
+  }
+
+  if (conditions.maxConfidence !== undefined) {
+    records = records.filter(record => record.confidence <= conditions.maxConfidence!);
+  }
+
+  // 排序
+  if (conditions.sortBy) {
+    records.sort((a, b) => {
+      let aValue: string | number;
+      let bValue: string | number;
+
+      switch (conditions.sortBy) {
+        case 'timestamp':
+          aValue = a.timestamp;
+          bValue = b.timestamp;
+          break;
+        case 'confidence':
+          aValue = a.confidence;
+          bValue = b.confidence;
+          break;
+        case 'locale':
+          aValue = a.locale;
+          bValue = b.locale;
+          break;
+        case 'source':
+          aValue = a.source;
+          bValue = b.source;
+          break;
+        default:
+          return 0;
+      }
+
+      if (aValue < bValue) {
+        return conditions.sortOrder === 'desc' ? 1 : -1;
+      }
+      if (aValue > bValue) {
+        return conditions.sortOrder === 'desc' ? -1 : 1;
+      }
+      return 0;
+    });
+  }
+
+  const totalCount = records.length;
+
+  // 应用分页
+  const offset = conditions.offset || 0;
+  const limit = conditions.limit || totalCount;
+  const paginatedRecords = records.slice(offset, offset + limit);
+  const hasMore = offset + limit < totalCount;
+
+  return {
+    records: paginatedRecords,
+    totalCount,
+    hasMore,
+  };
+}
+
+/**
+ * 搜索检测记录
+ * Search detection records
+ */
+export function searchDetections(searchTerm: string): LocaleDetectionRecord[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const term = searchTerm.toLowerCase();
+
+  return historyResult.data.history.filter(record => {
+    // 搜索语言代码
+    if (record.locale.toLowerCase().includes(term)) {
+      return true;
+    }
+
+    // 搜索来源
+    if (record.source.toLowerCase().includes(term)) {
+      return true;
+    }
+
+    // 搜索元数据
+    if (record.metadata) {
+      const metadataStr = JSON.stringify(record.metadata).toLowerCase();
+      if (metadataStr.includes(term)) {
+        return true;
+      }
+    }
+
+    return false;
+  });
+}
+
+// ==================== 聚合查询功能 ====================
+
+/**
+ * 获取唯一的语言列表
+ * Get unique locales
+ */
+export function getUniqueLocales(): Locale[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const locales = new Set<Locale>();
+  historyResult.data.history.forEach(record => {
+    locales.add(record.locale);
+  });
+
+  return Array.from(locales).sort();
+}
+
+/**
+ * 获取唯一的来源列表
+ * Get unique sources
+ */
+export function getUniqueSources(): string[] {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const sources = new Set<string>();
+  historyResult.data.history.forEach(record => {
+    sources.add(record.source);
+  });
+
+  return Array.from(sources).sort();
+}
+
+/**
+ * 按语言分组统计
+ * Group by locale statistics
+ */
+export function getLocaleGroupStats(): Array<{
+  locale: Locale;
+  count: number;
+  percentage: number;
+  avgConfidence: number;
+  lastDetection: number;
+}> {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const records = historyResult.data.history;
+  const totalRecords = records.length;
+
+  if (totalRecords === 0) {
+    return [];
+  }
+
+  const localeStats = new Map<Locale, {
+    count: number;
+    totalConfidence: number;
+    lastDetection: number;
+  }>();
+
+  records.forEach(record => {
+    const existing = localeStats.get(record.locale) || {
+      count: 0,
+      totalConfidence: 0,
+      lastDetection: 0,
+    };
+
+    existing.count += 1;
+    existing.totalConfidence += record.confidence;
+    existing.lastDetection = Math.max(existing.lastDetection, record.timestamp);
+
+    localeStats.set(record.locale, existing);
+  });
+
+  return Array.from(localeStats.entries())
+    .map(([locale, stats]) => ({
+      locale,
+      count: stats.count,
+      percentage: (stats.count / totalRecords) * 100,
+      avgConfidence: stats.totalConfidence / stats.count,
+      lastDetection: stats.lastDetection,
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * 按来源分组统计
+ * Group by source statistics
+ */
+export function getSourceGroupStats(): Array<{
+  source: string;
+  count: number;
+  percentage: number;
+  avgConfidence: number;
+  lastDetection: number;
+}> {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const records = historyResult.data.history;
+  const totalRecords = records.length;
+
+  if (totalRecords === 0) {
+    return [];
+  }
+
+  const sourceStats = new Map<string, {
+    count: number;
+    totalConfidence: number;
+    lastDetection: number;
+  }>();
+
+  records.forEach(record => {
+    const existing = sourceStats.get(record.source) || {
+      count: 0,
+      totalConfidence: 0,
+      lastDetection: 0,
+    };
+
+    existing.count += 1;
+    existing.totalConfidence += record.confidence;
+    existing.lastDetection = Math.max(existing.lastDetection, record.timestamp);
+
+    sourceStats.set(record.source, existing);
+  });
+
+  return Array.from(sourceStats.entries())
+    .map(([source, stats]) => ({
+      source,
+      count: stats.count,
+      percentage: (stats.count / totalRecords) * 100,
+      avgConfidence: stats.totalConfidence / stats.count,
+      lastDetection: stats.lastDetection,
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
+/**
+ * 获取时间分布统计
+ * Get time distribution statistics
+ */
+export function getTimeDistributionStats(bucketSize: number = 24 * 60 * 60 * 1000): Array<{
+  startTime: number;
+  endTime: number;
+  count: number;
+  avgConfidence: number;
+}> {
+  const historyResult = getDetectionHistory();
+
+  if (!historyResult.success || !historyResult.data) {
+    return [];
+  }
+
+  const records = historyResult.data.history;
+
+  if (records.length === 0) {
+    return [];
+  }
+
+  // 找到时间范围
+  const timestamps = records.map(r => r.timestamp);
+  const minTime = Math.min(...timestamps);
+  const _maxTime = Math.max(...timestamps);
+
+  // 创建时间桶
+  const buckets = new Map<number, {
+    count: number;
+    totalConfidence: number;
+  }>();
+
+  records.forEach(record => {
+    const bucketStart = Math.floor((record.timestamp - minTime) / bucketSize) * bucketSize + minTime;
+    const existing = buckets.get(bucketStart) || {
+      count: 0,
+      totalConfidence: 0,
+    };
+
+    existing.count += 1;
+    existing.totalConfidence += record.confidence;
+
+    buckets.set(bucketStart, existing);
+  });
+
+  return Array.from(buckets.entries())
+    .map(([startTime, stats]) => ({
+      startTime,
+      endTime: startTime + bucketSize,
+      count: stats.count,
+      avgConfidence: stats.totalConfidence / stats.count,
+    }))
+    .sort((a, b) => a.startTime - b.startTime);
+}

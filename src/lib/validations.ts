@@ -156,7 +156,7 @@ export type ContactFormData = z.infer<typeof contactFormSchema>;
 export const apiResponseSchema = z.object({
   success: z.boolean(),
   message: z.string().optional(),
-  data: z.any().optional(),
+  data: z.unknown().optional(),
   error: z.string().optional(),
   messageId: z.string().optional(),
 });

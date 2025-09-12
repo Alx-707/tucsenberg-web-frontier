@@ -59,7 +59,7 @@ describe('i18n Enhanced Request Configuration', () => {
     // Mock performance.now
     global.performance = {
       now: vi.fn().mockReturnValue(100),
-    } as any;
+    } as unknown;
   });
 
   describe('增强配置功能', () => {
@@ -375,7 +375,7 @@ describe('i18n Enhanced Request Configuration', () => {
     });
 
     it('应该处理性能API不可用的情况', async () => {
-      global.performance = undefined as any;
+      global.performance = undefined as unknown;
 
       mockGetRequestConfig.mockImplementation(async (configFn) => {
         const result = await configFn({ requestLocale: Promise.resolve('en') });

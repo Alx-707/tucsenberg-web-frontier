@@ -1,7 +1,7 @@
+import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 import { act, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 
 // 测试常量
 export const TEST_TIMEOUTS = {
@@ -33,7 +33,7 @@ vi.mock('next-intl', () => ({
 
 // Mock i18n routing
 vi.mock('@/i18n/routing', () => ({
-  Link: ({ children, href, ...props }: any) => (
+  Link: ({ children, href, ...props }: { children?: React.ReactNode; href?: string; [key: string]: any }) => (
     <a
       href={href}
       {...props}
@@ -46,7 +46,7 @@ vi.mock('@/i18n/routing', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: ({ children, open, onOpenChange }: any) => (
+  DropdownMenu: ({ children, open, onOpenChange }: { children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) => (
     <div
       data-testid='dropdown-menu'
       data-open={open}
@@ -55,7 +55,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuContent: ({ children, align, className, ...props }: any) => (
+  DropdownMenuContent: ({ children, align, className, ...props }: { children?: React.ReactNode; align?: string; className?: string; [key: string]: any }) => (
     <div
       data-testid='dropdown-content'
       data-align={align}
@@ -65,13 +65,13 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuTrigger: ({ children, asChild }: any) => {
+  DropdownMenuTrigger: ({ children, asChild }: { children?: React.ReactNode; asChild?: boolean }) => {
     if (asChild) {
       return children;
     }
     return <div data-testid='dropdown-trigger'>{children}</div>;
   },
-  DropdownMenuItem: ({ children, onClick, ...props }: any) => (
+  DropdownMenuItem: ({ children, onClick, ...props }: { children?: React.ReactNode; onClick?: () => void; [key: string]: any }) => (
     <div
       data-testid='dropdown-item'
       onClick={onClick}
@@ -83,7 +83,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, variant, size, className, ...props }: any) => (
+  Button: ({ children, variant, size, className, ...props }: { children?: React.ReactNode; variant?: string; size?: string; className?: string; [key: string]: any }) => (
     <button
       data-testid='language-button'
       data-variant={variant}
@@ -98,7 +98,7 @@ vi.mock('@/components/ui/button', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  Languages: ({ className, ...props }: any) => (
+  Languages: ({ className, ...props }: { className?: string; [key: string]: any }) => (
     <span
       data-testid='languages-icon'
       className={className}
@@ -107,7 +107,7 @@ vi.mock('lucide-react', () => ({
       🌐
     </span>
   ),
-  ChevronDown: ({ className, ...props }: any) => (
+  ChevronDown: ({ className, ...props }: { className?: string; [key: string]: any }) => (
     <span
       data-testid='chevron-down-icon'
       className={className}
@@ -116,7 +116,7 @@ vi.mock('lucide-react', () => ({
       ⌄
     </span>
   ),
-  Check: ({ className, ...props }: any) => (
+  Check: ({ className, ...props }: { className?: string; [key: string]: any }) => (
     <span
       data-testid='check-icon'
       className={className}

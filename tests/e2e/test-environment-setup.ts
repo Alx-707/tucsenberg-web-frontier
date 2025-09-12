@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 // import { FullConfig } from '@playwright/test'; // TODO: Use when needed
 
 /**
@@ -57,7 +58,7 @@ export function cleanupTestEnvironment() {
 /**
  * 检查页面是否存在干扰元素
  */
-export async function checkForInterferingElements(page: any) {
+export async function checkForInterferingElements(page: Page) {
   const interferingElements = [
     '#react-scan-toolbar-root',
     '[data-testid="react-scan-indicator"]',
@@ -90,7 +91,7 @@ export async function checkForInterferingElements(page: any) {
 /**
  * 移除页面中的干扰元素
  */
-export async function removeInterferingElements(page: any) {
+export async function removeInterferingElements(page: Page) {
   console.log('🧹 Removing interfering elements...');
 
   const interferingSelectors = [
@@ -118,7 +119,7 @@ export async function removeInterferingElements(page: any) {
 /**
  * 等待页面稳定（无干扰元素）
  */
-export async function waitForStablePage(page: any, timeout = 5000) {
+export async function waitForStablePage(page: Page, timeout = 5000) {
   console.log('⏳ Waiting for page to stabilize...');
 
   const startTime = Date.now();
@@ -146,9 +147,9 @@ export async function waitForStablePage(page: any, timeout = 5000) {
  * 安全点击元素（避免干扰）
  */
 export async function safeClick(
-  page: any,
+  page: Page,
   selector: string,
-  options: any = {},
+  options: unknown = {},
 ) {
   console.log(`🖱️  Safe clicking: ${selector}`);
 

@@ -1,0 +1,45 @@
+/**
+ * 内容统计函数
+ */
+
+import type { ContentStats, Locale } from '@/types/content';
+import { getContentConfig } from '../content-utils';
+import { getAllPosts, getAllPages } from './queries';
+
+/**
+ * Get content statistics
+ */
+export function getContentStats(): ContentStats {
+  const config = getContentConfig();
+  const stats: ContentStats = {
+    totalPosts: 0,
+    totalPages: 0,
+    postsByLocale: {} as Record<Locale, number>,
+    pagesByLocale: {} as Record<Locale, number>,
+    totalTags: 0,
+    totalCategories: 0,
+    lastUpdated: new Date().toISOString(),
+  };
+
+  // Count posts by locale
+  for (const locale of config.supportedLocales) {
+    const posts = getAllPosts(locale);
+    const pages = getAllPages(locale);
+
+    // Use type-safe property access with explicit validation
+    if (locale === 'en' || locale === 'zh') {
+      // Safe property assignment for known locales
+      if (locale === 'en') {
+        stats.postsByLocale.en = posts.length;
+        stats.pagesByLocale.en = pages.length;
+      } else {
+        stats.postsByLocale.zh = posts.length;
+        stats.pagesByLocale.zh = pages.length;
+      }
+    }
+    stats.totalPosts += posts.length;
+    stats.totalPages += pages.length;
+  }
+
+  return stats;
+}

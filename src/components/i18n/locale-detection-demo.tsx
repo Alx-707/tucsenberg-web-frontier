@@ -1,22 +1,22 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import {
-  LocaleDetectionResult,
-  useClientLocaleDetection,
-} from '@/lib/locale-detection';
-import { useLocaleStorage, UserLocalePreference } from '@/lib/locale-storage';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import type { LocaleDetectionResult } from '@/lib/locale-detection';
+import { useClientLocaleDetection } from '@/lib/locale-detection';
+import type { UserLocalePreference } from '@/lib/locale-storage';
+import { useLocaleStorage } from '@/lib/locale-storage';
+import { useCallback, useEffect, useState } from 'react';
 import { EnhancedLocaleSwitcher } from './enhanced-locale-switcher';
+;
 
 // 工具函数
 const getConfidenceColor = (confidence: number) => {
@@ -78,7 +78,7 @@ const DetectionResult = ({ detection }: DetectionResultProps) => (
 
 // 存储状态显示组件
 interface StorageStatsProps {
-  stats: any;
+  stats: unknown;
   onClearOverride: () => void;
 }
 
@@ -89,30 +89,30 @@ const StorageStats = ({ stats, onClearOverride }: StorageStatsProps) => (
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <span>有偏好设置:</span>
-          <Badge variant={stats.hasPreference ? 'default' : 'secondary'}>
-            {stats.hasPreference ? '是' : '否'}
+          <Badge variant={(stats as any).hasPreference ? 'default' : 'secondary'}>
+            {(stats as any).hasPreference ? '是' : '否'}
           </Badge>
         </div>
         <div className='flex items-center space-x-2'>
           <span>有用户覆盖:</span>
-          <Badge variant={stats.hasOverride ? 'default' : 'secondary'}>
-            {stats.hasOverride ? '是' : '否'}
+          <Badge variant={(stats as any).hasOverride ? 'default' : 'secondary'}>
+            {(stats as any).hasOverride ? '是' : '否'}
           </Badge>
         </div>
       </div>
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <span>当前语言:</span>
-          <Badge variant='outline'>{stats.currentLocale || '未设置'}</Badge>
+          <Badge variant='outline'>{(stats as any).currentLocale || '未设置'}</Badge>
         </div>
         <div className='flex items-center space-x-2'>
           <span>检测次数:</span>
-          <Badge variant='secondary'>{stats.detectionCount}</Badge>
+          <Badge variant='secondary'>{(stats as any).detectionCount}</Badge>
         </div>
       </div>
     </div>
 
-    {stats.hasOverride && (
+    {(stats as any).hasOverride && (
       <div className='mt-4'>
         <Button
           onClick={onClearOverride}

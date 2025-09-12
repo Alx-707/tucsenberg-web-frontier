@@ -2,7 +2,7 @@ interface I18nEvent {
   type: 'locale_change' | 'translation_error' | 'fallback_used' | 'load_time';
   locale: string;
   timestamp: number;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   userId?: string;
   sessionId: string;
 }
@@ -145,10 +145,10 @@ export class I18nAnalytics {
           localeUsage[event.locale] = (localeUsage[event.locale] || 0) + 1;
           break;
         case 'translation_error':
-          translationErrors++;
+          translationErrors += 1;
           break;
         case 'fallback_used':
-          fallbackUsage++;
+          fallbackUsage += 1;
           break;
         case 'load_time':
           loadTimes.push(event.metadata.loadTime);
@@ -171,7 +171,7 @@ export class I18nAnalytics {
   }
 
   // 实时监控仪表板数据
-  getRealTimeMetrics(): any {
+  getRealTimeMetrics(): unknown {
     const last24Hours = this.events.filter(
       (event) => Date.now() - event.timestamp < 24 * 60 * 60 * 1000,
     );
@@ -184,11 +184,11 @@ export class I18nAnalytics {
     };
   }
 
-  private async sendToAnalytics(eventType: string, data: any): Promise<void> {
+  private async sendToAnalytics(eventType: string, data: unknown): Promise<void> {
     try {
       // Google Analytics 4
       if (typeof window !== 'undefined' && 'gtag' in window) {
-        (window as any).gtag('event', eventType, data);
+        (window as unknown).gtag('event', eventType, data);
       }
 
       // 自定义分析服务
@@ -204,7 +204,7 @@ export class I18nAnalytics {
     }
   }
 
-  private async sendErrorReport(error: any): Promise<void> {
+  private async sendErrorReport(error: unknown): Promise<void> {
     try {
       if (typeof fetch !== 'undefined') {
         await fetch('/api/errors/i18n', {
@@ -218,7 +218,7 @@ export class I18nAnalytics {
     }
   }
 
-  private async sendPerformanceAlert(alert: any): Promise<void> {
+  private async sendPerformanceAlert(alert: unknown): Promise<void> {
     try {
       if (typeof fetch !== 'undefined') {
         await fetch('/api/alerts/performance', {

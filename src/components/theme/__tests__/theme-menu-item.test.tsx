@@ -13,7 +13,7 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     onKeyDown,
     role,
     ...props
-  }: any) => (
+  }: React.ComponentProps<"div">) => (
     <div
       role={role}
       className={className}
@@ -36,6 +36,9 @@ describe('ThemeMenuItem', () => {
     supportsViewTransitions: false,
     prefersReducedMotion: false,
     onClick: vi.fn(),
+    onKeyDown: vi.fn(),
+    supportsViewTransitions: false,
+    prefersReducedMotion: false,
     onKeyDown: vi.fn(),
   };
 

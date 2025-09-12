@@ -38,7 +38,7 @@ export interface ComponentTestTemplate<TProps = Record<string, unknown>> {
 /**
  * 标准测试结构模板
  */
-export class ComponentTestStructure<TProps = any> {
+export class ComponentTestStructure<TProps = Record<string, unknown>> {
   private template: ComponentTestTemplate<TProps>;
 
   constructor(template: ComponentTestTemplate<TProps>) {
@@ -215,10 +215,10 @@ export const TestUtils = {
   /**
    * 创建Mock函数工厂
    */
-  createMockFactory: <T extends (..._args: any[]) => any>(
+  createMockFactory: <T extends (..._args: unknown[]) => unknown>(
     implementation?: T,
-  ): any => {
-    return vi.fn(implementation) as any;
+  ): unknown => {
+    return vi.fn(implementation) as unknown;
   },
 
   /**

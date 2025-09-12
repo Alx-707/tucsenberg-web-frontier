@@ -1,4 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 // 导入要测试的组件
 import { TechStackSection } from '../tech-stack-section';
@@ -71,7 +72,7 @@ vi.mock('@/lib/tech-stack-data', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, className, ...props }: any) => (
+  Badge: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <span
       data-testid='badge'
       className={className}
@@ -83,7 +84,16 @@ vi.mock('@/components/ui/badge', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, className, onClick, asChild, ...props }: any) => {
+  Button: ({ children, asChild, variant, size, className, onClick, disabled, ...props }: {
+    children?: React.ReactNode;
+    asChild?: boolean;
+    variant?: string;
+    size?: string;
+    className?: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    [key: string]: unknown;
+  }) => {
     if (asChild) {
       return (
         <div
@@ -109,7 +119,7 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card'
       className={className}
@@ -118,7 +128,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-content'
       className={className}
@@ -127,7 +137,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardDescription: ({ children, className, ...props }: any) => (
+  CardDescription: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-description'
       className={className}
@@ -136,7 +146,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-header'
       className={className}
@@ -145,7 +155,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-title'
       className={className}
@@ -157,7 +167,7 @@ vi.mock('@/components/ui/card', () => ({
 }));
 
 vi.mock('@/components/ui/tabs', () => ({
-  Tabs: ({ children, value, onValueChange, className, ...props }: any) => (
+  Tabs: ({ children, value, onValueChange, className, ...props }: { children?: React.ReactNode; value?: string; onValueChange?: (value: string) => void; className?: string; [key: string]: any }) => (
     <div
       data-testid='tabs'
       data-value={value}
@@ -168,7 +178,7 @@ vi.mock('@/components/ui/tabs', () => ({
       {children}
     </div>
   ),
-  TabsContent: ({ children, value, className, ...props }: any) => (
+  TabsContent: ({ children, value, className, ...props }: { children?: React.ReactNode; value?: string; className?: string; [key: string]: any }) => (
     <div
       data-testid='tabs-content'
       data-value={value}
@@ -178,7 +188,7 @@ vi.mock('@/components/ui/tabs', () => ({
       {children}
     </div>
   ),
-  TabsList: ({ children, className, ...props }: any) => (
+  TabsList: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='tabs-list'
       className={className}
@@ -187,7 +197,7 @@ vi.mock('@/components/ui/tabs', () => ({
       {children}
     </div>
   ),
-  TabsTrigger: ({ children, value, className, ...props }: any) => (
+  TabsTrigger: ({ children, value, className, ...props }: { children?: React.ReactNode; value?: string; className?: string; [key: string]: any }) => (
     <button
       data-testid='tabs-trigger'
       data-value={value}

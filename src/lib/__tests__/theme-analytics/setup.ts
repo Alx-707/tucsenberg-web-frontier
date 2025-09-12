@@ -196,7 +196,7 @@ export function createMockSwitchPattern(
 export function getPrivateAnalytics(
   analytics: ThemeAnalytics,
 ): ThemeAnalyticsPrivate {
-  return analytics as any;
+  return analytics as unknown;
 }
 
 // Helper function to simulate time passage
@@ -218,7 +218,7 @@ export function simulateThemeSwitches(
     const to = patterns[(i + 1) % patterns.length];
     const startTime = Date.now() + i * 1000;
     const endTime = startTime + 100 + i * TEST_BASE_NUMBERS.LARGE_COUNT;
-    analytics.recordThemeSwitch(from as any, to as any, startTime, endTime);
+    analytics.recordThemeSwitch(from as unknown, to as unknown, startTime, endTime);
   }
 }
 

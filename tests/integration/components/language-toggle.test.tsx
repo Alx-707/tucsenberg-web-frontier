@@ -9,6 +9,7 @@
  * - Loading states
  */
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -28,7 +29,7 @@ vi.mock('next-intl', () => ({
 vi.mock('next-intl/navigation', () => ({
   usePathname: () => mockUsePathname(),
   createNavigation: () => ({
-    Link: ({ children, href, locale, onClick, className, ...props }: any) => (
+    Link: ({ children, href, locale, onClick, className, ...props }: React.ComponentProps<"div">) => (
       <a
         data-testid={`language-link-${locale}`}
         href={href}
@@ -67,13 +68,13 @@ vi.mock('react', async () => {
 
 // Mock UI components
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: ({ children }: any) => (
+  DropdownMenu: ({ children }: React.ComponentProps<"div">) => (
     <div data-testid='language-dropdown-menu'>{children}</div>
   ),
-  DropdownMenuTrigger: ({ children, asChild: _asChild }: any) => (
+  DropdownMenuTrigger: ({ children, asChild: _asChild }: React.ComponentProps<"div">) => (
     <div data-testid='language-dropdown-trigger'>{children}</div>
   ),
-  DropdownMenuContent: ({ children, align }: any) => (
+  DropdownMenuContent: ({ children, align }: React.ComponentProps<"div">) => (
     <div
       data-testid='language-dropdown-content'
       data-align={align}
@@ -81,13 +82,13 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuItem: ({ children, asChild: _asChild }: any) => (
+  DropdownMenuItem: ({ children, asChild: _asChild }: React.ComponentProps<"div">) => (
     <div data-testid='language-dropdown-item'>{children}</div>
   ),
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, variant, size, disabled, ...props }: any) => (
+  Button: ({ children, variant, size, disabled, ...props }: React.ComponentProps<"div">) => (
     <button
       data-testid='language-toggle-button'
       data-variant={variant}
@@ -103,7 +104,7 @@ vi.mock('@/components/ui/button', () => ({
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
   Languages: () => <span data-testid='languages-icon'>🌐</span>,
-  Loader2: ({ className }: any) => (
+  Loader2: ({ className }: React.ComponentProps<"div">) => (
     <span
       data-testid='loader-icon'
       className={className}
@@ -111,7 +112,7 @@ vi.mock('lucide-react', () => ({
       ⏳
     </span>
   ),
-  Check: ({ className }: any) => (
+  Check: ({ className }: React.ComponentProps<"div">) => (
     <span
       data-testid='check-icon'
       className={className}

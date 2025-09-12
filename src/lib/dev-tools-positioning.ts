@@ -6,8 +6,6 @@
  * 提供智能布局算法和可配置的定位策略
  */
 
-import { DEV_TOOLS_CONSTANTS } from '@/constants/dev-tools';
-
 export type DevToolPosition =
   | 'top-left'
   | 'top-right'

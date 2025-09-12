@@ -1,7 +1,8 @@
 /**
  * 翻译管理器相关类型定义
  */
-import { Locale } from '@/types/i18n';
+import type { Locale } from '@/types/i18n';
+;
 
 // 翻译质量评分接口
 export interface QualityScore {

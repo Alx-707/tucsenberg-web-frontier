@@ -2,6 +2,7 @@
  * @vitest-environment jsdom
  */
 
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -18,7 +19,7 @@ import {
 
 // Mock Lucide React icons
 vi.mock('lucide-react', () => ({
-  ChevronDownIcon: ({ className, ...props }: any) => (
+  ChevronDownIcon: ({ className, ...props }: React.ComponentProps<"div">) => (
     <svg
       data-testid='chevron-down-icon'
       className={className}

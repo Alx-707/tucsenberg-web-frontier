@@ -9,8 +9,9 @@
  * - 错误恢复机制
  */
 
-import React, { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import type { ReactElement, RenderOptions } from 'react';
+import React from 'react';
+import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // 错误类型定义
@@ -217,7 +218,7 @@ export class BoundaryConditionTester {
   }
 
   // 生成空值变体
-  generateNullVariants(): Array<any> {
+  generateNullVariants(): Array<unknown> {
     return [null, undefined, '', 0, false, NaN, {}, []];
   }
 }
@@ -288,7 +289,7 @@ export function renderWithErrorScenario(
 export class ErrorRecoveryTester {
   // 测试重试机制
   async testRetryMechanism(
-    operation: () => Promise<any>,
+    operation: () => Promise<unknown>,
     _operationId: string,
     maxRetries: number = 3,
     backoffMs: number = 10,

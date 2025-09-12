@@ -251,6 +251,9 @@ export const TEST_COUNT_CONSTANTS = {
 
   /** 完整百分比 - 100 */
   PERCENTAGE_FULL: TEST_BASE_NUMBERS.PERCENTAGE_FULL,
+
+  /** 最大标签数 - 5 */
+  MAX_TAGS: TEST_BASE_NUMBERS.MEDIUM_COUNT,
 } as const;
 
 /** 测试计数常量 (简化版本，向后兼容) */

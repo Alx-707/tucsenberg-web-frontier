@@ -1,7 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ContentError, ContentType } from '@/types/content';
+import type { ContentType } from '@/types/content';
+import { ContentError } from '@/types/content';;
 import { logger } from '@/lib/logger';
 import { CONTENT_LIMITS } from '@/constants/app-constants';
 import { getContentFiles, parseContentFile } from '../content-parser';
@@ -183,7 +184,7 @@ This is test content.`;
         'post4.zh.mdx',
         'invalid.txt',
         'draft.mdx',
-      ] as any);
+      ] as unknown);
     });
 
     it('should return all valid content files when no locale specified', () => {
@@ -239,7 +240,7 @@ This is test content.`;
         'image.jpg',
         'config.json',
         'readme.txt',
-      ] as any);
+      ] as unknown);
 
       const result = getContentFiles(mockContentDir);
 
@@ -250,7 +251,7 @@ This is test content.`;
     });
 
     it('should handle empty directory', () => {
-      mockFs.readdirSync.mockReturnValue([] as any);
+      mockFs.readdirSync.mockReturnValue([] as unknown);
 
       const result = getContentFiles(mockContentDir);
 

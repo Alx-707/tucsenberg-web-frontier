@@ -61,7 +61,7 @@ describe('useIntersectionObserver', () => {
 
     // Ensure window exists
     if (typeof global.window === 'undefined') {
-      global.window = {} as any;
+      global.window = {} as unknown;
     }
     global.window.IntersectionObserver = mockIntersectionObserver;
   });
@@ -273,7 +273,7 @@ describe('useIntersectionObserver', () => {
       let observerCallback:
         | ((_entries: IntersectionObserverEntry[]) => void)
         | null = null;
-      let mockObserverInstance: any;
+      let mockObserverInstance: unknown;
 
       mockIntersectionObserver.mockImplementation((callback) => {
         observerCallback = callback;

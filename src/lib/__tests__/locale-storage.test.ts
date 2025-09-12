@@ -1,11 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Locale } from '@/types/i18n';
+import type { Locale } from '@/types/i18n';
+;
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
-import {
-  LocaleDetectionHistory,
-  LocaleStorageManager,
-  UserLocalePreference,
-} from '../locale-storage';
+import type { LocaleDetectionHistory, UserLocalePreference } from '../locale-storage';
+import { LocaleStorageManager } from '../locale-storage';
 
 // Mock constants
 vi.mock('@/constants/i18n-constants', () => ({
@@ -315,7 +313,7 @@ describe('LocaleStorageManager', () => {
       mockLocalStorage.getItem.mockReturnValue(null);
 
       // Call addDetectionRecord through the public method
-      (LocaleStorageManager as any).addDetectionRecord({
+      (LocaleStorageManager as unknown).addDetectionRecord({
         locale: 'en',
         source: 'test',
         timestamp: Date.now(),

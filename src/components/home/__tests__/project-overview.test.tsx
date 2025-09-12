@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 // Import the component after mocks
 import { ProjectOverview } from '../project-overview';
@@ -45,7 +46,7 @@ vi.mock('@/lib/site-config', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, ...props }: any) => (
+  Badge: ({ children, ...props }: React.ComponentProps<"div">) => (
     <span
       data-testid='badge'
       {...props}
@@ -56,12 +57,21 @@ vi.mock('@/components/ui/badge', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, asChild, ...props }: any) => {
+  Button: (props: React.PropsWithChildren<{
+    variant?: string;
+    size?: string;
+    className?: string;
+    onClick?: () => void;
+    disabled?: boolean;
+    asChild?: boolean;
+    [key: string]: unknown;
+  }>) => {
+    const { asChild, children, ...restProps } = props;
     if (asChild) {
       return (
         <div
           data-testid='button'
-          {...props}
+          {...restProps}
         >
           {children}
         </div>
@@ -70,7 +80,7 @@ vi.mock('@/components/ui/button', () => ({
     return (
       <button
         data-testid='button'
-        {...props}
+        {...restProps}
       >
         {children}
       </button>
@@ -79,7 +89,7 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, ...props }: any) => (
+  Card: ({ children, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card'
       {...props}
@@ -87,7 +97,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardContent: ({ children, ...props }: any) => (
+  CardContent: ({ children, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-content'
       {...props}
@@ -95,7 +105,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardDescription: ({ children, ...props }: any) => (
+  CardDescription: ({ children, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-description'
       {...props}
@@ -103,7 +113,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardHeader: ({ children, ...props }: any) => (
+  CardHeader: ({ children, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-header'
       {...props}
@@ -111,7 +121,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardTitle: ({ children, ...props }: any) => (
+  CardTitle: ({ children, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='card-title'
       {...props}
@@ -166,7 +176,8 @@ describe('ProjectOverview', () => {
       'cta.getStarted': 'Get Started',
       'cta.viewSource': 'View Source Code',
     };
-    return translations[key] || key;
+    // eslint-disable-next-line security/detect-object-injection
+  return translations[key] || key; // key 来自测试数据，安全
   });
 
   beforeEach(() => {

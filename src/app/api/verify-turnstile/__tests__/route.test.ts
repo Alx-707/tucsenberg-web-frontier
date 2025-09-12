@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+;
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET, POST } from '../route';
 
@@ -199,7 +200,7 @@ describe('Verify Turnstile API Route', () => {
 
       // 验证fetch调用中包含了正确的IP地址（完整的x-forwarded-for值）
       const fetchCall = mockFetch.mock.calls[0];
-      const formData = fetchCall[1].body;
+      const formData = fetchCall?.[1]?.body;
       expect(formData).toContain('remoteip=192.168.1.1%2C%2010.0.0.1'); // URL encoded "192.168.1.1, 10.0.0.1"
     });
 
@@ -227,16 +228,14 @@ describe('Verify Turnstile API Route', () => {
 
       // 验证使用了提供的remoteip而不是从headers提取的IP
       const fetchCall = mockFetch.mock.calls[0];
-      const formData = fetchCall[1].body;
+      const formData = fetchCall?.[1]?.body;
       expect(formData).toContain('remoteip=192.168.1.1'); // 使用提供的remoteip参数
     });
   });
 
   describe('GET /api/verify-turnstile', () => {
     it('应该返回健康检查信息（配置已启用）', async () => {
-      const request = new NextRequest('http://localhost:3000/api/verify-turnstile', {
-        method: 'GET',
-      });
+      // GET request doesn't need request object
 
       const response = await GET();
       const data = await response.json();

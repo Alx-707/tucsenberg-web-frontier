@@ -5,14 +5,14 @@ import { ThemeToggleButton } from '../theme-toggle-button';
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-  Sun: ({ className, ...props }: any) => (
+  Sun: ({ className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='sun-icon'
       className={className}
       {...props}
     />
   ),
-  Moon: ({ className, ...props }: any) => (
+  Moon: ({ className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='moon-icon'
       className={className}

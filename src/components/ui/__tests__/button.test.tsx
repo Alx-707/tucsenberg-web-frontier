@@ -1,12 +1,12 @@
-import React from 'react';
-import Link from 'next/link';
 import { fireEvent, render, screen } from '@testing-library/react';
+import Link from 'next/link';
+import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { Button } from '../button';
 
 // Mock Next.js Link component
 vi.mock('next/link', () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: { children?: React.ReactNode; href?: string; [key: string]: any }) => (
     <a
       href={href}
       {...props}
@@ -18,7 +18,7 @@ vi.mock('next/link', () => ({
 
 // Mock Radix UI Slot component
 vi.mock('@radix-ui/react-slot', () => ({
-  Slot: ({ children, ...props }: any) => {
+  Slot: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => {
     // 如果children是React元素，克隆并添加props
     if (React.isValidElement(children)) {
       return React.cloneElement(children, {

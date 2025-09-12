@@ -1,0 +1,268 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 基础检查作业
+  basic-checks:
+    name: 基础检查
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.cache-key.outputs.key }}
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 生成缓存键
+        id: cache-key
+        run: echo "key=deps-${{ hashFiles('**/pnpm-lock.yaml') }}" >> $GITHUB_OUTPUT
+        
+      - name: 缓存依赖
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ steps.cache-key.outputs.key }}
+          restore-keys: deps-
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: TypeScript检查
+        run: pnpm type-check
+        
+      - name: ESLint检查
+        run: pnpm lint:check
+        
+      - name: 代码格式检查
+        run: pnpm format:check
+
+  # 测试作业
+  tests:
+    name: 单元测试
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 恢复依赖缓存
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ needs.basic-checks.outputs.cache-key }}
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: 运行单元测试
+        run: pnpm test:coverage
+        
+      - name: 上传覆盖率报告
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
+  # E2E测试作业
+  e2e-tests:
+    name: E2E测试
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 恢复依赖缓存
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ needs.basic-checks.outputs.cache-key }}
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: 安装Playwright浏览器
+        run: pnpm exec playwright install --with-deps
+        
+      - name: 构建项目
+        run: pnpm build
+        
+      - name: 运行E2E测试
+        run: pnpm test:e2e
+        
+      - name: 上传E2E报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-report
+          path: test-results/
+
+  # 性能检查作业
+  performance:
+    name: 性能检查
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 恢复依赖缓存
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ needs.basic-checks.outputs.cache-key }}
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: 包大小检查
+        run: pnpm size:check
+        
+      - name: 构建检查
+        run: pnpm build:check
+
+  # 安全检查作业
+  security:
+    name: 安全检查
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 恢复依赖缓存
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ needs.basic-checks.outputs.cache-key }}
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: 安全审计
+        run: pnpm security:audit
+
+  # 翻译质量检查
+  translation-quality:
+    name: 翻译质量检查
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: 恢复依赖缓存
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ needs.basic-checks.outputs.cache-key }}
+          
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+        
+      - name: 验证翻译
+        run: pnpm validate:translations
+
+  # 汇总作业
+  ci-summary:
+    name: CI汇总
+    runs-on: ubuntu-latest
+    needs: [basic-checks, tests, e2e-tests, performance, security, translation-quality]
+    if: always()
+    
+    steps:
+      - name: 检查所有作业状态
+        run: |
+          echo "基础检查: ${{ needs.basic-checks.result }}"
+          echo "单元测试: ${{ needs.tests.result }}"
+          echo "E2E测试: ${{ needs.e2e-tests.result }}"
+          echo "性能检查: ${{ needs.performance.result }}"
+          echo "安全检查: ${{ needs.security.result }}"
+          echo "翻译质量: ${{ needs.translation-quality.result }}"
+          
+          if [[ "${{ needs.basic-checks.result }}" != "success" || 
+                "${{ needs.tests.result }}" != "success" || 
+                "${{ needs.e2e-tests.result }}" != "success" || 
+                "${{ needs.performance.result }}" != "success" || 
+                "${{ needs.security.result }}" != "success" || 
+                "${{ needs.translation-quality.result }}" != "success" ]]; then
+            echo "❌ CI流水线失败"
+            exit 1
+          else
+            echo "✅ CI流水线成功"
+          fi

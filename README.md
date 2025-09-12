@@ -239,6 +239,19 @@ pnpm test:ui          # 可视化测试界面
 - ✅ **性能预算**: 包大小控制，性能监控
 - ✅ **错误监控**: Sentry集成，完整可观察性
 
+## 🏗️ 架构重构
+
+本项目正在进行系统性架构重构，旨在提升代码质量、构建性能和开发体验：
+
+- **📋 [重构指南](./docs/refactoring/README.md)** - 完整的重构流程和策略
+- **🎯 [最佳实践](./docs/refactoring/best-practices.md)** - 代码组织和重构规范
+- **✅ [代码审查Checklist](./docs/refactoring/code-review-checklist.md)** - 质量保证清单
+
+### 重构进度
+- **Export * 数量**: 97个 → 目标<30个（第一阶段）
+- **TypeScript错误**: 3093个 → 目标0个
+- **文件总数**: 786个 → 目标~300个
+
 ## 📚 学习资源
 
 - [Next.js 15 文档](https://nextjs.org/docs) - 了解最新特性

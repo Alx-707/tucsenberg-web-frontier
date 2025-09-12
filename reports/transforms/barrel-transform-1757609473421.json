@@ -1,0 +1,33 @@
+{
+  "timestamp": "2025-09-11T16:51:13.420Z",
+  "options": {
+    "createBackup": true,
+    "dryRun": true,
+    "verbose": true,
+    "preserveComments": true
+  },
+  "stats": {
+    "filesProcessed": 786,
+    "filesTransformed": 0,
+    "exportStarRemoved": 71,
+    "namedExportsAdded": 801,
+    "errors": [
+      {
+        "file": "src/types/whatsapp.ts",
+        "error": "Export 'WhatsAppConfig' is not defined. (94:2)",
+        "type": "parse_error"
+      },
+      {
+        "file": "src/lib/i18n-preloader.ts",
+        "error": "Export 'PreloaderFactoryConfig' is not defined. (78:2)",
+        "type": "parse_error"
+      }
+    ]
+  },
+  "summary": {
+    "success": false,
+    "filesProcessed": 786,
+    "filesTransformed": 0,
+    "transformationRate": "0.00%"
+  }
+}

@@ -35,7 +35,7 @@ vi.mock('@/lib/logger', () => ({
 }));
 
 // Mock View Transitions API
-const mockTransition: any = {
+const mockTransition = {
   ready: Promise.resolve(),
   finished: Promise.resolve(),
   updateCallbackDone: Promise.resolve(),
@@ -43,10 +43,10 @@ const mockTransition: any = {
   skipTransition: vi.fn(),
 };
 
-const mockStartViewTransition = vi.fn((callback: () => void) => {
-  callback();
+const mockStartViewTransition = vi.fn((callback?: () => void) => {
+  if (callback) callback();
   return mockTransition;
-});
+}) as any;
 
 // Check if startViewTransition already exists before defining it
 if (!document.startViewTransition) {
@@ -79,9 +79,10 @@ describe('useEnhancedTheme Performance Tests', () => {
     const { result: result2 } = renderHook(() => useEnhancedTheme());
 
     // Both hooks should return the same cached result
-    expect(result1.current.supportsViewTransitions).toBe(
-      result2.current.supportsViewTransitions,
-    );
+    // Note: supportsViewTransitions is not part of the hook return value
+    // It's a utility function that can be imported separately
+    expect(typeof result1.current.setCircularTheme).toBe('function');
+    expect(typeof result2.current.setCircularTheme).toBe('function');
   });
 
   it('should handle rapid theme switching with debouncing', async () => {
@@ -113,9 +114,9 @@ describe('useEnhancedTheme Performance Tests', () => {
 
     // Simulate rapid circular transitions
     act(() => {
-      result.current.setThemeWithCircularTransition('dark', mockEvent);
-      result.current.setThemeWithCircularTransition('light', mockEvent);
-      result.current.setThemeWithCircularTransition('system', mockEvent);
+      result.current.setCircularTheme('dark', mockEvent);
+      result.current.setCircularTheme('light', mockEvent);
+      result.current.setCircularTheme('system', mockEvent);
     });
 
     // Wait for debounce delay
@@ -130,17 +131,14 @@ describe('useEnhancedTheme Performance Tests', () => {
     const { result, rerender } = renderHook(() => useEnhancedTheme());
 
     const initialSetTheme = result.current.setTheme;
-    const initialSetCircularTheme =
-      result.current.setThemeWithCircularTransition;
+    const initialSetCircularTheme = result.current.setCircularTheme;
 
     // Rerender the hook
     rerender();
 
     // Functions should be the same reference (memoized)
     expect(result.current.setTheme).toBe(initialSetTheme);
-    expect(result.current.setThemeWithCircularTransition).toBe(
-      initialSetCircularTheme,
-    );
+    expect(result.current.setCircularTheme).toBe(initialSetCircularTheme);
   });
 
   it('should handle errors gracefully without breaking functionality', () => {

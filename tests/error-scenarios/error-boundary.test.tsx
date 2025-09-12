@@ -4,6 +4,7 @@
  * 全面测试错误边界组件的错误捕获、恢复和用户体验功能
  */
 
+import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -17,7 +18,7 @@ vi.mock('next-intl', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, onClick, variant, className, ...props }: any) => (
+  Button: ({ children, onClick, variant, className, ...props }: React.ComponentProps<"div">) => (
     <button
       data-testid='error-boundary-button'
       onClick={onClick}
@@ -31,7 +32,7 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/card', () => ({
-  Card: ({ children, className, ...props }: any) => (
+  Card: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='error-boundary-card'
       className={className}
@@ -40,7 +41,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardContent: ({ children, className, ...props }: any) => (
+  CardContent: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='error-boundary-card-content'
       className={className}
@@ -49,7 +50,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardDescription: ({ children, className, ...props }: any) => (
+  CardDescription: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='error-boundary-card-description'
       className={className}
@@ -58,7 +59,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardHeader: ({ children, className, ...props }: any) => (
+  CardHeader: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <div
       data-testid='error-boundary-card-header'
       className={className}
@@ -67,7 +68,7 @@ vi.mock('@/components/ui/card', () => ({
       {children}
     </div>
   ),
-  CardTitle: ({ children, className, ...props }: any) => (
+  CardTitle: ({ children, className, ...props }: React.ComponentProps<"div">) => (
     <h2
       data-testid='error-boundary-card-title'
       className={className}
@@ -80,7 +81,7 @@ vi.mock('@/components/ui/card', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  AlertTriangle: ({ className }: any) => (
+  AlertTriangle: ({ className }: React.ComponentProps<"div">) => (
     <span
       data-testid='alert-triangle-icon'
       className={className}
@@ -88,7 +89,7 @@ vi.mock('lucide-react', () => ({
       ⚠️
     </span>
   ),
-  RefreshCw: ({ className }: any) => (
+  RefreshCw: ({ className }: React.ComponentProps<"div">) => (
     <span
       data-testid='refresh-icon'
       className={className}

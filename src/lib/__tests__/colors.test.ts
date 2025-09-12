@@ -431,7 +431,7 @@ describe('OKLCH颜色系统', () => {
     });
 
     it('should handle empty colors object', () => {
-      const variables = generateCSSVariables({} as any);
+      const variables = generateCSSVariables({} as unknown);
 
       expect(variables).toEqual({});
     });

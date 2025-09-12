@@ -37,19 +37,19 @@ class TestAPIClient {
     this.retryDelay = retryDelay;
   }
 
-  async get(endpoint: string): Promise<any> {
+  async get(endpoint: string): Promise<unknown> {
     return this.request('GET', endpoint);
   }
 
-  async post(endpoint: string, data?: any): Promise<any> {
+  async post(endpoint: string, data?: unknown): Promise<unknown> {
     return this.request('POST', endpoint, data);
   }
 
   private async request(
     method: string,
     endpoint: string,
-    data?: any,
-  ): Promise<any> {
+    data?: unknown,
+  ): Promise<unknown> {
     const url = `${this.baseURL}${endpoint}`;
     let lastError: Error | null = null;
 

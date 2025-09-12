@@ -12,26 +12,26 @@ import {
  * 诊断数据管理的自定义 Hook
  */
 export function useDiagnosticsData() {
-  const [currentMetrics, setCurrentMetrics] = useState<SimpleWebVitals | null>(
+  const [currentMetrics, _setCurrentMetrics] = useState<SimpleWebVitals | null>(
     null,
   );
-  const [historicalData, setHistoricalData] = useState<SimpleWebVitals[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [historicalData, _setHistoricalData] = useState<SimpleWebVitals[]>([]);
+  const [isLoading, _setIsLoading] = useState(false);
 
   // 刷新数据
   const refreshData = useCallback(async () => {
-    setIsLoading(true);
+    _setIsLoading(true);
     try {
       // 等待数据收集
       await new Promise((resolve) =>
         setTimeout(resolve, DATA_COLLECTION_DELAY),
       );
       const metrics = collectCurrentMetrics();
-      setCurrentMetrics(metrics);
+      _setCurrentMetrics(metrics);
       const updatedHistory = saveCurrentData(metrics);
-      setHistoricalData(updatedHistory);
+      _setHistoricalData(updatedHistory);
     } finally {
-      setIsLoading(false);
+      _setIsLoading(false);
     }
   }, []);
 
@@ -42,7 +42,7 @@ export function useDiagnosticsData() {
   // 初始化
   useEffect(() => {
     const loadedHistoricalData = loadHistoricalData();
-    setHistoricalData(loadedHistoricalData);
+    _setHistoricalData(loadedHistoricalData);
     refreshData();
   }, [refreshData]);
 

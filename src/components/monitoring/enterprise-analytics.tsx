@@ -1,8 +1,13 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { logger } from '@/lib/logger';
 import { Analytics } from '@vercel/analytics/react';
 import { useLocale } from 'next-intl';
+import React, { useEffect } from 'react';
+
+/**
+ * 使用全局 logger（开发环境输出，生产环境静默）
+ */
 
 interface AnalyticsConfig {
   enableWebVitals: boolean;
@@ -63,16 +68,14 @@ function initWebVitals(locale: string): void {
         rating: string;
       }) => {
         // 开发环境日志
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(
-            `[Web Vitals] ${metric.name}: ${metric.value} (${metric.rating}) - Locale: ${locale}`,
-          );
-        }
+        logger.warn(
+          `[Web Vitals] ${metric.name}: ${metric.value} (${metric.rating}) - Locale: ${locale}`,
+        );
 
         // 发送到Vercel Analytics
         if ('va' in window) {
           try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             (window as any).va('track', 'Web Vital', {
               metric_name: metric.name,
               metric_value: metric.value,
@@ -80,7 +83,7 @@ function initWebVitals(locale: string): void {
               locale,
             });
           } catch (error) {
-            console.error('Failed to send to Vercel Analytics:', error);
+            logger.error('Failed to send to Vercel Analytics:', error);
           }
         }
       };
@@ -92,7 +95,7 @@ function initWebVitals(locale: string): void {
       onINP(reportVital);
     })
     .catch((error) => {
-      console.error('Failed to load web-vitals:', error);
+      logger.error('Failed to load web-vitals:', error);
     });
 }
 
@@ -117,22 +120,20 @@ function initI18nTracking(locale: string): void {
 }
 
 function trackNavigation(locale: string): void {
-  if (process.env.NODE_ENV === 'development') {
-    console.warn(
-      `[I18n Navigation] Locale: ${locale}, URL: ${window.location.href}`,
-    );
-  }
+  logger.warn(
+    `[I18n Navigation] Locale: ${locale}, URL: ${window.location.href}`,
+  );
 
   // 发送导航事件
   if ('va' in window) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       (window as any).va('track', 'Navigation', {
         locale,
         url: window.location.href,
       });
     } catch (error) {
-      console.error('Failed to send navigation event:', error);
+      logger.error('Failed to send navigation event:', error);
     }
   }
 }
@@ -156,20 +157,18 @@ function initPerformanceMonitoring(locale: string): void {
           total: navigation.loadEventEnd - navigation.fetchStart,
         };
 
-        if (process.env.NODE_ENV === 'development') {
-          console.warn(`[Performance] Locale: ${locale}`, metrics);
-        }
+        logger.warn(`[Performance] Locale: ${locale}`, metrics);
 
         // 发送性能指标
         if ('va' in window) {
           try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             (window as any).va('track', 'Performance', {
               ...metrics,
               locale,
             });
           } catch (error) {
-            console.error('Failed to send performance metrics:', error);
+            logger.error('Failed to send performance metrics:', error);
           }
         }
       }
@@ -190,11 +189,9 @@ function initPerformanceMonitoring(locale: string): void {
           resourceEntry.name.includes('locale') ||
           resourceEntry.name.includes('i18n')
         ) {
-          if (process.env.NODE_ENV === 'development') {
-            console.warn(
-              `[I18n Resource] ${resourceEntry.name}: ${resourceEntry.duration}ms (${resourceEntry.transferSize} bytes) - Locale: ${locale}`,
-            );
-          }
+          logger.warn(
+            `[I18n Resource] ${resourceEntry.name}: ${resourceEntry.duration}ms (${resourceEntry.transferSize} bytes) - Locale: ${locale}`,
+          );
         }
       }
     }
@@ -208,25 +205,23 @@ export const enterpriseAnalytics = {
   trackEvent: (eventName: string, properties: Record<string, unknown> = {}) => {
     if (typeof window === 'undefined') return;
 
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[Analytics Event] ${eventName}:`, properties);
-    }
+    logger.warn(`[Analytics Event] ${eventName}:`, properties);
 
     if ('va' in window) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         (window as any).va('track', eventName, properties);
       } catch (error) {
-        console.error('Failed to send to Vercel Analytics:', error);
+        logger.error('Failed to send to Vercel Analytics:', error);
       }
     }
 
     if ('gtag' in window) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         (window as any).gtag('event', eventName, properties);
       } catch (error) {
-        console.error('Failed to send to Google Analytics:', error);
+        logger.error('Failed to send to Google Analytics:', error);
       }
     }
   },
@@ -234,7 +229,7 @@ export const enterpriseAnalytics = {
   trackError: (error: Error, context: Record<string, unknown> = {}) => {
     if (typeof window === 'undefined') return;
 
-    console.error('[Tracked Error]', error, context);
+    logger.error('[Tracked Error]', error, context);
 
     enterpriseAnalytics.trackEvent('Error', {
       error_message: error.message,
@@ -247,9 +242,7 @@ export const enterpriseAnalytics = {
   trackI18nEvent: (eventType: string, data: Record<string, unknown> = {}) => {
     if (typeof window === 'undefined') return;
 
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[I18n Event] ${eventType}:`, data);
-    }
+    logger.warn(`[I18n Event] ${eventType}:`, data);
 
     enterpriseAnalytics.trackEvent(`I18n ${eventType}`, data);
   },

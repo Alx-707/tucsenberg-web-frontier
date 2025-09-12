@@ -1,463 +1,214 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import type {
+  PerformanceAlert,
+  PerformanceMetrics,
+  UsePerformanceMonitorOptions,
+  UsePerformanceMonitorReturn,
+} from './performance-monitor-types';
+import {
+  createPerformanceAlertSystem,
+  createMonitoringControls,
+  createPerformanceMonitorReturn,
+  validateAndSanitizeOptions,
+  generateAlertId,
+} from './performance-monitor-utils';
+import { usePerformanceMeasurements } from './performance-monitor-measurements';
 
-// 性能监控常量
-const PERFORMANCE_CONSTANTS = {
-  MEMORY_THRESHOLD_MB: 50,
-  MEMORY_BYTES_PER_MB: 1048576, // 1024 * 1024
-  TIME_CALCULATION_FACTOR: 36,
-  CALCULATION_DIVISOR: 2,
-  CALCULATION_MULTIPLIER: 9,
-} as const;
-
-// 辅助函数：检查内存使用并生成警告
-const checkMemoryUsageAlert = (
-  memoryUsage: number,
-  threshold: number,
-  addAlert: (_alert: Omit<PerformanceAlert, 'id' | 'timestamp'>) => void,
-) => {
-  if (memoryUsage > threshold) {
-    addAlert({
-      level: 'error',
-      message: `High memory usage detected: ${Math.round(memoryUsage / PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB)}MB`,
-      data: { memoryUsage },
-    });
-  }
-};
-
-// 扩展Performance接口以包含memory属性
-declare global {
-  interface Performance {
-    memory?: {
-      usedJSHeapSize: number;
-      totalJSHeapSize: number;
-      jsHeapSizeLimit: number;
-    };
-  }
-}
-
-interface PerformanceMetrics {
-  loadTime: number;
-  renderTime: number;
-  memoryUsage?: number;
-  networkLatency?: number;
-}
-
-interface PerformanceAlert {
-  id: string;
-  level: 'info' | 'warning' | 'error';
-  message: string;
-  timestamp: number;
-  data?: Record<string, string | number | boolean>;
-}
-
-interface PerformanceAlertSystem {
-  addAlert: (_alert: Omit<PerformanceAlert, 'id' | 'timestamp'>) => void;
-  getAlerts: () => PerformanceAlert[];
-  getAlertHistory: () => PerformanceAlert[];
-  clearAlerts: () => void;
-}
-
-interface PerformanceAlertThresholds {
-  loadTime?: number;
-  renderTime?: number;
-  memoryUsage?: number;
-}
-
-interface UsePerformanceMonitorOptions {
-  enableAlerts?: boolean;
-  alertThresholds?: {
-    loadTime?: number;
-    renderTime?: number;
-    memoryUsage?: number;
-  };
-  autoMonitoring?: boolean;
-  monitoringInterval?: number;
-  alertConfig?: {
-    enabled: boolean;
-    thresholds: {
-      cls: { warning: number; critical: number };
-      lcp: { warning: number; critical: number };
-      fid: { warning: number; critical: number };
-    };
-  };
-  autoBaseline?: boolean;
-}
-
-// 辅助函数：创建性能警告系统
-const createPerformanceAlertSystem = (
-  alerts: PerformanceAlert[],
-  alertHistory: React.MutableRefObject<PerformanceAlert[]>,
-  addAlert: (_alert: Omit<PerformanceAlert, 'id' | 'timestamp'>) => void,
-  setAlerts: React.Dispatch<React.SetStateAction<PerformanceAlert[]>>,
-): PerformanceAlertSystem => ({
-  addAlert,
-  getAlerts: () => alerts,
-  getAlertHistory: () => alertHistory.current,
-  clearAlerts: () => {
-    setAlerts([]);
-    alertHistory.current = [];
-  },
-});
-
-// 辅助函数：创建监控控制函数
-const createMonitoringControls = (
-  setIsMonitoring: React.Dispatch<React.SetStateAction<boolean>>,
-  setError: React.Dispatch<React.SetStateAction<string | null>>,
-  startTime: React.MutableRefObject<number | null>,
-  setMetrics: React.Dispatch<React.SetStateAction<PerformanceMetrics | null>>,
-) => ({
-  startMonitoring: () => {
-    setIsMonitoring(true);
-    setError(null);
-    startTime.current = Date.now();
-    setMetrics({
-      loadTime: 0,
-      renderTime: 0,
-    });
-  },
-  stopMonitoring: () => {
-    setIsMonitoring(false);
-  },
-  resetMetrics: () => {
-    setMetrics(null);
-    setError(null);
-  },
-});
-
-// 辅助函数：创建返回对象
-interface PerformanceMonitorReturnParams {
-  isMonitoring: boolean;
-  metrics: PerformanceMetrics | null;
-  alerts: PerformanceAlert[];
-  error: string | null;
-  getMetrics: () => PerformanceMetrics | null;
-  resetMetrics: () => void;
-  measureLoadTime: () => number;
-  measureRenderTime: (_renderStart: number) => number;
-  measureMemoryUsage: () => number | undefined;
-  startMonitoring: () => void;
-  stopMonitoring: () => void;
-  refreshMetrics: () => void;
-  clearAlerts: () => void;
-  performanceAlertSystem: PerformanceAlertSystem;
-}
-
-const createPerformanceMonitorReturn = (
-  params: PerformanceMonitorReturnParams,
-) => {
+/**
+ * 性能监控 Hook
+ *
+ * 提供全面的性能监控功能，包括：
+ * - 加载时间监控
+ * - 渲染时间监控
+ * - 内存使用监控
+ * - 性能警告系统
+ * - 实时性能指标
+ */
+export function usePerformanceMonitor(
+  options: UsePerformanceMonitorOptions = {},
+): UsePerformanceMonitorReturn {
+  // 验证和清理选项
+  const state = validateAndSanitizeOptions(options);
   const {
-    isMonitoring,
-    metrics,
-    alerts,
-    error,
-    getMetrics,
-    resetMetrics,
-    measureLoadTime,
-    measureRenderTime,
-    measureMemoryUsage,
-    startMonitoring,
-    stopMonitoring,
-    refreshMetrics,
-    clearAlerts,
-    performanceAlertSystem,
-  } = params;
+    enableAlerts,
+    alertThresholds,
+    monitoringInterval,
+    enableMemoryMonitoring,
+    enableRenderTimeMonitoring,
+    enableLoadTimeMonitoring,
+    maxAlerts,
+  } = state;
 
-  return {
-    isMonitoring,
-    metrics,
-    alerts,
-    error,
-    getMetrics,
-    resetMetrics,
-    measureLoadTime,
-    measureRenderTime,
-    measureMemoryUsage,
-    startMonitoring,
-    stopMonitoring,
-    refreshMetrics,
-    clearAlerts,
-    performanceAlertSystem,
-  };
-};
-
-// 创建性能监控状态的辅助函数
-function usePerformanceMonitorState(options: UsePerformanceMonitorOptions) {
-  // Validate and sanitize options to handle null/undefined/invalid values
-  const safeOptions = options || {};
-
-  const {
-    enableAlerts = false,
-    alertThresholds = null,
-    monitoringInterval = 1000,
-  } = safeOptions;
-
-  // Ensure alertThresholds is always a valid object
-  const validAlertThresholds =
-    alertThresholds && typeof alertThresholds === 'object'
-      ? {
-          loadTime:
-            typeof alertThresholds.loadTime === 'number'
-              ? alertThresholds.loadTime
-              : 3000,
-          renderTime:
-            typeof alertThresholds.renderTime === 'number'
-              ? alertThresholds.renderTime
-              : 100,
-          memoryUsage:
-            typeof alertThresholds.memoryUsage === 'number'
-              ? alertThresholds.memoryUsage
-              : PERFORMANCE_CONSTANTS.MEMORY_THRESHOLD_MB *
-                PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB,
-        }
-      : {
-          loadTime: 3000,
-          renderTime: 100,
-          memoryUsage:
-            PERFORMANCE_CONSTANTS.MEMORY_THRESHOLD_MB *
-            PERFORMANCE_CONSTANTS.MEMORY_BYTES_PER_MB, // 50MB
-        };
-
-  // Validate monitoring interval
-  const validMonitoringInterval =
-    typeof monitoringInterval === 'number' && monitoringInterval > 0
-      ? monitoringInterval
-      : 1000;
-
+  // 状态管理
   const [isMonitoring, setIsMonitoring] = useState(false);
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [alerts, setAlerts] = useState<PerformanceAlert[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const alertHistory = useRef<PerformanceAlert[]>([]);
-  const startTime = useRef<number>(Date.now());
 
+  // Refs
+  const startTime = useRef<number | null>(null);
+  const alertHistory = useRef<PerformanceAlert[]>([]);
+  const monitoringIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // 添加警告的函数
   const addAlert = useCallback(
     (alert: Omit<PerformanceAlert, 'id' | 'timestamp'>) => {
       const newAlert: PerformanceAlert = {
         ...alert,
-        id: Math.random()
-          .toString(PERFORMANCE_CONSTANTS.TIME_CALCULATION_FACTOR)
-          .substr(
-            PERFORMANCE_CONSTANTS.CALCULATION_DIVISOR,
-            PERFORMANCE_CONSTANTS.CALCULATION_MULTIPLIER,
-          ),
+        id: generateAlertId(),
         timestamp: Date.now(),
       };
 
-      setAlerts((prev) => [...prev, newAlert]);
-      alertHistory.current.push(newAlert);
-    },
-    [],
-  );
-
-  return {
-    enableAlerts,
-    alertThresholds: validAlertThresholds,
-    isMonitoring,
-    setIsMonitoring,
-    metrics,
-    setMetrics,
-    alerts,
-    setAlerts,
-    error,
-    setError,
-    alertHistory,
-    startTime,
-    addAlert,
-    monitoringInterval: validMonitoringInterval,
-  };
-}
-
-// 创建性能测量函数的辅助函数
-function usePerformanceMeasurements(
-  enableAlerts: boolean,
-  alertThresholds: Required<PerformanceAlertThresholds>,
-  addAlert: (_alert: Omit<PerformanceAlert, 'id' | 'timestamp'>) => void,
-  setMetrics: React.Dispatch<React.SetStateAction<PerformanceMetrics | null>>,
-  startTime: React.MutableRefObject<number>,
-) {
-  const measureLoadTime = useCallback(() => {
-    const loadTime = Date.now() - startTime.current;
-    setMetrics((prev) =>
-      prev ? { ...prev, loadTime } : { loadTime, renderTime: 0 },
-    );
-
-    if (
-      enableAlerts &&
-      typeof alertThresholds.loadTime === 'number' &&
-      loadTime >= alertThresholds.loadTime
-    ) {
-      addAlert({
-        level: 'warning',
-        message: `Slow load time detected: ${loadTime}ms`,
-        data: { loadTime },
+      setAlerts(prev => {
+        const updated = [...prev, newAlert];
+        // 限制警告数量
+        if (updated.length > maxAlerts) {
+          return updated.slice(-maxAlerts);
+        }
+        return updated;
       });
-    }
 
-    return loadTime;
-  }, [enableAlerts, alertThresholds.loadTime, addAlert, setMetrics, startTime]);
-
-  const measureRenderTime = useCallback(
-    (renderStart: number) => {
-      const renderTime = Date.now() - renderStart;
-      setMetrics((prev) =>
-        prev ? { ...prev, renderTime } : { loadTime: 0, renderTime },
-      );
-
-      if (
-        enableAlerts &&
-        typeof alertThresholds.renderTime === 'number' &&
-        renderTime >= alertThresholds.renderTime
-      ) {
-        addAlert({
-          level: 'warning',
-          message: `Slow render time detected: ${renderTime}ms`,
-          data: { renderTime },
-        });
+      // 添加到历史记录
+      alertHistory.current.push(newAlert);
+      if (alertHistory.current.length > maxAlerts * 2) {
+        alertHistory.current = alertHistory.current.slice(-maxAlerts * 2);
       }
-
-      return renderTime;
     },
-    [enableAlerts, alertThresholds.renderTime, addAlert, setMetrics],
+    [maxAlerts],
   );
 
-  const measureMemoryUsage = useCallback(() => {
-    if ('memory' in performance && performance.memory) {
-      const memoryInfo = performance.memory;
-      const memoryUsage = memoryInfo.usedJSHeapSize;
-      setMetrics((prev) =>
-        prev
-          ? { ...prev, memoryUsage }
-          : { loadTime: 0, renderTime: 0, memoryUsage },
-      );
-
-      if (enableAlerts && alertThresholds.memoryUsage) {
-        checkMemoryUsageAlert(
-          memoryUsage,
-          alertThresholds.memoryUsage,
-          addAlert,
-        );
-      }
-
-      return memoryUsage;
-    }
-    return undefined;
-  }, [enableAlerts, alertThresholds.memoryUsage, addAlert, setMetrics]);
-
-  return {
-    measureLoadTime,
-    measureRenderTime,
-    measureMemoryUsage,
-  };
-}
-
-export function usePerformanceMonitor(
-  options: UsePerformanceMonitorOptions = {},
-) {
-  const state = usePerformanceMonitorState(options);
-  const {
-    enableAlerts,
-    alertThresholds,
-    isMonitoring,
-    setIsMonitoring,
-    metrics,
-    setMetrics,
-    alerts,
-    setAlerts,
-    error,
-    setError,
-    alertHistory,
-    startTime,
-    addAlert,
-    monitoringInterval,
-  } = state;
-
-  const performanceAlertSystem: PerformanceAlertSystem =
-    createPerformanceAlertSystem(alerts, alertHistory, addAlert, setAlerts);
-
-  const monitoringControls = createMonitoringControls(
-    setIsMonitoring,
-    setError,
-    startTime,
-    setMetrics,
-  );
-  const { startMonitoring, stopMonitoring, resetMetrics } = monitoringControls;
-
+  // 性能测量函数
   const measurements = usePerformanceMeasurements(
     enableAlerts,
-    alertThresholds as Required<PerformanceAlertThresholds>,
+    alertThresholds,
     addAlert,
     setMetrics,
     startTime,
   );
-  const { measureLoadTime, measureRenderTime, measureMemoryUsage } =
-    measurements;
 
+  // 监控控制函数
+  const controls = createMonitoringControls(
+    setIsMonitoring,
+    setError,
+    startTime,
+    setMetrics,
+  );
+
+  // 性能警告系统
+  const performanceAlertSystem = createPerformanceAlertSystem(
+    alerts,
+    alertHistory,
+    addAlert,
+    setAlerts,
+  );
+
+  // 获取当前指标
+  const getMetrics = useCallback(() => metrics, [metrics]);
+
+  // 刷新指标
   const refreshMetrics = useCallback(() => {
-    if (isMonitoring) {
-      measureLoadTime();
-      measureMemoryUsage();
+    if (enableLoadTimeMonitoring) {
+      measurements.measureLoadTime();
     }
-  }, [isMonitoring, measureLoadTime, measureMemoryUsage]);
+    if (enableRenderTimeMonitoring) {
+      measurements.measureRenderTime();
+    }
+    if (enableMemoryMonitoring) {
+      measurements.measureMemoryUsage();
+    }
+  }, [
+    enableLoadTimeMonitoring,
+    enableRenderTimeMonitoring,
+    enableMemoryMonitoring,
+    measurements,
+  ]);
 
-  // Auto monitoring initialization effect
+  // 自动监控效果
   useEffect(() => {
-    if (options?.autoMonitoring) {
-      const timer = setTimeout(() => {
-        setIsMonitoring(true);
-        setError(null);
-        startTime.current = Date.now();
-        setMetrics({ loadTime: 0, renderTime: 0 });
-      }, 0);
-      return () => clearTimeout(timer);
+    if (isMonitoring) {
+      monitoringIntervalRef.current = setInterval(() => {
+        refreshMetrics();
+      }, monitoringInterval);
+
+      return () => {
+        if (monitoringIntervalRef.current) {
+          clearInterval(monitoringIntervalRef.current);
+          monitoringIntervalRef.current = null;
+        }
+      };
     }
-    return undefined;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMonitoring, monitoringInterval, refreshMetrics]);
+
+  // 组件卸载时清理
+  useEffect(() => {
+    return () => {
+      if (monitoringIntervalRef.current) {
+        clearInterval(monitoringIntervalRef.current);
+      }
+    };
   }, []);
 
-  // Auto monitoring interval effect
+  // 初始化时测量加载时间
   useEffect(() => {
-    if (!isMonitoring || monitoringInterval <= 0) return undefined;
+    if (enableLoadTimeMonitoring) {
+      // 延迟测量以确保页面完全加载
+      const timer = setTimeout(() => {
+        measurements.measureLoadTime();
+      }, 100);
 
-    const intervalId = setInterval(() => {
-      try {
-        refreshMetrics();
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Unknown monitoring error',
-        );
-      }
-    }, monitoringInterval);
+      return () => clearTimeout(timer);
+    }
+  }, [enableLoadTimeMonitoring, measurements]);
 
-    return () => clearInterval(intervalId);
-  }, [isMonitoring, monitoringInterval, refreshMetrics, setError]);
-
-  useEffect(() => {
-    // Measure initial load time
-    const timer = setTimeout(() => {
-      measureLoadTime();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [measureLoadTime]);
-
-  const getMetrics = () => metrics;
-
+  // 返回性能监控接口
   return createPerformanceMonitorReturn({
     isMonitoring,
     metrics,
     alerts,
     error,
     getMetrics,
-    resetMetrics,
-    measureLoadTime,
-    measureRenderTime,
-    measureMemoryUsage,
-    startMonitoring,
-    stopMonitoring,
+    startMonitoring: controls.startMonitoring,
+    stopMonitoring: controls.stopMonitoring,
+    resetMetrics: controls.resetMetrics,
+    measureLoadTime: measurements.measureLoadTime,
+    measureRenderTime: measurements.measureRenderTime,
     refreshMetrics,
     clearAlerts: performanceAlertSystem.clearAlerts,
     performanceAlertSystem,
   });
 }
+
+/**
+ * 导出类型定义
+ */
+export type {
+  PerformanceMetrics,
+  PerformanceAlert,
+  PerformanceAlertSystem,
+  UsePerformanceMonitorOptions,
+  UsePerformanceMonitorReturn,
+} from './performance-monitor-types';
+
+/**
+ * 导出工具函数
+ */
+export {
+  PERFORMANCE_CONSTANTS,
+  formatMemoryUsage,
+  formatTime,
+  checkPerformanceThresholds,
+} from './performance-monitor-utils';
+
+/**
+ * 导出测量函数
+ */
+export {
+  measureNetworkLatency,
+  measureFirstContentfulPaint,
+  measureLargestContentfulPaint,
+  measureCumulativeLayoutShift,
+  measureFirstInputDelay,
+  measureComprehensivePerformance,
+} from './performance-monitor-measurements';

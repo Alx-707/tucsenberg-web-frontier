@@ -3,8 +3,9 @@
  * 提供自定义渲染器和测试辅助函数
  */
 
+import type { RenderOptions } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // import { ThemeProvider } from 'next-themes';
@@ -88,7 +89,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   locale?: string;
   theme?: string;
   themes?: string[];
-  wrapper?: React.ComponentType<any>;
+  wrapper?: React.ComponentType<unknown>;
 }
 
 const customRender = (
@@ -140,7 +141,7 @@ export const createMockTheme = (theme: string = 'light') => {
 };
 
 // 路由测试工具
-export const createMockRouter = (overrides: Record<string, any> = {}) => {
+export const createMockRouter = (overrides: Record<string, unknown> = {}) => {
   return {
     route: '/',
     pathname: '/',
@@ -223,7 +224,7 @@ export const createPerformanceMocks = () => {
 
 // 网络请求Mock工具
 export const createFetchMock = (
-  response: any = {},
+  response: unknown = {},
   status: number = HTTP_STATUS.OK,
 ) => {
   return vi.fn().mockResolvedValue({
@@ -274,7 +275,7 @@ export const waitForNextTick = () =>
 
 // 测试数据生成器
 export const generateTestData = {
-  user: (overrides: Record<string, any> = {}) => ({
+  user: (overrides: Record<string, unknown> = {}) => ({
     id: '1',
     name: 'Test User',
     email: 'test@example.com',
@@ -282,7 +283,7 @@ export const generateTestData = {
     ...overrides,
   }),
 
-  post: (overrides: Record<string, any> = {}) => ({
+  post: (overrides: Record<string, unknown> = {}) => ({
     id: '1',
     title: 'Test Post',
     content: 'Test content',
@@ -305,5 +306,6 @@ export const generateTestData = {
 export { customRender as render };
 
 // 重新导出testing-library的所有工具
-export * from '@testing-library/react';
-export { vi } from 'vitest';
+    export * from '@testing-library/react';
+    export { vi } from 'vitest';
+

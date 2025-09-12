@@ -19,12 +19,12 @@ export type ThemeType = 'light' | 'dark' | 'system';
 export interface ThemeHookMock {
   theme: ThemeType;
   isOpen: boolean;
-  setIsOpen: any;
+  setIsOpen: unknown;
   supportsViewTransitions: boolean;
   prefersReducedMotion: boolean;
   prefersHighContrast: boolean;
-  handleThemeChange: any;
-  handleKeyDown: any;
+  handleThemeChange: unknown;
+  handleKeyDown: unknown;
   ariaAttributes: {
     'aria-label': string;
     'aria-expanded': string;
@@ -86,7 +86,7 @@ export class ThemeTestUtils {
   /**
    * 创建View Transitions API Mock
    */
-  static createViewTransitionsMock(): any {
+  static createViewTransitionsMock(): unknown {
     return vi.fn().mockImplementation((callback?: () => void) => {
       callback?.();
       return Promise.resolve();
@@ -178,7 +178,7 @@ export class ThemeTestUtils {
       {
         name: 'Invalid Theme State',
         setup: (mock: ThemeHookMock) => {
-          mock.theme = undefined as any;
+          mock.theme = undefined as unknown;
           mock.ariaAttributes['aria-current'] = 'light'; // fallback
         },
         description: 'should handle invalid theme state',
@@ -263,7 +263,7 @@ class ThemeTestAssertions {
    * 验证主题切换调用
    */
   static verifyThemeChange(
-    mockFunction: any,
+    mockFunction: unknown,
     expectedTheme: ThemeType,
     callIndex: number = 0,
   ): void {
@@ -295,7 +295,7 @@ class ThemeTestAssertions {
    * 验证键盘导航
    */
   static verifyKeyboardNavigation(
-    mockFunction: any,
+    mockFunction: unknown,
     expectedKey: string,
   ): void {
     expect(mockFunction).toHaveBeenCalledWith(

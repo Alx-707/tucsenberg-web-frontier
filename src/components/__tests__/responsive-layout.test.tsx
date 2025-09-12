@@ -447,7 +447,7 @@ describe('ResponsiveLayout', () => {
   describe('边缘情况处理', () => {
     it('should handle missing breakpoint data', () => {
       mockUseBreakpoint.mockReturnValue({
-        currentBreakpoint: 'unknown' as any,
+        currentBreakpoint: 'unknown' as unknown,
         isAbove: vi.fn().mockReturnValue(false),
         isBelow: vi.fn().mockReturnValue(false),
         isExactly: vi.fn().mockReturnValue(false),

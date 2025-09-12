@@ -13,13 +13,20 @@ vi.mock('next-intl/server', () => ({
 }));
 
 // Mock UnderConstruction组件
+interface MockUnderConstructionProps {
+  pageType: 'products' | 'blog' | 'about' | 'contact';
+  currentStep?: number;
+  expectedDate?: string;
+  showProgress?: boolean;
+}
+
 vi.mock('@/components/shared/under-construction', () => ({
-  UnderConstruction: ({ pageType, currentStep, expectedDate, showProgress }: any) => (
+  UnderConstruction: ({ pageType, currentStep, expectedDate, showProgress }: MockUnderConstructionProps) => (
     <div data-testid="under-construction">
       <div data-testid="page-type">{pageType}</div>
       <div data-testid="current-step">{currentStep}</div>
       <div data-testid="expected-date">{expectedDate}</div>
-      <div data-testid="show-progress">{showProgress.toString()}</div>
+      <div data-testid="show-progress">{showProgress?.toString()}</div>
     </div>
   ),
 }));
@@ -215,14 +222,14 @@ describe('BlogPage', () => {
   describe('开发状态验证', () => {
     it('应该显示正确的开发阶段', () => {
       render(<BlogPage />);
-      
+
       // Blog页面应该在第0步，表示尚未开始开发
       expect(screen.getByTestId('current-step')).toHaveTextContent('0');
     });
 
     it('应该显示正确的预期完成时间', () => {
       render(<BlogPage />);
-      
+
       // Blog页面预期在2024年第三季度完成
       expect(screen.getByTestId('expected-date')).toHaveTextContent('2024年第三季度');
     });
@@ -238,7 +245,7 @@ describe('BlogPage', () => {
       const startTime = performance.now();
       render(<BlogPage />);
       const endTime = performance.now();
-      
+
       // 渲染时间应该小于100ms
       expect(endTime - startTime).toBeLessThan(100);
     });
@@ -247,7 +254,7 @@ describe('BlogPage', () => {
   describe('可访问性测试', () => {
     it('应该渲染可访问的内容', () => {
       render(<BlogPage />);
-      
+
       // 验证组件存在且可访问
       const component = screen.getByTestId('under-construction');
       expect(component).toBeInTheDocument();

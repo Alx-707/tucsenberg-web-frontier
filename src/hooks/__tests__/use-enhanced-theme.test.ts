@@ -51,7 +51,7 @@ const mockStartViewTransition = vi.fn((callback: () => void) => {
 
 try {
   if ('startViewTransition' in document) {
-    (document as any).startViewTransition = mockStartViewTransition;
+    (document as unknown).startViewTransition = mockStartViewTransition;
   } else {
     Object.defineProperty(document, 'startViewTransition', {
       value: mockStartViewTransition,
@@ -61,7 +61,7 @@ try {
   }
 } catch {
   // If we can't define it, just set it directly
-  (document as any).startViewTransition = mockStartViewTransition;
+  (document as unknown).startViewTransition = mockStartViewTransition;
 }
 
 // Mock document.documentElement.animate
@@ -126,15 +126,15 @@ describe('useEnhancedTheme', () => {
     expect(mockSetTheme).toHaveBeenCalledWith('dark');
   });
 
-  it('should provide setThemeWithCircularTransition function', () => {
+  it('should provide setCircularTheme function', () => {
     const { result } = renderHook(() => useEnhancedTheme());
 
-    expect(typeof result.current.setThemeWithCircularTransition).toBe(
+    expect(typeof result.current.setCircularTheme).toBe(
       'function',
     );
 
     act(() => {
-      result.current.setThemeWithCircularTransition('dark');
+      result.current.setCircularTheme('dark');
       // 推进防抖定时器
       vi.advanceTimersByTime(100);
     });
@@ -142,11 +142,12 @@ describe('useEnhancedTheme', () => {
     expect(mockSetTheme).toHaveBeenCalledWith('dark');
   });
 
-  it('should detect View Transitions support', () => {
+  it('should provide theme switching functions', () => {
     const { result } = renderHook(() => useEnhancedTheme());
 
-    // supportsViewTransitions should be a boolean
-    expect(typeof result.current.supportsViewTransitions).toBe('boolean');
+    // Should provide both theme switching functions
+    expect(typeof result.current.setTheme).toBe('function');
+    expect(typeof result.current.setCircularTheme).toBe('function');
   });
 
   it('should handle theme switching without errors', () => {
@@ -177,7 +178,7 @@ describe('useEnhancedTheme', () => {
 
     expect(() => {
       act(() => {
-        result.current.setThemeWithCircularTransition('dark');
+        result.current.setCircularTheme('dark');
         // 推进防抖定时器
         vi.advanceTimersByTime(100);
       });
@@ -255,7 +256,7 @@ describe('useEnhancedTheme', () => {
       // 即使supportsViewTransitions返回true，函数也应该能处理API不可用的情况
       expect(() => {
         act(() => {
-          result.current.setThemeWithCircularTransition('dark');
+          result.current.setCircularTheme('dark');
           // 推进防抖定时器
           vi.advanceTimersByTime(100);
         });
@@ -269,13 +270,13 @@ describe('useEnhancedTheme', () => {
         throw new Error('View Transition failed');
       });
 
-      (document as any).startViewTransition = errorTransition;
+      (document as unknown).startViewTransition = errorTransition;
 
       const { result } = renderHook(() => useEnhancedTheme());
 
       expect(() => {
         act(() => {
-          result.current.setThemeWithCircularTransition('dark');
+          result.current.setCircularTheme('dark');
           // 推进防抖定时器
           vi.advanceTimersByTime(100);
         });
@@ -300,13 +301,13 @@ describe('useEnhancedTheme', () => {
         return rejectedTransition;
       });
 
-      (document as any).startViewTransition = mockFailingTransition;
+      (document as unknown).startViewTransition = mockFailingTransition;
 
       const { result } = renderHook(() => useEnhancedTheme());
 
       expect(() => {
         act(() => {
-          result.current.setThemeWithCircularTransition('dark');
+          result.current.setCircularTheme('dark');
           // 推进防抖定时器
           vi.advanceTimersByTime(100);
         });
@@ -400,7 +401,7 @@ describe('useEnhancedTheme', () => {
         act(() => {
           for (let i = 0; i < 10; i++) {
             result.current.setTheme(i % 2 === 0 ? 'light' : 'dark');
-            result.current.setThemeWithCircularTransition(
+            result.current.setCircularTheme(
               i % 2 === 0 ? 'dark' : 'light',
             );
           }
@@ -412,7 +413,7 @@ describe('useEnhancedTheme', () => {
       const { result, unmount } = renderHook(() => useEnhancedTheme());
 
       act(() => {
-        result.current.setThemeWithCircularTransition('dark');
+        result.current.setCircularTheme('dark');
       });
 
       expect(() => {

@@ -1,4 +1,4 @@
-import { QualityIssue } from '@/types/translation-manager';
+import type { QualityIssue } from '@/types/translation-manager';
 import { QUALITY_CHECK_THRESHOLDS } from '@/constants/i18n-constants';
 
 /**

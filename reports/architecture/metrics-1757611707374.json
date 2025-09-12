@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "timestamp": "2025-09-11T17:28:16.742Z",
+    "version": "1.0.0",
+    "project": "tucsenberg-web-frontier"
+  },
+  "metrics": {
+    "timestamp": "2025-09-11T17:28:16.742Z",
+    "exportStarCount": 26,
+    "exportStarByDomain": {
+      "other": 22,
+      "i18n": 4
+    },
+    "typeScriptErrors": 3099,
+    "eslintIssues": 2075,
+    "totalFiles": 786,
+    "i18nFiles": 24,
+    "circularDependencies": 0,
+    "crossDomainDependencies": 0,
+    "fileSizeStats": {
+      "min": 97,
+      "max": 25159,
+      "median": 6053,
+      "p75": 9038,
+      "p90": 11341,
+      "p95": 13148,
+      "average": 6069.468193384224
+    },
+    "domainStats": {}
+  },
+  "thresholds": {
+    "exportStar": {
+      "current": 97,
+      "phase1": 30,
+      "final": 0
+    },
+    "tsErrors": {
+      "current": 2759,
+      "phase1": 1500,
+      "phase2": 500,
+      "final": 0
+    },
+    "eslintIssues": {
+      "current": 2075,
+      "target": 200
+    },
+    "totalFiles": {
+      "current": 644,
+      "target": 300
+    }
+  },
+  "analysis": {
+    "phase1Ready": true,
+    "qualityTrend": {
+      "exportStarProgress": 73.19587628865979,
+      "tsErrorProgress": 0,
+      "eslintProgress": 0
+    },
+    "recommendations": [
+      "TypeScript错误数量较高，建议分阶段修复"
+    ]
+  }
+}

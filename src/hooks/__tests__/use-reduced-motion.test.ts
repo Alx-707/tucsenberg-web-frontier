@@ -127,7 +127,7 @@ describe('useReducedMotion', () => {
   it('should handle server-side rendering gracefully', () => {
     // Mock matchMedia to return null (SSR behavior)
     const originalMatchMedia = global.window.matchMedia;
-    global.window.matchMedia = vi.fn(() => null as any);
+    global.window.matchMedia = vi.fn(() => null as unknown);
 
     const { result } = renderHook(() => useReducedMotion());
 
@@ -143,7 +143,7 @@ describe('useReducedMotion', () => {
     const originalMatchMedia = global.window.matchMedia;
 
     // Mock window without matchMedia
-    global.window.matchMedia = undefined as any;
+    global.window.matchMedia = undefined as unknown;
 
     const { result } = renderHook(() => useReducedMotion());
 
@@ -237,7 +237,7 @@ describe('useReducedMotion', () => {
   });
 
   it('should handle malformed MediaQueryListEvent', () => {
-    let changeHandler: ((event: any) => void) | null = null;
+    let changeHandler: ((event: Event) => void) | null = null;
 
     const mockMediaQuery = {
       matches: false,
@@ -254,7 +254,7 @@ describe('useReducedMotion', () => {
     // Simulate malformed event
     act(() => {
       if (changeHandler) {
-        changeHandler({} as any); // Empty object instead of proper MediaQueryListEvent
+        changeHandler({} as unknown); // Empty object instead of proper MediaQueryListEvent
       }
     });
 
@@ -276,7 +276,7 @@ describe('useReducedMotion', () => {
       // Missing addEventListener and removeEventListener
     };
 
-    mockMatchMedia.mockReturnValue(incompleteMediaQuery as any);
+    mockMatchMedia.mockReturnValue(incompleteMediaQuery as unknown);
 
     expect(() => {
       renderHook(() => useReducedMotion());

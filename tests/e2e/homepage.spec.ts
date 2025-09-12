@@ -216,7 +216,7 @@ test.describe('Homepage Core Functionality', () => {
             const entries = list.getEntries();
             const webVitals: { lcp?: number; fid?: number; cls?: number } = {};
 
-            entries.forEach((entry: any) => {
+            entries.forEach((entry: unknown) => {
               if (entry.name === 'LCP') {
                 webVitals.lcp = entry.value;
               }

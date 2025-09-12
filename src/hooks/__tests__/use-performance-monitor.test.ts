@@ -464,7 +464,7 @@ describe('usePerformanceMonitor', () => {
 
       invalidConfigs.forEach((config) => {
         expect(() => {
-          renderHook(() => usePerformanceMonitor(config as any));
+          renderHook(() => usePerformanceMonitor(config as unknown));
         }).not.toThrow();
       });
     });
@@ -557,7 +557,7 @@ describe('usePerformanceMonitor', () => {
   describe('性能警报系统边缘情况', () => {
     it('should handle alert system with missing memory API', () => {
       const originalMemory = global.performance.memory;
-      delete (global.performance as any).memory;
+      delete (global.performance as unknown).memory;
 
       const { result } = renderHook(() =>
         usePerformanceMonitor({
@@ -570,8 +570,9 @@ describe('usePerformanceMonitor', () => {
 
       act(() => {
         result.current.startMonitoring();
-        const memoryUsage = result.current.measureMemoryUsage();
-        expect(memoryUsage).toBeUndefined();
+        // measureMemoryUsage is not exposed in the hook return value
+        // Instead, we can check if memory monitoring works through metrics
+        expect(result.current.metrics?.memoryUsage).toBeUndefined();
       });
 
       // Restore memory property

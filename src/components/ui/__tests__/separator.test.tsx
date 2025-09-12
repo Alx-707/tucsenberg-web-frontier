@@ -236,7 +236,7 @@ describe('Separator Component', () => {
     it('handles null className gracefully', () => {
       render(
         <Separator
-          className={null as any}
+          className={null as unknown}
           data-testid='separator'
         />,
       );

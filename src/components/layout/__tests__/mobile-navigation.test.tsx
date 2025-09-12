@@ -1,6 +1,6 @@
-import React from 'react';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MobileMenuButton, MobileNavigation } from '../mobile-navigation';
 import { renderWithProviders } from './test-utils';
@@ -29,7 +29,7 @@ vi.mock('next-intl', () => ({
 
 // Mock i18n routing
 vi.mock('@/i18n/routing', () => ({
-  Link: ({ children, href, onClick, ...props }: any) => (
+  Link: ({ children, href, onClick, ...props }: React.ComponentProps<"a">) => (
     <a
       href={href}
       onClick={onClick}
@@ -78,7 +78,7 @@ vi.mock('@/lib/navigation', () => {
 // Mock UI components with proper state management
 vi.mock('@/components/ui/sheet', () => {
   return {
-    Sheet: ({ children, open, onOpenChange }: any) => {
+    Sheet: ({ children, open, onOpenChange }: { children?: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void }) => {
       // Create a simple mock that passes the state through
       return (
         <div
@@ -89,7 +89,7 @@ vi.mock('@/components/ui/sheet', () => {
           {React.Children.map(children, (child) => {
             if (React.isValidElement(child) && child.type === 'SheetTrigger') {
               // Pass the state to SheetTrigger
-              return React.cloneElement(child as any, {
+              return React.cloneElement(child as unknown, {
                 ...(child.props || {}),
                 __sheetOpen: open,
                 __onOpenChange: onOpenChange,
@@ -100,7 +100,7 @@ vi.mock('@/components/ui/sheet', () => {
         </div>
       );
     },
-    SheetContent: ({ children, side, id, onEscapeKeyDown }: any) => (
+    SheetContent: ({ children, side, id, onEscapeKeyDown }: { children?: React.ReactNode; side?: string; id?: string; onEscapeKeyDown?: () => void }) => (
       <div
         data-testid='sheet-content'
         data-side={side}
@@ -110,28 +110,30 @@ vi.mock('@/components/ui/sheet', () => {
         {children}
       </div>
     ),
-    SheetHeader: ({ children }: any) => (
+    SheetHeader: ({ children }: React.ComponentProps<"div">) => (
       <div data-testid='sheet-header'>{children}</div>
     ),
-    SheetTitle: ({ children }: any) => (
+    SheetTitle: ({ children }: React.ComponentProps<"div">) => (
       <h2 data-testid='sheet-title'>{children}</h2>
     ),
-    SheetDescription: ({ children }: any) => (
+    SheetDescription: ({ children }: React.ComponentProps<"div">) => (
       <p data-testid='sheet-description'>{children}</p>
     ),
-    SheetTrigger: ({ children, asChild, __sheetOpen, __onOpenChange }: any) => {
-      if (asChild) {
+    SheetTrigger: ({ children, asChild, __sheetOpen, __onOpenChange }: { children?: React.ReactNode; asChild?: boolean; __sheetOpen?: boolean; __onOpenChange?: (open: boolean) => void }) => {
+      if (asChild && React.isValidElement(children)) {
         // When asChild is true, we need to clone the child and add our test id and click handler
         const child = React.Children.only(children);
         return React.cloneElement(child, {
           'data-testid': 'sheet-trigger',
           'aria-expanded': __sheetOpen ? 'true' : 'false',
           'data-state': __sheetOpen ? 'open' : 'closed',
-          'onClick': (e: any) => {
-            child.props.onClick?.(e);
+          'onClick': (e: Event) => {
+            if (React.isValidElement(child) && (child as any).props.onClick) {
+              (child as any).props.onClick(e);
+            }
             __onOpenChange?.(!__sheetOpen);
           },
-          ...child.props,
+          ...(React.isValidElement(child) ? (child as any).props : {}),
         });
       }
       return (
@@ -149,7 +151,7 @@ vi.mock('@/components/ui/sheet', () => {
 });
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, onClick, ...props }: any) => (
+  Button: ({ children, onClick, ...props }: React.ComponentProps<"button">) => (
     <button
       onClick={onClick}
       {...props}
@@ -160,7 +162,7 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/separator', () => ({
-  Separator: ({ className }: any) => (
+  Separator: ({ className }: React.ComponentProps<"div">) => (
     <hr
       data-testid='separator'
       className={className}

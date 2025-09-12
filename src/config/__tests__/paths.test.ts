@@ -1,18 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  getLocalizedPath,
-  getPageTypeFromPath,
-  getPathnames,
-  getRoutingConfig,
-  getSitemapConfig,
-  LOCALES_CONFIG,
-  PATHS_CONFIG,
-  SITE_CONFIG,
-  validatePathsConfig,
-  type Locale,
-  type LocalizedPath,
-  type PageType,
-} from '../paths';
+import type { Locale } from '../paths';
+import { getLocalizedPath, getPageTypeFromPath, getPathnames, getRoutingConfig, getSitemapConfig, LOCALES_CONFIG, PATHS_CONFIG, SITE_CONFIG, validatePathsConfig, type LocalizedPath, type PageType,  } from '../paths';;
 
 describe('paths configuration', () => {
   describe('type definitions', () => {
@@ -455,7 +443,7 @@ describe('paths configuration', () => {
     });
 
     it('should not create memory leaks with repeated calls', () => {
-      const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const initialMemory = (performance as unknown).memory?.usedJSHeapSize || 0;
 
       // Perform many operations
       for (let i = 0; i < 10000; i++) {
@@ -468,7 +456,7 @@ describe('paths configuration', () => {
         global.gc();
       }
 
-      const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const finalMemory = (performance as unknown).memory?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
 
       // Memory increase should be minimal (less than 1MB)

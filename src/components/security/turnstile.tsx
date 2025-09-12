@@ -1,8 +1,13 @@
 'use client';
 
-import React from 'react';
 import { Turnstile } from '@marsidev/react-turnstile';
+import React from 'react';
 import { env } from '../../../env.mjs';
+import { logger } from '@/lib/logger';
+
+/**
+ * 使用全局 logger（开发环境输出，生产环境静默）
+ */
 
 interface TurnstileProps {
   onVerify?: (_token: string) => void;
@@ -47,11 +52,9 @@ export function TurnstileWidget({
 
   // Don't render if no site key is configured
   if (!siteKey) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(
-        'Turnstile site key not configured. Bot protection is disabled.',
-      );
-    }
+    logger.warn(
+      'Turnstile site key not configured. Bot protection is disabled.',
+    );
     return null;
   }
 
@@ -76,14 +79,14 @@ export function TurnstileWidget({
   };
 
   const handleError = (error: string) => {
-    console.error('Turnstile error:', error);
+    logger.error('Turnstile error:', error);
     if (onError) {
       onError(error);
     }
   };
 
   const handleExpire = () => {
-    console.warn('Turnstile token expired');
+    logger.warn('Turnstile token expired');
     if (onExpire) {
       onExpire();
     }
@@ -120,40 +123,40 @@ export function TurnstileWidget({
 export function useTurnstile() {
   const [isVerified, setIsVerified] = React.useState(false);
   const [token, setToken] = React.useState<string | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, _setError] = React.useState<string | null>(null);
+  const [isLoading, _setIsLoading] = React.useState(false);
 
   const handleVerify = React.useCallback((verificationToken: string) => {
     setToken(verificationToken);
     setIsVerified(true);
-    setError(null);
-    setIsLoading(false);
+    _setError(null);
+    _setIsLoading(false);
   }, []);
 
   const handleError = React.useCallback((errorMessage: string) => {
-    setError(errorMessage);
+    _setError(errorMessage);
     setIsVerified(false);
     setToken(null);
-    setIsLoading(false);
+    _setIsLoading(false);
   }, []);
 
   const handleExpire = React.useCallback(() => {
     setIsVerified(false);
     setToken(null);
-    setError(null);
-    setIsLoading(false);
+    _setError(null);
+    _setIsLoading(false);
   }, []);
 
   const handleLoad = React.useCallback(() => {
-    setIsLoading(true);
-    setError(null);
+    _setIsLoading(true);
+    _setError(null);
   }, []);
 
   const reset = React.useCallback(() => {
     setIsVerified(false);
     setToken(null);
-    setError(null);
-    setIsLoading(false);
+    _setError(null);
+    _setIsLoading(false);
   }, []);
 
   return {

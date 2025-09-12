@@ -1,244 +1,68 @@
 /**
- * 性能监控协调器
+ * 性能监控协调器 - 主入口文件
+ * Performance Monitoring Coordinator - Main Entry Point
  *
  * 统一管理多个性能监控工具的协调运作：
  * - React Scan: 实时组件性能监控
  * - Web Eval Agent: 端到端用户体验测试
  * - Bundle Analyzer: 构建产物分析
  * - Size Limit: 包大小监控
+ * - Web Vitals: 核心网页指标监控
  */
 
-import { PERFORMANCE_CONSTANTS } from '@/constants/performance';
+// 重新导出所有模块的类型和功能
+export { PerformanceMetricSource, PerformanceMetricType, PerformanceMetrics, ReactScanConfig, WebEvalAgentConfig, BundleAnalyzerConfig, SizeLimitConfig, WebVitalsConfig, PerformanceConfig, Environment, getCurrentEnvironment, isTestEnvironment, isDevelopmentEnvironment, isProductionEnvironment, generateEnvironmentConfig, validateConfig } from './performance-monitoring-types';export { PerformanceConfigManager, createConfigManager, getDefaultConfig, validatePerformanceConfig, PerformanceMetricsManager, createMetricsManager, PerformanceReport, PerformanceReportGenerator, createReportGenerator, ToolConflictResult, PerformanceToolConflictChecker, createConflictChecker, quickConflictCheck, PerformanceMonitoringCore, PerformanceCoordinator } from
+'./performance-monitoring-core';export { ReactScanIntegration, useReactScanIntegration, validateReactScanConfig, ReactScanAnalyzer, ReactScanUtils, WebEvalAgentIntegration, useWebEvalAgentIntegration, validateWebEvalAgentConfig, WebEvalAgentAnalyzer, BundleAnalyzerIntegration, useBundleAnalyzerIntegration, validateBundleAnalyzerConfig, BundleAnalyzerAnalyzer, BundleAnalyzerUtils, WebVitalsIntegration, useWebVitalsIntegration, EnvironmentCompatibilityResult, checkEnvironmentCompatibility, performHealthCheck, validateWebVitalsConfig, WebVitalsAnalyzer, ReactScan, WebEvalAgent, BundleAnalyzer, WebVitals, EnvironmentCheck } from
+'./performance-monitoring-integrations';
 
-export interface PerformanceMetrics {
-  timestamp: number;
-  source:
-    | 'react-scan'
-    | 'web-eval-agent'
-    | 'bundle-analyzer'
-    | 'size-limit'
-    | 'custom';
-  type: 'component' | 'page' | 'bundle' | 'network' | 'user-interaction';
-  data: Record<string, unknown>;
-}
-
-export interface PerformanceConfig {
-  reactScan: {
-    enabled: boolean;
-    showToolbar: boolean;
-    trackUnnecessaryRenders: boolean;
-  };
-  webEvalAgent: {
-    enabled: boolean;
-    captureNetwork: boolean;
-    captureLogs: boolean;
-  };
-  bundleAnalyzer: {
-    enabled: boolean;
-    openAnalyzer: boolean;
-  };
-  sizeLimit: {
-    enabled: boolean;
-    limits: Record<string, number>;
-  };
-}
-
-class PerformanceMonitoringCoordinator {
-  private metrics: PerformanceMetrics[] = [];
-  private config: PerformanceConfig;
-
-  constructor() {
-    this.config = this.getEnvironmentConfig();
-  }
-
-  /**
-   * 根据环境获取配置
-   */
-  private getEnvironmentConfig(): PerformanceConfig {
-    const isProduction = process.env.NODE_ENV === 'production';
-    const isTest =
-      process.env.NODE_ENV === 'test' || process.env.PLAYWRIGHT_TEST === 'true';
-    const isDevelopment = process.env.NODE_ENV === 'development';
-
-    return {
-      reactScan: {
-        enabled:
-          isDevelopment &&
-          !isTest &&
-          process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN !== 'true',
-        showToolbar: isDevelopment && !isTest,
-        trackUnnecessaryRenders: isDevelopment,
-      },
-      webEvalAgent: {
-        enabled:
-          isTest || process.env.NEXT_PUBLIC_ENABLE_WEB_EVAL_AGENT === 'true',
-        captureNetwork: true,
-        captureLogs: true,
-      },
-      bundleAnalyzer: {
-        enabled: process.env.ANALYZE === 'true',
-        openAnalyzer: !isProduction,
-      },
-      sizeLimit: {
-        enabled: true,
-        limits: {
-          main:
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.MAIN_BUNDLE *
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
-          framework:
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.FRAMEWORK_BUNDLE *
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
-          css:
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.CSS_BUNDLE *
-            PERFORMANCE_CONSTANTS.BUNDLE_LIMITS.KB_TO_BYTES,
-        },
-      },
-    };
-  }
-
-  /**
-   * 记录性能指标
-   */
-  recordMetric(metric: Omit<PerformanceMetrics, 'timestamp'>) {
-    const fullMetric: PerformanceMetrics = {
-      ...metric,
-      timestamp: Date.now(),
-    };
-
-    this.metrics.push(fullMetric);
-
-    // 在开发环境中输出到控制台
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`📊 Performance Metric [${metric.source}]:`, metric.data);
-    }
-  }
-
-  /**
-   * 获取配置
-   */
-  getConfig(): PerformanceConfig {
-    return this.config;
-  }
-
-  /**
-   * 获取指标
-   */
-  getMetrics(source?: PerformanceMetrics['source']): PerformanceMetrics[] {
-    if (source) {
-      return this.metrics.filter((m) => m.source === source);
-    }
-    return this.metrics;
-  }
-
-  /**
-   * 清理旧指标
-   */
-  cleanupOldMetrics(
-    maxAge = PERFORMANCE_CONSTANTS.MONITORING.DATA_COLLECTION_INTERVAL *
-      PERFORMANCE_CONSTANTS.MONITORING.DATA_COLLECTION_DURATION *
-      1000,
-  ) {
-    // 5分钟
-    const cutoff = Date.now() - maxAge;
-    this.metrics = this.metrics.filter((m) => m.timestamp > cutoff);
-  }
-
-  /**
-   * 生成性能报告
-   */
-  generateReport(): {
-    summary: Record<string, unknown>;
-    details: PerformanceMetrics[];
-    recommendations: string[];
-  } {
-    const now = Date.now();
-    const recentMetrics = this.metrics.filter(
-      (m) =>
-        now - m.timestamp <
-        PERFORMANCE_CONSTANTS.MONITORING.MONITORING_INTERVAL,
-    ); // 最近1分钟
-
-    const summary = {
-      totalMetrics: this.metrics.length,
-      recentMetrics: recentMetrics.length,
-      sources: [...new Set(this.metrics.map((m) => m.source))],
-      types: [...new Set(this.metrics.map((m) => m.type))],
-      timeRange: {
-        start:
-          this.metrics.length > 0
-            ? Math.min(...this.metrics.map((m) => m.timestamp))
-            : now,
-        end:
-          this.metrics.length > 0
-            ? Math.max(...this.metrics.map((m) => m.timestamp))
-            : now,
-      },
-    };
-
-    const recommendations: string[] = [];
-
-    // 基于指标生成建议
-    const componentMetrics = this.metrics.filter((m) => m.type === 'component');
-    if (
-      componentMetrics.length > PERFORMANCE_CONSTANTS.MONITORING.MAX_DATA_POINTS
-    ) {
-      recommendations.push('考虑使用 React.memo 优化频繁渲染的组件');
-    }
-
-    const networkMetrics = this.metrics.filter((m) => m.type === 'network');
-    if (networkMetrics.some((m) => m.data.timing > 1000)) {
-      recommendations.push('检查网络请求性能，考虑添加缓存或优化 API');
-    }
-
-    return {
-      summary,
-      details: this.metrics,
-      recommendations,
-    };
-  }
-
-  /**
-   * 检查工具冲突
-   */
-  checkToolConflicts(): {
-    hasConflicts: boolean;
-    conflicts: string[];
-    suggestions: string[];
-  } {
-    const conflicts: string[] = [];
-    const suggestions: string[] = [];
-
-    // 检查 React Scan 和测试环境冲突
-    if (
-      this.config.reactScan.enabled &&
-      process.env.PLAYWRIGHT_TEST === 'true'
-    ) {
-      conflicts.push('React Scan 在测试环境中启用，可能干扰 Playwright 测试');
-      suggestions.push('在测试环境中设置 NEXT_PUBLIC_DISABLE_REACT_SCAN=true');
-    }
-
-    // 检查多个性能工具同时运行
-    const enabledTools = Object.entries(this.config)
-      .filter(([_, config]) => config.enabled)
-      .map(([tool]) => tool);
-
-    if (enabledTools.length > PERFORMANCE_CONSTANTS.MONITORING.DATA_PAGE_SIZE) {
-      suggestions.push('考虑在不同环境中使用不同的性能监控工具组合');
-    }
-
-    return {
-      hasConflicts: conflicts.length > 0,
-      conflicts,
-      suggestions,
-    };
-  }
-}
-
-// 全局实例
-export const performanceCoordinator = new PerformanceMonitoringCoordinator();
+// 导入核心功能
+import { PerformanceMonitoringCore } from './performance-monitoring-core';
+import type { PerformanceConfig } from './performance-monitoring-types';
+import { generateEnvironmentConfig } from './performance-monitoring-types';
 
 /**
- * React Scan 集成钩子
+ * 性能监控协调器 - 向后兼容的主类
+ * Performance Monitoring Coordinator - Backward compatible main class
+ */
+export class PerformanceMonitoringCoordinator extends PerformanceMonitoringCore {
+  constructor(customConfig?: Partial<PerformanceConfig>) {
+    super(customConfig);
+  }
+}
+
+// ==================== 全局实例和便捷导出 ====================
+
+/**
+ * 全局性能监控协调器实例
+ * Global performance monitoring coordinator instance
+ */
+export const performanceCoordinator = new PerformanceMonitoringCoordinator();
+
+// ==================== 便捷工厂函数 ====================
+
+/**
+ * 创建性能监控协调器实例
+ * Create performance monitoring coordinator instance
+ */
+export function createPerformanceCoordinator(
+customConfig?: Partial<PerformanceConfig>)
+: PerformanceMonitoringCoordinator {
+  return new PerformanceMonitoringCoordinator(customConfig);
+}
+
+/**
+ * 获取默认环境配置
+ * Get default environment configuration
+ */
+export function getDefaultConfig(): PerformanceConfig {
+  return generateEnvironmentConfig();
+}
+
+// ==================== 便捷集成钩子 ====================
+
+/**
+ * React Scan 集成钩子 (向后兼容)
+ * React Scan integration hook (backward compatible)
  */
 export function useReactScanIntegration() {
   const config = performanceCoordinator.getConfig();
@@ -253,16 +77,17 @@ export function useReactScanIntegration() {
           data: {
             componentName,
             renderCount,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         });
       }
-    },
+    }
   };
 }
 
 /**
- * Web Eval Agent 集成钩子
+ * Web Eval Agent 集成钩子 (向后兼容)
+ * Web Eval Agent integration hook (backward compatible)
  */
 export function useWebEvalAgentIntegration() {
   const config = performanceCoordinator.getConfig();
@@ -270,10 +95,10 @@ export function useWebEvalAgentIntegration() {
   return {
     enabled: config.webEvalAgent.enabled,
     recordUserInteraction: (
-      action: string,
-      timing: number,
-      success: boolean,
-    ) => {
+    action: string,
+    timing: number,
+    success: boolean) =>
+    {
       if (config.webEvalAgent.enabled) {
         performanceCoordinator.recordMetric({
           source: 'web-eval-agent',
@@ -282,17 +107,17 @@ export function useWebEvalAgentIntegration() {
             action,
             timing,
             success,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         });
       }
     },
     recordNetworkRequest: (
-      url: string,
-      method: string,
-      status: number,
-      timing: number,
-    ) => {
+    url: string,
+    method: string,
+    status: number,
+    timing: number) =>
+    {
       if (config.webEvalAgent.enabled && config.webEvalAgent.captureNetwork) {
         performanceCoordinator.recordMetric({
           source: 'web-eval-agent',
@@ -302,16 +127,17 @@ export function useWebEvalAgentIntegration() {
             method,
             status,
             timing,
-            timestamp: Date.now(),
-          },
+            timestamp: Date.now()
+          }
         });
       }
-    },
+    }
   };
 }
 
 /**
- * 环境检查工具
+ * 环境检查工具 (向后兼容)
+ * Environment check tool (backward compatible)
  */
 export function checkEnvironmentCompatibility(): {
   isCompatible: boolean;
@@ -333,7 +159,7 @@ export function checkEnvironmentCompatibility(): {
   if (process.env.NODE_ENV === 'development') {
     if (process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN === 'true') {
       recommendations.push(
-        '开发环境中 React Scan 被禁用，考虑启用以获得性能监控',
+        '开发环境中 React Scan 被禁用，考虑启用以获得性能监控'
       );
     }
   }
@@ -341,8 +167,14 @@ export function checkEnvironmentCompatibility(): {
   return {
     isCompatible: issues.length === 0,
     issues,
-    recommendations,
+    recommendations
   };
 }
 
+// ==================== 默认导出 ====================
+
+/**
+ * 默认导出全局协调器实例
+ * Default export global coordinator instance
+ */
 export default performanceCoordinator;

@@ -14,7 +14,37 @@
     "next": "下一页",
     "previous": "上一页",
     "close": "关闭",
-    "open": "打开"
+    "open": "打开",
+    "toast": {
+      "form": {
+        "contact": {
+          "success": "消息发送成功！",
+          "successDescription": "感谢您的留言，我们会尽快回复您。",
+          "error": "消息发送失败",
+          "errorDescription": "请稍后重试或直接联系我们。",
+          "loading": "正在发送消息..."
+        },
+        "newsletter": {
+          "success": "订阅成功！",
+          "successDescription": "感谢您订阅我们的邮件通讯。",
+          "error": "订阅失败",
+          "errorDescription": "请检查您的邮箱地址并重试。",
+          "loading": "正在订阅..."
+        },
+        "feedback": {
+          "success": "反馈提交成功！",
+          "successDescription": "感谢您的宝贵反馈。",
+          "error": "反馈提交失败",
+          "errorDescription": "请稍后重试。",
+          "loading": "正在提交反馈..."
+        }
+      }
+    }
+  },
+  "errorBoundary": {
+    "title": "发生错误",
+    "description": "出现了一些问题，请尝试刷新页面。",
+    "tryAgain": "重试"
   },
   "navigation": {
     "home": "首页",
@@ -22,18 +52,98 @@
     "contact": "联系我们",
     "services": "服务",
     "products": "产品",
+    "solutions": "解决方案",
+    "resources": "资源",
+    "enterprise": "企业版",
+    "docs": "文档",
+    "pricing": "定价",
     "blog": "博客",
     "diagnostics": "性能诊断",
     "login": "登录",
     "logout": "退出",
     "profile": "个人资料",
-    "settings": "设置"
+    "settings": "设置",
+    "frameworks": "框架",
+    "infrastructure": "基础设施",
+    "security": "安全",
+    "aiApps": "AI 应用",
+    "webApps": "Web 应用",
+    "ecommerce": "电商",
+    "guides": "指南",
+    "frameworksDescription": "使用最佳框架构建",
+    "infrastructureDescription": "可扩展且可靠的基础设施",
+    "securityDescription": "企业级安全保障",
+    "aiAppsDescription": "大规模部署 AI 应用",
+    "webAppsDescription": "现代 Web 应用平台",
+    "ecommerceDescription": "为您的在线商店提供动力",
+    "docsDescription": "完整的文档和指南",
+    "guidesDescription": "分步教程",
+    "blogDescription": "最新更新和见解"
+  },
+  "diagnostics": {
+    "title": "Web Vitals 性能诊断",
+    "description": "深入分析网站性能指标，识别关键问题，获取专业的优化建议。实时监控 CLS、LCP、FID 等核心 Web Vitals 指标。",
+    "controlPanel": {
+      "title": "性能诊断控制台",
+      "description": "实时监控和分析网站性能指标",
+      "refresh": "重新检测",
+      "refreshing": "检测中...",
+      "export": "导出数据"
+    },
+    "currentMetrics": {
+      "title": "当前页面性能指标",
+      "description": "基于 Core Web Vitals 标准的实时性能评估"
+    },
+    "historicalData": {
+      "title": "历史性能数据",
+      "description": "最近 {count} 次性能检测记录"
+    },
+    "thresholdReference": {
+      "title": "性能指标阈值参考",
+      "description": "基于 Google Core Web Vitals 标准",
+      "cls": {
+        "title": "CLS (累积布局偏移)",
+        "good": "良好",
+        "needsImprovement": "需要改进",
+        "poor": "较差"
+      },
+      "lcp": {
+        "title": "LCP (最大内容绘制)",
+        "good": "良好",
+        "needsImprovement": "需要改进",
+        "poor": "较差"
+      },
+      "fid": {
+        "title": "FID (首次输入延迟)",
+        "good": "良好",
+        "needsImprovement": "需要改进",
+        "poor": "较差"
+      }
+    },
+    "metrics": {
+      "cls": "累积布局偏移",
+      "lcp": "最大内容绘制",
+      "fid": "首次输入延迟",
+      "fcp": "首次内容绘制",
+      "ttfb": "首字节时间"
+    },
+    "status": {
+      "good": "良好",
+      "needsImprovement": "需要改进",
+      "poor": "较差",
+      "excellent": "优秀"
+    }
   },
   "theme": {
     "toggle": "切换主题",
     "light": "明亮模式",
     "dark": "暗黑模式",
-    "system": "系统模式"
+    "system": "系统模式",
+    "selectTheme": "选择显示主题",
+    "selectDisplayTheme": "选择显示主题：",
+    "switchToLight": "切换到明亮模式",
+    "switchToDark": "切换到暗黑模式",
+    "switchToSystem": "切换到系统模式"
   },
   "language": {
     "toggle": "切换语言",
@@ -55,6 +165,17 @@
     "description": "基于Next.js 15、React 19和TypeScript构建的现代化B2B企业级Web平台。",
     "getStarted": "开始使用",
     "learnMore": "了解更多",
+    "welcome": "欢迎来到 Tucsenberg",
+    "modernApp": "基于 Next.js 15 和 React 19 构建的现代化Web应用",
+    "features": {
+      "title": "特性"
+    },
+    "modernStack": "现代化技术栈",
+    "modernStackDesc": "采用最新技术构建",
+    "internationalization": "国际化",
+    "internationalizationDesc": "基于 next-intl 的多语言支持",
+    "testingReady": "测试就绪",
+    "testingReadyDesc": "完整的端到端测试配置",
     "hero": {
       "version": "v1.0.0 - 生产就绪",
       "title": {
@@ -77,6 +198,27 @@
       "title": "技术栈",
       "subtitle": "采用前沿技术构建，确保企业级性能和可扩展性。",
       "learnMore": "了解更多",
+      "categories": {
+        "core": "核心技术",
+        "frontend": "前端框架",
+        "backend": "后端技术",
+        "database": "数据存储",
+        "deployment": "部署运维",
+        "testing": "测试工具",
+        "tools": "开发工具"
+      },
+      "technologies": {
+        "nextjs": "React 全栈框架",
+        "react": "用户界面库",
+        "typescript": "类型安全的JavaScript",
+        "tailwindcss": "实用优先的CSS框架",
+        "nodejs": "JavaScript运行时",
+        "vitest": "快速的单元测试框架",
+        "playwright": "端到端测试框架",
+        "vercel": "前端部署平台",
+        "eslint": "代码质量检查",
+        "prettier": "代码格式化工具"
+      },
       "stats": {
         "totalTech": "技术总数",
         "categories": "技术分类",
@@ -180,11 +322,13 @@
         },
         "i18n": {
           "title": "国际化",
-          "description": "全面支持多语言，具备动态内容切换功能。"
+          "description": "全面支持多语言，具备动态内容切换功能。",
+          "languageUnit": "种语言"
         },
         "themes": {
           "title": "主题系统",
-          "description": "支持亮色、暗色和自定义主题的动态切换。"
+          "description": "支持亮色、暗色和自定义主题的动态切换。",
+          "multiTheme": "多主题"
         },
         "typescript": {
           "title": "类型安全",
@@ -496,6 +640,28 @@
     "animation": {
       "loading": "加载动画",
       "construction": "建设进行中"
+    },
+    "status": {
+      "inProgress": "进行中"
+    },
+    "features": {
+      "performance": "高性能",
+      "performanceDesc": "优化的性能和快速加载体验",
+      "collaboration": "团队协作",
+      "collaborationDesc": "强大的团队协作和项目管理功能",
+      "quality": "品质保证",
+      "qualityDesc": "严格的质量控制和测试流程"
+    },
+    "social": {
+      "followUs": "关注我们的最新动态"
+    },
+    "subscription": {
+      "title": "获取上线通知",
+      "description": "第一时间了解我们的最新进展",
+      "placeholder": "输入您的邮箱地址",
+      "submit": "订阅通知",
+      "submitting": "提交中...",
+      "success": "订阅成功！我们会及时通知您"
     }
   },
   "ReactScanDemo": {
@@ -533,5 +699,23 @@
       "defaultName": "产品",
       "defaultDescription": "产品描述"
     }
-  }
+  },
+  "organization": {
+    "name": "图森堡网络前沿",
+    "description": "现代化B2B企业级网络平台",
+    "phone": "+86-400-123-4567",
+    "social": {
+      "twitter": "https://twitter.com/tucsenberg",
+      "linkedin": "https://linkedin.com/company/tucsenberg",
+      "github": "https://github.com/tucsenberg"
+    }
+  },
+  "website": {
+    "name": "图森堡网络前沿",
+    "description": "基于Next.js 15的现代化B2B企业级网络平台"
+  },
+  "article": {
+    "defaultAuthor": "图森堡团队"
+  },
+  "title": "图森堡网络前沿"
 }

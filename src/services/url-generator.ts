@@ -5,14 +5,8 @@
 
 /* eslint-disable security/detect-object-injection */
 
-import {
-  getLocalizedPath,
-  LOCALES_CONFIG,
-  PATHS_CONFIG,
-  SITE_CONFIG,
-  type Locale,
-  type PageType,
-} from '@/config/paths';
+import type { type Locale } from '@/config/paths';
+import { getLocalizedPath, LOCALES_CONFIG, PATHS_CONFIG, SITE_CONFIG, type PageType,  } from '@/config/paths';;
 import { SEO_CONSTANTS } from '@/constants/seo-constants';
 
 // URL生成选项接口

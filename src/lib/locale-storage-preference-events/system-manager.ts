@@ -1,0 +1,66 @@
+/**
+ * 事件系统管理
+ * Event System Management
+ */
+
+'use client';
+
+import { PreferenceEventManager } from './event-manager';
+import { consoleLogListener, historyRecordingListener } from './event-listeners';
+
+/**
+ * 事件管理工具函数
+ * Event management utility functions
+ */
+
+/**
+ * 设置默认事件监听器
+ * Setup default event listeners
+ */
+export function setupDefaultListeners(options: {
+  enableConsoleLog?: boolean;
+  enableHistoryRecording?: boolean;
+} = {}): void {
+  const {
+    enableConsoleLog = true,
+    enableHistoryRecording = true,
+  } = options;
+
+  if (enableConsoleLog) {
+    PreferenceEventManager.addEventListener('*', consoleLogListener);
+  }
+
+  if (enableHistoryRecording) {
+    PreferenceEventManager.addEventListener('preference_saved', historyRecordingListener);
+  }
+}
+
+/**
+ * 清理事件系统
+ * Cleanup event system
+ */
+export function cleanupEventSystem(): void {
+  PreferenceEventManager.removeAllListeners();
+  PreferenceEventManager.clearEventHistory();
+}
+
+/**
+ * 获取事件系统状态
+ * Get event system status
+ */
+export function getEventSystemStatus(): {
+  isActive: boolean;
+  listenerStats: ReturnType<typeof PreferenceEventManager.getListenerStats>;
+  eventHistoryCount: number;
+  lastEventTime: number | null;
+} {
+  const listenerStats = PreferenceEventManager.getListenerStats();
+  const eventHistory = PreferenceEventManager.getEventHistory(1);
+  
+  return {
+    isActive: listenerStats.totalListeners > 0,
+    listenerStats,
+    eventHistoryCount: PreferenceEventManager.getEventHistory().length,
+    lastEventTime: eventHistory.length > 0 ? eventHistory[0].timestamp : null,
+  };
+}

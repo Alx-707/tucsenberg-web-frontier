@@ -7,7 +7,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { AnalysisResults, LogDisplay, MetricsGrid } from './components';
-import { TestResults } from './utils';
+import type { TestResults } from './utils';
+;
 
 // 子组件：总体评分卡片
 interface OverallScoreProps {

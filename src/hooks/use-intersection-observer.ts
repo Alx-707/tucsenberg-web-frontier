@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AccessibilityManager } from '@/lib/accessibility';
+import { AccessibilityUtils } from '@/lib/accessibility';
 import { logger } from '@/lib/logger';
 
 /**
@@ -145,7 +145,7 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
   const triggerOnce = options.triggerOnce ?? DEFAULT_OPTIONS.triggerOnce;
   const root = options.root ?? null;
 
-  const prefersReducedMotion = AccessibilityManager.prefersReducedMotion();
+  const prefersReducedMotion = AccessibilityUtils.prefersReducedMotion();
 
   const callbackRef = useCallback((node: T | null) => {
     ref.current = node;

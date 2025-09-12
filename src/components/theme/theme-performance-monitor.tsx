@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { sendThemeReport, themeAnalytics } from '@/lib/theme-analytics';
+import { logger } from '@/lib/logger';
 
 /**
  * 主题性能监控组件
@@ -73,14 +74,8 @@ export function ThemePerformanceDashboard() {
 
       // 在控制台输出性能统计
       if (summary.totalSwitches > 0) {
-        // eslint-disable-next-line no-console
-        console.group('🎨 Theme Performance Stats');
-        // eslint-disable-next-line no-console
-        console.log('📊 Performance Summary:', summary);
-        // eslint-disable-next-line no-console
-        console.log('📈 Usage Statistics:', usage);
-        // eslint-disable-next-line no-console
-        console.groupEnd();
+        logger.info('Theme Performance Summary', { summary });
+        logger.info('Theme Usage Statistics', { usage });
       }
     }, updateIntervalMs);
 

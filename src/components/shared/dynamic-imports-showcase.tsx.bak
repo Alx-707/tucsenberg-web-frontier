@@ -1,0 +1,330 @@
+'use client';
+
+/**
+ * 展示和演示组件动态导入
+ * 
+ * 组件展示区、演示组件、示例组件等的动态导入
+ */
+import dynamic from 'next/dynamic';
+import { 
+  ComponentLoadingFallback,
+  CardSkeletonFallback,
+  SHOWCASE_CONFIG,
+  
+} from './dynamic-imports-base';
+
+// ==================== 展示组件 ====================
+
+/**
+ * 组件展示区 - 动态导入
+ * Component Showcase - Dynamic Import
+ * 原因：展示组件，非首屏关键，2.76KB + showcase子组件
+ */
+export const DynamicComponentShowcase = dynamic(
+  () =>
+    import('../home/component-showcase').then((mod) => ({
+      default: mod.ComponentShowcase,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true, // 保持SSR以支持SEO
+  },
+);
+
+/**
+ * 技术栈展示 - 动态导入
+ * Tech Stack Showcase - Dynamic Import
+ * 原因：展示组件，SEO重要
+ */
+export const DynamicTechStackShowcase = dynamic(
+  () =>
+    import('../home/tech-stack-showcase').then((mod) => ({
+      default: mod.TechStackShowcase,
+    })),
+  { loading: () => <CardSkeletonFallback />, ssr: true },
+);
+
+/**
+ * 功能特性展示 - 动态导入
+ * Features Showcase - Dynamic Import
+ * 原因：营销组件，SEO重要
+ */
+export const DynamicFeaturesShowcase = dynamic(
+  () =>
+    import('../home/features-showcase').then((mod) => ({
+      default: mod.FeaturesShowcase,
+    })),
+  { loading: () => <CardSkeletonFallback />, ssr: true },
+);
+
+/**
+ * 项目案例展示 - 动态导入
+ * Projects Showcase - Dynamic Import
+ * 原因：作品集组件，SEO重要
+ */
+export const DynamicProjectsShowcase = dynamic(
+  () =>
+    import('../home/projects-showcase').then((mod) => ({
+      default: mod.ProjectsShowcase,
+    })),
+  { loading: () => <CardSkeletonFallback />, ssr: true },
+);
+
+/**
+ * 团队成员展示 - 动态导入
+ * Team Showcase - Dynamic Import
+ * 原因：关于页面组件
+ */
+export const DynamicTeamShowcase = dynamic(
+  () =>
+    import('../about/team-showcase').then((mod) => ({
+      default: mod.TeamShowcase,
+    })),
+  { loading: () => <CardSkeletonFallback />, ssr: true },
+);
+
+// ==================== 演示组件 ====================
+
+/**
+ * 交互演示组件 - 动态导入
+ * Interactive Demo - Dynamic Import
+ * 原因：演示组件，交互性强
+ */
+export const DynamicInteractiveDemo = dynamic(
+  () =>
+    import('../demo/interactive-demo').then((mod) => ({
+      default: mod.InteractiveDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false, // 交互演示不需要SSR
+  },
+);
+
+/**
+ * 代码演示组件 - 动态导入
+ * Code Demo - Dynamic Import
+ * 原因：代码展示组件，可能较大
+ */
+export const DynamicCodeDemo = dynamic(
+  () =>
+    import('../demo/code-demo').then((mod) => ({
+      default: mod.CodeDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true, // 代码演示可能需要SEO
+  },
+);
+
+/**
+ * API演示组件 - 动态导入
+ * API Demo - Dynamic Import
+ * 原因：API展示组件
+ */
+export const DynamicApiDemo = dynamic(
+  () =>
+    import('../demo/api-demo').then((mod) => ({
+      default: mod.ApiDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 性能演示组件 - 动态导入
+ * Performance Demo - Dynamic Import
+ * 原因：性能展示组件
+ */
+export const DynamicPerformanceDemo = dynamic(
+  () =>
+    import('../demo/performance-demo').then((mod) => ({
+      default: mod.PerformanceDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 响应式设计演示 - 动态导入
+ * Responsive Design Demo - Dynamic Import
+ * 原因：设计展示组件
+ */
+export const DynamicResponsiveDemo = dynamic(
+  () =>
+    import('../demo/responsive-demo').then((mod) => ({
+      default: mod.ResponsiveDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true,
+  },
+);
+
+// ==================== 示例组件 ====================
+
+/**
+ * 表单示例 - 动态导入
+ * Form Examples - Dynamic Import
+ * 原因：表单组件集合
+ */
+export const DynamicFormExamples = dynamic(
+  () =>
+    import('../examples/form-examples').then((mod) => ({
+      default: mod.FormExamples,
+    })),
+  { 
+    loading: () => <CardSkeletonFallback />,
+    ssr: true,
+  },
+);
+
+/**
+ * 布局示例 - 动态导入
+ * Layout Examples - Dynamic Import
+ * 原因：布局组件集合
+ */
+export const DynamicLayoutExamples = dynamic(
+  () =>
+    import('../examples/layout-examples').then((mod) => ({
+      default: mod.LayoutExamples,
+    })),
+  { 
+    loading: () => <CardSkeletonFallback />,
+    ssr: true,
+  },
+);
+
+/**
+ * 动画示例 - 动态导入
+ * Animation Examples - Dynamic Import
+ * 原因：动画组件集合
+ */
+export const DynamicAnimationExamples = dynamic(
+  () =>
+    import('../examples/animation-examples').then((mod) => ({
+      default: mod.AnimationExamples,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false, // 动画示例不需要SSR
+  },
+);
+
+/**
+ * 图表示例 - 动态导入
+ * Chart Examples - Dynamic Import
+ * 原因：图表组件集合，可能较大
+ */
+export const DynamicChartExamples = dynamic(
+  () =>
+    import('../examples/chart-examples').then((mod) => ({
+      default: mod.ChartExamples,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 数据可视化示例 - 动态导入
+ * Data Visualization Examples - Dynamic Import
+ * 原因：可视化组件集合
+ */
+export const DynamicDataVisualizationExamples = dynamic(
+  () =>
+    import('../examples/data-visualization-examples').then((mod) => ({
+      default: mod.DataVisualizationExamples,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+// ==================== 教程组件 ====================
+
+/**
+ * 入门教程 - 动态导入
+ * Getting Started Tutorial - Dynamic Import
+ * 原因：教程组件，内容丰富
+ */
+export const DynamicGettingStartedTutorial = dynamic(
+  () =>
+    import('../tutorial/getting-started-tutorial').then((mod) => ({
+      default: mod.GettingStartedTutorial,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true, // 教程需要SEO
+  },
+);
+
+/**
+ * 高级教程 - 动态导入
+ * Advanced Tutorial - Dynamic Import
+ * 原因：高级教程组件
+ */
+export const DynamicAdvancedTutorial = dynamic(
+  () =>
+    import('../tutorial/advanced-tutorial').then((mod) => ({
+      default: mod.AdvancedTutorial,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true,
+  },
+);
+
+/**
+ * 最佳实践指南 - 动态导入
+ * Best Practices Guide - Dynamic Import
+ * 原因：指南组件，内容丰富
+ */
+export const DynamicBestPracticesGuide = dynamic(
+  () =>
+    import('../tutorial/best-practices-guide').then((mod) => ({
+      default: mod.BestPracticesGuide,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true,
+  },
+);
+
+// ==================== 导出所有展示组件 ====================
+
+export const ShowcaseDynamicComponents = {
+  ComponentShowcase: DynamicComponentShowcase,
+  TechStackShowcase: DynamicTechStackShowcase,
+  FeaturesShowcase: DynamicFeaturesShowcase,
+  ProjectsShowcase: DynamicProjectsShowcase,
+  TeamShowcase: DynamicTeamShowcase,
+} as const;
+
+export const DemoDynamicComponents = {
+  InteractiveDemo: DynamicInteractiveDemo,
+  CodeDemo: DynamicCodeDemo,
+  ApiDemo: DynamicApiDemo,
+  PerformanceDemo: DynamicPerformanceDemo,
+  ResponsiveDemo: DynamicResponsiveDemo,
+} as const;
+
+export const ExampleDynamicComponents = {
+  FormExamples: DynamicFormExamples,
+  LayoutExamples: DynamicLayoutExamples,
+  AnimationExamples: DynamicAnimationExamples,
+  ChartExamples: DynamicChartExamples,
+  DataVisualizationExamples: DynamicDataVisualizationExamples,
+} as const;
+
+export const TutorialDynamicComponents = {
+  GettingStartedTutorial: DynamicGettingStartedTutorial,
+  AdvancedTutorial: DynamicAdvancedTutorial,
+  BestPracticesGuide: DynamicBestPracticesGuide,
+} as const;

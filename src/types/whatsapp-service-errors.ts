@@ -1,0 +1,451 @@
+/**
+ * WhatsApp Service Error Types and Classes
+ *
+ * This module provides comprehensive error handling types and classes
+ * for WhatsApp Business API integration, including specific error types
+ * for different failure scenarios.
+ */
+
+// ==================== Base Error Class ====================
+
+/**
+ * Base WhatsApp Error Class
+ * All WhatsApp-related errors extend from this base class
+ */
+export class WhatsAppError extends Error {
+  /** HTTP status code or custom error code */
+  public readonly code: number;
+  /** Error type identifier */
+  public readonly type: string;
+  /** Additional error subcode for more specific error identification */
+  public readonly subcode?: number;
+  /** Trace ID for request tracking */
+  public readonly traceId?: string;
+  /** Timestamp when error occurred */
+  public readonly timestamp: number;
+
+  constructor(
+    message: string,
+    code: number = 500,
+    type: string = 'WhatsAppError',
+    subcode?: number,
+    traceId?: string
+  ) {
+    super(message);
+    this.name = 'WhatsAppError';
+    this.code = code;
+    this.type = type;
+    this.subcode = subcode;
+    this.traceId = traceId;
+    this.timestamp = Date.now();
+
+    // Ensure proper prototype chain for instanceof checks
+    Object.setPrototypeOf(this, WhatsAppError.prototype);
+  }
+
+  /**
+   * Convert error to JSON for logging and serialization
+   */
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      code: this.code,
+      type: this.type,
+      subcode: this.subcode,
+      traceId: this.traceId,
+      timestamp: this.timestamp,
+      stack: this.stack
+    };
+  }
+
+  /**
+   * Check if error is retryable based on error type and code
+   */
+  isRetryable(): boolean {
+    // Rate limit errors are retryable
+    if (this.code === 429) return true;
+
+    // Network errors are retryable
+    if (this.code >= 500) return true;
+
+    // Timeout errors are retryable
+    if (this.type === 'NetworkError' && this instanceof WhatsAppNetworkError) {
+      return this.isTimeout === true;
+    }
+
+    return false;
+  }
+}
+
+// ==================== Specific Error Classes ====================
+
+/**
+ * WhatsApp API Error
+ * Errors returned directly from WhatsApp Business API
+ */
+export class WhatsAppApiError extends WhatsAppError {
+  /** Original API error details */
+  public readonly apiError?: {
+    error_data?: {
+      messaging_product: string;
+      details: string;
+    };
+    error_subcode?: number;
+    fbtrace_id?: string;
+  };
+
+  constructor(
+    message: string,
+    code: number,
+    apiError?: WhatsAppApiError['apiError'],
+    traceId?: string
+  ) {
+    super(
+      message,
+      code,
+      'ApiError',
+      apiError?.error_subcode,
+      traceId || apiError?.fbtrace_id
+    );
+    this.name = 'WhatsAppApiError';
+    this.apiError = apiError;
+  }
+
+  /**
+   * Convert to JSON with API error details
+   */
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      apiError: this.apiError
+    };
+  }
+
+  /**
+   * Get detailed error message including API details
+   */
+  getDetailedMessage(): string {
+    if (this.apiError?.error_data?.details) {
+      return `${this.message}: ${this.apiError.error_data.details}`;
+    }
+    return this.message;
+  }
+}
+
+/**
+ * WhatsApp Validation Error
+ * Errors related to invalid input data or configuration
+ */
+export class WhatsAppValidationError extends WhatsAppError {
+  /** Field that failed validation */
+  public readonly field?: string;
+  /** Value that failed validation */
+  public readonly value?: unknown;
+
+  constructor(
+    message: string,
+    field?: string,
+    value?: unknown
+  ) {
+    super(message, 400, 'ValidationError');
+    this.name = 'WhatsAppValidationError';
+    this.field = field;
+    this.value = value;
+  }
+
+  /**
+   * Convert to JSON with validation details
+   */
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      field: this.field,
+      value: this.value
+    };
+  }
+
+  /**
+   * Create validation error for specific field
+   */
+  static forField(field: string, value: unknown, reason: string): WhatsAppValidationError {
+    return new WhatsAppValidationError(
+      `Validation failed for field '${field}': ${reason}`,
+      field,
+      value
+    );
+  }
+
+  /**
+   * Create validation error for required field
+   */
+  static requiredField(field: string): WhatsAppValidationError {
+    return new WhatsAppValidationError(
+      `Required field '${field}' is missing`,
+      field,
+      undefined
+    );
+  }
+}
+
+/**
+ * WhatsApp Rate Limit Error
+ * Errors related to API rate limiting
+ */
+export class WhatsAppRateLimitError extends WhatsAppError {
+  /** Seconds to wait before retrying */
+  public readonly retryAfter?: number;
+  /** Rate limit quota */
+  public readonly limit?: number;
+  /** Remaining requests in current window */
+  public readonly remaining?: number;
+
+  constructor(
+    message: string,
+    retryAfter?: number,
+    limit?: number,
+    remaining?: number
+  ) {
+    super(message, 429, 'RateLimitError');
+    this.name = 'WhatsAppRateLimitError';
+    this.retryAfter = retryAfter;
+    this.limit = limit;
+    this.remaining = remaining;
+  }
+
+  /**
+   * Convert to JSON with rate limit details
+   */
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      retryAfter: this.retryAfter,
+      limit: this.limit,
+      remaining: this.remaining
+    };
+  }
+
+  /**
+   * Get retry delay in milliseconds
+   */
+  getRetryDelay(): number {
+    return (this.retryAfter || 60) * 1000; // Default to 60 seconds
+  }
+
+  /**
+   * Check if rate limit has expired
+   */
+  canRetryNow(): boolean {
+    if (!this.retryAfter) return true;
+    return Date.now() - this.timestamp >= this.getRetryDelay();
+  }
+}
+
+/**
+ * WhatsApp Network Error
+ * Errors related to network connectivity and timeouts
+ */
+export class WhatsAppNetworkError extends WhatsAppError {
+  /** Original network error */
+  public readonly originalError?: Error;
+  /** Whether this was a timeout error */
+  public readonly isTimeout?: boolean;
+
+  constructor(
+    message: string,
+    originalError?: Error,
+    isTimeout?: boolean
+  ) {
+    super(message, 500, 'NetworkError');
+    this.name = 'WhatsAppNetworkError';
+    this.originalError = originalError;
+    this.isTimeout = isTimeout;
+  }
+
+  /**
+   * Convert to JSON with network error details
+   */
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      originalError: this.originalError?.message,
+      isTimeout: this.isTimeout
+    };
+  }
+
+  /**
+   * Create timeout error
+   */
+  static timeout(timeoutMs: number): WhatsAppNetworkError {
+    return new WhatsAppNetworkError(
+      `Request timed out after ${timeoutMs}ms`,
+      undefined,
+      true
+    );
+  }
+
+  /**
+   * Create connection error
+   */
+  static connection(originalError: Error): WhatsAppNetworkError {
+    return new WhatsAppNetworkError(
+      `Network connection failed: ${originalError.message}`,
+      originalError,
+      false
+    );
+  }
+}
+
+/**
+ * WhatsApp Authentication Error
+ * Errors related to authentication and authorization
+ */
+export class WhatsAppAuthError extends WhatsAppError {
+  /** Whether the token has expired */
+  public readonly tokenExpired?: boolean;
+  /** Whether the token is invalid */
+  public readonly tokenInvalid?: boolean;
+
+  constructor(
+    message: string,
+    tokenExpired?: boolean,
+    tokenInvalid?: boolean
+  ) {
+    super(message, 401, 'AuthError');
+    this.name = 'WhatsAppAuthError';
+    this.tokenExpired = tokenExpired;
+    this.tokenInvalid = tokenInvalid;
+  }
+
+  /**
+   * Convert to JSON with auth details
+   */
+  toJSON() {
+    return {
+      ...super.toJSON(),
+      tokenExpired: this.tokenExpired,
+      tokenInvalid: this.tokenInvalid
+    };
+  }
+
+  /**
+   * Create expired token error
+   */
+  static expiredToken(): WhatsAppAuthError {
+    return new WhatsAppAuthError(
+      'Access token has expired',
+      true,
+      false
+    );
+  }
+
+  /**
+   * Create invalid token error
+   */
+  static invalidToken(): WhatsAppAuthError {
+    return new WhatsAppAuthError(
+      'Access token is invalid',
+      false,
+      true
+    );
+  }
+}
+
+// ==================== Error Type Guards ====================
+
+/**
+ * Check if error is a WhatsApp error
+ */
+export function isWhatsAppError(error: unknown): error is WhatsAppError {
+  return error instanceof WhatsAppError;
+}
+
+/**
+ * Check if error is a WhatsApp API error
+ */
+export function isWhatsAppApiError(error: unknown): error is WhatsAppApiError {
+  return error instanceof WhatsAppApiError;
+}
+
+/**
+ * Check if error is a WhatsApp validation error
+ */
+export function isWhatsAppValidationError(error: unknown): error is WhatsAppValidationError {
+  return error instanceof WhatsAppValidationError;
+}
+
+/**
+ * Check if error is a WhatsApp rate limit error
+ */
+export function isWhatsAppRateLimitError(error: unknown): error is WhatsAppRateLimitError {
+  return error instanceof WhatsAppRateLimitError;
+}
+
+/**
+ * Check if error is a WhatsApp network error
+ */
+export function isWhatsAppNetworkError(error: unknown): error is WhatsAppNetworkError {
+  return error instanceof WhatsAppNetworkError;
+}
+
+/**
+ * Check if error is a WhatsApp authentication error
+ */
+export function isWhatsAppAuthError(error: unknown): error is WhatsAppAuthError {
+  return error instanceof WhatsAppAuthError;
+}
+
+// ==================== Error Utilities ====================
+
+/**
+ * Create error from API response
+ */
+export function createErrorFromApiResponse(
+  response: { status: number; data?: Record<string, unknown> },
+  traceId?: string
+): WhatsAppError {
+  const { status, data } = response;
+
+  if (status === 401) {
+    return WhatsAppAuthError.invalidToken();
+  }
+
+  if (status === 429) {
+    const retryAfter = data?.error?.retry_after;
+    return new WhatsAppRateLimitError(
+      'Rate limit exceeded',
+      retryAfter
+    );
+  }
+
+  if (data?.error) {
+    return new WhatsAppApiError(
+      data.error.message || 'API Error',
+      status,
+      data.error,
+      traceId
+    );
+  }
+
+  return new WhatsAppError(
+    `HTTP ${status} Error`,
+    status,
+    'HttpError',
+    undefined,
+    traceId
+  );
+}
+
+/**
+ * Get error severity level
+ */
+export function getErrorSeverity(error: WhatsAppError): 'low' | 'medium' | 'high' | 'critical' {
+  if (error instanceof WhatsAppAuthError) return 'critical';
+  if (error instanceof WhatsAppValidationError) return 'medium';
+  if (error instanceof WhatsAppRateLimitError) return 'medium';
+  if (error instanceof WhatsAppNetworkError) return error.isTimeout ? 'medium' : 'high';
+  if (error instanceof WhatsAppApiError) {
+    return error.code >= 500 ? 'high' : 'medium';
+  }
+  return 'medium';
+}

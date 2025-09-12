@@ -318,7 +318,7 @@ describe('app-constants', () => {
     it('should be readonly', () => {
       expect(() => {
         // @ts-expect-error - Testing readonly property
-        APP_CONSTANTS.TIME = {} as any;
+        APP_CONSTANTS.TIME = {} as unknown;
       }).toThrow();
     });
   });

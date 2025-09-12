@@ -27,6 +27,19 @@ export const env = createEnv({
     // Bot Protection (Cloudflare Turnstile)
     TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
 
+    // AI Translation Service (Lingo.dev)
+    LINGO_DEV_API_KEY: z.string().min(1).optional(),
+    OPENAI_API_KEY: z.string().min(1).optional(),
+    GROQ_API_KEY: z.string().min(1).optional(),
+    GOOGLE_API_KEY: z.string().min(1).optional(),
+    MISTRAL_API_KEY: z.string().min(1).optional(),
+
+    // WhatsApp Business API
+    WHATSAPP_ACCESS_TOKEN: z.string().min(1).optional(),
+    WHATSAPP_PHONE_NUMBER_ID: z.string().min(1).optional(),
+    WHATSAPP_BUSINESS_ACCOUNT_ID: z.string().min(1).optional(),
+    WHATSAPP_WEBHOOK_VERIFY_TOKEN: z.string().min(1).optional(),
+
     // Monitoring & Analytics
     SENTRY_DSN: z.string().url().optional(),
     SENTRY_ORG: z.string().optional(),
@@ -125,6 +138,15 @@ export const env = createEnv({
     EMAIL_FROM: process.env.EMAIL_FROM,
     EMAIL_REPLY_TO: process.env.EMAIL_REPLY_TO,
     TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    LINGO_DEV_API_KEY: process.env.LINGO_DEV_API_KEY,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    GROQ_API_KEY: process.env.GROQ_API_KEY,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+    MISTRAL_API_KEY: process.env.MISTRAL_API_KEY,
+    WHATSAPP_ACCESS_TOKEN: process.env.WHATSAPP_ACCESS_TOKEN,
+    WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID,
+    WHATSAPP_BUSINESS_ACCOUNT_ID: process.env.WHATSAPP_BUSINESS_ACCOUNT_ID,
+    WHATSAPP_WEBHOOK_VERIFY_TOKEN: process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN,
     SENTRY_DSN: process.env.SENTRY_DSN,
     SENTRY_ORG: process.env.SENTRY_ORG,
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,

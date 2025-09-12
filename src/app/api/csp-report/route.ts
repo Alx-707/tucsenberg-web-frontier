@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+;
 import type { CSPReport } from '@/config/security';
 import { env } from '../../../../env.mjs';
+import { logger } from '@/lib/logger';
 
 /**
  * CSP Report endpoint
@@ -62,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     // Log the violation
     const JSON_INDENT = 2;
-    console.warn(
+    logger.warn(
       'CSP Violation Report:',
       JSON.stringify(violationData, null, JSON_INDENT),
     );
@@ -72,8 +74,8 @@ export async function POST(request: NextRequest) {
       // Example: Send to Sentry, DataDog, or other monitoring service
       // await sendToMonitoringService(violationData);
 
-      // For now, we'll just log it
-      console.error('Production CSP Violation:', violationData);
+      // For now, log through our logger (silent in production)
+      logger.error('Production CSP Violation:', violationData);
     }
 
     // Check for common violation patterns that might indicate attacks
@@ -93,7 +95,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (isSuspicious) {
-      console.error('SUSPICIOUS CSP VIOLATION DETECTED:', violationData);
+      logger.error('SUSPICIOUS CSP VIOLATION DETECTED:', violationData);
 
       // In production, you might want to trigger additional security measures
       // such as rate limiting, IP blocking, or alerting
@@ -108,7 +110,7 @@ export async function POST(request: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error('Error processing CSP report:', error);
+    logger.error('Error processing CSP report:', error as unknown);
 
     return NextResponse.json(
       { error: 'Internal server error' },

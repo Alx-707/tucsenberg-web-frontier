@@ -1,0 +1,329 @@
+'use client';
+
+/**
+ * 国际化动态导入组件
+ * 
+ * i18n相关组件、翻译工具、语言检测等的动态导入
+ */
+import dynamic from 'next/dynamic';
+import { 
+  ComponentLoadingFallback,
+  PERFORMANCE_CONFIG,
+  
+} from './dynamic-imports-base';
+
+// ==================== 国际化核心组件 ====================
+
+/**
+ * 国际化性能仪表板 - 动态导入
+ * I18n Performance Dashboard - Dynamic Import
+ * 原因：开发环境组件，非关键，6.39KB
+ */
+export const DynamicI18nPerformanceDashboard = dynamic(
+  () =>
+    import('../i18n/performance-dashboard').then((mod) => ({
+      default: mod.I18nPerformanceDashboard,
+    })),
+  { loading: () => <ComponentLoadingFallback />, ssr: false },
+);
+
+/**
+ * 语言检测演示 - 动态导入
+ * Locale Detection Demo - Dynamic Import
+ * 原因：演示组件，非关键，6.64KB
+ */
+export const DynamicLocaleDetectionDemo = dynamic(
+  () =>
+    import('../i18n/locale-detection-demo').then((mod) => ({
+      default: mod.LocaleDetectionDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 翻译预加载器 - 动态导入
+ * Translation Preloader - Dynamic Import
+ * 原因：性能优化组件，6.92KB
+ */
+export const DynamicTranslationPreloader = dynamic(
+  () =>
+    import('../i18n/translation-preloader').then((mod) => ({
+      default: mod.TranslationPreloader,
+    })),
+  { 
+    loading: () => null, // 预加载器不显示加载状态
+    ssr: false,
+  },
+);
+
+/**
+ * 语言切换器 - 动态导入
+ * Language Switcher - Dynamic Import
+ * 原因：交互组件，可能较大
+ */
+export const DynamicLanguageSwitcher = dynamic(
+  () =>
+    import('../i18n/language-switcher').then((mod) => ({
+      default: mod.LanguageSwitcher,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: true, // 语言切换器需要SEO支持
+  },
+);
+
+/**
+ * 翻译编辑器 - 动态导入
+ * Translation Editor - Dynamic Import
+ * 原因：管理工具，复杂组件
+ */
+export const DynamicTranslationEditor = dynamic(
+  () =>
+    import('../i18n/translation-editor').then((mod) => ({
+      default: mod.TranslationEditor,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 翻译验证器 - 动态导入
+ * Translation Validator - Dynamic Import
+ * 原因：开发工具，质量检查
+ */
+export const DynamicTranslationValidator = dynamic(
+  () =>
+    import('../i18n/translation-validator').then((mod) => ({
+      default: mod.TranslationValidator,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+// ==================== 语言检测组件 ====================
+
+/**
+ * 智能语言检测器 - 动态导入
+ * Smart Locale Detector - Dynamic Import
+ * 原因：检测逻辑组件
+ */
+export const DynamicSmartLocaleDetector = dynamic(
+  () =>
+    import('../i18n/smart-locale-detector').then((mod) => ({
+      default: mod.SmartLocaleDetector,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 地理位置语言检测 - 动态导入
+ * Geo Locale Detector - Dynamic Import
+ * 原因：地理位置API依赖
+ */
+export const DynamicGeoLocaleDetector = dynamic(
+  () =>
+    import('../i18n/geo-locale-detector').then((mod) => ({
+      default: mod.GeoLocaleDetector,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 浏览器语言检测 - 动态导入
+ * Browser Locale Detector - Dynamic Import
+ * 原因：浏览器API依赖
+ */
+export const DynamicBrowserLocaleDetector = dynamic(
+  () =>
+    import('../i18n/browser-locale-detector').then((mod) => ({
+      default: mod.BrowserLocaleDetector,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+// ==================== 翻译工具组件 ====================
+
+/**
+ * 翻译缓存管理器 - 动态导入
+ * Translation Cache Manager - Dynamic Import
+ * 原因：缓存管理工具
+ */
+export const DynamicTranslationCacheManager = dynamic(
+  () =>
+    import('../i18n/translation-cache-manager').then((mod) => ({
+      default: mod.TranslationCacheManager,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 翻译统计分析 - 动态导入
+ * Translation Analytics - Dynamic Import
+ * 原因：分析工具组件
+ */
+export const DynamicTranslationAnalytics = dynamic(
+  () =>
+    import('../i18n/translation-analytics').then((mod) => ({
+      default: mod.TranslationAnalytics,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 翻译质量检查器 - 动态导入
+ * Translation Quality Checker - Dynamic Import
+ * 原因：质量检查工具
+ */
+export const DynamicTranslationQualityChecker = dynamic(
+  () =>
+    import('../i18n/translation-quality-checker').then((mod) => ({
+      default: mod.TranslationQualityChecker,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 翻译导入导出工具 - 动态导入
+ * Translation Import Export Tool - Dynamic Import
+ * 原因：管理工具
+ */
+export const DynamicTranslationImportExport = dynamic(
+  () =>
+    import('../i18n/translation-import-export').then((mod) => ({
+      default: mod.TranslationImportExport,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+// ==================== 国际化UI组件 ====================
+
+/**
+ * 多语言文本组件 - 动态导入
+ * Multilingual Text - Dynamic Import
+ * 原因：文本渲染组件
+ */
+export const DynamicMultilingualText = dynamic(
+  () =>
+    import('../i18n/multilingual-text').then((mod) => ({
+      default: mod.MultilingualText,
+    })),
+  { 
+    loading: () => null,
+    ssr: true,
+  },
+);
+
+/**
+ * 语言特定格式化器 - 动态导入
+ * Locale Specific Formatter - Dynamic Import
+ * 原因：格式化工具组件
+ */
+export const DynamicLocaleFormatter = dynamic(
+  () =>
+    import('../i18n/locale-formatter').then((mod) => ({
+      default: mod.LocaleFormatter,
+    })),
+  { 
+    loading: () => null,
+    ssr: true,
+  },
+);
+
+/**
+ * 日期时间本地化 - 动态导入
+ * DateTime Localization - Dynamic Import
+ * 原因：日期时间格式化
+ */
+export const DynamicDateTimeLocalizer = dynamic(
+  () =>
+    import('../i18n/datetime-localizer').then((mod) => ({
+      default: mod.DateTimeLocalizer,
+    })),
+  { 
+    loading: () => null,
+    ssr: true,
+  },
+);
+
+/**
+ * 数字本地化 - 动态导入
+ * Number Localization - Dynamic Import
+ * 原因：数字格式化
+ */
+export const DynamicNumberLocalizer = dynamic(
+  () =>
+    import('../i18n/number-localizer').then((mod) => ({
+      default: mod.NumberLocalizer,
+    })),
+  { 
+    loading: () => null,
+    ssr: true,
+  },
+);
+
+/**
+ * 货币本地化 - 动态导入
+ * Currency Localization - Dynamic Import
+ * 原因：货币格式化
+ */
+export const DynamicCurrencyLocalizer = dynamic(
+  () =>
+    import('../i18n/currency-localizer').then((mod) => ({
+      default: mod.CurrencyLocalizer,
+    })),
+  { 
+    loading: () => null,
+    ssr: true,
+  },
+);
+
+// ==================== 导出所有国际化组件 ====================
+
+export const I18nDynamicComponents = {
+  PerformanceDashboard: DynamicI18nPerformanceDashboard,
+  LocaleDetectionDemo: DynamicLocaleDetectionDemo,
+  TranslationPreloader: DynamicTranslationPreloader,
+  LanguageSwitcher: DynamicLanguageSwitcher,
+  TranslationEditor: DynamicTranslationEditor,
+  TranslationValidator: DynamicTranslationValidator,
+  SmartLocaleDetector: DynamicSmartLocaleDetector,
+  GeoLocaleDetector: DynamicGeoLocaleDetector,
+  BrowserLocaleDetector: DynamicBrowserLocaleDetector,
+  TranslationCacheManager: DynamicTranslationCacheManager,
+  TranslationAnalytics: DynamicTranslationAnalytics,
+  TranslationQualityChecker: DynamicTranslationQualityChecker,
+  TranslationImportExport: DynamicTranslationImportExport,
+  MultilingualText: DynamicMultilingualText,
+  LocaleFormatter: DynamicLocaleFormatter,
+  DateTimeLocalizer: DynamicDateTimeLocalizer,
+  NumberLocalizer: DynamicNumberLocalizer,
+  CurrencyLocalizer: DynamicCurrencyLocalizer,
+} as const;

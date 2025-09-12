@@ -343,8 +343,8 @@ describe('EnhancedWebVitalsCollector', () => {
         },
       ];
 
-      (mockPerformance.getEntriesByType as any).mockImplementation(
-        (type: any) => {
+      (mockPerformance.getEntriesByType as unknown).mockImplementation(
+        (type: unknown) => {
           if (type === 'resource') {
             return mockResourceEntries;
           }
@@ -374,8 +374,8 @@ describe('EnhancedWebVitalsCollector', () => {
         initiatorType: 'img',
       }));
 
-      (mockPerformance.getEntriesByType as any).mockImplementation(
-        (type: any) => {
+      (mockPerformance.getEntriesByType as unknown).mockImplementation(
+        (type: unknown) => {
           if (type === 'resource') {
             return manySlowResources;
           }
@@ -393,8 +393,8 @@ describe('EnhancedWebVitalsCollector', () => {
     });
 
     it('should handle missing resource entries', () => {
-      (mockPerformance.getEntriesByType as any).mockImplementation(
-        (type: any) => {
+      (mockPerformance.getEntriesByType as unknown).mockImplementation(
+        (type: unknown) => {
           if (type === 'resource') {
             return [];
           }
@@ -467,7 +467,7 @@ describe('EnhancedWebVitalsCollector', () => {
         domContentLoaded: 1500,
         loadComplete: 2000,
         firstPaint: 1200,
-      } as any);
+      } as unknown);
 
       const report = collector.generateDiagnosticReport();
 
@@ -510,7 +510,7 @@ describe('EnhancedWebVitalsCollector', () => {
           timestamp: Date.now(),
         },
         slowResources: [],
-      } as any);
+      } as unknown);
 
       const report = collector.generateDiagnosticReport();
 
@@ -593,7 +593,7 @@ describe('EnhancedWebVitalsCollector', () => {
 
   describe('边缘情况处理', () => {
     it('should handle null performance entries', () => {
-      mockPerformance.getEntriesByType.mockReturnValue(null as any);
+      mockPerformance.getEntriesByType.mockReturnValue(null as unknown);
 
       expect(() => {
         collector.getDetailedMetrics();

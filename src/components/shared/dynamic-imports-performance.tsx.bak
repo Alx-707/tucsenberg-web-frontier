@@ -1,0 +1,279 @@
+'use client';
+
+/**
+ * 性能监控动态导入组件
+ * 
+ * 性能监控、Web Vitals、主题性能等相关组件的动态导入
+ */
+import dynamic from 'next/dynamic';
+import { 
+  ComponentLoadingFallback,
+  PERFORMANCE_CONFIG,
+  
+  withConditionalDynamic,
+  isDevelopment 
+} from './dynamic-imports-base';
+
+// ==================== 性能监控组件 ====================
+
+/**
+ * Web Vitals 指示器 - 动态导入
+ * Web Vitals Indicator - Dynamic Import
+ * 原因：性能监控组件，非关键，7.08KB
+ */
+export const DynamicWebVitalsIndicator = dynamic(
+  () =>
+    import('../performance/web-vitals-indicator').then((mod) => ({
+      default: mod.WebVitalsIndicator,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false, // 性能监控组件不需要SSR
+  },
+);
+
+/**
+ * 主题性能监控 - 动态导入
+ * Theme Performance Monitor - Dynamic Import
+ * 原因：开发环境组件，非关键，2.62KB
+ */
+export const DynamicThemePerformanceMonitor = dynamic(
+  () =>
+    import('../theme/theme-performance-monitor').then((mod) => ({
+      default: mod.ThemePerformanceMonitor,
+    })),
+  { 
+    loading: () => null, // 监控组件不显示加载状态
+    ssr: false,
+  },
+);
+
+/**
+ * 性能仪表板 - 动态导入
+ * Performance Dashboard - Dynamic Import
+ * 原因：复杂监控组件，开发环境使用
+ */
+export const DynamicPerformanceDashboard = dynamic(
+  () =>
+    import('../performance/performance-dashboard').then((mod) => ({
+      default: mod.PerformanceDashboard,
+    })),
+  { loading: () => <ComponentLoadingFallback />, ssr: false },
+);
+
+/**
+ * 内存使用监控 - 动态导入
+ * Memory Usage Monitor - Dynamic Import
+ * 原因：开发工具，性能监控
+ */
+export const DynamicMemoryMonitor = dynamic(
+  () =>
+    import('../performance/memory-monitor').then((mod) => ({
+      default: mod.MemoryMonitor,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 渲染性能监控 - 动态导入
+ * Render Performance Monitor - Dynamic Import
+ * 原因：开发工具，性能分析
+ */
+export const DynamicRenderMonitor = dynamic(
+  () =>
+    import('../performance/render-monitor').then((mod) => ({
+      default: mod.RenderMonitor,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 网络性能监控 - 动态导入
+ * Network Performance Monitor - Dynamic Import
+ * 原因：性能监控组件
+ */
+export const DynamicNetworkMonitor = dynamic(
+  () =>
+    import('../performance/network-monitor').then((mod) => ({
+      default: mod.NetworkMonitor,
+    })),
+  { loading: () => <ComponentLoadingFallback />, ssr: false },
+);
+
+/**
+ * 包大小分析器 - 动态导入
+ * Bundle Size Analyzer - Dynamic Import
+ * 原因：开发工具，分析组件
+ */
+export const DynamicBundleAnalyzer = dynamic(
+  () =>
+    import('../performance/bundle-analyzer').then((mod) => ({
+      default: mod.BundleAnalyzer,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 性能指标收集器 - 动态导入
+ * Performance Metrics Collector - Dynamic Import
+ * 原因：后台监控组件
+ */
+export const DynamicMetricsCollector = dynamic(
+  () =>
+    import('../performance/metrics-collector').then((mod) => ({
+      default: mod.MetricsCollector,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 性能警报系统 - 动态导入
+ * Performance Alert System - Dynamic Import
+ * 原因：监控组件，按需加载
+ */
+export const DynamicPerformanceAlerts = dynamic(
+  () =>
+    import('../performance/performance-alerts').then((mod) => ({
+      default: mod.PerformanceAlerts,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+/**
+ * 性能报告生成器 - 动态导入
+ * Performance Report Generator - Dynamic Import
+ * 原因：工具组件，按需加载
+ */
+export const DynamicPerformanceReporter = dynamic(
+  () =>
+    import('../performance/performance-reporter').then((mod) => ({
+      default: mod.PerformanceReporter,
+    })),
+  { loading: () => <ComponentLoadingFallback />, ssr: false },
+);
+
+// ==================== 开发环境专用性能组件 ====================
+
+/**
+ * 开发环境性能监控组件
+ * Development Performance Monitor
+ * 只在开发环境加载
+ */
+export const DevelopmentPerformanceMonitor = withConditionalDynamic(
+  DynamicPerformanceDashboard,
+  isDevelopment,
+);
+
+/**
+ * 开发环境Web Vitals指示器
+ * Development Web Vitals Indicator
+ * 只在开发环境加载
+ */
+export const DevelopmentWebVitalsIndicator = withConditionalDynamic(
+  DynamicWebVitalsIndicator,
+  isDevelopment,
+);
+
+/**
+ * 开发环境主题性能监控
+ * Development Theme Performance Monitor
+ * 只在开发环境加载
+ */
+export const DevelopmentThemeMonitor = withConditionalDynamic(
+  DynamicThemePerformanceMonitor,
+  isDevelopment,
+);
+
+/**
+ * 开发环境内存监控
+ * Development Memory Monitor
+ * 只在开发环境加载
+ */
+export const DevelopmentMemoryMonitor = withConditionalDynamic(
+  DynamicMemoryMonitor,
+  isDevelopment,
+);
+
+/**
+ * 开发环境渲染监控
+ * Development Render Monitor
+ * 只在开发环境加载
+ */
+export const DevelopmentRenderMonitor = withConditionalDynamic(
+  DynamicRenderMonitor,
+  isDevelopment,
+);
+
+// ==================== 性能监控组合组件 ====================
+
+/**
+ * 完整性能监控套件 - 动态导入
+ * Complete Performance Monitoring Suite - Dynamic Import
+ * 包含所有性能监控组件
+ */
+export const DynamicPerformanceMonitoringSuite = dynamic(
+  () =>
+    import('../performance/monitoring-suite').then((mod) => ({
+      default: mod.PerformanceMonitoringSuite,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 轻量级性能监控 - 动态导入
+ * Lightweight Performance Monitor - Dynamic Import
+ * 精简版性能监控
+ */
+export const DynamicLightweightMonitor = dynamic(
+  () =>
+    import('../performance/lightweight-monitor').then((mod) => ({
+      default: mod.LightweightMonitor,
+    })),
+  { 
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+// ==================== 导出所有性能监控组件 ====================
+
+export const PerformanceDynamicComponents = {
+  WebVitalsIndicator: DynamicWebVitalsIndicator,
+  ThemePerformanceMonitor: DynamicThemePerformanceMonitor,
+  PerformanceDashboard: DynamicPerformanceDashboard,
+  MemoryMonitor: DynamicMemoryMonitor,
+  RenderMonitor: DynamicRenderMonitor,
+  NetworkMonitor: DynamicNetworkMonitor,
+  BundleAnalyzer: DynamicBundleAnalyzer,
+  MetricsCollector: DynamicMetricsCollector,
+  PerformanceAlerts: DynamicPerformanceAlerts,
+  PerformanceReporter: DynamicPerformanceReporter,
+  PerformanceMonitoringSuite: DynamicPerformanceMonitoringSuite,
+  LightweightMonitor: DynamicLightweightMonitor,
+} as const;
+
+export const DevelopmentPerformanceComponents = {
+  PerformanceMonitor: DevelopmentPerformanceMonitor,
+  WebVitalsIndicator: DevelopmentWebVitalsIndicator,
+  ThemeMonitor: DevelopmentThemeMonitor,
+  MemoryMonitor: DevelopmentMemoryMonitor,
+  RenderMonitor: DevelopmentRenderMonitor,
+} as const;

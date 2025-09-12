@@ -1,6 +1,6 @@
 'use client';
 
-/* eslint-disable max-lines-per-function, @typescript-eslint/no-explicit-any, no-unused-vars, security/detect-object-injection, no-undef, no-shadow */
+/* eslint-disable max-lines-per-function, no-unused-vars, security/detect-object-injection, no-undef, no-shadow */
 import { useCallback, useMemo } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
@@ -40,7 +40,7 @@ export function useEnhancedTranslations(
 
   // 增强的翻译函数
   const enhancedT = useCallback(
-    (key: string, values?: Record<string, any>) => {
+    (key: string, values?: Record<string, string | number | boolean | Record<string, unknown> | unknown[]>) => {
       const startTime = performance.now();
 
       try {
@@ -72,7 +72,7 @@ export function useEnhancedTranslations(
 
   // 批量翻译函数
   const batchT = useCallback(
-    (keys: string[], values?: Record<string, any>) => {
+    (keys: string[], values?: Record<string, string | number | boolean | Record<string, unknown> | unknown[]>) => {
       return keys.reduce(
         (acc, key) => {
           acc[key] = enhancedT(key, values);
@@ -90,7 +90,7 @@ export function useEnhancedTranslations(
       condition: boolean,
       trueKey: string,
       falseKey: string,
-      values?: Record<string, any>,
+      values?: Record<string, string | number | boolean | Record<string, unknown> | unknown[]>,
     ) => {
       return enhancedT(condition ? trueKey : falseKey, values);
     },

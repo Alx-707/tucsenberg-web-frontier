@@ -14,7 +14,12 @@ vi.mock('next-intl/server', () => ({
 
 // Mock UnderConstruction组件
 vi.mock('@/components/shared/under-construction', () => ({
-  UnderConstruction: ({ pageType, currentStep, expectedDate, showProgress }: any) => (
+  UnderConstruction: ({ pageType, currentStep, expectedDate, showProgress }: {
+    pageType: string;
+    currentStep: number;
+    expectedDate: string;
+    showProgress: boolean;
+  }) => (
     <div data-testid="under-construction">
       <div data-testid="page-type">{pageType}</div>
       <div data-testid="current-step">{currentStep}</div>
@@ -222,7 +227,7 @@ describe('AboutPage', () => {
       const startTime = performance.now();
       render(<AboutPage />);
       const endTime = performance.now();
-      
+
       // 渲染时间应该小于100ms
       expect(endTime - startTime).toBeLessThan(100);
     });
@@ -231,7 +236,7 @@ describe('AboutPage', () => {
   describe('可访问性测试', () => {
     it('应该渲染可访问的内容', () => {
       render(<AboutPage />);
-      
+
       // 验证组件存在且可访问
       const component = screen.getByTestId('under-construction');
       expect(component).toBeInTheDocument();

@@ -1,11 +1,11 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import reactYouMightNotNeedAnEffect from 'eslint-plugin-react-you-might-not-need-an-effect';
 import security from 'eslint-plugin-security';
 import securityNode from 'eslint-plugin-security-node';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -121,33 +121,51 @@ export default [
     },
   },
 
-  // Code complexity and quality rules (最严格企业级标准)
+  // 超严格质量保障配置 - 零妥协标准
   {
-    name: 'code-quality-config',
+    name: 'ultra-strict-quality-config',
     files: ['**/*.{js,jsx,ts,tsx}'],
     rules: {
-      // Complexity rules (平衡质量与效率)
-      'complexity': ['error', 15], // 从10调整为15，平衡AI友好性
-      'max-depth': ['error', 4], // 保持4层，合理的嵌套深度
-      'max-lines-per-function': ['error', 120], // 从80调整为120，适应完整业务逻辑
-      'max-params': ['error', 5], // 保持5个参数，合理限制
-      'max-nested-callbacks': ['error', 3], // 降低到3层，更严格
-      'max-lines': ['error', 500], // 文件最大行数
-      'max-statements': ['error', 30], // 函数最大语句数
+      // 🔒 复杂度控制：企业级标准
+      'complexity': ['error', 15], // 企业级标准：复杂度限制15
+      'max-depth': ['error', 3], // 降低到3层，强制扁平化
+      'max-lines-per-function': [
+        'error',
+        { max: 120, skipBlankLines: true, skipComments: true },
+      ], // 企业级标准：函数长度限制120行（跳过空行与注释）
+      'max-params': ['error', 3], // 降低到3个参数，强制对象传参
+      'max-nested-callbacks': ['error', 2], // 降低到2层，强制Promise/async
+      'max-lines': [
+        'error',
+        { max: 500, skipBlankLines: true, skipComments: true },
+      ], // 调整到500行并跳过空行与注释
+      'max-statements': ['error', 20], // 降低到20个语句，强制逻辑简化
       'max-statements-per-line': ['error', { max: 1 }], // 每行最大语句数
 
-      // Code quality rules (最严格)
-      'no-console': ['error', { allow: ['error', 'warn'] }], // 仅允许error和warn级别
+      // 🔒 代码质量规则：零容忍标准
+      'no-console': 'error', // 完全禁止console，强制使用logger
       'no-debugger': 'error',
       'no-alert': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
       'no-duplicate-imports': 'error',
       'no-unused-expressions': 'error',
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       'no-undef': 'error',
       'no-unreachable': 'error',
       'no-unreachable-loop': 'error',
+
+      // 🔒 新增严格规则：强制代码质量
+      'no-empty': 'error', // 禁止空代码块
+      'no-empty-function': 'error', // 禁止空函数
+      'no-implicit-coercion': 'error', // 禁止隐式类型转换
+      'no-magic-numbers': ['error', {
+        ignore: [0, 1, -1], // 仅允许最基本的数字
+        ignoreArrayIndexes: false, // 数组索引也要常量化
+        ignoreDefaultValues: false, // 默认值也要常量化
+        enforceConst: true,
+        detectObjects: true, // 检测对象中的魔法数字
+      }],
 
       // Best practices (最严格)
       'eqeqeq': ['error', 'always'],
@@ -232,7 +250,13 @@ export default [
       'no-unneeded-ternary': 'error',
       'no-unused-private-class-members': 'error',
       'prefer-arrow-callback': 'error',
-      'prefer-destructuring': 'error',
+      'prefer-destructuring': [
+        'error',
+        {
+          array: false, // 允许数组索引访问，如 arr[0]
+          object: true, // 仍然要求对象解构
+        },
+      ],
       'prefer-exponentiation-operator': 'error',
       'prefer-object-spread': 'error',
       'prefer-rest-params': 'error',
@@ -242,7 +266,7 @@ export default [
       // TypeScript specific rules
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { argsIgnorePattern: '^_' },
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
 
       // 🔴 全TypeScript项目：严格禁止any类型
@@ -253,50 +277,39 @@ export default [
     },
   },
 
-  // Relaxed rules for i18n files
+  // 精简的i18n文件配置 - 仅豁免必要规则
   {
     name: 'i18n-overrides',
     files: [
       'src/lib/i18n-*.ts',
-      'src/lib/translation-quality.ts',
-      'src/lib/locale-detection.ts',
-      'src/lib/locale-storage.ts',
-      'src/lib/translation-manager.ts',
-      'src/lib/translation-validators.ts',
-      'src/lib/translation-benchmarks.ts',
+      'src/lib/translation-*.ts',
+      'src/lib/locale-*.ts',
       'src/components/i18n/*.tsx',
       'src/types/i18n.ts',
       'src/components/language-toggle.tsx',
     ],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      'no-unused-vars': 'off',
-      'complexity': 'off',
-      'max-nested-callbacks': 'off',
-      'max-lines-per-function': 'off',
-      'no-magic-numbers': 'off',
-      'react/display-name': 'off',
-      'no-console': 'off',
-      'security/detect-non-literal-regexp': 'off',
-      'security-node/non-literal-reg-expr': 'off',
-      'security-node/detect-insecure-randomness': 'off',
-      'no-shadow': 'off',
-      'no-undef': 'off',
-      'no-plusplus': 'off',
-      'security/detect-object-injection': 'off',
-      'max-params': 'off',
-      'max-nested-callbacks': 'off',
-      'require-await': 'off',
-      'dot-notation': 'off',
-      'default-case': 'off',
-      'no-implicit-coercion': 'off',
+      // 仅豁免i18n特定的必要规则
+      'no-magic-numbers': 'off', // i18n配置中的数字常量
+      'max-lines-per-function': [
+        'warn',
+        { max: 200, skipBlankLines: true, skipComments: true },
+      ], // i18n函数可能较长（跳过空行与注释）
+      'complexity': ['warn', 20], // i18n逻辑可能复杂
+      'security/detect-object-injection': 'error', // i18n动态键访问，统一为error级别
+      'dot-notation': 'off', // i18n键名可能包含特殊字符
+      'no-console': ['warn', { allow: ['warn', 'error'] }], // 允许i18n调试
+
+      // 保持严格的类型安全和基本规则
+      '@typescript-eslint/no-explicit-any': 'error', // 恢复严格类型检查
+      'no-undef': 'error', // 恢复未定义变量检查
+      'security/detect-non-literal-regexp': 'error', // 恢复安全检查
     },
   },
 
-  // Vitest test files configuration with relaxed rules
+  // 渐进式统一严格标准 - 测试文件适度豁免
   {
-    name: 'vitest-config',
+    name: 'progressive-unified-test-config',
     files: [
       '**/*.test.{js,jsx,ts,tsx}',
       '**/__tests__/**/*.{js,jsx,ts,tsx}',
@@ -319,50 +332,56 @@ export default [
       },
     },
     rules: {
-      // 测试文件特殊规则 - 适当放宽但保持质量
+      // 🎯 渐进式标准：测试文件保持合理限制
+      'max-lines-per-function': [
+        'warn',
+        { max: 600, skipBlankLines: true, skipComments: true },
+      ], // 调整为600行并跳过空行与注释，适应大型测试describe块
+      'complexity': ['warn', 20], // 从25降到20，保持测试逻辑清晰
+      'max-nested-callbacks': ['warn', 6], // 从8降到6，控制嵌套深度
+      'max-lines': [
+        'warn',
+        { max: 800, skipBlankLines: true, skipComments: true },
+      ], // 从1200降到800，并跳过空行与注释
+      'max-statements': ['warn', 50], // 从80降到50，鼓励测试分解
+      'max-params': ['warn', 8], // 从10降到8，合理参数数量
 
-      // 函数长度和复杂度 - 测试文件可以更长更复杂
-      'max-lines-per-function': ['error', 1000], // 从800调整为1000行（大型测试套件）
-      'complexity': ['error', 20], // 从10放宽到20
-      'max-nested-callbacks': ['error', 6], // 从3放宽到6层（describe/it嵌套）
-      'max-lines': ['error', 1000], // 从500放宽到1000行
-      'max-statements': ['error', 60], // 从30放宽到60个语句
+      // 测试文件必要的特殊模式（保持不变）
+      'no-magic-numbers': 'off', // 测试数据需要具体数值
+      'no-plusplus': 'off', // 循环计数器在测试中常见
+      'prefer-arrow-callback': 'off', // function表达式在测试中更清晰
+      'no-unused-expressions': 'off', // expect().toBe() 断言语句
+      'no-empty-function': 'off', // 空mock函数是合理的
+      'prefer-destructuring': 'off', // 测试中直接属性访问更直观
+      'no-new': 'off', // mock对象创建需要
+      'require-await': 'off', // async测试模式
+      'no-throw-literal': 'off', // 测试异常抛出
+      'no-underscore-dangle': 'off', // 私有属性测试访问
 
-      // 测试文件常见模式
-      'no-magic-numbers': [
-        'error',
-        {
-          ignore: [0, 1, -1, 100, 200, 404, 500, 1000, 3000], // 允许HTTP状态码和测试超时值
-          ignoreArrayIndexes: true,
-          ignoreDefaultValues: true,
-        },
-      ],
+      // 🎯 企业级标准：测试文件也保持严格类型安全
+      '@typescript-eslint/no-explicit-any': 'error', // 测试代码也需要类型安全
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }], // 严格清理未使用变量
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }], // 保持代码整洁
+      '@typescript-eslint/no-require-imports': 'off', // 测试中可能需要require导入
 
-      // 测试中常用的模式
-      'prefer-arrow-callback': 'off', // 测试中function表达式更清晰
-      'no-unused-expressions': 'off', // expect().toBe() 等断言
-      'no-empty-function': 'off', // 空的mock函数
-      'max-params': ['error', 8], // 从5放宽到8个参数
+      // 安全规则统一为error级别
+      'security/detect-object-injection': 'error', // 测试数据访问，统一为error级别
+      'security/detect-unsafe-regex': 'warn', // 测试正则表达式
+      'no-script-url': 'off', // 测试URL可能需要
 
-      // 微调优化：适度放宽但保持提醒
-      '@typescript-eslint/no-explicit-any': 'off', // 测试中的mock对象，允许使用any
-      'require-await': 'warn', // 测试中常见的async模式，改为警告
-      'no-new': 'warn', // 测试中的mock对象创建，改为警告
-
-      // 保持安全标准 - 这些规则绝不放宽
-      'security/detect-object-injection': 'error',
-      'security/detect-non-literal-fs-filename': 'error',
-      'security/detect-unsafe-regex': 'error',
-      'security-node/detect-insecure-randomness': 'error',
-      'no-console': 'warn', // 测试中允许console但给出警告
-      'no-undef': 'error', // 基本语法错误必须修复
+      // 保持严格的基本语法规则
+      'no-undef': 'error', // 未定义变量必须修复
+      'no-shadow': 'warn', // 变量遮蔽警告
+      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }], // 允许测试调试输出
+      '@next/next/no-img-element': 'off', // 测试中允许使用原生 img 元素
     },
   },
 
-  // Scripts and configuration files - allow console output and magic numbers
+  // 渐进式统一严格标准 - 开发工具最小豁免
   {
-    name: 'scripts-config',
+    name: 'progressive-unified-dev-tools-config',
     files: [
+      // 构建脚本和配置文件（真正需要豁免的）
       'scripts/**/*.{js,ts}',
       'src/scripts/**/*.{js,ts}',
       'config/**/*.{js,ts}',
@@ -370,10 +389,114 @@ export default [
       'next.config.ts',
       'tailwind.config.ts',
       'vitest.config.ts',
+      'playwright.config.ts',
+      '*.config.{js,ts,mjs}',
+
+      // 开发者工具（应用渐进式标准）
+      'src/components/dev-tools/**/*.{ts,tsx}',
+      'src/app/**/dev-tools/**/*.{ts,tsx}',
+      'src/app/**/react-scan-demo/**/*.{ts,tsx}',
+      'src/app/**/diagnostics/**/*.{ts,tsx}',
+      'src/lib/react-scan-config.ts',
+      'src/lib/dev-tools-positioning.ts',
+      'src/lib/performance-monitoring-coordinator.ts',
+      'src/constants/dev-tools.ts',
+      'src/constants/test-*.ts',
     ],
     rules: {
-      'no-console': 'off', // 构建脚本允许console输出
-      'no-magic-numbers': 'off', // 配置文件允许魔法数字
+      // 🎯 渐进式改进：开发工具保持基本质量标准
+      'max-lines-per-function': [
+        'warn',
+        { max: 250, skipBlankLines: true, skipComments: true },
+      ], // 调整为250行并跳过空行与注释，适应开发工具复杂性
+      'complexity': ['warn', 18], // 从无限制改为18复杂度警告
+      'max-lines': [
+        'warn',
+        { max: 800, skipBlankLines: true, skipComments: true },
+      ], // 调整到800行并跳过空行与注释，适应开发工具复杂性
+
+      // 构建脚本必要豁免（保持不变）
+      'no-console': 'off', // 构建脚本需要console输出
+      'no-magic-numbers': 'off', // 配置文件需要具体数值
+      'no-implicit-coercion': 'off', // 配置文件类型转换
+
+      // 🔄 渐进改进：开发工具TypeScript规则收紧
+      '@typescript-eslint/no-explicit-any': 'warn', // 开发工具允许适度使用any（全局对象访问）
+      '@typescript-eslint/ban-ts-comment': 'warn', // 开发工具允许@ts-nocheck（仅开发环境）
+
+      // 开发工具特定但合理的豁免
+      'no-underscore-dangle': ['error', { allow: ['__REACT_SCAN__', '__DEV__'] }],
+      'security/detect-object-injection': 'error', // 开发工具动态访问，统一为error级别
+      'no-empty-function': 'warn', // 开发工具占位符
+      'consistent-return': 'warn', // 开发工具复杂逻辑
+      'no-param-reassign': 'warn', // 开发工具参数修改
+      'prefer-destructuring': 'warn', // 开发工具属性访问
+
+      // 保持严格的基本语法检查
+      'no-undef': ['error', { typeof: true }], // 未定义变量检查
+      'no-unused-vars': 'warn', // 清理未使用变量
+    },
+  },
+
+  // 🎯 架构重构专用规则 - 禁止新增export *
+  {
+    name: 'architecture-refactor-rules',
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      // 禁止新增export *重新导出 - 架构重构期间临时规则
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'ExportAllDeclaration',
+          message: '🚫 架构重构期间禁止新增 export * 重新导出。请使用命名导出：export { specificExport } from "./module"'
+        }
+      ],
+
+      // 禁止相对路径导入（强制使用@/别名）
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['../*', './*'],
+              message: '🚫 请使用 @/ 路径别名替代相对路径导入，例如：import { something } from "@/lib/module"'
+            }
+          ]
+        }
+      ]
+    },
+  },
+
+  // 🎯 渐进式统一严格标准 - 核心配置增强
+  {
+    name: 'progressive-unified-enhancements',
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      // AI编码质量保障增强
+      'prefer-const': 'error', // AI容易生成let，强制使用const
+      'no-var': 'error', // 严格禁止var
+      'no-duplicate-imports': 'error', // AI可能重复导入
+
+      // React特化规则（针对AI编码）
+      'react-hooks/exhaustive-deps': 'warn', // AI容易遗漏依赖，警告提醒
+
+      // 函数命名和结构
+      'func-names': ['warn', 'as-needed'], // 鼓励命名函数，便于调试
+      'no-anonymous-default-export': 'off', // 允许匿名默认导出（React组件）
+
+      // 渐进式质量提升
+      'max-statements-per-line': ['error', { max: 1 }], // 每行最多一个语句
+      'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }], // 控制空行数量
+
+      // 安全增强（针对AI编码）
+      'no-eval': 'error', // 严格禁止eval
+      'no-implied-eval': 'error', // 禁止隐式eval
+      'no-new-func': 'error', // 禁止Function构造函数
+
+      // 类型安全增强（仅适用于TypeScript文件）
+      '@typescript-eslint/no-unused-expressions': 'error', // 禁止未使用的表达式
+      // 注意：prefer-nullish-coalescing 和 prefer-optional-chain 需要类型信息
+      // 这些规则由 Next.js TypeScript 配置处理
     },
   },
 
@@ -402,129 +525,9 @@ export default [
     ],
   },
 
-  // 开发工具复杂度豁免配置
-  {
-    name: 'dev-tools-complexity-exemption',
-    files: [
-      // 开发者工具面板和调试插件
-      'src/components/dev-tools/**/*.{ts,tsx}',
-      'src/app/*/dev-tools/**/*.{ts,tsx}',
-      'src/app/*/react-scan-demo/**/*.{ts,tsx}',
-      'src/app/*/diagnostics/**/*.{ts,tsx}',
-      // 开发环境特定库文件
-      'src/lib/dev-tools-positioning.ts',
-      'src/lib/performance-monitoring-coordinator.ts',
-      'src/lib/react-scan-config.ts',
-      // 开发环境特定常量
-      'src/constants/dev-tools.ts',
-    ],
-    rules: {
-      'max-lines-per-function': 'off',
-      'complexity': 'off',
-      'max-lines': 'off',
-      'max-params': 'off', // 开发工具可能需要更多参数
-      'max-depth': 'off', // 开发工具可能有复杂的嵌套逻辑
-    },
-  },
 
-  // 测试文件宽松配置 - 自动生成
-  {
-    name: 'test-files-relaxed-config',
-    files: [
-      'tests/**/*.{js,jsx,ts,tsx}',
-      'src/**/*.test.{js,jsx,ts,tsx}',
-      'src/**/__tests__/**/*.{js,jsx,ts,tsx}',
-    ],
-    rules: {
-      'no-magic-numbers': 'off',
-      'no-plusplus': 'off',
-      'require-await': 'off',
-      'security/detect-object-injection': 'off',
-      'security/detect-unsafe-regex': 'off',
-      'no-script-url': 'off',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      'no-underscore-dangle': 'off',
-      'max-lines-per-function': 'off',
-      'max-lines': 'off',
-      'no-throw-literal': 'off',
-      // 新增：测试文件特殊处理
-      '@typescript-eslint/no-require-imports': 'off', // 允许require导入
-      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }], // 允许console输出
-      'no-new': 'off', // 允许new副作用，测试中常用
-      'no-shadow': 'warn', // 允许变量遮蔽
-      '@next/next/no-assign-module-variable': 'off', // 允许module变量赋值
-    },
-  },
 
-  // 开发工具特殊配置
-  {
-    name: 'dev-tools-special-config',
-    files: [
-      // 开发者工具面板和调试插件
-      'src/components/dev-tools/**/*.{ts,tsx}',
-      'src/app/**/dev-tools/**/*.{ts,tsx}',
-      'src/app/**/react-scan-demo/**/*.{ts,tsx}',
-      'src/app/**/diagnostics/**/*.{ts,tsx}',
-      // 开发环境特定库文件
-      'src/lib/react-scan-config.ts',
-      'src/lib/dev-tools-positioning.ts',
-      'src/lib/performance-monitoring-coordinator.ts',
-      // 开发环境特定常量
-      'src/constants/dev-tools.ts',
-      'src/constants/test-*.ts',
-    ],
-    rules: {
-      // 开发工具允许console输出
-      'no-console': ['warn', { allow: ['warn', 'error', 'info', 'log'] }],
 
-      // 允许React Scan的特殊命名
-      'no-underscore-dangle': [
-        'error',
-        {
-          allow: ['__REACT_SCAN__', '__DEV__'],
-        },
-      ],
 
-      // 开发工具可以使用any类型（但要有注释说明）
-      '@typescript-eslint/no-explicit-any': 'warn',
 
-      // 允许开发工具使用 @ts-nocheck 等 TypeScript 注释
-      '@typescript-eslint/ban-ts-comment': 'off',
-
-      // 允许对象注入（开发工具需要动态访问）
-      'security/detect-object-injection': 'warn',
-
-      // 允许空函数（开发工具占位符）
-      'no-empty-function': 'warn',
-
-      // 允许一致性返回问题（开发工具复杂逻辑）
-      'consistent-return': 'warn',
-
-      // 允许未定义变量（React等全局变量）
-      'no-undef': ['error', { typeof: true }],
-
-      // 开发工具特定豁免
-      'no-magic-numbers': 'warn', // 开发工具可能需要硬编码数值
-      'no-param-reassign': 'warn', // 开发工具可能需要修改参数
-      'prefer-destructuring': 'warn', // 开发工具可能需要直接访问属性
-    },
-  },
-
-  // 配置文件特殊处理
-  {
-    name: 'config-files-special',
-    files: [
-      'playwright.config.ts',
-      '*.config.{js,ts,mjs}',
-      'scripts/**/*.{js,ts}',
-    ],
-    rules: {
-      // 配置文件允许魔法数字
-      'no-magic-numbers': 'off',
-
-      // 配置文件允许隐式类型转换
-      'no-implicit-coercion': 'off',
-    },
-  },
 ];

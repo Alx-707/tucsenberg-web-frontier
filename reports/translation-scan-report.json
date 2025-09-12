@@ -1,0 +1,2946 @@
+{
+  "timestamp": "2025-09-03T10:42:00.494Z",
+  "summary": {
+    "totalFiles": 315,
+    "scannedFiles": 315,
+    "errorCount": 0,
+    "warningCount": 0,
+    "totalKeys": 367,
+    "uniqueKeys": 198,
+    "missingKeys": [
+      "organization.name",
+      "organization.description",
+      "organization.phone",
+      "organization.social.twitter",
+      "organization.social.linkedin",
+      "organization.social.github",
+      "website.name",
+      "website.description",
+      "article.defaultAuthor",
+      "title",
+      "description",
+      "siteName",
+      "hello",
+      "greeting",
+      "missing.key",
+      "fallback.key",
+      "test.key",
+      "loading",
+      "toggle",
+      "english",
+      "chinese",
+      "tryAgain",
+      "comingSoon",
+      "progress.title",
+      "expectedCompletion",
+      "backToHome",
+      "contactUs",
+      "stayTuned",
+      "status",
+      "nearCompletion",
+      "selectLanguage",
+      "fallbackWarning",
+      "today",
+      "yesterday",
+      "tomorrow",
+      "stats.totalTech",
+      "stats.categories",
+      "stats.modern",
+      "stats.quality",
+      "learnMore",
+      "subtitle",
+      "features.performance.title",
+      "features.performance.description",
+      "features.security.title",
+      "features.security.description",
+      "features.i18n.title",
+      "features.i18n.description",
+      "features.themes.title",
+      "features.themes.description",
+      "features.typescript.title",
+      "features.typescript.description",
+      "features.deployment.title",
+      "features.deployment.description",
+      "highlights.modern",
+      "highlights.scalable",
+      "highlights.accessible",
+      "highlights.performant",
+      "highlights.secure",
+      "highlights.maintainable",
+      "highlights.title",
+      "highlights.subtitle",
+      "architecture.title",
+      "architecture.frontend.title",
+      "architecture.frontend.description",
+      "architecture.ui.title",
+      "architecture.ui.description",
+      "architecture.tooling.title",
+      "architecture.tooling.description",
+      "cta.title",
+      "cta.description",
+      "cta.getStarted",
+      "cta.viewSource",
+      "cta.demo",
+      "cta.github",
+      "version",
+      "title.line1",
+      "title.line2",
+      "tabs.components",
+      "tabs.themes",
+      "tabs.responsive",
+      "buttons.getStarted",
+      "buttons.learnMore",
+      "community.title",
+      "community.description",
+      "community.discussions",
+      "community.issues",
+      "actions.github.title",
+      "actions.github.description",
+      "actions.download.title",
+      "actions.download.description",
+      "actions.docs.title",
+      "actions.docs.description",
+      "stats.technologies",
+      "stats.typescript",
+      "stats.performance",
+      "stats.languages",
+      "badge",
+      "primary.github",
+      "primary.demo",
+      "themes.title",
+      "themes.description",
+      "themes.toggle",
+      "themes.language",
+      "themes.colors.title",
+      "themes.typography.title",
+      "themes.typography.bold",
+      "themes.typography.medium",
+      "themes.typography.normal",
+      "themes.typography.muted",
+      "responsive.title",
+      "responsive.description",
+      "responsive.mobile.title",
+      "responsive.mobile.description",
+      "responsive.tablet.title",
+      "responsive.tablet.description",
+      "responsive.desktop.title",
+      "responsive.desktop.description",
+      "components.interactive.title",
+      "components.interactive.description",
+      "components.interactive.likes",
+      "components.interactive.star",
+      "components.interactive.download",
+      "components.interactive.share",
+      "components.forms.title",
+      "components.forms.description",
+      "components.forms.name",
+      "components.forms.namePlaceholder",
+      "components.forms.email",
+      "components.forms.emailPlaceholder",
+      "components.forms.submit",
+      "components.buttons.title",
+      "components.buttons.description",
+      "components.buttons.primary",
+      "components.buttons.secondary",
+      "components.buttons.outline",
+      "components.buttons.ghost",
+      "components.buttons.small",
+      "components.buttons.default",
+      "components.buttons.large",
+      "components.badges.title",
+      "components.badges.description",
+      "components.badges.default",
+      "components.badges.secondary",
+      "components.badges.outline",
+      "components.badges.destructive",
+      "components.badges.success",
+      "components.badges.warning",
+      "components.badges.info",
+      "firstName",
+      "firstNamePlaceholder",
+      "lastName",
+      "lastNamePlaceholder",
+      "email",
+      "emailPlaceholder",
+      "company",
+      "companyPlaceholder",
+      "phone",
+      "phonePlaceholder",
+      "subject",
+      "subjectPlaceholder",
+      "message",
+      "messagePlaceholder",
+      "acceptPrivacy",
+      "marketingConsent",
+      "submitSuccess",
+      "submitError",
+      "submitting",
+      "submit",
+      "rateLimitMessage",
+      "welcome",
+      "modernApp",
+      "getStarted",
+      "features",
+      "modernStack",
+      "modernStackDesc",
+      "internationalization",
+      "internationalizationDesc",
+      "testingReady",
+      "testingReadyDesc",
+      "instructions.title",
+      "instructions.step1",
+      "instructions.step2",
+      "instructions.step3",
+      "instructions.step4",
+      "refreshing",
+      "refresh",
+      "export",
+      "status.good",
+      "status.needsImprovement",
+      "status.poor",
+      "status.excellent",
+      "currentMetrics.title",
+      "currentMetrics.description"
+    ],
+    "unusedKeys": [
+      "common.loading",
+      "common.error",
+      "common.success",
+      "common.cancel",
+      "common.confirm",
+      "common.save",
+      "common.edit",
+      "common.delete",
+      "common.search",
+      "common.filter",
+      "common.sort",
+      "common.next",
+      "common.previous",
+      "common.close",
+      "common.open",
+      "errorBoundary.title",
+      "errorBoundary.description",
+      "errorBoundary.tryAgain",
+      "navigation.home",
+      "navigation.about",
+      "navigation.contact",
+      "navigation.services",
+      "navigation.products",
+      "navigation.blog",
+      "navigation.diagnostics",
+      "navigation.login",
+      "navigation.logout",
+      "navigation.profile",
+      "navigation.settings",
+      "diagnostics.title",
+      "diagnostics.description",
+      "diagnostics.controlPanel.title",
+      "diagnostics.controlPanel.description",
+      "diagnostics.controlPanel.refresh",
+      "diagnostics.controlPanel.refreshing",
+      "diagnostics.controlPanel.export",
+      "diagnostics.currentMetrics.title",
+      "diagnostics.currentMetrics.description",
+      "diagnostics.status.good",
+      "diagnostics.status.needsImprovement",
+      "diagnostics.status.poor",
+      "diagnostics.status.excellent",
+      "theme.toggle",
+      "theme.light",
+      "theme.dark",
+      "theme.system",
+      "language.toggle",
+      "language.selectLanguage",
+      "language.english",
+      "language.chinese",
+      "language.switching",
+      "language.switchSuccess",
+      "language.switchError",
+      "language.fallbackWarning",
+      "language.detectionInfo",
+      "language.source",
+      "language.confidence",
+      "language.userPreference",
+      "home.title",
+      "home.subtitle",
+      "home.description",
+      "home.getStarted",
+      "home.learnMore",
+      "home.welcome",
+      "home.modernApp",
+      "home.features.title",
+      "home.features.performance.title",
+      "home.features.performance.description",
+      "home.features.scalable.title",
+      "home.features.scalable.description",
+      "home.features.secure.title",
+      "home.features.secure.description",
+      "home.modernStack",
+      "home.modernStackDesc",
+      "home.internationalization",
+      "home.internationalizationDesc",
+      "home.testingReady",
+      "home.testingReadyDesc",
+      "home.hero.version",
+      "home.hero.title.line1",
+      "home.hero.title.line2",
+      "home.hero.subtitle",
+      "home.hero.cta.demo",
+      "home.hero.cta.github",
+      "home.hero.stats.technologies",
+      "home.hero.stats.typescript",
+      "home.hero.stats.performance",
+      "home.hero.stats.languages",
+      "home.techStack.title",
+      "home.techStack.subtitle",
+      "home.techStack.learnMore",
+      "home.techStack.stats.totalTech",
+      "home.techStack.stats.categories",
+      "home.techStack.stats.modern",
+      "home.techStack.stats.quality",
+      "home.showcase.title",
+      "home.showcase.subtitle",
+      "home.showcase.tabs.components",
+      "home.showcase.tabs.themes",
+      "home.showcase.tabs.responsive",
+      "home.showcase.components.buttons.title",
+      "home.showcase.components.buttons.description",
+      "home.showcase.components.buttons.primary",
+      "home.showcase.components.buttons.secondary",
+      "home.showcase.components.buttons.outline",
+      "home.showcase.components.buttons.ghost",
+      "home.showcase.components.buttons.small",
+      "home.showcase.components.buttons.default",
+      "home.showcase.components.buttons.large",
+      "home.showcase.components.forms.title",
+      "home.showcase.components.forms.description",
+      "home.showcase.components.forms.name",
+      "home.showcase.components.forms.namePlaceholder",
+      "home.showcase.components.forms.email",
+      "home.showcase.components.forms.emailPlaceholder",
+      "home.showcase.components.forms.submit",
+      "home.showcase.components.interactive.title",
+      "home.showcase.components.interactive.description",
+      "home.showcase.components.interactive.likes",
+      "home.showcase.components.interactive.star",
+      "home.showcase.components.interactive.download",
+      "home.showcase.components.interactive.share",
+      "home.showcase.components.badges.title",
+      "home.showcase.components.badges.description",
+      "home.showcase.components.badges.default",
+      "home.showcase.components.badges.secondary",
+      "home.showcase.components.badges.outline",
+      "home.showcase.components.badges.destructive",
+      "home.showcase.components.badges.success",
+      "home.showcase.components.badges.warning",
+      "home.showcase.components.badges.info",
+      "home.showcase.themes.title",
+      "home.showcase.themes.description",
+      "home.showcase.themes.toggle",
+      "home.showcase.themes.language",
+      "home.showcase.themes.colors.title",
+      "home.showcase.themes.typography.title",
+      "home.showcase.themes.typography.bold",
+      "home.showcase.themes.typography.medium",
+      "home.showcase.themes.typography.normal",
+      "home.showcase.themes.typography.muted",
+      "home.showcase.responsive.title",
+      "home.showcase.responsive.description",
+      "home.showcase.responsive.mobile.title",
+      "home.showcase.responsive.mobile.description",
+      "home.showcase.responsive.tablet.title",
+      "home.showcase.responsive.tablet.description",
+      "home.showcase.responsive.desktop.title",
+      "home.showcase.responsive.desktop.description",
+      "home.overview.title",
+      "home.overview.subtitle",
+      "home.overview.features.performance.title",
+      "home.overview.features.performance.description",
+      "home.overview.features.security.title",
+      "home.overview.features.security.description",
+      "home.overview.features.i18n.title",
+      "home.overview.features.i18n.description",
+      "home.overview.features.themes.title",
+      "home.overview.features.themes.description",
+      "home.overview.features.typescript.title",
+      "home.overview.features.typescript.description",
+      "home.overview.features.deployment.title",
+      "home.overview.features.deployment.description",
+      "home.overview.highlights.title",
+      "home.overview.highlights.subtitle",
+      "home.overview.highlights.modern",
+      "home.overview.highlights.scalable",
+      "home.overview.highlights.accessible",
+      "home.overview.highlights.performant",
+      "home.overview.highlights.secure",
+      "home.overview.highlights.maintainable",
+      "home.overview.architecture.title",
+      "home.overview.architecture.frontend.title",
+      "home.overview.architecture.frontend.description",
+      "home.overview.architecture.ui.title",
+      "home.overview.architecture.ui.description",
+      "home.overview.architecture.tooling.title",
+      "home.overview.architecture.tooling.description",
+      "home.overview.cta.title",
+      "home.overview.cta.description",
+      "home.overview.cta.getStarted",
+      "home.overview.cta.viewSource",
+      "home.cta.badge",
+      "home.cta.title",
+      "home.cta.subtitle",
+      "home.cta.primary.github",
+      "home.cta.primary.demo",
+      "home.cta.actions.github.title",
+      "home.cta.actions.github.description",
+      "home.cta.actions.download.title",
+      "home.cta.actions.download.description",
+      "home.cta.actions.docs.title",
+      "home.cta.actions.docs.description",
+      "home.cta.buttons.getStarted",
+      "home.cta.buttons.learnMore",
+      "home.cta.stats.technologies",
+      "home.cta.stats.typescript",
+      "home.cta.stats.performance",
+      "home.cta.stats.languages",
+      "home.cta.community.title",
+      "home.cta.community.description",
+      "home.cta.community.discussions",
+      "home.cta.community.issues",
+      "themeDemo.title",
+      "themeDemo.description",
+      "themeDemo.chineseTest",
+      "themeDemo.englishTest",
+      "themeDemo.chineseDescription",
+      "themeDemo.englishDescription",
+      "themeDemo.chineseInput",
+      "themeDemo.englishInput",
+      "themeDemo.chinesePlaceholder",
+      "themeDemo.englishPlaceholder",
+      "themeDemo.primaryButton",
+      "themeDemo.secondaryButton",
+      "themeDemo.outlineButton",
+      "instructions.getStarted",
+      "instructions.saveChanges",
+      "actions.deployNow",
+      "actions.readDocs",
+      "contact.form.title",
+      "contact.form.description",
+      "contact.form.firstName",
+      "contact.form.lastName",
+      "contact.form.email",
+      "contact.form.company",
+      "contact.form.phone",
+      "contact.form.subject",
+      "contact.form.message",
+      "contact.form.firstNamePlaceholder",
+      "contact.form.lastNamePlaceholder",
+      "contact.form.emailPlaceholder",
+      "contact.form.companyPlaceholder",
+      "contact.form.phonePlaceholder",
+      "contact.form.subjectPlaceholder",
+      "contact.form.messagePlaceholder",
+      "contact.form.acceptPrivacy",
+      "contact.form.marketingConsent",
+      "contact.form.submit",
+      "contact.form.submitting",
+      "contact.form.success",
+      "contact.form.error",
+      "contact.form.validation.firstNameRequired",
+      "contact.form.validation.firstNameTooShort",
+      "contact.form.validation.lastNameRequired",
+      "contact.form.validation.lastNameTooShort",
+      "contact.form.validation.emailRequired",
+      "contact.form.validation.emailInvalid",
+      "contact.form.validation.messageRequired",
+      "contact.form.validation.messageTooShort",
+      "footer.learn",
+      "footer.examples",
+      "footer.goToNextjs",
+      "footer.copyright",
+      "footer.description",
+      "footer.sections.product.title",
+      "footer.sections.product.home",
+      "footer.sections.product.enterprise",
+      "footer.sections.product.pricing",
+      "footer.sections.company.title",
+      "footer.sections.company.terms",
+      "footer.sections.company.aiPolicy",
+      "footer.sections.company.privacy",
+      "footer.sections.resources.title",
+      "footer.sections.resources.faqs",
+      "footer.sections.resources.docs",
+      "footer.sections.resources.ambassadors",
+      "footer.sections.resources.community",
+      "footer.sections.resources.vercel",
+      "formatting.date.today",
+      "formatting.date.yesterday",
+      "formatting.date.tomorrow",
+      "formatting.date.lastUpdated",
+      "formatting.date.publishedOn",
+      "formatting.number.currency",
+      "formatting.number.percentage",
+      "formatting.number.fileSize",
+      "formatting.plurals.items.zero",
+      "formatting.plurals.items.one",
+      "formatting.plurals.items.other",
+      "formatting.plurals.users.zero",
+      "formatting.plurals.users.one",
+      "formatting.plurals.users.other",
+      "formatting.plurals.notifications.zero",
+      "formatting.plurals.notifications.one",
+      "formatting.plurals.notifications.other",
+      "errors.notFound",
+      "errors.serverError",
+      "errors.networkError",
+      "errors.validationError",
+      "errors.unauthorized",
+      "errors.forbidden",
+      "errors.timeout",
+      "errors.generic",
+      "errors.translationMissing",
+      "errors.loadingFailed",
+      "accessibility.skipToContent",
+      "accessibility.loading",
+      "accessibility.error",
+      "accessibility.languageSelector",
+      "accessibility.themeSelector",
+      "seo.title",
+      "seo.keywords",
+      "seo.pages.home.title",
+      "seo.pages.home.description",
+      "seo.pages.about.title",
+      "seo.pages.about.description",
+      "seo.pages.contact.title",
+      "seo.pages.contact.description",
+      "seo.pages.products.title",
+      "seo.pages.products.description",
+      "seo.pages.blog.title",
+      "seo.pages.blog.description",
+      "underConstruction.title",
+      "underConstruction.subtitle",
+      "underConstruction.description",
+      "underConstruction.backToHome",
+      "underConstruction.comingSoon",
+      "underConstruction.expectedCompletion",
+      "underConstruction.stayTuned",
+      "underConstruction.contactUs",
+      "underConstruction.pages.products.title",
+      "underConstruction.pages.products.description",
+      "underConstruction.pages.products.features",
+      "underConstruction.pages.blog.title",
+      "underConstruction.pages.blog.description",
+      "underConstruction.pages.blog.features",
+      "underConstruction.pages.about.title",
+      "underConstruction.pages.about.description",
+      "underConstruction.pages.about.features",
+      "underConstruction.pages.contact.title",
+      "underConstruction.pages.contact.description",
+      "underConstruction.pages.contact.features",
+      "underConstruction.progress.title",
+      "underConstruction.progress.status",
+      "underConstruction.progress.nearCompletion",
+      "underConstruction.progress.planning",
+      "underConstruction.progress.development",
+      "underConstruction.progress.testing",
+      "underConstruction.progress.launch",
+      "underConstruction.animation.loading",
+      "underConstruction.animation.construction",
+      "ReactScanDemo.title",
+      "ReactScanDemo.description",
+      "ReactScanDemo.instructions.title",
+      "ReactScanDemo.instructions.step1",
+      "ReactScanDemo.instructions.step2",
+      "ReactScanDemo.instructions.step3",
+      "ReactScanDemo.instructions.step4",
+      "structured-data.organization.name",
+      "structured-data.organization.description",
+      "structured-data.organization.phone",
+      "structured-data.organization.social.twitter",
+      "structured-data.organization.social.linkedin",
+      "structured-data.organization.social.github",
+      "structured-data.website.name",
+      "structured-data.website.description",
+      "structured-data.article.defaultTitle",
+      "structured-data.article.defaultDescription",
+      "structured-data.article.defaultAuthor",
+      "structured-data.product.defaultName",
+      "structured-data.product.defaultDescription"
+    ]
+  },
+  "translationKeys": [
+    "acceptPrivacy",
+    "accessibility.closeMenu",
+    "accessibility.openMenu",
+    "actions.docs.description",
+    "actions.docs.title",
+    "actions.download.description",
+    "actions.download.title",
+    "actions.github.description",
+    "actions.github.title",
+    "architecture.frontend.description",
+    "architecture.frontend.title",
+    "architecture.title",
+    "architecture.tooling.description",
+    "architecture.tooling.title",
+    "architecture.ui.description",
+    "architecture.ui.title",
+    "article.defaultAuthor",
+    "backToHome",
+    "badge",
+    "buttons.getStarted",
+    "buttons.learnMore",
+    "chinese",
+    "comingSoon",
+    "community.description",
+    "community.discussions",
+    "community.issues",
+    "community.title",
+    "company",
+    "companyPlaceholder",
+    "components.badges.default",
+    "components.badges.description",
+    "components.badges.destructive",
+    "components.badges.info",
+    "components.badges.outline",
+    "components.badges.secondary",
+    "components.badges.success",
+    "components.badges.title",
+    "components.badges.warning",
+    "components.buttons.default",
+    "components.buttons.description",
+    "components.buttons.ghost",
+    "components.buttons.large",
+    "components.buttons.outline",
+    "components.buttons.primary",
+    "components.buttons.secondary",
+    "components.buttons.small",
+    "components.buttons.title",
+    "components.forms.description",
+    "components.forms.email",
+    "components.forms.emailPlaceholder",
+    "components.forms.name",
+    "components.forms.namePlaceholder",
+    "components.forms.submit",
+    "components.forms.title",
+    "components.interactive.description",
+    "components.interactive.download",
+    "components.interactive.likes",
+    "components.interactive.share",
+    "components.interactive.star",
+    "components.interactive.title",
+    "contactUs",
+    "cta.demo",
+    "cta.description",
+    "cta.getStarted",
+    "cta.github",
+    "cta.title",
+    "cta.viewSource",
+    "currentMetrics.description",
+    "currentMetrics.title",
+    "description",
+    "email",
+    "emailPlaceholder",
+    "english",
+    "expectedCompletion",
+    "export",
+    "fallback.key",
+    "fallbackWarning",
+    "features",
+    "features.deployment.description",
+    "features.deployment.title",
+    "features.i18n.description",
+    "features.i18n.title",
+    "features.performance.description",
+    "features.performance.title",
+    "features.security.description",
+    "features.security.title",
+    "features.themes.description",
+    "features.themes.title",
+    "features.typescript.description",
+    "features.typescript.title",
+    "firstName",
+    "firstNamePlaceholder",
+    "footer.sections.social.title",
+    "getStarted",
+    "greeting",
+    "hello",
+    "highlights.accessible",
+    "highlights.maintainable",
+    "highlights.modern",
+    "highlights.performant",
+    "highlights.scalable",
+    "highlights.secure",
+    "highlights.subtitle",
+    "highlights.title",
+    "instructions.step1",
+    "instructions.step2",
+    "instructions.step3",
+    "instructions.step4",
+    "instructions.title",
+    "internationalization",
+    "internationalizationDesc",
+    "lastName",
+    "lastNamePlaceholder",
+    "learnMore",
+    "loading",
+    "marketingConsent",
+    "message",
+    "messagePlaceholder",
+    "missing.key",
+    "modernApp",
+    "modernStack",
+    "modernStackDesc",
+    "nearCompletion",
+    "organization.description",
+    "organization.name",
+    "organization.phone",
+    "organization.social.github",
+    "organization.social.linkedin",
+    "organization.social.twitter",
+    "phone",
+    "phonePlaceholder",
+    "primary.demo",
+    "primary.github",
+    "progress.title",
+    "rateLimitMessage",
+    "refresh",
+    "refreshing",
+    "responsive.description",
+    "responsive.desktop.description",
+    "responsive.desktop.title",
+    "responsive.mobile.description",
+    "responsive.mobile.title",
+    "responsive.tablet.description",
+    "responsive.tablet.title",
+    "responsive.title",
+    "selectLanguage",
+    "seo.description",
+    "seo.siteName",
+    "siteName",
+    "stats.categories",
+    "stats.languages",
+    "stats.modern",
+    "stats.performance",
+    "stats.quality",
+    "stats.technologies",
+    "stats.totalTech",
+    "stats.typescript",
+    "status",
+    "status.excellent",
+    "status.good",
+    "status.needsImprovement",
+    "status.poor",
+    "stayTuned",
+    "subject",
+    "subjectPlaceholder",
+    "submit",
+    "submitError",
+    "submitSuccess",
+    "submitting",
+    "subtitle",
+    "tabs.components",
+    "tabs.responsive",
+    "tabs.themes",
+    "test.key",
+    "testingReady",
+    "testingReadyDesc",
+    "themes.colors.title",
+    "themes.description",
+    "themes.language",
+    "themes.title",
+    "themes.toggle",
+    "themes.typography.bold",
+    "themes.typography.medium",
+    "themes.typography.muted",
+    "themes.typography.normal",
+    "themes.typography.title",
+    "title",
+    "title.line1",
+    "title.line2",
+    "today",
+    "toggle",
+    "tomorrow",
+    "tryAgain",
+    "version",
+    "website.description",
+    "website.name",
+    "welcome",
+    "yesterday"
+  ],
+  "keyUsages": {
+    "organization.name": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 24,
+        "column": 6
+      },
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 108,
+        "column": 14
+      },
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 150,
+        "column": 8
+      },
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 158,
+        "column": 8
+      }
+    ],
+    "organization.description": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 27,
+        "column": 6
+      }
+    ],
+    "organization.phone": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 37,
+        "column": 22
+      }
+    ],
+    "organization.social.twitter": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 42,
+        "column": 6
+      }
+    ],
+    "organization.social.linkedin": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 45,
+        "column": 6
+      }
+    ],
+    "organization.social.github": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 48,
+        "column": 6
+      }
+    ],
+    "website.name": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 68,
+        "column": 6
+      }
+    ],
+    "website.description": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 71,
+        "column": 6
+      }
+    ],
+    "article.defaultAuthor": [
+      {
+        "file": "src/lib/structured-data-generators.ts",
+        "line": 104,
+        "column": 8
+      }
+    ],
+    "title": [
+      {
+        "file": "src/lib/seo-metadata.ts",
+        "line": 43,
+        "column": 6
+      },
+      {
+        "file": "src/components/error-boundary.tsx",
+        "line": 96,
+        "column": 13
+      },
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 236,
+        "column": 19
+      },
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 235,
+        "column": 15
+      },
+      {
+        "file": "src/components/home/component-showcase.tsx",
+        "line": 50,
+        "column": 15
+      },
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 251,
+        "column": 15
+      },
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 14,
+        "column": 11
+      },
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 30,
+        "column": 49
+      },
+      {
+        "file": "src/app/[locale]/products/page.tsx",
+        "line": 21,
+        "column": 11
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/page-components.tsx",
+        "line": 20,
+        "column": 9
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 79,
+        "column": 24
+      },
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 22,
+        "column": 11
+      },
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 60,
+        "column": 17
+      },
+      {
+        "file": "src/app/[locale]/blog/page.tsx",
+        "line": 21,
+        "column": 11
+      },
+      {
+        "file": "src/app/[locale]/about/page.tsx",
+        "line": 21,
+        "column": 11
+      }
+    ],
+    "description": [
+      {
+        "file": "src/lib/seo-metadata.ts",
+        "line": 46,
+        "column": 6
+      },
+      {
+        "file": "src/components/error-boundary.tsx",
+        "line": 99,
+        "column": 13
+      },
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 15,
+        "column": 17
+      },
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 31,
+        "column": 51
+      },
+      {
+        "file": "src/app/[locale]/products/page.tsx",
+        "line": 22,
+        "column": 17
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/page-components.tsx",
+        "line": 23,
+        "column": 9
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 80,
+        "column": 30
+      },
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 23,
+        "column": 17
+      },
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 61,
+        "column": 23
+      },
+      {
+        "file": "src/app/[locale]/blog/page.tsx",
+        "line": 22,
+        "column": 17
+      },
+      {
+        "file": "src/app/[locale]/about/page.tsx",
+        "line": 22,
+        "column": 17
+      }
+    ],
+    "siteName": [
+      {
+        "file": "src/lib/seo-metadata.ts",
+        "line": 49,
+        "column": 15
+      },
+      {
+        "file": "src/components/layout/logo.tsx",
+        "line": 70,
+        "column": 18
+      }
+    ],
+    "hello": [
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 104,
+        "column": 26
+      }
+    ],
+    "greeting": [
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 113,
+        "column": 26
+      }
+    ],
+    "missing.key": [
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 134,
+        "column": 26
+      },
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 143,
+        "column": 26
+      },
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 432,
+        "column": 6
+      }
+    ],
+    "fallback.key": [
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 152,
+        "column": 26
+      }
+    ],
+    "test.key": [
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 404,
+        "column": 6
+      },
+      {
+        "file": "src/hooks/__tests__/use-enhanced-translations.test.ts",
+        "line": 419,
+        "column": 6
+      }
+    ],
+    "loading": [
+      {
+        "file": "src/components/loading-spinner.tsx",
+        "line": 45,
+        "column": 14
+      }
+    ],
+    "toggle": [
+      {
+        "file": "src/components/language-toggle.tsx",
+        "line": 72,
+        "column": 37
+      },
+      {
+        "file": "src/components/layout/language-switcher.tsx",
+        "line": 164,
+        "column": 58
+      },
+      {
+        "file": "src/components/layout/language-switcher.tsx",
+        "line": 166,
+        "column": 39
+      },
+      {
+        "file": "src/components/i18n/enhanced-locale-switcher.tsx",
+        "line": 282,
+        "column": 37
+      }
+    ],
+    "english": [
+      {
+        "file": "src/components/language-toggle.tsx",
+        "line": 95,
+        "column": 19
+      }
+    ],
+    "chinese": [
+      {
+        "file": "src/components/language-toggle.tsx",
+        "line": 123,
+        "column": 19
+      }
+    ],
+    "tryAgain": [
+      {
+        "file": "src/components/error-boundary.tsx",
+        "line": 119,
+        "column": 13
+      }
+    ],
+    "comingSoon": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 62,
+        "column": 13
+      }
+    ],
+    "progress.title": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 71,
+        "column": 15
+      }
+    ],
+    "expectedCompletion": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 80,
+        "column": 13
+      }
+    ],
+    "backToHome": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 91,
+        "column": 28
+      }
+    ],
+    "contactUs": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 100,
+        "column": 35
+      }
+    ],
+    "stayTuned": [
+      {
+        "file": "src/components/shared/under-construction.tsx",
+        "line": 106,
+        "column": 56
+      }
+    ],
+    "status": [
+      {
+        "file": "src/components/shared/progress-indicator.tsx",
+        "line": 127,
+        "column": 44
+      }
+    ],
+    "nearCompletion": [
+      {
+        "file": "src/components/shared/progress-indicator.tsx",
+        "line": 127,
+        "column": 58
+      }
+    ],
+    "accessibility.closeMenu": [
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 71,
+        "column": 18
+      },
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 157,
+        "column": 18
+      }
+    ],
+    "accessibility.openMenu": [
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 72,
+        "column": 18
+      },
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 157,
+        "column": 49
+      }
+    ],
+    "seo.siteName": [
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 85,
+        "column": 15
+      }
+    ],
+    "seo.description": [
+      {
+        "file": "src/components/layout/mobile-navigation.tsx",
+        "line": 88,
+        "column": 15
+      }
+    ],
+    "selectLanguage": [
+      {
+        "file": "src/components/layout/language-switcher.tsx",
+        "line": 173,
+        "column": 22
+      },
+      {
+        "file": "src/components/i18n/enhanced-locale-switcher.tsx",
+        "line": 292,
+        "column": 17
+      }
+    ],
+    "footer.sections.social.title": [
+      {
+        "file": "src/components/layout/footer.tsx",
+        "line": 93,
+        "column": 9
+      }
+    ],
+    "fallbackWarning": [
+      {
+        "file": "src/components/i18n/translation-fallback.tsx",
+        "line": 155,
+        "column": 51
+      }
+    ],
+    "today": [
+      {
+        "file": "src/components/i18n/format-helpers.tsx",
+        "line": 34,
+        "column": 22
+      }
+    ],
+    "yesterday": [
+      {
+        "file": "src/components/i18n/format-helpers.tsx",
+        "line": 36,
+        "column": 22
+      }
+    ],
+    "tomorrow": [
+      {
+        "file": "src/components/i18n/format-helpers.tsx",
+        "line": 38,
+        "column": 22
+      }
+    ],
+    "stats.totalTech": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 42,
+        "column": 13
+      }
+    ],
+    "stats.categories": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 50,
+        "column": 13
+      }
+    ],
+    "stats.modern": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 56,
+        "column": 13
+      }
+    ],
+    "stats.quality": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 62,
+        "column": 13
+      }
+    ],
+    "learnMore": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 180,
+        "column": 27
+      },
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 25,
+        "column": 15
+      }
+    ],
+    "subtitle": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 237,
+        "column": 22
+      },
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 238,
+        "column": 15
+      },
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 216,
+        "column": 13
+      },
+      {
+        "file": "src/components/home/component-showcase.tsx",
+        "line": 53,
+        "column": 15
+      },
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 255,
+        "column": 15
+      }
+    ],
+    "features.performance.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 31,
+        "column": 13
+      }
+    ],
+    "features.performance.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 32,
+        "column": 19
+      }
+    ],
+    "features.security.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 37,
+        "column": 13
+      }
+    ],
+    "features.security.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 38,
+        "column": 19
+      }
+    ],
+    "features.i18n.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 43,
+        "column": 13
+      }
+    ],
+    "features.i18n.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 44,
+        "column": 19
+      }
+    ],
+    "features.themes.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 49,
+        "column": 13
+      }
+    ],
+    "features.themes.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 50,
+        "column": 19
+      }
+    ],
+    "features.typescript.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 55,
+        "column": 13
+      }
+    ],
+    "features.typescript.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 56,
+        "column": 19
+      }
+    ],
+    "features.deployment.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 61,
+        "column": 13
+      }
+    ],
+    "features.deployment.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 62,
+        "column": 19
+      }
+    ],
+    "highlights.modern": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 93,
+        "column": 4
+      }
+    ],
+    "highlights.scalable": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 94,
+        "column": 4
+      }
+    ],
+    "highlights.accessible": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 95,
+        "column": 4
+      }
+    ],
+    "highlights.performant": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 96,
+        "column": 4
+      }
+    ],
+    "highlights.secure": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 97,
+        "column": 4
+      }
+    ],
+    "highlights.maintainable": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 98,
+        "column": 4
+      }
+    ],
+    "highlights.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 105,
+        "column": 43
+      }
+    ],
+    "highlights.subtitle": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 107,
+        "column": 13
+      }
+    ],
+    "architecture.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 132,
+        "column": 9
+      }
+    ],
+    "architecture.frontend.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 139,
+        "column": 15
+      }
+    ],
+    "architecture.frontend.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 144,
+        "column": 15
+      }
+    ],
+    "architecture.ui.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 164,
+        "column": 15
+      }
+    ],
+    "architecture.ui.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 169,
+        "column": 15
+      }
+    ],
+    "architecture.tooling.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 189,
+        "column": 15
+      }
+    ],
+    "architecture.tooling.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 194,
+        "column": 15
+      }
+    ],
+    "cta.title": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 251,
+        "column": 49
+      }
+    ],
+    "cta.description": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 253,
+        "column": 19
+      }
+    ],
+    "cta.getStarted": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 262,
+        "column": 21
+      }
+    ],
+    "cta.viewSource": [
+      {
+        "file": "src/components/home/project-overview.tsx",
+        "line": 276,
+        "column": 23
+      }
+    ],
+    "cta.demo": [
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 116,
+        "column": 11
+      }
+    ],
+    "cta.github": [
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 134,
+        "column": 11
+      }
+    ],
+    "version": [
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 204,
+        "column": 21
+      }
+    ],
+    "title.line1": [
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 210,
+        "column": 19
+      }
+    ],
+    "title.line2": [
+      {
+        "file": "src/components/home/hero-section.tsx",
+        "line": 211,
+        "column": 19
+      }
+    ],
+    "tabs.components": [
+      {
+        "file": "src/components/home/component-showcase.tsx",
+        "line": 63,
+        "column": 17
+      }
+    ],
+    "tabs.themes": [
+      {
+        "file": "src/components/home/component-showcase.tsx",
+        "line": 65,
+        "column": 43
+      }
+    ],
+    "tabs.responsive": [
+      {
+        "file": "src/components/home/component-showcase.tsx",
+        "line": 67,
+        "column": 17
+      }
+    ],
+    "buttons.getStarted": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 84,
+        "column": 22
+      }
+    ],
+    "buttons.learnMore": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 85,
+        "column": 22
+      }
+    ],
+    "community.title": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 130,
+        "column": 13
+      }
+    ],
+    "community.description": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 133,
+        "column": 13
+      }
+    ],
+    "community.discussions": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 148,
+        "column": 17
+      }
+    ],
+    "community.issues": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 162,
+        "column": 17
+      }
+    ],
+    "actions.github.title": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 178,
+        "column": 13
+      }
+    ],
+    "actions.github.description": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 179,
+        "column": 19
+      }
+    ],
+    "actions.download.title": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 186,
+        "column": 13
+      }
+    ],
+    "actions.download.description": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 187,
+        "column": 19
+      }
+    ],
+    "actions.docs.title": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 194,
+        "column": 13
+      }
+    ],
+    "actions.docs.description": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 195,
+        "column": 19
+      }
+    ],
+    "stats.technologies": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 204,
+        "column": 13
+      }
+    ],
+    "stats.typescript": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 208,
+        "column": 13
+      }
+    ],
+    "stats.performance": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 212,
+        "column": 13
+      }
+    ],
+    "stats.languages": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 216,
+        "column": 13
+      }
+    ],
+    "badge": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 246,
+        "column": 17
+      }
+    ],
+    "primary.github": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 272,
+        "column": 19
+      }
+    ],
+    "primary.demo": [
+      {
+        "file": "src/components/home/call-to-action.tsx",
+        "line": 287,
+        "column": 19
+      }
+    ],
+    "themes.title": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 24,
+        "column": 22
+      }
+    ],
+    "themes.description": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 25,
+        "column": 28
+      }
+    ],
+    "themes.toggle": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 29,
+        "column": 19
+      }
+    ],
+    "themes.language": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 33,
+        "column": 19
+      }
+    ],
+    "themes.colors.title": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 38,
+        "column": 43
+      }
+    ],
+    "themes.typography.title": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 47,
+        "column": 43
+      }
+    ],
+    "themes.typography.bold": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 49,
+        "column": 42
+      }
+    ],
+    "themes.typography.medium": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 50,
+        "column": 44
+      }
+    ],
+    "themes.typography.normal": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 51,
+        "column": 44
+      }
+    ],
+    "themes.typography.muted": [
+      {
+        "file": "src/components/home/showcase/theme-showcase.tsx",
+        "line": 53,
+        "column": 19
+      }
+    ],
+    "responsive.title": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 23,
+        "column": 22
+      }
+    ],
+    "responsive.description": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 24,
+        "column": 28
+      }
+    ],
+    "responsive.mobile.title": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 30,
+        "column": 43
+      }
+    ],
+    "responsive.mobile.description": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 32,
+        "column": 17
+      }
+    ],
+    "responsive.tablet.title": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 37,
+        "column": 43
+      }
+    ],
+    "responsive.tablet.description": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 39,
+        "column": 17
+      }
+    ],
+    "responsive.desktop.title": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 44,
+        "column": 43
+      }
+    ],
+    "responsive.desktop.description": [
+      {
+        "file": "src/components/home/showcase/responsive-showcase.tsx",
+        "line": 46,
+        "column": 17
+      }
+    ],
+    "components.interactive.title": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 27,
+        "column": 20
+      }
+    ],
+    "components.interactive.description": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 29,
+        "column": 11
+      }
+    ],
+    "components.interactive.likes": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 34,
+        "column": 17
+      }
+    ],
+    "components.interactive.star": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 53,
+        "column": 13
+      }
+    ],
+    "components.interactive.download": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 60,
+        "column": 13
+      }
+    ],
+    "components.interactive.share": [
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 67,
+        "column": 13
+      }
+    ],
+    "components.forms.title": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 20,
+        "column": 20
+      }
+    ],
+    "components.forms.description": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 21,
+        "column": 26
+      }
+    ],
+    "components.forms.name": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 25,
+        "column": 38
+      }
+    ],
+    "components.forms.namePlaceholder": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 28,
+        "column": 25
+      }
+    ],
+    "components.forms.email": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 32,
+        "column": 39
+      }
+    ],
+    "components.forms.emailPlaceholder": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 36,
+        "column": 25
+      }
+    ],
+    "components.forms.submit": [
+      {
+        "file": "src/components/home/showcase/form-showcase.tsx",
+        "line": 39,
+        "column": 36
+      }
+    ],
+    "components.buttons.title": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 18,
+        "column": 20
+      }
+    ],
+    "components.buttons.description": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 19,
+        "column": 26
+      }
+    ],
+    "components.buttons.primary": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 23,
+        "column": 19
+      }
+    ],
+    "components.buttons.secondary": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 25,
+        "column": 13
+      }
+    ],
+    "components.buttons.outline": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 27,
+        "column": 37
+      }
+    ],
+    "components.buttons.ghost": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 28,
+        "column": 35
+      }
+    ],
+    "components.buttons.small": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 31,
+        "column": 29
+      }
+    ],
+    "components.buttons.default": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 32,
+        "column": 34
+      }
+    ],
+    "components.buttons.large": [
+      {
+        "file": "src/components/home/showcase/button-showcase.tsx",
+        "line": 33,
+        "column": 29
+      }
+    ],
+    "components.badges.title": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 18,
+        "column": 20
+      }
+    ],
+    "components.badges.description": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 19,
+        "column": 26
+      }
+    ],
+    "components.badges.default": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 23,
+        "column": 18
+      }
+    ],
+    "components.badges.secondary": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 24,
+        "column": 38
+      }
+    ],
+    "components.badges.outline": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 25,
+        "column": 36
+      }
+    ],
+    "components.badges.destructive": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 27,
+        "column": 13
+      }
+    ],
+    "components.badges.success": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 32,
+        "column": 13
+      }
+    ],
+    "components.badges.warning": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 35,
+        "column": 13
+      }
+    ],
+    "components.badges.info": [
+      {
+        "file": "src/components/home/showcase/badge-showcase.tsx",
+        "line": 37,
+        "column": 42
+      }
+    ],
+    "firstName": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 32,
+        "column": 11
+      }
+    ],
+    "firstNamePlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 36,
+        "column": 23
+      }
+    ],
+    "lastName": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 59,
+        "column": 11
+      }
+    ],
+    "lastNamePlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 63,
+        "column": 23
+      }
+    ],
+    "email": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 107,
+        "column": 11
+      }
+    ],
+    "emailPlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 112,
+        "column": 23
+      }
+    ],
+    "company": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 129,
+        "column": 34
+      }
+    ],
+    "companyPlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 132,
+        "column": 23
+      }
+    ],
+    "phone": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 173,
+        "column": 34
+      }
+    ],
+    "phonePlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 177,
+        "column": 25
+      }
+    ],
+    "subject": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 200,
+        "column": 13
+      }
+    ],
+    "subjectPlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 204,
+        "column": 25
+      }
+    ],
+    "message": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 228,
+        "column": 11
+      }
+    ],
+    "messagePlaceholder": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 232,
+        "column": 23
+      }
+    ],
+    "acceptPrivacy": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 289,
+        "column": 13
+      }
+    ],
+    "marketingConsent": [
+      {
+        "file": "src/components/forms/contact-form-fields.tsx",
+        "line": 316,
+        "column": 13
+      }
+    ],
+    "submitSuccess": [
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 44,
+        "column": 15
+      }
+    ],
+    "submitError": [
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 48,
+        "column": 31
+      }
+    ],
+    "submitting": [
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 52,
+        "column": 15
+      },
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 317,
+        "column": 26
+      }
+    ],
+    "submit": [
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 317,
+        "column": 44
+      }
+    ],
+    "rateLimitMessage": [
+      {
+        "file": "src/components/forms/contact-form-container.tsx",
+        "line": 322,
+        "column": 13
+      }
+    ],
+    "welcome": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 16,
+        "column": 51
+      }
+    ],
+    "modernApp": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 18,
+        "column": 13
+      }
+    ],
+    "getStarted": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 22,
+        "column": 15
+      }
+    ],
+    "features": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 31,
+        "column": 67
+      }
+    ],
+    "modernStack": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 34,
+        "column": 56
+      }
+    ],
+    "modernStackDesc": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 36,
+        "column": 17
+      }
+    ],
+    "internationalization": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 40,
+        "column": 56
+      }
+    ],
+    "internationalizationDesc": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 42,
+        "column": 17
+      }
+    ],
+    "testingReady": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 46,
+        "column": 56
+      }
+    ],
+    "testingReadyDesc": [
+      {
+        "file": "src/app/[locale]/page.tsx",
+        "line": 48,
+        "column": 17
+      }
+    ],
+    "instructions.title": [
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 35,
+        "column": 13
+      }
+    ],
+    "instructions.step1": [
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 38,
+        "column": 19
+      }
+    ],
+    "instructions.step2": [
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 39,
+        "column": 19
+      }
+    ],
+    "instructions.step3": [
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 40,
+        "column": 19
+      }
+    ],
+    "instructions.step4": [
+      {
+        "file": "src/app/[locale]/react-scan-demo/page.tsx",
+        "line": 41,
+        "column": 19
+      }
+    ],
+    "refreshing": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 92,
+        "column": 27
+      }
+    ],
+    "refresh": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 92,
+        "column": 45
+      }
+    ],
+    "export": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 101,
+        "column": 15
+      }
+    ],
+    "status.good": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 119,
+        "column": 13
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 189,
+        "column": 10
+      }
+    ],
+    "status.needsImprovement": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 121,
+        "column": 13
+      },
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 190,
+        "column": 10
+      }
+    ],
+    "status.poor": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 123,
+        "column": 13
+      }
+    ],
+    "status.excellent": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 187,
+        "column": 8
+      }
+    ],
+    "currentMetrics.title": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 195,
+        "column": 20
+      }
+    ],
+    "currentMetrics.description": [
+      {
+        "file": "src/app/[locale]/diagnostics/components.tsx",
+        "line": 197,
+        "column": 11
+      }
+    ]
+  },
+  "analysis": {
+    "missingKeys": [
+      "organization.name",
+      "organization.description",
+      "organization.phone",
+      "organization.social.twitter",
+      "organization.social.linkedin",
+      "organization.social.github",
+      "website.name",
+      "website.description",
+      "article.defaultAuthor",
+      "title",
+      "description",
+      "siteName",
+      "hello",
+      "greeting",
+      "missing.key",
+      "fallback.key",
+      "test.key",
+      "loading",
+      "toggle",
+      "english",
+      "chinese",
+      "tryAgain",
+      "comingSoon",
+      "progress.title",
+      "expectedCompletion",
+      "backToHome",
+      "contactUs",
+      "stayTuned",
+      "status",
+      "nearCompletion",
+      "selectLanguage",
+      "fallbackWarning",
+      "today",
+      "yesterday",
+      "tomorrow",
+      "stats.totalTech",
+      "stats.categories",
+      "stats.modern",
+      "stats.quality",
+      "learnMore",
+      "subtitle",
+      "features.performance.title",
+      "features.performance.description",
+      "features.security.title",
+      "features.security.description",
+      "features.i18n.title",
+      "features.i18n.description",
+      "features.themes.title",
+      "features.themes.description",
+      "features.typescript.title",
+      "features.typescript.description",
+      "features.deployment.title",
+      "features.deployment.description",
+      "highlights.modern",
+      "highlights.scalable",
+      "highlights.accessible",
+      "highlights.performant",
+      "highlights.secure",
+      "highlights.maintainable",
+      "highlights.title",
+      "highlights.subtitle",
+      "architecture.title",
+      "architecture.frontend.title",
+      "architecture.frontend.description",
+      "architecture.ui.title",
+      "architecture.ui.description",
+      "architecture.tooling.title",
+      "architecture.tooling.description",
+      "cta.title",
+      "cta.description",
+      "cta.getStarted",
+      "cta.viewSource",
+      "cta.demo",
+      "cta.github",
+      "version",
+      "title.line1",
+      "title.line2",
+      "tabs.components",
+      "tabs.themes",
+      "tabs.responsive",
+      "buttons.getStarted",
+      "buttons.learnMore",
+      "community.title",
+      "community.description",
+      "community.discussions",
+      "community.issues",
+      "actions.github.title",
+      "actions.github.description",
+      "actions.download.title",
+      "actions.download.description",
+      "actions.docs.title",
+      "actions.docs.description",
+      "stats.technologies",
+      "stats.typescript",
+      "stats.performance",
+      "stats.languages",
+      "badge",
+      "primary.github",
+      "primary.demo",
+      "themes.title",
+      "themes.description",
+      "themes.toggle",
+      "themes.language",
+      "themes.colors.title",
+      "themes.typography.title",
+      "themes.typography.bold",
+      "themes.typography.medium",
+      "themes.typography.normal",
+      "themes.typography.muted",
+      "responsive.title",
+      "responsive.description",
+      "responsive.mobile.title",
+      "responsive.mobile.description",
+      "responsive.tablet.title",
+      "responsive.tablet.description",
+      "responsive.desktop.title",
+      "responsive.desktop.description",
+      "components.interactive.title",
+      "components.interactive.description",
+      "components.interactive.likes",
+      "components.interactive.star",
+      "components.interactive.download",
+      "components.interactive.share",
+      "components.forms.title",
+      "components.forms.description",
+      "components.forms.name",
+      "components.forms.namePlaceholder",
+      "components.forms.email",
+      "components.forms.emailPlaceholder",
+      "components.forms.submit",
+      "components.buttons.title",
+      "components.buttons.description",
+      "components.buttons.primary",
+      "components.buttons.secondary",
+      "components.buttons.outline",
+      "components.buttons.ghost",
+      "components.buttons.small",
+      "components.buttons.default",
+      "components.buttons.large",
+      "components.badges.title",
+      "components.badges.description",
+      "components.badges.default",
+      "components.badges.secondary",
+      "components.badges.outline",
+      "components.badges.destructive",
+      "components.badges.success",
+      "components.badges.warning",
+      "components.badges.info",
+      "firstName",
+      "firstNamePlaceholder",
+      "lastName",
+      "lastNamePlaceholder",
+      "email",
+      "emailPlaceholder",
+      "company",
+      "companyPlaceholder",
+      "phone",
+      "phonePlaceholder",
+      "subject",
+      "subjectPlaceholder",
+      "message",
+      "messagePlaceholder",
+      "acceptPrivacy",
+      "marketingConsent",
+      "submitSuccess",
+      "submitError",
+      "submitting",
+      "submit",
+      "rateLimitMessage",
+      "welcome",
+      "modernApp",
+      "getStarted",
+      "features",
+      "modernStack",
+      "modernStackDesc",
+      "internationalization",
+      "internationalizationDesc",
+      "testingReady",
+      "testingReadyDesc",
+      "instructions.title",
+      "instructions.step1",
+      "instructions.step2",
+      "instructions.step3",
+      "instructions.step4",
+      "refreshing",
+      "refresh",
+      "export",
+      "status.good",
+      "status.needsImprovement",
+      "status.poor",
+      "status.excellent",
+      "currentMetrics.title",
+      "currentMetrics.description"
+    ],
+    "unusedKeys": [
+      "common.loading",
+      "common.error",
+      "common.success",
+      "common.cancel",
+      "common.confirm",
+      "common.save",
+      "common.edit",
+      "common.delete",
+      "common.search",
+      "common.filter",
+      "common.sort",
+      "common.next",
+      "common.previous",
+      "common.close",
+      "common.open",
+      "errorBoundary.title",
+      "errorBoundary.description",
+      "errorBoundary.tryAgain",
+      "navigation.home",
+      "navigation.about",
+      "navigation.contact",
+      "navigation.services",
+      "navigation.products",
+      "navigation.blog",
+      "navigation.diagnostics",
+      "navigation.login",
+      "navigation.logout",
+      "navigation.profile",
+      "navigation.settings",
+      "diagnostics.title",
+      "diagnostics.description",
+      "diagnostics.controlPanel.title",
+      "diagnostics.controlPanel.description",
+      "diagnostics.controlPanel.refresh",
+      "diagnostics.controlPanel.refreshing",
+      "diagnostics.controlPanel.export",
+      "diagnostics.currentMetrics.title",
+      "diagnostics.currentMetrics.description",
+      "diagnostics.status.good",
+      "diagnostics.status.needsImprovement",
+      "diagnostics.status.poor",
+      "diagnostics.status.excellent",
+      "theme.toggle",
+      "theme.light",
+      "theme.dark",
+      "theme.system",
+      "language.toggle",
+      "language.selectLanguage",
+      "language.english",
+      "language.chinese",
+      "language.switching",
+      "language.switchSuccess",
+      "language.switchError",
+      "language.fallbackWarning",
+      "language.detectionInfo",
+      "language.source",
+      "language.confidence",
+      "language.userPreference",
+      "home.title",
+      "home.subtitle",
+      "home.description",
+      "home.getStarted",
+      "home.learnMore",
+      "home.welcome",
+      "home.modernApp",
+      "home.features.title",
+      "home.features.performance.title",
+      "home.features.performance.description",
+      "home.features.scalable.title",
+      "home.features.scalable.description",
+      "home.features.secure.title",
+      "home.features.secure.description",
+      "home.modernStack",
+      "home.modernStackDesc",
+      "home.internationalization",
+      "home.internationalizationDesc",
+      "home.testingReady",
+      "home.testingReadyDesc",
+      "home.hero.version",
+      "home.hero.title.line1",
+      "home.hero.title.line2",
+      "home.hero.subtitle",
+      "home.hero.cta.demo",
+      "home.hero.cta.github",
+      "home.hero.stats.technologies",
+      "home.hero.stats.typescript",
+      "home.hero.stats.performance",
+      "home.hero.stats.languages",
+      "home.techStack.title",
+      "home.techStack.subtitle",
+      "home.techStack.learnMore",
+      "home.techStack.stats.totalTech",
+      "home.techStack.stats.categories",
+      "home.techStack.stats.modern",
+      "home.techStack.stats.quality",
+      "home.showcase.title",
+      "home.showcase.subtitle",
+      "home.showcase.tabs.components",
+      "home.showcase.tabs.themes",
+      "home.showcase.tabs.responsive",
+      "home.showcase.components.buttons.title",
+      "home.showcase.components.buttons.description",
+      "home.showcase.components.buttons.primary",
+      "home.showcase.components.buttons.secondary",
+      "home.showcase.components.buttons.outline",
+      "home.showcase.components.buttons.ghost",
+      "home.showcase.components.buttons.small",
+      "home.showcase.components.buttons.default",
+      "home.showcase.components.buttons.large",
+      "home.showcase.components.forms.title",
+      "home.showcase.components.forms.description",
+      "home.showcase.components.forms.name",
+      "home.showcase.components.forms.namePlaceholder",
+      "home.showcase.components.forms.email",
+      "home.showcase.components.forms.emailPlaceholder",
+      "home.showcase.components.forms.submit",
+      "home.showcase.components.interactive.title",
+      "home.showcase.components.interactive.description",
+      "home.showcase.components.interactive.likes",
+      "home.showcase.components.interactive.star",
+      "home.showcase.components.interactive.download",
+      "home.showcase.components.interactive.share",
+      "home.showcase.components.badges.title",
+      "home.showcase.components.badges.description",
+      "home.showcase.components.badges.default",
+      "home.showcase.components.badges.secondary",
+      "home.showcase.components.badges.outline",
+      "home.showcase.components.badges.destructive",
+      "home.showcase.components.badges.success",
+      "home.showcase.components.badges.warning",
+      "home.showcase.components.badges.info",
+      "home.showcase.themes.title",
+      "home.showcase.themes.description",
+      "home.showcase.themes.toggle",
+      "home.showcase.themes.language",
+      "home.showcase.themes.colors.title",
+      "home.showcase.themes.typography.title",
+      "home.showcase.themes.typography.bold",
+      "home.showcase.themes.typography.medium",
+      "home.showcase.themes.typography.normal",
+      "home.showcase.themes.typography.muted",
+      "home.showcase.responsive.title",
+      "home.showcase.responsive.description",
+      "home.showcase.responsive.mobile.title",
+      "home.showcase.responsive.mobile.description",
+      "home.showcase.responsive.tablet.title",
+      "home.showcase.responsive.tablet.description",
+      "home.showcase.responsive.desktop.title",
+      "home.showcase.responsive.desktop.description",
+      "home.overview.title",
+      "home.overview.subtitle",
+      "home.overview.features.performance.title",
+      "home.overview.features.performance.description",
+      "home.overview.features.security.title",
+      "home.overview.features.security.description",
+      "home.overview.features.i18n.title",
+      "home.overview.features.i18n.description",
+      "home.overview.features.themes.title",
+      "home.overview.features.themes.description",
+      "home.overview.features.typescript.title",
+      "home.overview.features.typescript.description",
+      "home.overview.features.deployment.title",
+      "home.overview.features.deployment.description",
+      "home.overview.highlights.title",
+      "home.overview.highlights.subtitle",
+      "home.overview.highlights.modern",
+      "home.overview.highlights.scalable",
+      "home.overview.highlights.accessible",
+      "home.overview.highlights.performant",
+      "home.overview.highlights.secure",
+      "home.overview.highlights.maintainable",
+      "home.overview.architecture.title",
+      "home.overview.architecture.frontend.title",
+      "home.overview.architecture.frontend.description",
+      "home.overview.architecture.ui.title",
+      "home.overview.architecture.ui.description",
+      "home.overview.architecture.tooling.title",
+      "home.overview.architecture.tooling.description",
+      "home.overview.cta.title",
+      "home.overview.cta.description",
+      "home.overview.cta.getStarted",
+      "home.overview.cta.viewSource",
+      "home.cta.badge",
+      "home.cta.title",
+      "home.cta.subtitle",
+      "home.cta.primary.github",
+      "home.cta.primary.demo",
+      "home.cta.actions.github.title",
+      "home.cta.actions.github.description",
+      "home.cta.actions.download.title",
+      "home.cta.actions.download.description",
+      "home.cta.actions.docs.title",
+      "home.cta.actions.docs.description",
+      "home.cta.buttons.getStarted",
+      "home.cta.buttons.learnMore",
+      "home.cta.stats.technologies",
+      "home.cta.stats.typescript",
+      "home.cta.stats.performance",
+      "home.cta.stats.languages",
+      "home.cta.community.title",
+      "home.cta.community.description",
+      "home.cta.community.discussions",
+      "home.cta.community.issues",
+      "themeDemo.title",
+      "themeDemo.description",
+      "themeDemo.chineseTest",
+      "themeDemo.englishTest",
+      "themeDemo.chineseDescription",
+      "themeDemo.englishDescription",
+      "themeDemo.chineseInput",
+      "themeDemo.englishInput",
+      "themeDemo.chinesePlaceholder",
+      "themeDemo.englishPlaceholder",
+      "themeDemo.primaryButton",
+      "themeDemo.secondaryButton",
+      "themeDemo.outlineButton",
+      "instructions.getStarted",
+      "instructions.saveChanges",
+      "actions.deployNow",
+      "actions.readDocs",
+      "contact.form.title",
+      "contact.form.description",
+      "contact.form.firstName",
+      "contact.form.lastName",
+      "contact.form.email",
+      "contact.form.company",
+      "contact.form.phone",
+      "contact.form.subject",
+      "contact.form.message",
+      "contact.form.firstNamePlaceholder",
+      "contact.form.lastNamePlaceholder",
+      "contact.form.emailPlaceholder",
+      "contact.form.companyPlaceholder",
+      "contact.form.phonePlaceholder",
+      "contact.form.subjectPlaceholder",
+      "contact.form.messagePlaceholder",
+      "contact.form.acceptPrivacy",
+      "contact.form.marketingConsent",
+      "contact.form.submit",
+      "contact.form.submitting",
+      "contact.form.success",
+      "contact.form.error",
+      "contact.form.validation.firstNameRequired",
+      "contact.form.validation.firstNameTooShort",
+      "contact.form.validation.lastNameRequired",
+      "contact.form.validation.lastNameTooShort",
+      "contact.form.validation.emailRequired",
+      "contact.form.validation.emailInvalid",
+      "contact.form.validation.messageRequired",
+      "contact.form.validation.messageTooShort",
+      "footer.learn",
+      "footer.examples",
+      "footer.goToNextjs",
+      "footer.copyright",
+      "footer.description",
+      "footer.sections.product.title",
+      "footer.sections.product.home",
+      "footer.sections.product.enterprise",
+      "footer.sections.product.pricing",
+      "footer.sections.company.title",
+      "footer.sections.company.terms",
+      "footer.sections.company.aiPolicy",
+      "footer.sections.company.privacy",
+      "footer.sections.resources.title",
+      "footer.sections.resources.faqs",
+      "footer.sections.resources.docs",
+      "footer.sections.resources.ambassadors",
+      "footer.sections.resources.community",
+      "footer.sections.resources.vercel",
+      "formatting.date.today",
+      "formatting.date.yesterday",
+      "formatting.date.tomorrow",
+      "formatting.date.lastUpdated",
+      "formatting.date.publishedOn",
+      "formatting.number.currency",
+      "formatting.number.percentage",
+      "formatting.number.fileSize",
+      "formatting.plurals.items.zero",
+      "formatting.plurals.items.one",
+      "formatting.plurals.items.other",
+      "formatting.plurals.users.zero",
+      "formatting.plurals.users.one",
+      "formatting.plurals.users.other",
+      "formatting.plurals.notifications.zero",
+      "formatting.plurals.notifications.one",
+      "formatting.plurals.notifications.other",
+      "errors.notFound",
+      "errors.serverError",
+      "errors.networkError",
+      "errors.validationError",
+      "errors.unauthorized",
+      "errors.forbidden",
+      "errors.timeout",
+      "errors.generic",
+      "errors.translationMissing",
+      "errors.loadingFailed",
+      "accessibility.skipToContent",
+      "accessibility.loading",
+      "accessibility.error",
+      "accessibility.languageSelector",
+      "accessibility.themeSelector",
+      "seo.title",
+      "seo.keywords",
+      "seo.pages.home.title",
+      "seo.pages.home.description",
+      "seo.pages.about.title",
+      "seo.pages.about.description",
+      "seo.pages.contact.title",
+      "seo.pages.contact.description",
+      "seo.pages.products.title",
+      "seo.pages.products.description",
+      "seo.pages.blog.title",
+      "seo.pages.blog.description",
+      "underConstruction.title",
+      "underConstruction.subtitle",
+      "underConstruction.description",
+      "underConstruction.backToHome",
+      "underConstruction.comingSoon",
+      "underConstruction.expectedCompletion",
+      "underConstruction.stayTuned",
+      "underConstruction.contactUs",
+      "underConstruction.pages.products.title",
+      "underConstruction.pages.products.description",
+      "underConstruction.pages.products.features",
+      "underConstruction.pages.blog.title",
+      "underConstruction.pages.blog.description",
+      "underConstruction.pages.blog.features",
+      "underConstruction.pages.about.title",
+      "underConstruction.pages.about.description",
+      "underConstruction.pages.about.features",
+      "underConstruction.pages.contact.title",
+      "underConstruction.pages.contact.description",
+      "underConstruction.pages.contact.features",
+      "underConstruction.progress.title",
+      "underConstruction.progress.status",
+      "underConstruction.progress.nearCompletion",
+      "underConstruction.progress.planning",
+      "underConstruction.progress.development",
+      "underConstruction.progress.testing",
+      "underConstruction.progress.launch",
+      "underConstruction.animation.loading",
+      "underConstruction.animation.construction",
+      "ReactScanDemo.title",
+      "ReactScanDemo.description",
+      "ReactScanDemo.instructions.title",
+      "ReactScanDemo.instructions.step1",
+      "ReactScanDemo.instructions.step2",
+      "ReactScanDemo.instructions.step3",
+      "ReactScanDemo.instructions.step4",
+      "structured-data.organization.name",
+      "structured-data.organization.description",
+      "structured-data.organization.phone",
+      "structured-data.organization.social.twitter",
+      "structured-data.organization.social.linkedin",
+      "structured-data.organization.social.github",
+      "structured-data.website.name",
+      "structured-data.website.description",
+      "structured-data.article.defaultTitle",
+      "structured-data.article.defaultDescription",
+      "structured-data.article.defaultAuthor",
+      "structured-data.product.defaultName",
+      "structured-data.product.defaultDescription"
+    ]
+  },
+  "errors": [],
+  "warnings": []
+}

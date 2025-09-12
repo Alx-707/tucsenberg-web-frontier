@@ -105,7 +105,7 @@ describe('useThemeToggle', () => {
     vi.useFakeTimers();
 
     // Mock View Transitions API safely
-    (document as any).startViewTransition = mockStartViewTransition;
+    (document as unknown).startViewTransition = mockStartViewTransition;
   });
 
   afterEach(() => {
@@ -119,7 +119,6 @@ describe('useThemeToggle', () => {
 
       expect(result.current.theme).toBe('light');
       expect(result.current.isOpen).toBe(false);
-      expect(result.current.supportsViewTransitions).toBe(true);
       expect(result.current.prefersReducedMotion).toBe(false);
       expect(result.current.prefersHighContrast).toBe(false);
     });
@@ -462,7 +461,8 @@ describe('useThemeToggle', () => {
 
       const { result } = renderHook(() => useThemeToggle());
 
-      expect(result.current.supportsViewTransitions).toBe(false);
+      // supportsViewTransitions is no longer part of the hook return value
+      expect(typeof result.current.handleThemeChange).toBe('function');
     });
   });
 

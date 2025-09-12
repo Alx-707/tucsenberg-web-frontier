@@ -121,6 +121,12 @@ export const TEST_CONTENT_LIMITS = {
 
   /** 最大复杂度 - 10 */
   MAX_COMPLEXITY: 10,
+
+  /** SEO标题最大长度 - 60 */
+  SEO_TITLE_MAX_LENGTH: 60,
+
+  /** SEO描述最大长度 - 160 */
+  SEO_DESCRIPTION_MAX_LENGTH: 160,
 } as const;
 
 // ==================== 测试动画和缓动常量 ====================

@@ -1,6 +1,7 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect, useState } from 'react';;
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 // 自定义hook处理hydration

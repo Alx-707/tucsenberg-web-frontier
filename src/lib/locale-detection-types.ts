@@ -1,4 +1,5 @@
-import { Locale } from '@/types/i18n';
+import type { Locale } from '@/types/i18n';
+;
 
 /**
  * 检测结果接口
@@ -21,5 +22,8 @@ export interface LocaleDetectionResult {
     timeZoneLocale?: Locale;
     fallbackUsed?: boolean;
     browserLanguages?: string[];
+    detectionStats?: {
+      consistentSources: number;
+    };
   };
 }

@@ -84,7 +84,7 @@ test.describe('Web Eval Agent Integration', () => {
       return new Promise((resolve) => {
         const observer = new PerformanceObserver((list) => {
           const entries = list.getEntries();
-          const performanceData: Record<string, any> = {};
+          const performanceData: Record<string, unknown> = {};
 
           entries.forEach((entry) => {
             if (entry.entryType === 'navigation') {
@@ -118,7 +118,7 @@ test.describe('Web Eval Agent Integration', () => {
 
     // Verify reasonable performance
     if (metrics && typeof metrics === 'object' && 'navigation' in metrics) {
-      const { navigation } = metrics as any;
+      const { navigation } = metrics as unknown;
       if (navigation && navigation.loadComplete) {
         expect(navigation.loadComplete).toBeLessThan(5000); // 5 seconds max
       }

@@ -3,6 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { useAccessibility } from '@/lib/accessibility';
 import { useEnhancedTheme } from './use-enhanced-theme';
+import { supportsViewTransitions } from './theme-transition-utils';
 
 /**
  * 检查组件是否已挂载的hook
@@ -25,7 +26,7 @@ function useMounted() {
  * 创建主题切换处理函数
  */
 function createThemeChangeHandler(
-  setThemeWithCircularTransition: (
+  setCircularTheme: (
     _theme: string,
     _event?: React.MouseEvent<HTMLElement>,
   ) => void,
@@ -39,7 +40,7 @@ function createThemeChangeHandler(
     announceSwitching();
 
     // 执行主题切换
-    setThemeWithCircularTransition(newTheme, event);
+    setCircularTheme(newTheme, event);
 
     // 延迟播报完成状态
     const reducedMotionDelay = 50;
@@ -61,8 +62,7 @@ function createThemeChangeHandler(
  * 封装主题切换、无障碍性支持和状态管理
  */
 export function useThemeToggle() {
-  const { theme, setThemeWithCircularTransition, supportsViewTransitions } =
-    useEnhancedTheme();
+  const { theme, setCircularTheme } = useEnhancedTheme();
   const [isOpen, setIsOpenState] = useState(false);
   const mounted = useMounted();
 
@@ -80,7 +80,7 @@ export function useThemeToggle() {
   const handleThemeChange = useCallback(
     (newTheme: string, event?: React.MouseEvent<HTMLElement>) => {
       const handler = createThemeChangeHandler(
-        setThemeWithCircularTransition,
+        setCircularTheme,
         announceSwitching,
         announceThemeChange,
         prefersReducedMotion,
@@ -89,7 +89,7 @@ export function useThemeToggle() {
       handler(newTheme, event);
     },
     [
-      setThemeWithCircularTransition,
+      setCircularTheme,
       announceSwitching,
       announceThemeChange,
       prefersReducedMotion,
@@ -117,9 +117,10 @@ export function useThemeToggle() {
     theme,
     isOpen,
     setIsOpen,
-    supportsViewTransitions,
+
     prefersReducedMotion,
     prefersHighContrast,
+    supportsViewTransitions: supportsViewTransitions(),
 
     // 处理函数
     handleThemeChange,

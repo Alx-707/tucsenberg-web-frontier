@@ -1,7 +1,7 @@
+import { ThemeToggle } from '@/components/theme-toggle';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { ThemeProvider } from 'next-themes';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 /**
  * 主题切换组件浏览器测试
@@ -72,7 +72,7 @@ const mockSetTheme = vi.fn();
 const mockTheme = vi.fn(() => 'light');
 
 vi.mock('next-themes', () => ({
-  ThemeProvider: ({ children }: any) => <div>{children}</div>,
+  ThemeProvider: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
   useTheme: () => ({
     theme: mockTheme(),
     setTheme: mockSetTheme,

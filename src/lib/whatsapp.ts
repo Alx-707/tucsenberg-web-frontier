@@ -1,0 +1,214 @@
+import WhatsApp from 'whatsapp';
+import { env } from '../../env.mjs';
+import { logger } from './logger';
+
+/**
+ * WhatsApp webhook消息体类型定义
+ */
+interface WhatsAppWebhookBody {
+  entry?: Array<{
+    changes?: Array<{
+      value?: {
+        messages?: Array<{
+          from: string;
+          text?: { body: string };
+        }>;
+      };
+    }>;
+  }>;
+}
+
+/**
+ * WhatsApp Business API 服务类
+ * 提供发送消息、处理 webhook 等功能
+ */
+export class WhatsAppService {
+  private client: WhatsApp;
+
+  constructor() {
+    if (!env.WHATSAPP_ACCESS_TOKEN) {
+      throw new Error('WHATSAPP_ACCESS_TOKEN is required');
+    }
+
+    // WhatsApp constructor expects phoneNumberId as number
+    const phoneNumberId = env.WHATSAPP_PHONE_NUMBER_ID
+      ? parseInt(env.WHATSAPP_PHONE_NUMBER_ID, 10)
+      : 0;
+    this.client = new WhatsApp(phoneNumberId);
+    // Set token separately if needed
+    if (env.WHATSAPP_ACCESS_TOKEN) {
+      (this.client as { token?: string }).token = env.WHATSAPP_ACCESS_TOKEN;
+    }
+  }
+
+  /**
+   * 发送文本消息
+   */
+  async sendTextMessage(to: string, message: string) {
+    try {
+      // WhatsApp API expects recipient as second parameter
+      const recipient = parseInt(to, 10);
+      const response = await this.client.messages.text(
+        {
+          body: message,
+        },
+        recipient,
+      );
+      return response;
+    } catch (_error) {
+    // 忽略错误变量
+      logger.error('Failed to send WhatsApp message', {}, _error instanceof Error ? _error : new Error(String(_error)));
+      throw _error;
+    }
+  }
+
+  /**
+   * 发送模板消息
+   */
+  async sendTemplateMessage(
+    to: string,
+    templateName: string,
+    languageCode: string = 'en',
+    components?: Array<Record<string, unknown>>,
+  ) {
+    try {
+      // WhatsApp API expects recipient as second parameter
+      const recipient = parseInt(to, 10);
+      // WhatsApp template message with correct structure
+      const templateObject = {
+        name: templateName,
+        language: {
+          policy: 'deterministic' as const,
+          code: languageCode,
+        },
+        ...(components && { components }),
+      };
+      const response = await this.client.messages.template(
+        templateObject as unknown as Parameters<typeof this.client.messages.template>[0],
+        recipient,
+      );
+      return response;
+    } catch (_error) {
+    // 忽略错误变量
+      logger.error('Failed to send WhatsApp template message', {}, _error instanceof Error ? _error : new Error(String(_error)));
+      throw _error;
+    }
+  }
+
+  /**
+   * 验证 webhook 签名
+   */
+  verifyWebhook(mode: string, token: string, challenge: string): string | null {
+    if (mode === 'subscribe' && token === env.WHATSAPP_WEBHOOK_VERIFY_TOKEN) {
+      return challenge;
+    }
+    return null;
+  }
+
+  /**
+   * 处理接收到的消息
+   */
+  async handleIncomingMessage(body: WhatsAppWebhookBody) {
+    try {
+      const entry = body.entry?.[0];
+      const changes = entry?.changes?.[0];
+      const value = changes?.value;
+
+      if (value?.messages) {
+        const [message] = value.messages;
+        if (message) {
+          const { from } = message;
+          const messageBody = message.text?.body;
+
+          // 使用logger替代console.log
+          logger.info(`Received WhatsApp message from ${from}: ${messageBody}`);
+
+          // 这里可以添加自动回复逻辑
+          if (messageBody) {
+            await this.sendAutoReply(from, messageBody);
+          }
+        }
+      }
+
+      return { success: true };
+    } catch (_error) {
+    // 忽略错误变量
+      logger.error('Failed to handle incoming WhatsApp message', {}, _error instanceof Error ? _error : new Error(String(_error)));
+      throw _error;
+    }
+  }
+
+  /**
+   * 自动回复逻辑
+   */
+  private async sendAutoReply(to: string, receivedMessage: string) {
+    // 简单的自动回复逻辑
+    const lowerMessage = receivedMessage.toLowerCase();
+
+    let replyMessage = '';
+
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+      replyMessage =
+        'Hello! Thank you for contacting us. How can we help you today?';
+    } else if (lowerMessage.includes('help')) {
+      replyMessage =
+        "We're here to help! Please describe your question or concern.";
+    } else if (
+      lowerMessage.includes('price') ||
+      lowerMessage.includes('cost')
+    ) {
+      replyMessage =
+        'For pricing information, please visit our website or contact our sales team.';
+    } else {
+      replyMessage =
+        'Thank you for your message. Our team will get back to you soon!';
+    }
+
+    await this.sendTextMessage(to, replyMessage);
+  }
+}
+
+// 单例实例
+let whatsappService: WhatsAppService | null = null;
+
+export function getWhatsAppService(): WhatsAppService {
+  if (!whatsappService) {
+    whatsappService = new WhatsAppService();
+  }
+  return whatsappService;
+}
+
+// 消息类型定义
+export interface WhatsAppMessage {
+  to: string;
+  type: 'text' | 'template' | 'media';
+  content: {
+    body?: string;
+    templateName?: string;
+    languageCode?: string;
+    components?: Array<Record<string, unknown>>;
+    mediaUrl?: string;
+    caption?: string;
+  };
+}
+
+// 发送消息的通用函数
+export function sendWhatsAppMessage(message: WhatsAppMessage) {
+  const service = getWhatsAppService();
+
+  switch (message.type) {
+    case 'text':
+      return service.sendTextMessage(message.to, message.content.body!);
+
+    case 'template':
+      return service.sendTemplateMessage(
+        message.to,
+        message.content.templateName!,
+        message.content.languageCode,
+        message.content.components,
+      );
+
+    default:
+      throw new Error(`Unsupported message type: ${message.type}`);
+  }
+}

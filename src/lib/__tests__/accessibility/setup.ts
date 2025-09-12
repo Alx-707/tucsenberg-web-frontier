@@ -120,7 +120,7 @@ export function setupAccessibilityTest() {
     textContent: '',
     style: {},
     remove: vi.fn(),
-  } as any;
+  } as unknown;
 
   // Reset DOM mocks
   mockGetElementById.mockReturnValue(null);
@@ -176,7 +176,7 @@ export function setupAccessibilityTest() {
 }
 
 // Helper function to create accessibility manager instance
-export function createAccessibilityManager(config?: any): AccessibilityManager {
+export function createAccessibilityManager(config?: unknown): AccessibilityManager {
   return new AccessibilityManager({
     language: 'en',
     enableVoiceAnnouncements: true,
@@ -190,7 +190,7 @@ export function createAccessibilityManager(config?: any): AccessibilityManager {
 export function getPrivateAccessibility(
   manager: AccessibilityManager,
 ): AccessibilityManagerPrivate {
-  return manager as any;
+  return manager as unknown;
 }
 
 // Helper function to simulate media query changes

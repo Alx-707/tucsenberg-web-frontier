@@ -1,0 +1,147 @@
+/**
+ * 语言存储系统验证函数
+ * Locale Storage System Validation Functions
+ */
+
+import { BaseValidators } from '../locale-storage-types-base';
+
+import type {
+  UserLocalePreference,
+  LocaleDetectionHistory,
+  ValidationResult,
+} from '../locale-storage-types-data';
+
+/**
+ * 验证函数
+ * Validation functions
+ */
+
+/**
+ * 验证用户偏好
+ * Validate user preference
+ */
+export function validatePreference(preference: UserLocalePreference): ValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // 验证必需字段
+  if (!BaseValidators.isValidLocale(preference.locale)) {
+    errors.push('Invalid locale');
+  }
+
+  if (!BaseValidators.isValidSource(preference.source)) {
+    errors.push('Invalid source');
+  }
+
+  if (!BaseValidators.isValidTimestamp(preference.timestamp)) {
+    errors.push('Invalid timestamp');
+  }
+
+  if (!BaseValidators.isValidConfidence(preference.confidence)) {
+    errors.push('Invalid confidence value');
+  }
+
+  // 验证元数据
+  if (preference.metadata) {
+    if (typeof preference.metadata !== 'object') {
+      errors.push('Metadata must be an object');
+    } else {
+      // 验证用户代理
+      if (preference.metadata.userAgent && typeof preference.metadata.userAgent !== 'string') {
+        warnings.push('User agent should be a string');
+      }
+
+      // 验证IP国家
+      if (preference.metadata.ipCountry && typeof preference.metadata.ipCountry !== 'string') {
+        warnings.push('IP country should be a string');
+      }
+
+      // 验证浏览器语言
+      if (preference.metadata.browserLanguages && !Array.isArray(preference.metadata.browserLanguages)) {
+        warnings.push('Browser languages should be an array');
+      }
+
+      // 验证时区
+      if (preference.metadata.timezone && typeof preference.metadata.timezone !== 'string') {
+        warnings.push('Timezone should be a string');
+      }
+    }
+  }
+
+  // 验证置信度与来源的一致性
+  if (preference.source === 'user' && preference.confidence < 0.9) {
+    warnings.push('User-selected preferences should have high confidence');
+  }
+
+  if (preference.source === 'fallback' && preference.confidence > 0.3) {
+    warnings.push('Fallback preferences should have low confidence');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings,
+  };
+}
+
+/**
+ * 验证检测历史
+ * Validate detection history
+ */
+export function validateDetectionHistory(history: LocaleDetectionHistory): ValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // 验证检测记录数组
+  if (!Array.isArray(history.detections)) {
+    errors.push('Detections must be an array');
+  } else {
+    // 验证每个检测记录
+    history.detections.forEach((detection, index) => {
+      if (!BaseValidators.isValidLocale(detection.locale)) {
+        errors.push(`Invalid locale in detection ${index}`);
+      }
+
+      if (!BaseValidators.isValidSource(detection.source)) {
+        errors.push(`Invalid source in detection ${index}`);
+      }
+
+      if (!BaseValidators.isValidTimestamp(detection.timestamp)) {
+        errors.push(`Invalid timestamp in detection ${index}`);
+      }
+
+      if (!BaseValidators.isValidConfidence(detection.confidence)) {
+        errors.push(`Invalid confidence in detection ${index}`);
+      }
+    });
+
+    // 验证数量一致性
+    if (history.detections.length !== history.totalDetections) {
+      warnings.push('Detection count mismatch');
+    }
+
+    // 验证时间顺序
+    for (let i = 1; i < history.detections.length; i++) {
+      if (history.detections[i].timestamp < history.detections[i - 1].timestamp) {
+        warnings.push('Detections are not in chronological order');
+        break;
+      }
+    }
+  }
+
+  // 验证最后更新时间
+  if (!BaseValidators.isValidTimestamp(history.lastUpdated)) {
+    errors.push('Invalid lastUpdated timestamp');
+  }
+
+  // 验证总检测数
+  if (typeof history.totalDetections !== 'number' || history.totalDetections < 0) {
+    errors.push('Invalid totalDetections');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    warnings,
+  };
+}

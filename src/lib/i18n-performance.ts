@@ -1,14 +1,23 @@
 import { cache } from 'react';
+import { logger } from '@/lib/logger';
 import {
   CACHE_DURATIONS,
   CACHE_LIMITS,
   PERFORMANCE_THRESHOLDS,
 } from '@/constants/i18n-constants';
 
+/**
+ * 缓存项接口
+ */
+interface CacheItem {
+  value: unknown;
+  timestamp: number;
+}
+
 // 翻译缓存管理器
 export class TranslationCache {
   private static instance: TranslationCache;
-  private cache = new Map<string, any>();
+  private cache = new Map<string, CacheItem>();
   private readonly maxSize = CACHE_LIMITS.MAX_PERFORMANCE_DATA_POINTS;
   private readonly ttl = CACHE_DURATIONS.TRANSLATION_CACHE;
 
@@ -20,7 +29,7 @@ export class TranslationCache {
   }
 
   // 缓存翻译消息
-  set(key: string, value: any): void {
+  set(key: string, value: unknown): void {
     if (this.cache.size >= this.maxSize) {
       // LRU清理
       const firstKey = this.cache.keys().next().value;
@@ -36,7 +45,7 @@ export class TranslationCache {
   }
 
   // 获取缓存的翻译消息
-  get(key: string): any | null {
+  get(key: string): unknown | null {
     const cached = this.cache.get(key);
     if (!cached) return null;
 
@@ -91,7 +100,7 @@ export const getCachedMessages = cache(async (locale: string) => {
     cacheInstance.set(cacheKey, messages);
     return messages;
   } catch (error) {
-    console.error(`Failed to load messages for locale ${locale}:`, error);
+    logger.error(`Failed to load messages for locale ${locale}:`, error);
     return {};
   }
 });
@@ -133,15 +142,15 @@ export class I18nPerformanceMonitor {
   }
 
   static recordCacheHit(): void {
-    this.metrics.cacheHits++;
+    this.metrics.cacheHits += 1;
   }
 
   static recordCacheMiss(): void {
-    this.metrics.cacheMisses++;
+    this.metrics.cacheMisses += 1;
   }
 
   static recordError(): void {
-    this.metrics.errors++;
+    this.metrics.errors += 1;
   }
 
   static getMetrics() {
@@ -221,7 +230,7 @@ export function evaluatePerformance(
 
 function getPerformanceScore(
   value: number,
-  targets: any,
+  targets: unknown,
   higherIsBetter = false,
 ): number {
   if (higherIsBetter) {

@@ -4,7 +4,7 @@ import { Label } from '../label';
 
 // Mock Radix UI Label
 vi.mock('@radix-ui/react-label', () => ({
-  Root: ({ children, ...props }: any) => <label {...props}>{children}</label>,
+  Root: ({ children, ...props }: { children?: React.ReactNode; [key: string]: any }) => <label {...props}>{children}</label>,
 }));
 
 describe('Label Component', () => {

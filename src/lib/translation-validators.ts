@@ -1,10 +1,11 @@
 /**
  * 翻译验证器工具类
  */
-import { Locale } from '@/types/i18n';
-import { QualityIssue } from '@/types/translation-manager';
+import type { Locale } from '@/types/i18n';
+;
+import type { QualityIssue } from '@/types/translation-manager';
 import { VALIDATION_THRESHOLDS } from '@/constants/i18n-constants';
-import { ValidationResult } from './translation-quality-types';
+import type { ValidationResult } from './translation-quality-types';
 
 export class TranslationValidators {
   /**

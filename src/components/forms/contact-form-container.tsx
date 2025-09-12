@@ -6,11 +6,8 @@ import { Turnstile } from '@marsidev/react-turnstile';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
 import { logger } from '@/lib/logger';
-import {
-  ContactFormData,
-  contactFormSchema,
-  FormSubmissionStatus,
-} from '@/lib/validations';
+import type { ContactFormData, FormSubmissionStatus } from '@/lib/validations';
+import { contactFormSchema,  } from '@/lib/validations';;
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {

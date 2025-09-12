@@ -2,9 +2,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
-import { DEV_TOOLS_CONSTANTS } from '@/constants/dev-tools';
-
 interface DevToolConfig {
   id: string;
   name: string;

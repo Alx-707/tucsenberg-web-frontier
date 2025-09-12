@@ -14,7 +14,7 @@ import { vi } from 'vitest';
  * 创建vi.hoisted Mock配置的工厂函数
  * 确保所有Mock在模块导入前正确设置
  */
-export function createHoistedMocks<T extends Record<string, any>>(
+export function createHoistedMocks<T extends Record<string, unknown>>(
   mockDefinitions: () => T,
 ): T {
   return vi.hoisted(mockDefinitions);
@@ -41,7 +41,7 @@ export const createNextIntlMocks = () => {
   const mockUseRouter = vi.fn();
 
   // 设置默认返回值
-  mockUseTranslations.mockReturnValue((key: string, params?: any) => {
+  mockUseTranslations.mockReturnValue((key: string, params?: unknown) => {
     if (params) {
       return `${key} with ${JSON.stringify(params)}`;
     }
@@ -60,7 +60,7 @@ export const createNextIntlMocks = () => {
     prefetch: vi.fn(),
   });
 
-  mockLink.mockImplementation(({ children, ...props }: any) => {
+  mockLink.mockImplementation(({ children, ...props }: unknown) => {
     return {
       type: 'a',
       props: { ...props, children },
@@ -173,13 +173,13 @@ export const createBrowserAPIMocks = () => {
     dispatchEvent: vi.fn(),
   }));
 
-  mockIntersectionObserver.mockImplementation((_callback: any) => ({
+  mockIntersectionObserver.mockImplementation((_callback: unknown) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
   }));
 
-  mockResizeObserver.mockImplementation((_callback: any) => ({
+  mockResizeObserver.mockImplementation((_callback: unknown) => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
@@ -418,7 +418,7 @@ export const createEventMocks = () => {
  */
 export const createMockEvent = (
   type: string,
-  properties: Record<string, any> = {},
+  properties: Record<string, unknown> = {},
 ) => {
   return {
     type,

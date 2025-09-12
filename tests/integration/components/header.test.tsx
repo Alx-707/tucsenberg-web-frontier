@@ -219,7 +219,7 @@ describe('Header Integration Tests', () => {
     });
 
     it('should handle invalid variant gracefully', () => {
-      render(<Header variant={'invalid' as any} />);
+      render(<Header variant={'invalid' as unknown} />);
 
       const header = screen.getByRole('banner');
       expect(header).toBeInTheDocument();

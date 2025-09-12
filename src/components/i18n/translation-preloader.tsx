@@ -1,12 +1,14 @@
 'use client';
 
 /* eslint-disable no-case-declarations */
-import { useEffect } from 'react';
-import { useLocale } from 'next-intl';
+import { MINUTE_MS } from '@/constants/units';
 import {
-  I18nPerformanceMonitor,
-  preloadTranslations,
+    I18nPerformanceMonitor,
+    preloadTranslations,
 } from '@/lib/i18n-performance';
+import { logger } from '@/lib/logger';
+import { useLocale } from 'next-intl';
+import { useEffect } from 'react';
 
 interface TranslationPreloaderProps {
   /**
@@ -95,7 +97,7 @@ export function TranslationPreloader({
           I18nPerformanceMonitor.recordLoadTime(loadTime);
         }
       } catch (error) {
-        console.error('Translation preload failed:', error);
+        logger.error('Translation preload failed', { error: error as Error });
         if (enableMonitoring) {
           I18nPerformanceMonitor.recordError();
         }
@@ -131,7 +133,7 @@ export function CriticalTranslationPreloader() {
         // 记录缓存命中
         I18nPerformanceMonitor.recordCacheHit();
       } catch (error) {
-        console.error('Critical translation preload failed:', error);
+        logger.error('Critical translation preload failed', { error: error as Error });
         I18nPerformanceMonitor.recordError();
       }
     };
@@ -165,7 +167,7 @@ async function performSmartPreload(currentLocale: string) {
     try {
       await preloadTranslations([currentLocale]);
     } catch (error) {
-      console.warn(`Failed to preload namespace ${namespace}:`, error);
+      logger.warn(`Failed to preload namespace ${namespace}`, { error: error as Error });
     }
   }
 }
@@ -228,9 +230,9 @@ export function PerformanceMonitoringPreloader() {
       () => {
         // 这里可以添加缓存清理逻辑
 
-        console.debug('Translation cache cleanup performed');
+        logger.debug('Translation cache cleanup performed');
       },
-      5 * 60 * 1000,
+      5 * MINUTE_MS,
     ); // 每5分钟清理一次
 
     // 定期报告性能指标
@@ -239,13 +241,13 @@ export function PerformanceMonitoringPreloader() {
 
       // 如果性能指标异常，记录警告
       if (metrics.averageLoadTime > 200) {
-        console.warn('Translation load time exceeds target:', metrics);
+        logger.warn('Translation load time exceeds target', { metrics });
       }
 
       if (metrics.cacheHitRate < 90) {
-        console.warn('Translation cache hit rate below target:', metrics);
+        logger.warn('Translation cache hit rate below target', { metrics });
       }
-    }, 60 * 1000); // 每分钟检查一次
+    }, MINUTE_MS); // 每分钟检查一次
 
     return () => {
       clearInterval(cleanupInterval);

@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { Locale } from '@/types/i18n';
+import type { Locale } from '@/types/i18n';
+;
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { SmartLocaleDetector } from '../locale-detector';
 

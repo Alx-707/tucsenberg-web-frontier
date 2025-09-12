@@ -1,15 +1,18 @@
 'use client';
 
-import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+import { useTranslations } from 'next-intl';
+import type { ReactNode } from 'react';
+import { Component, type ErrorInfo } from 'react';
+;
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -35,14 +38,19 @@ export class ErrorBoundary extends Component<
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Always log errors for debugging and monitoring
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    // 安全的错误日志记录
+    this.logError(error, errorInfo);
 
     // Log error to monitoring service in production
     if (process.env.NODE_ENV === 'production') {
       // Replace with your error monitoring service
       // Sentry.captureException(error, { extra: errorInfo });
     }
+  }
+
+  private logError(error: Error, errorInfo: ErrorInfo) {
+    // Dev-only console output; no-ops in production
+    logger.error('ErrorBoundary caught an error:', error, errorInfo);
   }
 
   override render() {

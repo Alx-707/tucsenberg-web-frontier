@@ -14,7 +14,37 @@
     "next": "Next",
     "previous": "Previous",
     "close": "Close",
-    "open": "Open"
+    "open": "Open",
+    "toast": {
+      "form": {
+        "contact": {
+          "success": "Message sent successfully!",
+          "successDescription": "Thank you for your message. We'll get back to you soon.",
+          "error": "Failed to send message",
+          "errorDescription": "Please try again later or contact us directly.",
+          "loading": "Sending message..."
+        },
+        "newsletter": {
+          "success": "Successfully subscribed!",
+          "successDescription": "Thank you for subscribing to our newsletter.",
+          "error": "Subscription failed",
+          "errorDescription": "Please check your email and try again.",
+          "loading": "Subscribing..."
+        },
+        "feedback": {
+          "success": "Feedback submitted!",
+          "successDescription": "Thank you for your valuable feedback.",
+          "error": "Failed to submit feedback",
+          "errorDescription": "Please try again later.",
+          "loading": "Submitting feedback..."
+        }
+      }
+    }
+  },
+  "errorBoundary": {
+    "title": "An error occurred",
+    "description": "Something went wrong. Please try refreshing the page.",
+    "tryAgain": "Try Again"
   },
   "navigation": {
     "home": "Home",
@@ -22,18 +52,98 @@
     "contact": "Contact",
     "services": "Services",
     "products": "Products",
+    "solutions": "Solutions",
+    "resources": "Resources",
+    "enterprise": "Enterprise",
+    "docs": "Docs",
+    "pricing": "Pricing",
     "blog": "Blog",
     "diagnostics": "Performance Diagnostics",
     "login": "Login",
     "logout": "Logout",
     "profile": "Profile",
-    "settings": "Settings"
+    "settings": "Settings",
+    "frameworks": "Frameworks",
+    "infrastructure": "Infrastructure",
+    "security": "Security",
+    "aiApps": "AI Apps",
+    "webApps": "Web Apps",
+    "ecommerce": "Ecommerce",
+    "guides": "Guides",
+    "frameworksDescription": "Build with the best frameworks",
+    "infrastructureDescription": "Scalable and reliable infrastructure",
+    "securityDescription": "Enterprise-grade security",
+    "aiAppsDescription": "Deploy AI applications at scale",
+    "webAppsDescription": "Modern web application platform",
+    "ecommerceDescription": "Power your online store",
+    "docsDescription": "Complete documentation and guides",
+    "guidesDescription": "Step-by-step tutorials",
+    "blogDescription": "Latest updates and insights"
+  },
+  "diagnostics": {
+    "title": "Web Vitals Performance Diagnostics",
+    "description": "In-depth analysis of website performance metrics, identify key issues, and get professional optimization recommendations. Real-time monitoring of core Web Vitals metrics such as CLS, LCP, FID.",
+    "controlPanel": {
+      "title": "Performance Diagnostics Console",
+      "description": "Real-time monitoring and analysis of website performance metrics",
+      "refresh": "Refresh",
+      "refreshing": "Detecting...",
+      "export": "Export Data"
+    },
+    "currentMetrics": {
+      "title": "Current Page Performance Metrics",
+      "description": "Real-time performance assessment based on Core Web Vitals standards"
+    },
+    "historicalData": {
+      "title": "Historical Performance Data",
+      "description": "Recent {count} performance test records"
+    },
+    "thresholdReference": {
+      "title": "Performance Metrics Threshold Reference",
+      "description": "Based on Google Core Web Vitals standards",
+      "cls": {
+        "title": "CLS (Cumulative Layout Shift)",
+        "good": "Good",
+        "needsImprovement": "Needs Improvement",
+        "poor": "Poor"
+      },
+      "lcp": {
+        "title": "LCP (Largest Contentful Paint)",
+        "good": "Good",
+        "needsImprovement": "Needs Improvement",
+        "poor": "Poor"
+      },
+      "fid": {
+        "title": "FID (First Input Delay)",
+        "good": "Good",
+        "needsImprovement": "Needs Improvement",
+        "poor": "Poor"
+      }
+    },
+    "metrics": {
+      "cls": "Cumulative Layout Shift",
+      "lcp": "Largest Contentful Paint",
+      "fid": "First Input Delay",
+      "fcp": "First Contentful Paint",
+      "ttfb": "Time to First Byte"
+    },
+    "status": {
+      "good": "Good",
+      "needsImprovement": "Needs Improvement",
+      "poor": "Poor",
+      "excellent": "Excellent"
+    }
   },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light",
     "dark": "Dark",
-    "system": "System"
+    "system": "System",
+    "selectTheme": "Select display theme",
+    "selectDisplayTheme": "Select a display theme:",
+    "switchToLight": "Switch to light theme",
+    "switchToDark": "Switch to dark theme",
+    "switchToSystem": "Switch to system theme"
   },
   "language": {
     "toggle": "Toggle language",
@@ -55,6 +165,17 @@
     "description": "A cutting-edge web platform built with Next.js 15, React 19, and TypeScript for modern B2B enterprises.",
     "getStarted": "Get Started",
     "learnMore": "Learn More",
+    "welcome": "Welcome to Tucsenberg",
+    "modernApp": "A modern web application built with Next.js 15 and React 19",
+    "features": {
+      "title": "Features"
+    },
+    "modernStack": "Modern Stack",
+    "modernStackDesc": "Built with the latest technologies",
+    "internationalization": "Internationalization",
+    "internationalizationDesc": "Multi-language support with next-intl",
+    "testingReady": "Testing Ready",
+    "testingReadyDesc": "Comprehensive E2E testing setup",
     "hero": {
       "version": "v1.0.0 - Production Ready",
       "title": {
@@ -77,6 +198,27 @@
       "title": "Technology Stack",
       "subtitle": "Built with cutting-edge technologies for enterprise-grade performance and scalability.",
       "learnMore": "Learn More",
+      "categories": {
+        "core": "Core Technologies",
+        "frontend": "Frontend Frameworks",
+        "backend": "Backend Technologies",
+        "database": "Data Storage",
+        "deployment": "Deployment & DevOps",
+        "testing": "Testing Tools",
+        "tools": "Development Tools"
+      },
+      "technologies": {
+        "nextjs": "React full-stack framework",
+        "react": "User interface library",
+        "typescript": "Type-safe JavaScript",
+        "tailwindcss": "Utility-first CSS framework",
+        "nodejs": "JavaScript runtime",
+        "vitest": "Fast unit testing framework",
+        "playwright": "End-to-end testing framework",
+        "vercel": "Frontend deployment platform",
+        "eslint": "Code quality checker",
+        "prettier": "Code formatting tool"
+      },
       "stats": {
         "totalTech": "Total Technologies",
         "categories": "Categories",
@@ -180,11 +322,13 @@
         },
         "i18n": {
           "title": "Internationalization",
-          "description": "Full support for multiple languages with dynamic content switching."
+          "description": "Full support for multiple languages with dynamic content switching.",
+          "languageUnit": "Languages"
         },
         "themes": {
           "title": "Theme System",
-          "description": "Dynamic theme switching with light, dark, and custom theme support."
+          "description": "Dynamic theme switching with light, dark, and custom theme support.",
+          "multiTheme": "Multi-theme"
         },
         "typescript": {
           "title": "Type Safety",
@@ -496,6 +640,28 @@
     "animation": {
       "loading": "Loading animation",
       "construction": "Construction in progress"
+    },
+    "status": {
+      "inProgress": "In Progress"
+    },
+    "features": {
+      "performance": "High Performance",
+      "performanceDesc": "Optimized performance and fast loading experience",
+      "collaboration": "Team Collaboration",
+      "collaborationDesc": "Powerful team collaboration and project management features",
+      "quality": "Quality Assurance",
+      "qualityDesc": "Strict quality control and testing processes"
+    },
+    "social": {
+      "followUs": "Follow us for the latest updates"
+    },
+    "subscription": {
+      "title": "Get Launch Notifications",
+      "description": "Be the first to know about our latest updates",
+      "placeholder": "Enter your email address",
+      "submit": "Subscribe",
+      "submitting": "Submitting...",
+      "success": "Successfully subscribed! We'll notify you soon"
     }
   },
   "ReactScanDemo": {
@@ -533,5 +699,23 @@
       "defaultName": "Product",
       "defaultDescription": "Product description"
     }
-  }
+  },
+  "organization": {
+    "name": "Tucsenberg Web Frontier",
+    "description": "Modern B2B Enterprise Web Platform",
+    "phone": "+1-555-0123",
+    "social": {
+      "twitter": "https://twitter.com/tucsenberg",
+      "linkedin": "https://linkedin.com/company/tucsenberg",
+      "github": "https://github.com/tucsenberg"
+    }
+  },
+  "website": {
+    "name": "Tucsenberg Web Frontier",
+    "description": "Modern B2B Enterprise Web Platform with Next.js 15"
+  },
+  "article": {
+    "defaultAuthor": "Tucsenberg Team"
+  },
+  "title": "Tucsenberg Web Frontier"
 }

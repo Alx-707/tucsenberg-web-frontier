@@ -82,7 +82,7 @@ describe('i18n Request Configuration', () => {
     // Mock performance.now
     global.performance = {
       now: vi.fn().mockReturnValue(100),
-    } as any;
+    } as unknown;
   });
 
   describe('基础配置', () => {

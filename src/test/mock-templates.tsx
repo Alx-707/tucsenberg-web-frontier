@@ -251,7 +251,7 @@ export const createBrowserAPIMock = () => {
 export const createUIComponentMock = () => {
   return vi.hoisted(() => {
     // DropdownMenu组件Mock
-    const DropdownMenu = ({ children, open, onOpenChange }: any) => (
+    const DropdownMenu = ({ children, open, onOpenChange }: unknown) => (
       <div
         data-testid='dropdown-menu'
         data-open={open}
@@ -261,7 +261,7 @@ export const createUIComponentMock = () => {
       </div>
     );
 
-    const DropdownMenuContent = ({ children, align, ...props }: any) => (
+    const DropdownMenuContent = ({ children, align, ...props }: unknown) => (
       <div
         data-testid='dropdown-content'
         data-align={align}
@@ -271,12 +271,12 @@ export const createUIComponentMock = () => {
       </div>
     );
 
-    const DropdownMenuTrigger = ({ children }: any) => (
+    const DropdownMenuTrigger = ({ children }: unknown) => (
       <div data-testid='dropdown-trigger'>{children}</div>
     );
 
     // Button组件Mock
-    const Button = ({ children, variant, size, ...props }: any) => (
+    const Button = ({ children, variant, size, ...props }: unknown) => (
       <button
         data-testid='theme-button'
         data-variant={variant}
@@ -289,7 +289,7 @@ export const createUIComponentMock = () => {
 
     // Icon组件Mock
     const Icons = {
-      Sun: ({ className, ...props }: any) => (
+      Sun: ({ className, ...props }: unknown) => (
         <span
           data-testid='sun-icon'
           className={className}
@@ -298,7 +298,7 @@ export const createUIComponentMock = () => {
           ☀️
         </span>
       ),
-      Moon: ({ className, ...props }: any) => (
+      Moon: ({ className, ...props }: unknown) => (
         <span
           data-testid='moon-icon'
           className={className}
@@ -307,7 +307,7 @@ export const createUIComponentMock = () => {
           🌙
         </span>
       ),
-      Monitor: ({ className, ...props }: any) => (
+      Monitor: ({ className, ...props }: unknown) => (
         <span
           data-testid='monitor-icon'
           className={className}

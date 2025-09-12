@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  EnhancedLocaleSwitcher,
-  LocaleSwitcherWithInfo,
-  SimpleLocaleSwitcher,
+    EnhancedLocaleSwitcher,
+    LocaleSwitcherWithInfo,
+    SimpleLocaleSwitcher,
 } from '../enhanced-locale-switcher';
 
 // Mock next-intl
@@ -36,13 +37,13 @@ vi.mock('@/lib/locale-storage', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/badge', () => ({
-  Badge: ({ children, className, variant }: any) => (
+  Badge: ({ children, className, variant }: { children?: React.ReactNode; className?: string; variant?: string }) => (
     <span className={`badge ${variant} ${className}`}>{children}</span>
   ),
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, className, variant, size, disabled, ...props }: any) => (
+  Button: ({ children, className, variant, size, disabled, asChild, ...props }: { children?: React.ReactNode; className?: string; variant?: string; size?: string; disabled?: boolean; asChild?: boolean; [key: string]: any }) => (
     <button
       className={`button ${variant} ${size} ${className}`}
       disabled={disabled}
@@ -54,13 +55,13 @@ vi.mock('@/components/ui/button', () => ({
 }));
 
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: ({ children }: any) => (
+  DropdownMenu: ({ children }: React.ComponentProps<"div">) => (
     <div data-testid='dropdown-menu'>{children}</div>
   ),
-  DropdownMenuTrigger: ({ children }: any) => (
+  DropdownMenuTrigger: ({ children }: React.ComponentProps<"div">) => (
     <div data-testid='dropdown-trigger'>{children}</div>
   ),
-  DropdownMenuContent: ({ children, className }: any) => (
+  DropdownMenuContent: ({ children, className }: React.ComponentProps<"div">) => (
     <div
       data-testid='dropdown-content'
       className={className}
@@ -68,12 +69,12 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuItem: ({ children, asChild }: any) => (
+  DropdownMenuItem: ({ children, asChild }: { children?: React.ReactNode; asChild?: boolean }) => (
     <div data-testid='dropdown-item'>
       {asChild ? children : <span>{children}</span>}
     </div>
   ),
-  DropdownMenuLabel: ({ children, className }: any) => (
+  DropdownMenuLabel: ({ children, className }: React.ComponentProps<"div">) => (
     <div
       data-testid='dropdown-label'
       className={className}
@@ -86,37 +87,37 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
 
 // Mock lucide-react icons
 vi.mock('lucide-react', () => ({
-  Check: ({ className }: any) => (
+  Check: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='check-icon'
       className={className}
     />
   ),
-  Globe: ({ className }: any) => (
+  Globe: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='globe-icon'
       className={className}
     />
   ),
-  Languages: ({ className }: any) => (
+  Languages: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='languages-icon'
       className={className}
     />
   ),
-  Loader2: ({ className }: any) => (
+  Loader2: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='loader-icon'
       className={className}
     />
   ),
-  MapPin: ({ className }: any) => (
+  MapPin: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='mappin-icon'
       className={className}
     />
   ),
-  Monitor: ({ className }: any) => (
+  Monitor: ({ className }: React.ComponentProps<"div">) => (
     <div
       data-testid='monitor-icon'
       className={className}

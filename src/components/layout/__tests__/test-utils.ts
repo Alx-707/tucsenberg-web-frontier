@@ -1,8 +1,8 @@
 /**
  * Test utilities for layout components
  */
-import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { type ReactElement } from 'react';
+import { render, type RenderOptions } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // Mock messages for testing
@@ -37,7 +37,7 @@ export const mockMessages = {
 // Simple render function without complex providers for now
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   locale?: string;
-  messages?: Record<string, any>;
+  messages?: Record<string, unknown>;
 }
 
 export function renderWithProviders(

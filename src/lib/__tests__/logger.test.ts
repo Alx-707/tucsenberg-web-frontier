@@ -236,11 +236,7 @@ describe('Logger', () => {
 
   describe('log utility functions', () => {
     beforeEach(() => {
-      // Reset logger config for utility tests
-      logger.updateConfig({
-        minLevel: LogLevel.DEBUG,
-        enableConsoleInDev: true,
-      });
+      // Clear mocks for utility tests
       vi.clearAllMocks();
     });
 
@@ -275,7 +271,7 @@ describe('Logger', () => {
       const testLogger = createLogger({ enableConsoleInDev: true });
 
       expect(() => {
-        testLogger.info('Test message', null as any);
+        testLogger.info('Test message', null as unknown);
       }).not.toThrow();
     });
 

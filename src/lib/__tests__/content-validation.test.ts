@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { ContentType } from '@/types/content';
+import type { ContentType } from '@/types/content';
+;
 import {
   TEST_CONTENT_LIMITS,
   TEST_COUNT_CONSTANTS,

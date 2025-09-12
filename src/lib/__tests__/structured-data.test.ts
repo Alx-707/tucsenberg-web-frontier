@@ -470,7 +470,7 @@ describe('Structured Data Generation', () => {
     it('should handle invalid structured data types', async () => {
       const data = await generateLocalizedStructuredData(
         'en',
-        'InvalidType' as any,
+        'InvalidType' as unknown,
         {},
       );
 
@@ -490,7 +490,7 @@ describe('Structured Data Generation', () => {
         const data = await generateLocalizedStructuredData(
           'en',
           testCase.type,
-          testCase.data as any,
+          testCase.data as unknown,
         );
 
         expect(data).toHaveProperty('@context', 'https://schema.org');
@@ -619,7 +619,7 @@ describe('Structured Data Generation', () => {
     });
 
     it('should not create memory leaks with repeated calls', async () => {
-      const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const initialMemory = (performance as unknown).memory?.usedJSHeapSize || 0;
 
       // Perform many operations
       for (let i = 0; i < 1000; i++) {
@@ -632,7 +632,7 @@ describe('Structured Data Generation', () => {
         global.gc();
       }
 
-      const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
+      const finalMemory = (performance as unknown).memory?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
 
       // Memory increase should be minimal (less than 5MB)
@@ -736,7 +736,7 @@ describe('Structured Data Generation', () => {
     it('should handle unknown structured data types', async () => {
       const result = await generateLocalizedStructuredData(
         'en',
-        'UnknownType' as any,
+        'UnknownType' as unknown,
         {},
       );
 

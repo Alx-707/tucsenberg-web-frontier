@@ -320,6 +320,15 @@ export class WebVitalsMonitor {
   }
 
   /**
+   * 重置监控器状态
+   */
+  reset(): void {
+    this.metrics = {};
+    this.cleanup();
+    this.initialize();
+  }
+
+  /**
    * 清理监控器
    */
   cleanup(): void {

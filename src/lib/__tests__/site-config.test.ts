@@ -223,7 +223,7 @@ describe('Site Configuration', () => {
     });
 
     it('should have no undefined values in configurations', () => {
-      const checkForUndefined = (obj: any, path = ''): void => {
+      const checkForUndefined = (obj: unknown, path = ''): void => {
         Object.entries(obj).forEach(([key, value]) => {
           const currentPath = path ? `${path}.${key}` : key;
           if (value === undefined) {

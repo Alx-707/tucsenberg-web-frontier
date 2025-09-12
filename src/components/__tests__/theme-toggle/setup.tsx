@@ -37,11 +37,11 @@ const {
   mockUseThemeToggle,
 } = mocks;
 export {
-  mockResolvedTheme,
-  mockSetTheme,
-  mockSystemTheme,
-  mockTheme,
-  mockUseThemeToggle,
+    mockResolvedTheme,
+    mockSetTheme,
+    mockSystemTheme,
+    mockTheme,
+    mockUseThemeToggle
 };
 
 vi.mock('next-themes', () => ({
@@ -59,7 +59,11 @@ vi.mock('@/hooks/use-theme-toggle', () => ({
 
 // Mock UI components
 vi.mock('@/components/ui/dropdown-menu', () => ({
-  DropdownMenu: ({ children, open, onOpenChange }: any) => (
+  DropdownMenu: ({ children, open, onOpenChange }: {
+    children?: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+  }) => (
     <div
       data-testid='dropdown-menu'
       data-open={open}
@@ -74,7 +78,13 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     className,
     role,
     ...props
-  }: any) => (
+  }: {
+    children?: React.ReactNode;
+    align?: string;
+    className?: string;
+    role?: string;
+    [key: string]: any;
+  }) => (
     <div
       data-testid='dropdown-content'
       data-align={align}
@@ -85,7 +95,10 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       {children}
     </div>
   ),
-  DropdownMenuTrigger: ({ children, asChild }: any) => {
+  DropdownMenuTrigger: ({ children, asChild }: {
+    children?: React.ReactNode;
+    asChild?: boolean;
+  }) => {
     if (asChild) {
       // When asChild is true, render children directly
       return children;
@@ -99,7 +112,14 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
     className,
     role,
     ...props
-  }: any) => (
+  }: {
+    children?: React.ReactNode;
+    onClick?: () => void;
+    onKeyDown?: (event: React.KeyboardEvent) => void;
+    className?: string;
+    role?: string;
+    [key: string]: any;
+  }) => (
     <div
       onClick={onClick}
       onKeyDown={onKeyDown}
@@ -113,7 +133,14 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
 }));
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, asChild, variant, size, className, ...props }: any) => {
+  Button: ({ children, asChild, variant, size, className, ...props }: {
+    children?: React.ReactNode;
+    asChild?: boolean;
+    variant?: string;
+    size?: string;
+    className?: string;
+    [key: string]: any;
+  }) => {
     if (asChild) {
       return children;
     }
@@ -133,7 +160,10 @@ vi.mock('@/components/ui/button', () => ({
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-  Sun: ({ className, ...props }: any) => (
+  Sun: ({ className, ...props }: {
+    className?: string;
+    [key: string]: any;
+  }) => (
     <span
       data-testid='sun-icon'
       className={className}
@@ -142,7 +172,10 @@ vi.mock('lucide-react', () => ({
       ☀️
     </span>
   ),
-  Moon: ({ className, ...props }: any) => (
+  Moon: ({ className, ...props }: {
+    className?: string;
+    [key: string]: any;
+  }) => (
     <span
       data-testid='moon-icon'
       className={className}
@@ -151,7 +184,10 @@ vi.mock('lucide-react', () => ({
       🌙
     </span>
   ),
-  Monitor: ({ className, ...props }: any) => (
+  Monitor: ({ className, ...props }: {
+    className?: string;
+    [key: string]: any;
+  }) => (
     <span
       data-testid='monitor-icon'
       className={className}
@@ -173,8 +209,15 @@ vi.mock('@/components/theme/theme-toggle-button', () => {
         prefersHighContrast: _prefersHighContrast,
         prefersReducedMotion: _prefersReducedMotion,
         ...props
-      }: any,
-      ref: any,
+      }: {
+        ariaAttributes?: Record<string, any>;
+        onKeyDown?: (event: React.KeyboardEvent) => void;
+        onClick?: () => void;
+        prefersHighContrast?: boolean;
+        prefersReducedMotion?: boolean;
+        [key: string]: any;
+      },
+      ref: React.Ref<HTMLButtonElement>,
     ) => {
       return (
         <button
@@ -213,7 +256,18 @@ vi.mock('@/components/theme/theme-menu-item', () => ({
     supportsViewTransitions: _supportsViewTransitions,
     prefersReducedMotion: _prefersReducedMotion,
     ...props
-  }: any) => {
+  }: {
+    theme?: string;
+    currentTheme?: string;
+    label?: string;
+    ariaLabel?: string;
+    icon?: React.ComponentType<any>;
+    onClick?: () => void;
+    onKeyDown?: (event: React.KeyboardEvent) => void;
+    supportsViewTransitions?: boolean;
+    prefersReducedMotion?: boolean;
+    [key: string]: any;
+  }) => {
     return (
       <div
         data-testid={`theme-menu-item-${theme}`}

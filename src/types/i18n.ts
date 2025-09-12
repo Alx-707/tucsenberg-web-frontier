@@ -304,7 +304,7 @@ export interface TranslationQuality {
 declare global {
   interface IntlMessages extends Messages {
     // This interface extends Messages to provide type safety for next-intl
-    [key: string]: any;
+    [key: string]: unknown;
   }
 }
 

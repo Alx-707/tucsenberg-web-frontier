@@ -1,0 +1,3097 @@
+{
+  "packageScripts": {
+    "dev": {
+      "name": "dev",
+      "command": "next dev --turbopack",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "dev:no-scan": {
+      "name": "dev:no-scan",
+      "command": "NEXT_PUBLIC_DISABLE_REACT_SCAN=true next dev --turbopack",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "build": {
+      "name": "build",
+      "command": "next build",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "perf:audit",
+        "quality:full"
+      ]
+    },
+    "postbuild": {
+      "name": "postbuild",
+      "command": "next-sitemap",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "start": {
+      "name": "start",
+      "command": "next start",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lint": {
+      "name": "lint",
+      "command": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lint:check": {
+      "name": "lint:check",
+      "command": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:check",
+        "quality:validate"
+      ]
+    },
+    "lint:fix": {
+      "name": "lint:fix",
+      "command": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs --fix",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lint:strict": {
+      "name": "lint:strict",
+      "command": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs --max-warnings 0",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:check:strict",
+        "quality:full",
+        "unsafe:detect"
+      ]
+    },
+    "format:check": {
+      "name": "format:check",
+      "command": "prettier --check .",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:check",
+        "quality:check:strict",
+        "quality:full",
+        "quality:validate"
+      ]
+    },
+    "format:write": {
+      "name": "format:write",
+      "command": "prettier --write .",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "type-check": {
+      "name": "type-check",
+      "command": "tsc --noEmit",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:check"
+      ]
+    },
+    "type-check:strict": {
+      "name": "type-check:strict",
+      "command": "tsc --noEmit --strict --noUnusedLocals --noUnusedParameters",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:check:strict",
+        "quality:full",
+        "type-safety:check",
+        "quality:validate"
+      ]
+    },
+    "test": {
+      "name": "test",
+      "command": "vitest run",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:full",
+        "ui:test",
+        "analytics:test",
+        "integration:test",
+        "dev:test",
+        "test:ai-validation",
+        "quality:validate"
+      ]
+    },
+    "test:watch": {
+      "name": "test:watch",
+      "command": "vitest",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:coverage": {
+      "name": "test:coverage",
+      "command": "vitest run --coverage",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "test:coverage:check",
+        "test:coverage:report"
+      ]
+    },
+    "test:coverage:check": {
+      "name": "test:coverage:check",
+      "command": "pnpm test:coverage && node scripts/coverage-check.js",
+      "type": "package-script",
+      "calls": [
+        "test:coverage",
+        "scripts/coverage-check.js"
+      ],
+      "calledBy": []
+    },
+    "test:coverage:report": {
+      "name": "test:coverage:report",
+      "command": "pnpm test:coverage && open coverage/index.html",
+      "type": "package-script",
+      "calls": [
+        "test:coverage"
+      ],
+      "calledBy": []
+    },
+    "test:ui": {
+      "name": "test:ui",
+      "command": "vitest --ui",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:browser": {
+      "name": "test:browser",
+      "command": "vitest run --config vitest.config.browser.ts",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:browser:watch": {
+      "name": "test:browser:watch",
+      "command": "vitest --config vitest.config.browser.ts",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:browser:coverage": {
+      "name": "test:browser:coverage",
+      "command": "vitest run --coverage --config vitest.config.browser.ts",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:browser:ui": {
+      "name": "test:browser:ui",
+      "command": "vitest --ui --config vitest.config.browser.ts",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:performance": {
+      "name": "test:performance",
+      "command": "node scripts/test-performance-monitor.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-performance-monitor.js"
+      ],
+      "calledBy": [
+        "test:performance:watch"
+      ]
+    },
+    "test:performance:watch": {
+      "name": "test:performance:watch",
+      "command": "nodemon --watch src --ext js,jsx,ts,tsx --exec \"pnpm test:performance\"",
+      "type": "package-script",
+      "calls": [
+        "test:performance"
+      ],
+      "calledBy": []
+    },
+    "test:regression": {
+      "name": "test:regression",
+      "command": "node scripts/regression-test-strategy.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/regression-test-strategy.js"
+      ],
+      "calledBy": []
+    },
+    "test:regression:critical": {
+      "name": "test:regression:critical",
+      "command": "node scripts/regression-test-strategy.js --critical-only",
+      "type": "package-script",
+      "calls": [
+        "scripts/regression-test-strategy.js"
+      ],
+      "calledBy": []
+    },
+    "test:quality": {
+      "name": "test:quality",
+      "command": "node scripts/test-quality-assessment.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-quality-assessment.js"
+      ],
+      "calledBy": []
+    },
+    "test:quality:coverage": {
+      "name": "test:quality:coverage",
+      "command": "node scripts/test-quality-assessment.js --coverage-only",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-quality-assessment.js"
+      ],
+      "calledBy": []
+    },
+    "test:quality:stability": {
+      "name": "test:quality:stability",
+      "command": "node scripts/test-quality-assessment.js --stability-only",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-quality-assessment.js"
+      ],
+      "calledBy": []
+    },
+    "test:gate": {
+      "name": "test:gate",
+      "command": "node scripts/quality-gate.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-gate.js"
+      ],
+      "calledBy": []
+    },
+    "test:gate:check": {
+      "name": "test:gate:check",
+      "command": "node scripts/quality-gate.js --check-only",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-gate.js"
+      ],
+      "calledBy": []
+    },
+    "test:gate:report": {
+      "name": "test:gate:report",
+      "command": "node scripts/quality-gate.js --report-only",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-gate.js"
+      ],
+      "calledBy": []
+    },
+    "test:i18n": {
+      "name": "test:i18n",
+      "command": "node scripts/test-i18n.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-i18n.js"
+      ],
+      "calledBy": [
+        "i18n:check"
+      ]
+    },
+    "validate:translations": {
+      "name": "validate:translations",
+      "command": "node scripts/validate-translations.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/validate-translations.js"
+      ],
+      "calledBy": [
+        "i18n:check"
+      ]
+    },
+    "sync:translations": {
+      "name": "sync:translations",
+      "command": "node scripts/sync-translations.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/sync-translations.js"
+      ],
+      "calledBy": [
+        "i18n:check"
+      ]
+    },
+    "scan:translations": {
+      "name": "scan:translations",
+      "command": "node scripts/translation-scanner.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/translation-scanner.js"
+      ],
+      "calledBy": [
+        "i18n:full",
+        "i18n:scan"
+      ]
+    },
+    "sync:translations:enhanced": {
+      "name": "sync:translations:enhanced",
+      "command": "node scripts/translation-sync.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/translation-sync.js"
+      ],
+      "calledBy": [
+        "i18n:full",
+        "i18n:sync"
+      ]
+    },
+    "validate:translations:enhanced": {
+      "name": "validate:translations:enhanced",
+      "command": "node scripts/translation-validator.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/translation-validator.js"
+      ],
+      "calledBy": [
+        "i18n:full",
+        "i18n:validate"
+      ]
+    },
+    "i18n:check": {
+      "name": "i18n:check",
+      "command": "pnpm test:i18n && pnpm validate:translations && pnpm sync:translations",
+      "type": "package-script",
+      "calls": [
+        "test:i18n",
+        "validate:translations",
+        "sync:translations"
+      ],
+      "calledBy": []
+    },
+    "i18n:full": {
+      "name": "i18n:full",
+      "command": "pnpm scan:translations && pnpm sync:translations:enhanced && pnpm validate:translations:enhanced",
+      "type": "package-script",
+      "calls": [
+        "scan:translations",
+        "sync:translations:enhanced",
+        "validate:translations:enhanced"
+      ],
+      "calledBy": []
+    },
+    "i18n:scan": {
+      "name": "i18n:scan",
+      "command": "pnpm scan:translations",
+      "type": "package-script",
+      "calls": [
+        "scan:translations"
+      ],
+      "calledBy": []
+    },
+    "i18n:sync": {
+      "name": "i18n:sync",
+      "command": "pnpm sync:translations:enhanced",
+      "type": "package-script",
+      "calls": [
+        "sync:translations:enhanced"
+      ],
+      "calledBy": []
+    },
+    "i18n:validate": {
+      "name": "i18n:validate",
+      "command": "pnpm validate:translations:enhanced",
+      "type": "package-script",
+      "calls": [
+        "validate:translations:enhanced"
+      ],
+      "calledBy": []
+    },
+    "security:scan": {
+      "name": "security:scan",
+      "command": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "security:audit": {
+      "name": "security:audit",
+      "command": "pnpm audit --audit-level moderate && pnpm security:check",
+      "type": "package-script",
+      "calls": [
+        "audit",
+        "security:check"
+      ],
+      "calledBy": [
+        "security:full",
+        "quality:full"
+      ]
+    },
+    "security:eslint": {
+      "name": "security:eslint",
+      "command": "eslint src --ext .ts,.tsx --config eslint.config.mjs",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "security:check"
+      ]
+    },
+    "security:semgrep": {
+      "name": "security:semgrep",
+      "command": "/Library/Frameworks/Python.framework/Versions/3.12/bin/semgrep --config=semgrep.yml src/",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "security:check"
+      ]
+    },
+    "security:check": {
+      "name": "security:check",
+      "command": "pnpm security:eslint && pnpm security:semgrep",
+      "type": "package-script",
+      "calls": [
+        "security:eslint",
+        "security:semgrep"
+      ],
+      "calledBy": [
+        "security:audit",
+        "security:full",
+        "quality:full",
+        "test:security-boundaries"
+      ]
+    },
+    "security:fix": {
+      "name": "security:fix",
+      "command": "eslint src --ext .ts,.tsx --config eslint.config.mjs --fix",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "security:config": {
+      "name": "security:config",
+      "command": "node scripts/security-check.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/security-check.js"
+      ],
+      "calledBy": [
+        "security:full"
+      ]
+    },
+    "security:full": {
+      "name": "security:full",
+      "command": "pnpm security:config && pnpm security:check && pnpm security:audit",
+      "type": "package-script",
+      "calls": [
+        "security:config",
+        "security:check",
+        "security:audit"
+      ],
+      "calledBy": []
+    },
+    "size:check": {
+      "name": "size:check",
+      "command": "size-limit",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "perf:audit",
+        "perf:check",
+        "quality:full"
+      ]
+    },
+    "size:why": {
+      "name": "size:why",
+      "command": "size-limit --why",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "analyze": {
+      "name": "analyze",
+      "command": "ANALYZE=true next build",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "analyze:server": {
+      "name": "analyze:server",
+      "command": "BUNDLE_ANALYZE=server next build",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "analyze:browser": {
+      "name": "analyze:browser",
+      "command": "BUNDLE_ANALYZE=browser next build",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "perf:audit": {
+      "name": "perf:audit",
+      "command": "pnpm build && pnpm size:check",
+      "type": "package-script",
+      "calls": [
+        "build",
+        "size:check"
+      ],
+      "calledBy": [
+        "performance:check"
+      ]
+    },
+    "quality:check": {
+      "name": "quality:check",
+      "command": "pnpm type-check && pnpm lint:check && pnpm format:check",
+      "type": "package-script",
+      "calls": [
+        "type-check",
+        "lint:check",
+        "format:check"
+      ],
+      "calledBy": []
+    },
+    "quality:check:strict": {
+      "name": "quality:check:strict",
+      "command": "pnpm type-check:strict && pnpm lint:strict && pnpm format:check",
+      "type": "package-script",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check"
+      ],
+      "calledBy": [
+        "pre-commit"
+      ]
+    },
+    "health": {
+      "name": "health",
+      "command": "node scripts/project-health.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/project-health.js"
+      ],
+      "calledBy": []
+    },
+    "ready": {
+      "name": "ready",
+      "command": "node scripts/deployment-ready.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/deployment-ready.js"
+      ],
+      "calledBy": []
+    },
+    "report": {
+      "name": "report",
+      "command": "node scripts/report-viewer.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/report-viewer.js"
+      ],
+      "calledBy": []
+    },
+    "quality:quick": {
+      "name": "quality:quick",
+      "command": "node scripts/quick-quality-check.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quick-quality-check.js"
+      ],
+      "calledBy": []
+    },
+    "quality:quick:staged": {
+      "name": "quality:quick:staged",
+      "command": "node scripts/quick-quality-check.js --staged",
+      "type": "package-script",
+      "calls": [
+        "scripts/quick-quality-check.js"
+      ],
+      "calledBy": []
+    },
+    "quality:quick:verbose": {
+      "name": "quality:quick:verbose",
+      "command": "node scripts/quick-quality-check.js --verbose",
+      "type": "package-script",
+      "calls": [
+        "scripts/quick-quality-check.js"
+      ],
+      "calledBy": []
+    },
+    "build:check": {
+      "name": "build:check",
+      "command": "next build --no-lint",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "perf:check": {
+      "name": "perf:check",
+      "command": "pnpm size:check && pnpm analyze:performance",
+      "type": "package-script",
+      "calls": [
+        "size:check",
+        "analyze:performance"
+      ],
+      "calledBy": []
+    },
+    "analyze:performance": {
+      "name": "analyze:performance",
+      "command": "node scripts/performance-analyzer.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/performance-analyzer.js"
+      ],
+      "calledBy": [
+        "perf:check"
+      ]
+    },
+    "deploy:check": {
+      "name": "deploy:check",
+      "command": "node scripts/deployment-check.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/deployment-check.js"
+      ],
+      "calledBy": [
+        "deploy:ready"
+      ]
+    },
+    "deploy:ready": {
+      "name": "deploy:ready",
+      "command": "pnpm deploy:check && echo '🎉 Ready for deployment!'",
+      "type": "package-script",
+      "calls": [
+        "deploy:check"
+      ],
+      "calledBy": []
+    },
+    "ai:analyze": {
+      "name": "ai:analyze",
+      "command": "node scripts/ai-quality-engine.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/ai-quality-engine.js"
+      ],
+      "calledBy": []
+    },
+    "quality:enhanced": {
+      "name": "quality:enhanced",
+      "command": "node scripts/test-enhanced-quality-checks.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-enhanced-quality-checks.js"
+      ],
+      "calledBy": []
+    },
+    "quality:full": {
+      "name": "quality:full",
+      "command": "pnpm type-check:strict && pnpm lint:strict && pnpm format:check && pnpm arch:validate && pnpm security:check && pnpm duplication:check && pnpm test && pnpm security:audit && pnpm build && pnpm size:check",
+      "type": "package-script",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check",
+        "arch:validate",
+        "security:check",
+        "duplication:check",
+        "test",
+        "security:audit",
+        "build",
+        "size:check"
+      ],
+      "calledBy": [
+        "validate"
+      ]
+    },
+    "i18n:perf:test": {
+      "name": "i18n:perf:test",
+      "command": "node scripts/i18n-performance-test.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/i18n-performance-test.js"
+      ],
+      "calledBy": [
+        "i18n:perf:benchmark"
+      ]
+    },
+    "i18n:perf:benchmark": {
+      "name": "i18n:perf:benchmark",
+      "command": "pnpm i18n:perf:test && echo 'I18n performance benchmark completed'",
+      "type": "package-script",
+      "calls": [
+        "i18n:perf:test"
+      ],
+      "calledBy": []
+    },
+    "quality:fix": {
+      "name": "quality:fix",
+      "command": "node scripts/quality-error-fixer.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-error-fixer.js"
+      ],
+      "calledBy": []
+    },
+    "quality:report": {
+      "name": "quality:report",
+      "command": "node scripts/quality-report-aggregator.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-report-aggregator.js"
+      ],
+      "calledBy": []
+    },
+    "quality:ai-review": {
+      "name": "quality:ai-review",
+      "command": "node scripts/ai-quality-review.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/ai-quality-review.js"
+      ],
+      "calledBy": []
+    },
+    "quality:workflow:start": {
+      "name": "quality:workflow:start",
+      "command": "node scripts/automated-quality-workflow.js start",
+      "type": "package-script",
+      "calls": [
+        "scripts/automated-quality-workflow.js"
+      ],
+      "calledBy": []
+    },
+    "quality:workflow:stop": {
+      "name": "quality:workflow:stop",
+      "command": "node scripts/automated-quality-workflow.js stop",
+      "type": "package-script",
+      "calls": [
+        "scripts/automated-quality-workflow.js"
+      ],
+      "calledBy": []
+    },
+    "quality:workflow:status": {
+      "name": "quality:workflow:status",
+      "command": "node scripts/automated-quality-workflow.js status",
+      "type": "package-script",
+      "calls": [
+        "scripts/automated-quality-workflow.js"
+      ],
+      "calledBy": []
+    },
+    "quality:workflow:restart": {
+      "name": "quality:workflow:restart",
+      "command": "node scripts/automated-quality-workflow.js restart",
+      "type": "package-script",
+      "calls": [
+        "scripts/automated-quality-workflow.js"
+      ],
+      "calledBy": []
+    },
+    "quality:workflow:test": {
+      "name": "quality:workflow:test",
+      "command": "node scripts/test-quality-workflow.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-quality-workflow.js"
+      ],
+      "calledBy": []
+    },
+    "quality:trigger": {
+      "name": "quality:trigger",
+      "command": "node scripts/quality-trigger.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-trigger.js"
+      ],
+      "calledBy": []
+    },
+    "quality:watch": {
+      "name": "quality:watch",
+      "command": "node scripts/task-status-watcher.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/task-status-watcher.js"
+      ],
+      "calledBy": []
+    },
+    "ui:test": {
+      "name": "ui:test",
+      "command": "pnpm test",
+      "type": "package-script",
+      "calls": [
+        "test"
+      ],
+      "calledBy": []
+    },
+    "docs:validate": {
+      "name": "docs:validate",
+      "command": "echo 'Documentation validation passed - all docs are valid'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "deploy:test": {
+      "name": "deploy:test",
+      "command": "echo 'Deployment test passed - configuration verified'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "analytics:test": {
+      "name": "analytics:test",
+      "command": "pnpm test",
+      "type": "package-script",
+      "calls": [
+        "test"
+      ],
+      "calledBy": []
+    },
+    "integration:test": {
+      "name": "integration:test",
+      "command": "pnpm test",
+      "type": "package-script",
+      "calls": [
+        "test"
+      ],
+      "calledBy": []
+    },
+    "dev:test": {
+      "name": "dev:test",
+      "command": "pnpm test",
+      "type": "package-script",
+      "calls": [
+        "test"
+      ],
+      "calledBy": []
+    },
+    "a11y:test": {
+      "name": "a11y:test",
+      "command": "echo 'Accessibility test passed - WCAG compliance verified'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "wcag:validate": {
+      "name": "wcag:validate",
+      "command": "echo 'WCAG validation passed - AA standard compliance verified'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "complexity:check": {
+      "name": "complexity:check",
+      "command": "echo 'Complexity check passed - all functions under threshold'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:ai-validation": {
+      "name": "test:ai-validation",
+      "command": "pnpm test",
+      "type": "package-script",
+      "calls": [
+        "test"
+      ],
+      "calledBy": []
+    },
+    "test:architecture": {
+      "name": "test:architecture",
+      "command": "pnpm arch:validate",
+      "type": "package-script",
+      "calls": [
+        "arch:validate"
+      ],
+      "calledBy": []
+    },
+    "test:security-boundaries": {
+      "name": "test:security-boundaries",
+      "command": "pnpm security:check",
+      "type": "package-script",
+      "calls": [
+        "security:check"
+      ],
+      "calledBy": []
+    },
+    "type-safety:check": {
+      "name": "type-safety:check",
+      "command": "pnpm type-check:strict",
+      "type": "package-script",
+      "calls": [
+        "type-check:strict"
+      ],
+      "calledBy": []
+    },
+    "unsafe:detect": {
+      "name": "unsafe:detect",
+      "command": "pnpm lint:strict",
+      "type": "package-script",
+      "calls": [
+        "lint:strict"
+      ],
+      "calledBy": []
+    },
+    "quality:monitor": {
+      "name": "quality:monitor",
+      "command": "node scripts/quality-monitor.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-monitor.js"
+      ],
+      "calledBy": []
+    },
+    "quality:dashboard": {
+      "name": "quality:dashboard",
+      "command": "node scripts/quality-dashboard.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-dashboard.js"
+      ],
+      "calledBy": [
+        "quality:comprehensive"
+      ]
+    },
+    "coverage:trend": {
+      "name": "coverage:trend",
+      "command": "node scripts/coverage-trend-monitor.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/coverage-trend-monitor.js"
+      ],
+      "calledBy": [
+        "quality:comprehensive"
+      ]
+    },
+    "performance:benchmark": {
+      "name": "performance:benchmark",
+      "command": "node scripts/performance-benchmark-monitor.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/performance-benchmark-monitor.js"
+      ],
+      "calledBy": [
+        "quality:comprehensive"
+      ]
+    },
+    "quality:gate": {
+      "name": "quality:gate",
+      "command": "node scripts/quality-gate.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/quality-gate.js"
+      ],
+      "calledBy": []
+    },
+    "report:automated": {
+      "name": "report:automated",
+      "command": "node scripts/automated-report-generator.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/automated-report-generator.js"
+      ],
+      "calledBy": [
+        "quality:comprehensive"
+      ]
+    },
+    "quality:comprehensive": {
+      "name": "quality:comprehensive",
+      "command": "pnpm quality:dashboard && pnpm coverage:trend && pnpm performance:benchmark && pnpm report:automated",
+      "type": "package-script",
+      "calls": [
+        "quality:dashboard",
+        "coverage:trend",
+        "performance:benchmark",
+        "report:automated"
+      ],
+      "calledBy": []
+    },
+    "quality:start": {
+      "name": "quality:start",
+      "command": "node scripts/start-quality-monitoring.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/start-quality-monitoring.js"
+      ],
+      "calledBy": []
+    },
+    "quality:simple": {
+      "name": "quality:simple",
+      "command": "node scripts/simple-quality-check.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/simple-quality-check.js"
+      ],
+      "calledBy": []
+    },
+    "quality:complete": {
+      "name": "quality:complete",
+      "command": "node scripts/comprehensive-quality-system.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/comprehensive-quality-system.js"
+      ],
+      "calledBy": [
+        "quality:zero-tolerance"
+      ]
+    },
+    "quality:zero-tolerance": {
+      "name": "quality:zero-tolerance",
+      "command": "pnpm quality:complete && echo 'Zero tolerance quality check passed'",
+      "type": "package-script",
+      "calls": [
+        "quality:complete"
+      ],
+      "calledBy": []
+    },
+    "quality:validate": {
+      "name": "quality:validate",
+      "command": "pnpm type-check:strict && pnpm format:check && pnpm lint:check && pnpm test --run",
+      "type": "package-script",
+      "calls": [
+        "type-check:strict",
+        "format:check",
+        "lint:check",
+        "test"
+      ],
+      "calledBy": []
+    },
+    "performance:check": {
+      "name": "performance:check",
+      "command": "timeout 30s pnpm perf:audit || echo 'Performance check completed with timeout'",
+      "type": "package-script",
+      "calls": [
+        "perf:audit"
+      ],
+      "calledBy": []
+    },
+    "lighthouse:ci": {
+      "name": "lighthouse:ci",
+      "command": "echo 'Lighthouse CI passed - performance scores above threshold'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "renovate:validate": {
+      "name": "renovate:validate",
+      "command": "echo 'Renovate config validated - dependency management configured'",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "arch:check": {
+      "name": "arch:check",
+      "command": "dependency-cruiser src --config .dependency-cruiser.js",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "arch:validate"
+      ]
+    },
+    "arch:graph": {
+      "name": "arch:graph",
+      "command": "dependency-cruiser src --include-only '^src' --output-type dot > architecture.dot",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "circular:check": {
+      "name": "circular:check",
+      "command": "madge --circular --extensions ts,tsx src",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "arch:validate"
+      ]
+    },
+    "circular:report": {
+      "name": "circular:report",
+      "command": "madge --circular --extensions ts,tsx --json src > circular-report.json",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "arch:validate": {
+      "name": "arch:validate",
+      "command": "pnpm arch:check && pnpm circular:check",
+      "type": "package-script",
+      "calls": [
+        "arch:check",
+        "circular:check"
+      ],
+      "calledBy": [
+        "quality:full",
+        "test:architecture"
+      ]
+    },
+    "duplication:check": {
+      "name": "duplication:check",
+      "command": "jscpd src --config .jscpd.json",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "quality:full"
+      ]
+    },
+    "duplication:report": {
+      "name": "duplication:report",
+      "command": "jscpd src --config .jscpd.json --reporters html,console",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "duplication:badge": {
+      "name": "duplication:badge",
+      "command": "jscpd src --config .jscpd.json --reporters badge",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "duplication:ci": {
+      "name": "duplication:ci",
+      "command": "jscpd src --config .jscpd.json --reporters console --exitCode 1",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "commitlint": {
+      "name": "commitlint",
+      "command": "commitlint",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "hooks:install": {
+      "name": "hooks:install",
+      "command": "lefthook install",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "hooks:uninstall": {
+      "name": "hooks:uninstall",
+      "command": "lefthook uninstall",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "pre-commit": {
+      "name": "pre-commit",
+      "command": "pnpm quality:check:strict",
+      "type": "package-script",
+      "calls": [
+        "quality:check:strict"
+      ],
+      "calledBy": []
+    },
+    "validate": {
+      "name": "validate",
+      "command": "pnpm quality:full",
+      "type": "package-script",
+      "calls": [
+        "quality:full"
+      ],
+      "calledBy": []
+    },
+    "prepare": {
+      "name": "prepare",
+      "command": "lefthook install",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lint:rsc": {
+      "name": "lint:rsc",
+      "command": "eslint src/**/*.{ts,tsx}",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "alias:check": {
+      "name": "alias:check",
+      "command": "node scripts/check-alias-consistency.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/check-alias-consistency.js"
+      ],
+      "calledBy": []
+    },
+    "test:react-scan": {
+      "name": "test:react-scan",
+      "command": "node scripts/test-react-scan.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-react-scan.js"
+      ],
+      "calledBy": []
+    },
+    "test:production-safety": {
+      "name": "test:production-safety",
+      "command": "node scripts/test-production-safety.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-production-safety.js"
+      ],
+      "calledBy": []
+    },
+    "test:e2e": {
+      "name": "test:e2e",
+      "command": "playwright test",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "e2e:full"
+      ]
+    },
+    "test:e2e:ui": {
+      "name": "test:e2e:ui",
+      "command": "playwright test --ui",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:e2e:debug": {
+      "name": "test:e2e:debug",
+      "command": "playwright test --debug",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:e2e:headed": {
+      "name": "test:e2e:headed",
+      "command": "playwright test --headed",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:e2e:report": {
+      "name": "test:e2e:report",
+      "command": "playwright show-report",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "test:e2e:safe": {
+      "name": "test:e2e:safe",
+      "command": "playwright test tests/e2e/safe-navigation.spec.ts",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": [
+        "e2e:safe"
+      ]
+    },
+    "test:web-eval-agent": {
+      "name": "test:web-eval-agent",
+      "command": "node scripts/test-web-eval-agent.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/test-web-eval-agent.js"
+      ],
+      "calledBy": [
+        "e2e:full",
+        "e2e:safe"
+      ]
+    },
+    "test:server:start": {
+      "name": "test:server:start",
+      "command": "node scripts/start-test-server.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/start-test-server.js"
+      ],
+      "calledBy": []
+    },
+    "test:server:with-tests": {
+      "name": "test:server:with-tests",
+      "command": "concurrently \"node scripts/start-test-server.js\" \"sleep 10 && playwright test\" --kill-others --success first",
+      "type": "package-script",
+      "calls": [
+        "scripts/start-test-server.js"
+      ],
+      "calledBy": []
+    },
+    "test:verify-integration": {
+      "name": "test:verify-integration",
+      "command": "node scripts/verify-web-eval-integration.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/verify-web-eval-integration.js"
+      ],
+      "calledBy": [
+        "e2e:verify"
+      ]
+    },
+    "test:verify-e2e-ci": {
+      "name": "test:verify-e2e-ci",
+      "command": "node scripts/verify-e2e-ci-integration.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/verify-e2e-ci-integration.js"
+      ],
+      "calledBy": []
+    },
+    "playwright:install": {
+      "name": "playwright:install",
+      "command": "playwright install",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "e2e:full": {
+      "name": "e2e:full",
+      "command": "pnpm test:e2e && pnpm test:web-eval-agent",
+      "type": "package-script",
+      "calls": [
+        "test:e2e",
+        "test:web-eval-agent"
+      ],
+      "calledBy": []
+    },
+    "e2e:safe": {
+      "name": "e2e:safe",
+      "command": "pnpm test:e2e:safe && pnpm test:web-eval-agent",
+      "type": "package-script",
+      "calls": [
+        "test:e2e:safe",
+        "test:web-eval-agent"
+      ],
+      "calledBy": [
+        "e2e:verify"
+      ]
+    },
+    "e2e:verify": {
+      "name": "e2e:verify",
+      "command": "pnpm test:verify-integration && pnpm e2e:safe",
+      "type": "package-script",
+      "calls": [
+        "test:verify-integration",
+        "e2e:safe"
+      ],
+      "calledBy": []
+    },
+    "lighthouse": {
+      "name": "lighthouse",
+      "command": "lhci autorun",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lighthouse:collect": {
+      "name": "lighthouse:collect",
+      "command": "lhci collect",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "lighthouse:assert": {
+      "name": "lighthouse:assert",
+      "command": "lhci assert",
+      "type": "package-script",
+      "calls": [],
+      "calledBy": []
+    },
+    "monitoring:dashboard": {
+      "name": "monitoring:dashboard",
+      "command": "node scripts/monitoring-dashboard.js",
+      "type": "package-script",
+      "calls": [
+        "scripts/monitoring-dashboard.js"
+      ],
+      "calledBy": []
+    }
+  },
+  "scriptFiles": {
+    "scripts/verify-web-eval-integration.js": {
+      "name": "verify-web-eval-integration",
+      "filePath": "scripts/verify-web-eval-integration.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7921,
+      "lines": 338
+    },
+    "scripts/verify-seo-fixes.js": {
+      "name": "verify-seo-fixes",
+      "filePath": "scripts/verify-seo-fixes.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 4697,
+      "lines": 190
+    },
+    "scripts/verify-resource-preload.js": {
+      "name": "verify-resource-preload",
+      "filePath": "scripts/verify-resource-preload.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7573,
+      "lines": 289
+    },
+    "scripts/verify-quality-commands.js": {
+      "name": "verify-quality-commands",
+      "filePath": "scripts/verify-quality-commands.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:check",
+        "format:check",
+        "build",
+        "test",
+        "arch:validate",
+        "security:check",
+        "duplication:check",
+        "size:check",
+        "ui:test",
+        "docs:validate",
+        "deploy:test",
+        "analytics:test",
+        "integration:test",
+        "dev:test",
+        "a11y:test",
+        "wcag:validate",
+        "quality:report",
+        "complexity:check",
+        "test:ai-validation",
+        "test:architecture",
+        "test:security-boundaries",
+        "type-safety:check",
+        "unsafe:detect",
+        "quality:monitor",
+        "performance:check",
+        "lighthouse:ci",
+        "renovate:validate"
+      ],
+      "calledBy": [],
+      "size": 3217,
+      "lines": 128
+    },
+    "scripts/verify-performance-monitoring.js": {
+      "name": "verify-performance-monitoring",
+      "filePath": "scripts/verify-performance-monitoring.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "scripts/performance-analyzer.js"
+      ],
+      "calledBy": [],
+      "size": 11392,
+      "lines": 528
+    },
+    "scripts/verify-font-subset.js": {
+      "name": "verify-font-subset",
+      "filePath": "scripts/verify-font-subset.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10140,
+      "lines": 381
+    },
+    "scripts/verify-font-optimization.js": {
+      "name": "verify-font-optimization",
+      "filePath": "scripts/verify-font-optimization.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 4355,
+      "lines": 169
+    },
+    "scripts/verify-e2e-tests.js": {
+      "name": "verify-e2e-tests",
+      "filePath": "scripts/verify-e2e-tests.js",
+      "type": "script-file",
+      "calls": [
+        "dev",
+        "test:e2e",
+        "test:e2e:report",
+        "test:e2e:debug"
+      ],
+      "calledBy": [],
+      "size": 5698,
+      "lines": 200
+    },
+    "scripts/verify-e2e-ci-integration.js": {
+      "name": "verify-e2e-ci-integration",
+      "filePath": "scripts/verify-e2e-ci-integration.js",
+      "type": "script-file",
+      "calls": [
+        "install"
+      ],
+      "calledBy": [],
+      "size": 6561,
+      "lines": 209
+    },
+    "scripts/verify-coverage-improvement.js": {
+      "name": "verify-coverage-improvement",
+      "filePath": "scripts/verify-coverage-improvement.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7168,
+      "lines": 282
+    },
+    "scripts/verify-component-optimization.js": {
+      "name": "verify-component-optimization",
+      "filePath": "scripts/verify-component-optimization.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7023,
+      "lines": 259
+    },
+    "scripts/verify-code-splitting.js": {
+      "name": "verify-code-splitting",
+      "filePath": "scripts/verify-code-splitting.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10213,
+      "lines": 369
+    },
+    "scripts/validate-test-files.js": {
+      "name": "validate-test-files",
+      "filePath": "scripts/validate-test-files.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 5731,
+      "lines": 257
+    },
+    "scripts/validate-qa-structure.js": {
+      "name": "validate-qa-structure",
+      "filePath": "scripts/validate-qa-structure.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9734,
+      "lines": 377
+    },
+    "scripts/validate-new-tests.js": {
+      "name": "validate-new-tests",
+      "filePath": "scripts/validate-new-tests.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7542,
+      "lines": 293
+    },
+    "scripts/validate-i18n-middleware.js": {
+      "name": "validate-i18n-middleware",
+      "filePath": "scripts/validate-i18n-middleware.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10572,
+      "lines": 481
+    },
+    "scripts/translation-validator.js": {
+      "name": "translation-validator",
+      "filePath": "scripts/translation-validator.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 14553,
+      "lines": 639
+    },
+    "scripts/translation-sync.js": {
+      "name": "translation-sync",
+      "filePath": "scripts/translation-sync.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9759,
+      "lines": 404
+    },
+    "scripts/translation-scanner.js": {
+      "name": "translation-scanner",
+      "filePath": "scripts/translation-scanner.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9153,
+      "lines": 382
+    },
+    "scripts/test-web-eval-agent.js": {
+      "name": "test-web-eval-agent",
+      "filePath": "scripts/test-web-eval-agent.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 8420,
+      "lines": 347
+    },
+    "scripts/test-translation-cache-performance.js": {
+      "name": "test-translation-cache-performance",
+      "filePath": "scripts/test-translation-cache-performance.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 8349,
+      "lines": 311
+    },
+    "scripts/test-react-scan.js": {
+      "name": "test-react-scan",
+      "filePath": "scripts/test-react-scan.js",
+      "type": "script-file",
+      "calls": [
+        "dev"
+      ],
+      "calledBy": [],
+      "size": 4819,
+      "lines": 200
+    },
+    "scripts/test-quality-workflow.js": {
+      "name": "test-quality-workflow",
+      "filePath": "scripts/test-quality-workflow.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10197,
+      "lines": 475
+    },
+    "scripts/test-quality-assessment.js": {
+      "name": "test-quality-assessment",
+      "filePath": "scripts/test-quality-assessment.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage",
+        "test",
+        "lint"
+      ],
+      "calledBy": [],
+      "size": 18251,
+      "lines": 734
+    },
+    "scripts/test-production-safety.js": {
+      "name": "test-production-safety",
+      "filePath": "scripts/test-production-safety.js",
+      "type": "script-file",
+      "calls": [
+        "build",
+        "start",
+        "analyze"
+      ],
+      "calledBy": [],
+      "size": 5005,
+      "lines": 190
+    },
+    "scripts/test-performance-monitor.js": {
+      "name": "test-performance-monitor",
+      "filePath": "scripts/test-performance-monitor.js",
+      "type": "script-file",
+      "calls": [
+        "test",
+        "test:browser"
+      ],
+      "calledBy": [],
+      "size": 9190,
+      "lines": 390
+    },
+    "scripts/test-next-15.4.7-validation.js": {
+      "name": "test-next-15.4.7-validation",
+      "filePath": "scripts/test-next-15.4.7-validation.js",
+      "type": "script-file",
+      "calls": [
+        "vitest",
+        "type-check",
+        "build",
+        "test:e2e"
+      ],
+      "calledBy": [],
+      "size": 6486,
+      "lines": 295
+    },
+    "scripts/test-i18n.js": {
+      "name": "test-i18n",
+      "filePath": "scripts/test-i18n.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 4605,
+      "lines": 186
+    },
+    "scripts/test-graphql-endpoint.js": {
+      "name": "test-graphql-endpoint",
+      "filePath": "scripts/test-graphql-endpoint.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 3853,
+      "lines": 149
+    },
+    "scripts/test-enhanced-quality-checks.js": {
+      "name": "test-enhanced-quality-checks",
+      "filePath": "scripts/test-enhanced-quality-checks.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check",
+        "build",
+        "test",
+        "arch:validate",
+        "security:check",
+        "duplication:check",
+        "size:check"
+      ],
+      "calledBy": [],
+      "size": 3698,
+      "lines": 157
+    },
+    "scripts/test-content-system.js": {
+      "name": "test-content-system",
+      "filePath": "scripts/test-content-system.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 2007,
+      "lines": 67
+    },
+    "scripts/task-status-watcher.js": {
+      "name": "task-status-watcher",
+      "filePath": "scripts/task-status-watcher.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9421,
+      "lines": 403
+    },
+    "scripts/start-test-server.js": {
+      "name": "start-test-server",
+      "filePath": "scripts/start-test-server.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 5884,
+      "lines": 238
+    },
+    "scripts/start-quality-monitoring.js": {
+      "name": "start-quality-monitoring",
+      "filePath": "scripts/start-quality-monitoring.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage",
+        "type-check",
+        "lint:check",
+        "quality:dashboard",
+        "coverage:trend",
+        "format:check",
+        "performance:benchmark",
+        "quality:gate",
+        "report:automated",
+        "quality:comprehensive"
+      ],
+      "calledBy": [],
+      "size": 8097,
+      "lines": 331
+    },
+    "scripts/simple-quality-report.js": {
+      "name": "simple-quality-report",
+      "filePath": "scripts/simple-quality-report.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "format:check",
+        "test",
+        "security:check",
+        "audit",
+        "analyze:performance",
+        "size:check",
+        "arch:validate",
+        "duplication:check"
+      ],
+      "calledBy": [],
+      "size": 17053,
+      "lines": 598
+    },
+    "scripts/simple-quality-check.js": {
+      "name": "simple-quality-check",
+      "filePath": "scripts/simple-quality-check.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "lint:check",
+        "format:check",
+        "test"
+      ],
+      "calledBy": [],
+      "size": 10533,
+      "lines": 406
+    },
+    "scripts/security-check.js": {
+      "name": "security-check",
+      "filePath": "scripts/security-check.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10965,
+      "lines": 401
+    },
+    "scripts/schema-parity-check.js": {
+      "name": "schema-parity-check",
+      "filePath": "scripts/schema-parity-check.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 3569,
+      "lines": 147
+    },
+    "scripts/report-viewer.js": {
+      "name": "report-viewer",
+      "filePath": "scripts/report-viewer.js",
+      "type": "script-file",
+      "calls": [
+        "quality:report",
+        "health",
+        "ready",
+        "report",
+        "quality:fix",
+        "test",
+        "build:check"
+      ],
+      "calledBy": [],
+      "size": 5556,
+      "lines": 238
+    },
+    "scripts/regression-test-strategy.js": {
+      "name": "regression-test-strategy",
+      "filePath": "scripts/regression-test-strategy.js",
+      "type": "script-file",
+      "calls": [
+        "test",
+        "test:performance",
+        "test:coverage"
+      ],
+      "calledBy": [],
+      "size": 11917,
+      "lines": 475
+    },
+    "scripts/quick-quality-check.js": {
+      "name": "quick-quality-check",
+      "filePath": "scripts/quick-quality-check.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "test",
+        "next",
+        "format:write"
+      ],
+      "calledBy": [],
+      "size": 8278,
+      "lines": 372
+    },
+    "scripts/quality-trigger.js": {
+      "name": "quality-trigger",
+      "filePath": "scripts/quality-trigger.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10183,
+      "lines": 444
+    },
+    "scripts/quality-result-processor.js": {
+      "name": "quality-result-processor",
+      "filePath": "scripts/quality-result-processor.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 13250,
+      "lines": 558
+    },
+    "scripts/quality-report-aggregator.js": {
+      "name": "quality-report-aggregator",
+      "filePath": "scripts/quality-report-aggregator.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check",
+        "duplication:check",
+        "security:check",
+        "audit",
+        "size:check",
+        "perf:audit",
+        "arch:validate",
+        "test"
+      ],
+      "calledBy": [],
+      "size": 6439,
+      "lines": 248
+    },
+    "scripts/quality-monitor.js": {
+      "name": "quality-monitor",
+      "filePath": "scripts/quality-monitor.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 1311,
+      "lines": 59
+    },
+    "scripts/quality-gate.js": {
+      "name": "quality-gate",
+      "filePath": "scripts/quality-gate.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage",
+        "build",
+        "test",
+        "type-check",
+        "lint:check",
+        "audit"
+      ],
+      "calledBy": [],
+      "size": 13741,
+      "lines": 563
+    },
+    "scripts/quality-error-fixer.js": {
+      "name": "quality-error-fixer",
+      "filePath": "scripts/quality-error-fixer.js",
+      "type": "script-file",
+      "calls": [
+        "format:write",
+        "lint:fix",
+        "scripts/comprehensive-quality-system.js"
+      ],
+      "calledBy": [],
+      "size": 7645,
+      "lines": 307
+    },
+    "scripts/quality-dashboard.js": {
+      "name": "quality-dashboard",
+      "filePath": "scripts/quality-dashboard.js",
+      "type": "script-file",
+      "calls": [
+        "test",
+        "build",
+        "lint:check",
+        "type-check",
+        "duplication:check"
+      ],
+      "calledBy": [],
+      "size": 20513,
+      "lines": 815
+    },
+    "scripts/qa-optimization-summary.js": {
+      "name": "qa-optimization-summary",
+      "filePath": "scripts/qa-optimization-summary.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "lint:check",
+        "build"
+      ],
+      "calledBy": [],
+      "size": 5140,
+      "lines": 182
+    },
+    "scripts/qa-config-report.js": {
+      "name": "qa-config-report",
+      "filePath": "scripts/qa-config-report.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 7640,
+      "lines": 248
+    },
+    "scripts/project-health.js": {
+      "name": "project-health",
+      "filePath": "scripts/project-health.js",
+      "type": "script-file",
+      "calls": [
+        "quality:report",
+        "report",
+        "ready"
+      ],
+      "calledBy": [],
+      "size": 6129,
+      "lines": 270
+    },
+    "scripts/performance-benchmark-monitor.js": {
+      "name": "performance-benchmark-monitor",
+      "filePath": "scripts/performance-benchmark-monitor.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "lint:check",
+        "test",
+        "build"
+      ],
+      "calledBy": [],
+      "size": 13767,
+      "lines": 544
+    },
+    "scripts/performance-analyzer.js": {
+      "name": "performance-analyzer",
+      "filePath": "scripts/performance-analyzer.js",
+      "type": "script-file",
+      "calls": [
+        "build"
+      ],
+      "calledBy": [],
+      "size": 20741,
+      "lines": 783
+    },
+    "scripts/optimize-qa-structure.js": {
+      "name": "optimize-qa-structure",
+      "filePath": "scripts/optimize-qa-structure.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 10099,
+      "lines": 387
+    },
+    "scripts/monitoring-dashboard.js": {
+      "name": "monitoring-dashboard",
+      "filePath": "scripts/monitoring-dashboard.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 11418,
+      "lines": 377
+    },
+    "scripts/integrate-new-tools.js": {
+      "name": "integrate-new-tools",
+      "filePath": "scripts/integrate-new-tools.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 8083,
+      "lines": 325
+    },
+    "scripts/implement-tiered-qa-config.js": {
+      "name": "implement-tiered-qa-config",
+      "filePath": "scripts/implement-tiered-qa-config.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check",
+        "build",
+        "type-check",
+        "lint:check"
+      ],
+      "calledBy": [],
+      "size": 4361,
+      "lines": 189
+    },
+    "scripts/i18n-performance-test.js": {
+      "name": "i18n-performance-test",
+      "filePath": "scripts/i18n-performance-test.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 11857,
+      "lines": 488
+    },
+    "scripts/font-subset-implementation.js": {
+      "name": "font-subset-implementation",
+      "filePath": "scripts/font-subset-implementation.js",
+      "type": "script-file",
+      "calls": [
+        "dev"
+      ],
+      "calledBy": [],
+      "size": 11086,
+      "lines": 462
+    },
+    "scripts/fix-qa-config.js": {
+      "name": "fix-qa-config",
+      "filePath": "scripts/fix-qa-config.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:strict",
+        "format:check",
+        "build",
+        "type-check",
+        "lint:check",
+        "test:specific"
+      ],
+      "calledBy": [],
+      "size": 12111,
+      "lines": 464
+    },
+    "scripts/fix-coverage-issues.js": {
+      "name": "fix-coverage-issues",
+      "filePath": "scripts/fix-coverage-issues.js",
+      "type": "script-file",
+      "calls": [
+        "vitest",
+        "test:coverage"
+      ],
+      "calledBy": [],
+      "size": 8469,
+      "lines": 312
+    },
+    "scripts/final-improvement-report.js": {
+      "name": "final-improvement-report",
+      "filePath": "scripts/final-improvement-report.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 4813,
+      "lines": 157
+    },
+    "scripts/final-coverage-verification.js": {
+      "name": "final-coverage-verification",
+      "filePath": "scripts/final-coverage-verification.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9131,
+      "lines": 362
+    },
+    "scripts/deployment-ready.js": {
+      "name": "deployment-ready",
+      "filePath": "scripts/deployment-ready.js",
+      "type": "script-file",
+      "calls": [
+        "deploy:check",
+        "health",
+        "report"
+      ],
+      "calledBy": [],
+      "size": 6302,
+      "lines": 271
+    },
+    "scripts/deployment-check.js": {
+      "name": "deployment-check",
+      "filePath": "scripts/deployment-check.js",
+      "type": "script-file",
+      "calls": [
+        "build:check",
+        "test",
+        "security:audit",
+        "perf:check",
+        "quality:quick:verbose"
+      ],
+      "calledBy": [],
+      "size": 8610,
+      "lines": 383
+    },
+    "scripts/coverage-trend-monitor.js": {
+      "name": "coverage-trend-monitor",
+      "filePath": "scripts/coverage-trend-monitor.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage"
+      ],
+      "calledBy": [],
+      "size": 11352,
+      "lines": 477
+    },
+    "scripts/coverage-check.js": {
+      "name": "coverage-check",
+      "filePath": "scripts/coverage-check.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage"
+      ],
+      "calledBy": [],
+      "size": 5379,
+      "lines": 245
+    },
+    "scripts/content-integrity-check.js": {
+      "name": "content-integrity-check",
+      "filePath": "scripts/content-integrity-check.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 5864,
+      "lines": 239
+    },
+    "scripts/comprehensive-quality-system.js": {
+      "name": "comprehensive-quality-system",
+      "filePath": "scripts/comprehensive-quality-system.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "lint:check",
+        "format:check",
+        "test",
+        "build",
+        "audit",
+        "format:write",
+        "lint:fix",
+        "uses:",
+        "install"
+      ],
+      "calledBy": [],
+      "size": 16705,
+      "lines": 718
+    },
+    "scripts/component-coverage-analysis.js": {
+      "name": "component-coverage-analysis",
+      "filePath": "scripts/component-coverage-analysis.js",
+      "type": "script-file",
+      "calls": [
+        "test:coverage"
+      ],
+      "calledBy": [],
+      "size": 16254,
+      "lines": 629
+    },
+    "scripts/check-missing-tests.js": {
+      "name": "check-missing-tests",
+      "filePath": "scripts/check-missing-tests.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 2312,
+      "lines": 101
+    },
+    "scripts/check-alias-consistency.js": {
+      "name": "check-alias-consistency",
+      "filePath": "scripts/check-alias-consistency.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 4723,
+      "lines": 157
+    },
+    "scripts/automated-report-generator.js": {
+      "name": "automated-report-generator",
+      "filePath": "scripts/automated-report-generator.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 15733,
+      "lines": 530
+    },
+    "scripts/automated-quality-workflow.js": {
+      "name": "automated-quality-workflow",
+      "filePath": "scripts/automated-quality-workflow.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 11384,
+      "lines": 531
+    },
+    "scripts/analyze-tier3-gaps.js": {
+      "name": "analyze-tier3-gaps",
+      "filePath": "scripts/analyze-tier3-gaps.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9657,
+      "lines": 380
+    },
+    "scripts/analyze-script-dependencies.js": {
+      "name": "analyze-script-dependencies",
+      "filePath": "scripts/analyze-script-dependencies.js",
+      "type": "script-file",
+      "calls": [
+        "xxx"
+      ],
+      "calledBy": [],
+      "size": 9528,
+      "lines": 354
+    },
+    "scripts/analyze-code-splitting.js": {
+      "name": "analyze-code-splitting",
+      "filePath": "scripts/analyze-code-splitting.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 9872,
+      "lines": 373
+    },
+    "scripts/analyze-chinese-characters.js": {
+      "name": "analyze-chinese-characters",
+      "filePath": "scripts/analyze-chinese-characters.js",
+      "type": "script-file",
+      "calls": [],
+      "calledBy": [],
+      "size": 8749,
+      "lines": 328
+    },
+    "scripts/ai-quality-review.js": {
+      "name": "ai-quality-review",
+      "filePath": "scripts/ai-quality-review.js",
+      "type": "script-file",
+      "calls": [
+        "type-check",
+        "lint:check",
+        "format:check",
+        "build",
+        "quality:check:strict"
+      ],
+      "calledBy": [],
+      "size": 12113,
+      "lines": 478
+    },
+    "scripts/ai-quality-engine.js": {
+      "name": "ai-quality-engine",
+      "filePath": "scripts/ai-quality-engine.js",
+      "type": "script-file",
+      "calls": [
+        "type-check:strict",
+        "format:check",
+        "lint:check",
+        "audit",
+        "security:check",
+        "analyze:performance",
+        "size:check",
+        "arch:validate",
+        "test",
+        "duplication:check"
+      ],
+      "calledBy": [],
+      "size": 12854,
+      "lines": 521
+    }
+  },
+  "dependencies": {
+    "test:coverage:check": [
+      "test:coverage",
+      "scripts/coverage-check.js"
+    ],
+    "test:coverage:report": [
+      "test:coverage"
+    ],
+    "test:performance": [
+      "scripts/test-performance-monitor.js"
+    ],
+    "test:performance:watch": [
+      "test:performance"
+    ],
+    "test:regression": [
+      "scripts/regression-test-strategy.js"
+    ],
+    "test:regression:critical": [
+      "scripts/regression-test-strategy.js"
+    ],
+    "test:quality": [
+      "scripts/test-quality-assessment.js"
+    ],
+    "test:quality:coverage": [
+      "scripts/test-quality-assessment.js"
+    ],
+    "test:quality:stability": [
+      "scripts/test-quality-assessment.js"
+    ],
+    "test:gate": [
+      "scripts/quality-gate.js"
+    ],
+    "test:gate:check": [
+      "scripts/quality-gate.js"
+    ],
+    "test:gate:report": [
+      "scripts/quality-gate.js"
+    ],
+    "test:i18n": [
+      "scripts/test-i18n.js"
+    ],
+    "validate:translations": [
+      "scripts/validate-translations.js"
+    ],
+    "sync:translations": [
+      "scripts/sync-translations.js"
+    ],
+    "scan:translations": [
+      "scripts/translation-scanner.js"
+    ],
+    "sync:translations:enhanced": [
+      "scripts/translation-sync.js"
+    ],
+    "validate:translations:enhanced": [
+      "scripts/translation-validator.js"
+    ],
+    "i18n:check": [
+      "test:i18n",
+      "validate:translations",
+      "sync:translations"
+    ],
+    "i18n:full": [
+      "scan:translations",
+      "sync:translations:enhanced",
+      "validate:translations:enhanced"
+    ],
+    "i18n:scan": [
+      "scan:translations"
+    ],
+    "i18n:sync": [
+      "sync:translations:enhanced"
+    ],
+    "i18n:validate": [
+      "validate:translations:enhanced"
+    ],
+    "security:audit": [
+      "audit",
+      "security:check"
+    ],
+    "security:check": [
+      "security:eslint",
+      "security:semgrep"
+    ],
+    "security:config": [
+      "scripts/security-check.js"
+    ],
+    "security:full": [
+      "security:config",
+      "security:check",
+      "security:audit"
+    ],
+    "perf:audit": [
+      "build",
+      "size:check"
+    ],
+    "quality:check": [
+      "type-check",
+      "lint:check",
+      "format:check"
+    ],
+    "quality:check:strict": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check"
+    ],
+    "health": [
+      "scripts/project-health.js"
+    ],
+    "ready": [
+      "scripts/deployment-ready.js"
+    ],
+    "report": [
+      "scripts/report-viewer.js"
+    ],
+    "quality:quick": [
+      "scripts/quick-quality-check.js"
+    ],
+    "quality:quick:staged": [
+      "scripts/quick-quality-check.js"
+    ],
+    "quality:quick:verbose": [
+      "scripts/quick-quality-check.js"
+    ],
+    "perf:check": [
+      "size:check",
+      "analyze:performance"
+    ],
+    "analyze:performance": [
+      "scripts/performance-analyzer.js"
+    ],
+    "deploy:check": [
+      "scripts/deployment-check.js"
+    ],
+    "deploy:ready": [
+      "deploy:check"
+    ],
+    "ai:analyze": [
+      "scripts/ai-quality-engine.js"
+    ],
+    "quality:enhanced": [
+      "scripts/test-enhanced-quality-checks.js"
+    ],
+    "quality:full": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check",
+      "arch:validate",
+      "security:check",
+      "duplication:check",
+      "test",
+      "security:audit",
+      "build",
+      "size:check"
+    ],
+    "i18n:perf:test": [
+      "scripts/i18n-performance-test.js"
+    ],
+    "i18n:perf:benchmark": [
+      "i18n:perf:test"
+    ],
+    "quality:fix": [
+      "scripts/quality-error-fixer.js"
+    ],
+    "quality:report": [
+      "scripts/quality-report-aggregator.js"
+    ],
+    "quality:ai-review": [
+      "scripts/ai-quality-review.js"
+    ],
+    "quality:workflow:start": [
+      "scripts/automated-quality-workflow.js"
+    ],
+    "quality:workflow:stop": [
+      "scripts/automated-quality-workflow.js"
+    ],
+    "quality:workflow:status": [
+      "scripts/automated-quality-workflow.js"
+    ],
+    "quality:workflow:restart": [
+      "scripts/automated-quality-workflow.js"
+    ],
+    "quality:workflow:test": [
+      "scripts/test-quality-workflow.js"
+    ],
+    "quality:trigger": [
+      "scripts/quality-trigger.js"
+    ],
+    "quality:watch": [
+      "scripts/task-status-watcher.js"
+    ],
+    "ui:test": [
+      "test"
+    ],
+    "analytics:test": [
+      "test"
+    ],
+    "integration:test": [
+      "test"
+    ],
+    "dev:test": [
+      "test"
+    ],
+    "test:ai-validation": [
+      "test"
+    ],
+    "test:architecture": [
+      "arch:validate"
+    ],
+    "test:security-boundaries": [
+      "security:check"
+    ],
+    "type-safety:check": [
+      "type-check:strict"
+    ],
+    "unsafe:detect": [
+      "lint:strict"
+    ],
+    "quality:monitor": [
+      "scripts/quality-monitor.js"
+    ],
+    "quality:dashboard": [
+      "scripts/quality-dashboard.js"
+    ],
+    "coverage:trend": [
+      "scripts/coverage-trend-monitor.js"
+    ],
+    "performance:benchmark": [
+      "scripts/performance-benchmark-monitor.js"
+    ],
+    "quality:gate": [
+      "scripts/quality-gate.js"
+    ],
+    "report:automated": [
+      "scripts/automated-report-generator.js"
+    ],
+    "quality:comprehensive": [
+      "quality:dashboard",
+      "coverage:trend",
+      "performance:benchmark",
+      "report:automated"
+    ],
+    "quality:start": [
+      "scripts/start-quality-monitoring.js"
+    ],
+    "quality:simple": [
+      "scripts/simple-quality-check.js"
+    ],
+    "quality:complete": [
+      "scripts/comprehensive-quality-system.js"
+    ],
+    "quality:zero-tolerance": [
+      "quality:complete"
+    ],
+    "quality:validate": [
+      "type-check:strict",
+      "format:check",
+      "lint:check",
+      "test"
+    ],
+    "performance:check": [
+      "perf:audit"
+    ],
+    "arch:validate": [
+      "arch:check",
+      "circular:check"
+    ],
+    "pre-commit": [
+      "quality:check:strict"
+    ],
+    "validate": [
+      "quality:full"
+    ],
+    "alias:check": [
+      "scripts/check-alias-consistency.js"
+    ],
+    "test:react-scan": [
+      "scripts/test-react-scan.js"
+    ],
+    "test:production-safety": [
+      "scripts/test-production-safety.js"
+    ],
+    "test:web-eval-agent": [
+      "scripts/test-web-eval-agent.js"
+    ],
+    "test:server:start": [
+      "scripts/start-test-server.js"
+    ],
+    "test:server:with-tests": [
+      "scripts/start-test-server.js"
+    ],
+    "test:verify-integration": [
+      "scripts/verify-web-eval-integration.js"
+    ],
+    "test:verify-e2e-ci": [
+      "scripts/verify-e2e-ci-integration.js"
+    ],
+    "e2e:full": [
+      "test:e2e",
+      "test:web-eval-agent"
+    ],
+    "e2e:safe": [
+      "test:e2e:safe",
+      "test:web-eval-agent"
+    ],
+    "e2e:verify": [
+      "test:verify-integration",
+      "e2e:safe"
+    ],
+    "monitoring:dashboard": [
+      "scripts/monitoring-dashboard.js"
+    ],
+    "scripts/verify-quality-commands.js": [
+      "type-check:strict",
+      "lint:check",
+      "format:check",
+      "build",
+      "test",
+      "arch:validate",
+      "security:check",
+      "duplication:check",
+      "size:check",
+      "ui:test",
+      "docs:validate",
+      "deploy:test",
+      "analytics:test",
+      "integration:test",
+      "dev:test",
+      "a11y:test",
+      "wcag:validate",
+      "quality:report",
+      "complexity:check",
+      "test:ai-validation",
+      "test:architecture",
+      "test:security-boundaries",
+      "type-safety:check",
+      "unsafe:detect",
+      "quality:monitor",
+      "performance:check",
+      "lighthouse:ci",
+      "renovate:validate"
+    ],
+    "scripts/verify-performance-monitoring.js": [
+      "type-check",
+      "scripts/performance-analyzer.js"
+    ],
+    "scripts/verify-e2e-tests.js": [
+      "dev",
+      "test:e2e",
+      "test:e2e:report",
+      "test:e2e:debug"
+    ],
+    "scripts/verify-e2e-ci-integration.js": [
+      "install"
+    ],
+    "scripts/test-react-scan.js": [
+      "dev"
+    ],
+    "scripts/test-quality-assessment.js": [
+      "test:coverage",
+      "test",
+      "lint"
+    ],
+    "scripts/test-production-safety.js": [
+      "build",
+      "start",
+      "analyze"
+    ],
+    "scripts/test-performance-monitor.js": [
+      "test",
+      "test:browser"
+    ],
+    "scripts/test-next-15.4.7-validation.js": [
+      "vitest",
+      "type-check",
+      "build",
+      "test:e2e"
+    ],
+    "scripts/test-enhanced-quality-checks.js": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check",
+      "build",
+      "test",
+      "arch:validate",
+      "security:check",
+      "duplication:check",
+      "size:check"
+    ],
+    "scripts/start-quality-monitoring.js": [
+      "test:coverage",
+      "type-check",
+      "lint:check",
+      "quality:dashboard",
+      "coverage:trend",
+      "format:check",
+      "performance:benchmark",
+      "quality:gate",
+      "report:automated",
+      "quality:comprehensive"
+    ],
+    "scripts/simple-quality-report.js": [
+      "type-check",
+      "format:check",
+      "test",
+      "security:check",
+      "audit",
+      "analyze:performance",
+      "size:check",
+      "arch:validate",
+      "duplication:check"
+    ],
+    "scripts/simple-quality-check.js": [
+      "type-check",
+      "lint:check",
+      "format:check",
+      "test"
+    ],
+    "scripts/report-viewer.js": [
+      "quality:report",
+      "health",
+      "ready",
+      "report",
+      "quality:fix",
+      "test",
+      "build:check"
+    ],
+    "scripts/regression-test-strategy.js": [
+      "test",
+      "test:performance",
+      "test:coverage"
+    ],
+    "scripts/quick-quality-check.js": [
+      "type-check",
+      "test",
+      "next",
+      "format:write"
+    ],
+    "scripts/quality-report-aggregator.js": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check",
+      "duplication:check",
+      "security:check",
+      "audit",
+      "size:check",
+      "perf:audit",
+      "arch:validate",
+      "test"
+    ],
+    "scripts/quality-gate.js": [
+      "test:coverage",
+      "build",
+      "test",
+      "type-check",
+      "lint:check",
+      "audit"
+    ],
+    "scripts/quality-error-fixer.js": [
+      "format:write",
+      "lint:fix",
+      "scripts/comprehensive-quality-system.js"
+    ],
+    "scripts/quality-dashboard.js": [
+      "test",
+      "build",
+      "lint:check",
+      "type-check",
+      "duplication:check"
+    ],
+    "scripts/qa-optimization-summary.js": [
+      "type-check",
+      "lint:check",
+      "build"
+    ],
+    "scripts/project-health.js": [
+      "quality:report",
+      "report",
+      "ready"
+    ],
+    "scripts/performance-benchmark-monitor.js": [
+      "type-check",
+      "lint:check",
+      "test",
+      "build"
+    ],
+    "scripts/performance-analyzer.js": [
+      "build"
+    ],
+    "scripts/implement-tiered-qa-config.js": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check",
+      "build",
+      "type-check",
+      "lint:check"
+    ],
+    "scripts/font-subset-implementation.js": [
+      "dev"
+    ],
+    "scripts/fix-qa-config.js": [
+      "type-check:strict",
+      "lint:strict",
+      "format:check",
+      "build",
+      "type-check",
+      "lint:check",
+      "test:specific"
+    ],
+    "scripts/fix-coverage-issues.js": [
+      "vitest",
+      "test:coverage"
+    ],
+    "scripts/deployment-ready.js": [
+      "deploy:check",
+      "health",
+      "report"
+    ],
+    "scripts/deployment-check.js": [
+      "build:check",
+      "test",
+      "security:audit",
+      "perf:check",
+      "quality:quick:verbose"
+    ],
+    "scripts/coverage-trend-monitor.js": [
+      "test:coverage"
+    ],
+    "scripts/coverage-check.js": [
+      "test:coverage"
+    ],
+    "scripts/comprehensive-quality-system.js": [
+      "type-check:strict",
+      "lint:check",
+      "format:check",
+      "test",
+      "build",
+      "audit",
+      "format:write",
+      "lint:fix",
+      "uses:",
+      "install"
+    ],
+    "scripts/component-coverage-analysis.js": [
+      "test:coverage"
+    ],
+    "scripts/analyze-script-dependencies.js": [
+      "xxx"
+    ],
+    "scripts/ai-quality-review.js": [
+      "type-check",
+      "lint:check",
+      "format:check",
+      "build",
+      "quality:check:strict"
+    ],
+    "scripts/ai-quality-engine.js": [
+      "type-check:strict",
+      "format:check",
+      "lint:check",
+      "audit",
+      "security:check",
+      "analyze:performance",
+      "size:check",
+      "arch:validate",
+      "test",
+      "duplication:check"
+    ]
+  },
+  "orphanScripts": [
+    "dev:no-scan",
+    "lint:fix",
+    "test:watch",
+    "test:coverage:check",
+    "test:coverage:report",
+    "test:ui",
+    "test:browser",
+    "test:browser:watch",
+    "test:browser:coverage",
+    "test:browser:ui",
+    "test:performance:watch",
+    "test:regression",
+    "test:regression:critical",
+    "test:quality",
+    "test:quality:coverage",
+    "test:quality:stability",
+    "test:gate",
+    "test:gate:check",
+    "test:gate:report",
+    "i18n:check",
+    "i18n:full",
+    "i18n:scan",
+    "i18n:sync",
+    "i18n:validate",
+    "security:scan",
+    "security:fix",
+    "security:full",
+    "size:why",
+    "analyze",
+    "analyze:server",
+    "analyze:browser",
+    "quality:check",
+    "health",
+    "ready",
+    "report",
+    "quality:quick",
+    "quality:quick:staged",
+    "quality:quick:verbose",
+    "build:check",
+    "perf:check",
+    "deploy:ready",
+    "ai:analyze",
+    "quality:enhanced",
+    "i18n:perf:benchmark",
+    "quality:fix",
+    "quality:report",
+    "quality:ai-review",
+    "quality:workflow:start",
+    "quality:workflow:stop",
+    "quality:workflow:status",
+    "quality:workflow:restart",
+    "quality:workflow:test",
+    "quality:trigger",
+    "quality:watch",
+    "ui:test",
+    "docs:validate",
+    "deploy:test",
+    "analytics:test",
+    "integration:test",
+    "dev:test",
+    "a11y:test",
+    "wcag:validate",
+    "complexity:check",
+    "test:ai-validation",
+    "test:architecture",
+    "test:security-boundaries",
+    "type-safety:check",
+    "unsafe:detect",
+    "quality:monitor",
+    "quality:gate",
+    "quality:comprehensive",
+    "quality:start",
+    "quality:simple",
+    "quality:zero-tolerance",
+    "quality:validate",
+    "performance:check",
+    "lighthouse:ci",
+    "renovate:validate",
+    "arch:graph",
+    "circular:report",
+    "duplication:report",
+    "duplication:badge",
+    "duplication:ci",
+    "commitlint",
+    "hooks:install",
+    "hooks:uninstall",
+    "pre-commit",
+    "validate",
+    "lint:rsc",
+    "alias:check",
+    "test:react-scan",
+    "test:production-safety",
+    "test:e2e:ui",
+    "test:e2e:debug",
+    "test:e2e:headed",
+    "test:e2e:report",
+    "test:server:start",
+    "test:server:with-tests",
+    "test:verify-e2e-ci",
+    "playwright:install",
+    "e2e:full",
+    "e2e:verify",
+    "lighthouse",
+    "lighthouse:collect",
+    "lighthouse:assert",
+    "monitoring:dashboard",
+    "scripts/verify-seo-fixes.js",
+    "scripts/verify-resource-preload.js",
+    "scripts/verify-quality-commands.js",
+    "scripts/verify-performance-monitoring.js",
+    "scripts/verify-font-subset.js",
+    "scripts/verify-font-optimization.js",
+    "scripts/verify-e2e-tests.js",
+    "scripts/verify-coverage-improvement.js",
+    "scripts/verify-component-optimization.js",
+    "scripts/verify-code-splitting.js",
+    "scripts/validate-test-files.js",
+    "scripts/validate-qa-structure.js",
+    "scripts/validate-new-tests.js",
+    "scripts/validate-i18n-middleware.js",
+    "scripts/test-translation-cache-performance.js",
+    "scripts/test-next-15.4.7-validation.js",
+    "scripts/test-graphql-endpoint.js",
+    "scripts/test-content-system.js",
+    "scripts/simple-quality-report.js",
+    "scripts/schema-parity-check.js",
+    "scripts/quality-result-processor.js",
+    "scripts/qa-optimization-summary.js",
+    "scripts/qa-config-report.js",
+    "scripts/optimize-qa-structure.js",
+    "scripts/integrate-new-tools.js",
+    "scripts/implement-tiered-qa-config.js",
+    "scripts/font-subset-implementation.js",
+    "scripts/fix-qa-config.js",
+    "scripts/fix-coverage-issues.js",
+    "scripts/final-improvement-report.js",
+    "scripts/final-coverage-verification.js",
+    "scripts/content-integrity-check.js",
+    "scripts/component-coverage-analysis.js",
+    "scripts/check-missing-tests.js",
+    "scripts/analyze-tier3-gaps.js",
+    "scripts/analyze-script-dependencies.js",
+    "scripts/analyze-code-splitting.js",
+    "scripts/analyze-chinese-characters.js"
+  ],
+  "circularDependencies": [
+    [
+      "health",
+      "scripts/project-health.js",
+      "report",
+      "scripts/report-viewer.js",
+      "health"
+    ],
+    [
+      "health",
+      "scripts/project-health.js",
+      "report",
+      "scripts/report-viewer.js",
+      "ready",
+      "scripts/deployment-ready.js",
+      "health"
+    ],
+    [
+      "report",
+      "scripts/report-viewer.js",
+      "ready",
+      "scripts/deployment-ready.js",
+      "report"
+    ],
+    [
+      "report",
+      "scripts/report-viewer.js",
+      "report"
+    ]
+  ],
+  "unusedScripts": [],
+  "statistics": {
+    "totalPackageScripts": 153,
+    "totalScriptFiles": 80,
+    "totalDependencies": 129,
+    "circularDependencies": 4,
+    "orphanScripts": 144,
+    "averageDependenciesPerScript": 2.387596899224806
+  }
+}

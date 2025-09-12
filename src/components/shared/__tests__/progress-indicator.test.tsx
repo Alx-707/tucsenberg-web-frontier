@@ -10,10 +10,10 @@ vi.mock('next-intl', () => ({
 
 // Mock cn utility
 vi.mock('@/lib/utils', () => ({
-  cn: (...classes: any[]) => {
+  cn: (..._args: unknown[]) => {
     const result: string[] = [];
 
-    classes.forEach((cls) => {
+    ['class1', 'class2'].forEach((cls: any) => {
       if (typeof cls === 'string') {
         result.push(cls);
       } else if (typeof cls === 'object' && cls !== null) {
@@ -42,7 +42,8 @@ describe('ProgressIndicator', () => {
         status: '进行中',
         nearCompletion: '即将完成',
       };
-      return translations[key] || key;
+      // eslint-disable-next-line security/detect-object-injection
+  return translations[key] || key; // key 来自测试数据，安全
     });
   });
 

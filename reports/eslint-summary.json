@@ -1,0 +1,165 @@
+{
+  "timestamp": "2025-09-11T13:01:26.532Z",
+  "totals": {
+    "errors": 2073,
+    "warnings": 38,
+    "total": 2111
+  },
+  "anyType": {
+    "rule": "@typescript-eslint/no-explicit-any",
+    "errors": 32,
+    "warnings": 0
+  },
+  "security": {
+    "total": 128,
+    "errors": 128,
+    "warnings": 0,
+    "breakdown": {
+      "genericObjectInjection": 97,
+      "variableAssignedToInjection": 22
+    }
+  },
+  "console": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "magicNumbers": {
+    "total": 459,
+    "top": [
+      {
+        "number": 0,
+        "count": 60
+      },
+      {
+        "number": 2,
+        "count": 53
+      },
+      {
+        "number": 60,
+        "count": 46
+      },
+      {
+        "number": 1024,
+        "count": 45
+      },
+      {
+        "number": 5,
+        "count": 28
+      },
+      {
+        "number": 10,
+        "count": 25
+      },
+      {
+        "number": 16,
+        "count": 16
+      },
+      {
+        "number": 24,
+        "count": 14
+      },
+      {
+        "number": 3,
+        "count": 12
+      },
+      {
+        "number": 9,
+        "count": 9
+      },
+      {
+        "number": 50,
+        "count": 8
+      },
+      {
+        "number": -5,
+        "count": 7
+      }
+    ]
+  },
+  "complexity": {
+    "complexity": {
+      "errors": 10,
+      "warnings": 3
+    },
+    "maxDepth": {
+      "errors": 25,
+      "warnings": 0
+    },
+    "maxNestedCallbacks": {
+      "errors": 6,
+      "warnings": 0
+    },
+    "noElseReturn": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "noPlusPlus": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "unused": {
+    "total": 1061,
+    "js": {
+      "errors": 674,
+      "warnings": 7
+    },
+    "ts": {
+      "errors": 380,
+      "warnings": 0
+    },
+    "topNames": [
+      {
+        "name": "error",
+        "count": 42
+      },
+      {
+        "name": "key",
+        "count": 39
+      },
+      {
+        "name": "event",
+        "count": 26
+      },
+      {
+        "name": "locale",
+        "count": 25
+      },
+      {
+        "name": "value",
+        "count": 16
+      },
+      {
+        "name": "data",
+        "count": 16
+      },
+      {
+        "name": "Locale",
+        "count": 16
+      },
+      {
+        "name": "config",
+        "count": 10
+      },
+      {
+        "name": "options",
+        "count": 10
+      },
+      {
+        "name": "args",
+        "count": 8
+      }
+    ]
+  },
+  "devTools": {
+    "tsNoCheck": {
+      "errors": 0,
+      "warnings": 14
+    },
+    "tNotDefinedCount": 0,
+    "nextImg": {
+      "errors": 0,
+      "warnings": 0
+    }
+  }
+}

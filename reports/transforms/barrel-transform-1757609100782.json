@@ -1,0 +1,388 @@
+{
+  "timestamp": "2025-09-11T16:45:00.781Z",
+  "options": {
+    "createBackup": true,
+    "dryRun": true,
+    "verbose": true,
+    "preserveComments": true
+  },
+  "stats": {
+    "filesProcessed": 786,
+    "filesTransformed": 0,
+    "exportStarRemoved": 0,
+    "namedExportsAdded": 0,
+    "errors": [
+      {
+        "file": "src/types/whatsapp.ts",
+        "error": "Export 'WhatsAppConfig' is not defined. (94:2)",
+        "type": "parse_error"
+      },
+      {
+        "file": "src/types/whatsapp-webhook-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-webhook-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-webhook-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-webhook-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-service-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-service-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-service-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-service-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-api-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-api-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-api-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/whatsapp-api-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/types/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/translation-quality.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-integrations.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-integrations.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-integrations.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-integrations.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-core.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-core.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-core.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-core.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-coordinator.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-coordinator.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/performance-monitoring-coordinator.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-preference.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-preference.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-preference.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-preference.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-manager.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-manager.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-manager.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-manager.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-manager.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-maintenance.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-maintenance.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-maintenance.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-maintenance.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-history.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-history.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-history.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-history.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-history.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-analytics.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-analytics.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-analytics.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-storage-analytics.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detector.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detector.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detector.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detection.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detection.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detection.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/locale-detection.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/i18n-preloader.ts",
+        "error": "Export 'PreloaderFactoryConfig' is not defined. (78:2)",
+        "type": "parse_error"
+      },
+      {
+        "file": "src/lib/i18n-cache-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/i18n-cache-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/i18n-cache-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/lib/i18n-cache-types.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/constants/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/constants/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/constants/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/constants/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/constants/index.ts",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/components/shared/dynamic-imports.tsx",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      },
+      {
+        "file": "src/components/shared/dynamic-imports.tsx",
+        "error": "Export processing error: Cannot read properties of undefined (reading 'transformStats')",
+        "type": "export_processing_error"
+      }
+    ]
+  },
+  "summary": {
+    "success": false,
+    "filesProcessed": 786,
+    "filesTransformed": 0,
+    "transformationRate": "0.00%"
+  }
+}

@@ -1,15 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import {
-  webVitalsMonitor,
-  type WebVitalsMetrics,
-} from '@/lib/web-vitals-monitor';
-import {
-  MONITORING_INTERVALS,
-  WEB_VITALS_THRESHOLDS,
+    MONITORING_INTERVALS,
+    WEB_VITALS_THRESHOLDS,
 } from '@/constants/performance-constants';
+import {
+    webVitalsMonitor,
+    type WebVitalsMetrics,
+} from '@/lib/web-vitals-monitor';
+import { useEffect, useState } from 'react';
 
 // 工具函数：获取指标颜色
 const getMetricColor = (value: number, good: number, poor: number): string => {
@@ -102,7 +101,11 @@ function useWebVitalsMonitoring() {
  * 生产环境静默收集数据并定期发送报告。
  */
 export function WebVitalsIndicator() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = {
+    registerTool: () => {},
+    unregisterTool: () => {},
+    getClasses: () => '',
+  };
   const { metrics, isVisible } = useWebVitalsMonitoring();
 
   // 注册工具到布局管理器

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
 import { REACT_SCAN_CONFIG } from '@/constants/react-scan';
+import React, { useEffect } from 'react';
 
 /**
  * React Scan Provider
@@ -39,7 +38,7 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    // let reactScanInstance: any = null; // TODO: Use when needed
+    // let reactScanInstance: unknown = null; // TODO: Use when needed
     let isReactScanEnabled = true;
 
     // 动态导入并初始化 React Scan
@@ -175,7 +174,11 @@ export function ReactScanProvider({ children }: { children: React.ReactNode }) {
  * 自动跟随开发环境启用，生产环境不显示
  */
 export function ReactScanIndicator() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = {
+    registerTool: () => {},
+    unregisterTool: () => {},
+    getClasses: () => '',
+  };
 
   // 检查是否明确禁用
   const explicitlyDisabled =
@@ -221,7 +224,11 @@ export function ReactScanIndicator() {
  * 自动跟随开发环境启用，生产环境不显示
  */
 export function ReactScanControlPanel() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = {
+    registerTool: () => {},
+    unregisterTool: () => {},
+    getClasses: () => '',
+  };
 
   // 检查是否明确禁用
   const explicitlyDisabled =

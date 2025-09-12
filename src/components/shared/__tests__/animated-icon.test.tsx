@@ -10,7 +10,7 @@ vi.mock('@/hooks/use-reduced-motion', () => ({
 
 // Mock cn utility
 vi.mock('@/lib/utils', () => ({
-  cn: (...classes: any[]) => classes.filter(Boolean).join(' '),
+  cn: (...args: unknown[]) => args.filter(Boolean).join(' '),
 }));
 
 describe('AnimatedIcon', () => {

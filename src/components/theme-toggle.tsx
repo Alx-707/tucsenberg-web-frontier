@@ -1,23 +1,23 @@
 'use client';
 
-import { Monitor, Moon, Sun } from 'lucide-react';
 import { ThemeMenuItem } from '@/components/theme/theme-menu-item';
 import { ThemeToggleButton } from '@/components/theme/theme-toggle-button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useThemeToggle } from '@/hooks/use-theme-toggle';
+import { Monitor, Moon, Sun } from 'lucide-react';
 
 export function ThemeToggle() {
   const {
     theme,
     isOpen,
     setIsOpen,
-    supportsViewTransitions,
     prefersReducedMotion,
     prefersHighContrast,
+    supportsViewTransitions,
     handleThemeChange,
     handleKeyDown,
     ariaAttributes,

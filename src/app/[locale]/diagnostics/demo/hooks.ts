@@ -3,12 +3,9 @@ import {
   analyzePerformance,
   testWebVitalsCollection,
 } from '@/scripts/test-web-vitals';
-import {
-  exportTestResults,
-  PERFORMANCE_CONSTANTS,
-  simulatePerformanceIssues,
-  TestResults,
-} from './utils';
+import type { TestResults } from './utils';
+import { exportTestResults } from './utils';
+import { PERFORMANCE_CONSTANTS, simulatePerformanceIssues,  } from './utils';
 
 // 诊断功能 Hook
 export function useDiagnostics() {

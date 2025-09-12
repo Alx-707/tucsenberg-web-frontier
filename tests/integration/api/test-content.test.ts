@@ -19,9 +19,9 @@ vi.mock('@/lib/logger', () => ({
   },
 }));
 
-const mockGetAllPages = getAllPages as any;
-const mockGetAllPosts = getAllPosts as any;
-const mockGetContentStats = getContentStats as any;
+const mockGetAllPages = getAllPages as unknown;
+const mockGetAllPosts = getAllPosts as unknown;
+const mockGetContentStats = getContentStats as unknown;
 
 describe('API Integration Tests - /api/test-content', () => {
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe('API Integration Tests - /api/test-content', () => {
   describe('GET /api/test-content', () => {
     it('should return successful response with content data', async () => {
       // Setup mocks
-      mockGetAllPosts.mockImplementation((locale: string) => {
+      (mockGetAllPosts as any).mockImplementation((locale: string) => {
         if (locale === 'en') {
           return [
             {
@@ -54,7 +54,7 @@ describe('API Integration Tests - /api/test-content', () => {
         ];
       });
 
-      mockGetAllPages.mockImplementation((locale: string) => {
+      (mockGetAllPages as any).mockImplementation((locale: string) => {
         if (locale === 'en') {
           return [
             {
@@ -75,7 +75,7 @@ describe('API Integration Tests - /api/test-content', () => {
         ];
       });
 
-      mockGetContentStats.mockReturnValue({
+      (mockGetContentStats as any).mockReturnValue({
         totalFiles: 4,
         totalSize: 1024,
         lastModified: '2024-01-01T00:00:00Z',
@@ -129,9 +129,9 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should handle empty content gracefully', async () => {
       // Setup mocks for empty content
-      mockGetAllPosts.mockReturnValue([]);
-      mockGetAllPages.mockReturnValue([]);
-      mockGetContentStats.mockReturnValue({
+      (mockGetAllPosts as any).mockReturnValue([]);
+      (mockGetAllPages as any).mockReturnValue([]);
+      (mockGetContentStats as any).mockReturnValue({
         totalFiles: 0,
         totalSize: 0,
         lastModified: null,
@@ -154,7 +154,7 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should handle content with missing metadata', async () => {
       // Setup mocks with incomplete metadata
-      mockGetAllPosts.mockReturnValue([
+      (mockGetAllPosts as any).mockReturnValue([
         {
           metadata: {
             // Missing title and slug
@@ -163,7 +163,7 @@ describe('API Integration Tests - /api/test-content', () => {
         },
       ]);
 
-      mockGetAllPages.mockReturnValue([
+      (mockGetAllPages as any).mockReturnValue([
         {
           metadata: {
             // Missing title and slug
@@ -171,7 +171,7 @@ describe('API Integration Tests - /api/test-content', () => {
         },
       ]);
 
-      mockGetContentStats.mockReturnValue({
+      (mockGetContentStats as any).mockReturnValue({
         totalFiles: 2,
         totalSize: 512,
         lastModified: '2024-01-01T00:00:00Z',
@@ -197,7 +197,7 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should handle errors and return 500 status', async () => {
       // Setup mock to throw error
-      mockGetAllPosts.mockImplementation(() => {
+      (mockGetAllPosts as any).mockImplementation(() => {
         throw new Error('Content loading failed');
       });
 
@@ -214,7 +214,7 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should handle non-Error exceptions', async () => {
       // Setup mock to throw non-Error
-      mockGetAllPosts.mockImplementation(() => {
+      (mockGetAllPosts as any).mockImplementation(() => {
         throw 'String error';
       });
 
@@ -230,9 +230,9 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should call all required content functions', async () => {
       // Setup mocks
-      mockGetAllPosts.mockReturnValue([]);
-      mockGetAllPages.mockReturnValue([]);
-      mockGetContentStats.mockReturnValue({});
+      (mockGetAllPosts as any).mockReturnValue([]);
+      (mockGetAllPages as any).mockReturnValue([]);
+      (mockGetContentStats as any).mockReturnValue({});
 
       // Execute API call
       await GET();
@@ -247,9 +247,9 @@ describe('API Integration Tests - /api/test-content', () => {
 
     it('should return NextResponse with correct headers', async () => {
       // Setup mocks
-      mockGetAllPosts.mockReturnValue([]);
-      mockGetAllPages.mockReturnValue([]);
-      mockGetContentStats.mockReturnValue({});
+      (mockGetAllPosts as any).mockReturnValue([]);
+      (mockGetAllPages as any).mockReturnValue([]);
+      (mockGetContentStats as any).mockReturnValue({});
 
       // Execute API call
       const response = await GET();

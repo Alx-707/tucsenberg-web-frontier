@@ -1,12 +1,13 @@
 'use client';
 
 /// <reference lib="dom" />
-import * as React from 'react';
-import { forwardRef, useEffect, useState } from 'react';
-import { AccessibilityManager } from '@/lib/accessibility';
-import { cn } from '@/lib/utils';
 import { ANIMATION_DURATIONS } from '@/constants/performance-constants';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import { AccessibilityUtils } from '@/lib/accessibility-utils';
+import { logger } from '@/lib/logger';
+import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { animationUtils } from './animated-counter-helpers';
 
 /**
@@ -166,7 +167,7 @@ function useAnimatedCounter({
     if (isAnimating) return;
 
     // 检查可访问性偏好
-    const prefersReducedMotion = AccessibilityManager.prefersReducedMotion();
+    const prefersReducedMotion = AccessibilityUtils.prefersReducedMotion();
     if (prefersReducedMotion) {
       setCurrentValue(to);
       return;
@@ -284,10 +285,9 @@ export const AnimatedCounter = forwardRef<
             return formatter(currentValue);
           } catch (error) {
             // Fallback to default formatting if custom formatter throws
-            console.warn(
-              'AnimatedCounter: Formatter error, using fallback',
-              error,
-            );
+            logger.warn('AnimatedCounter: Formatter error, using fallback', {
+              error: error as Error,
+            });
             return Math.round(currentValue).toString();
           }
         })()}

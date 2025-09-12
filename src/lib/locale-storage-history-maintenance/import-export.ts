@@ -1,0 +1,129 @@
+/**
+ * 语言检测历史导入导出功能
+ * Locale Detection History Import/Export Functions
+ */
+
+'use client';
+
+import { LocalStorageManager } from '../locale-storage-local';
+import type {
+  LocaleDetectionHistory,
+  StorageOperationResult,
+} from '../locale-storage-types';
+import { 
+  getDetectionHistory, 
+  validateHistoryData,
+  HistoryCacheManager 
+} from '../locale-storage-history-core';
+
+/**
+ * 导出历史记录
+ * Export history
+ */
+export function exportHistory(): StorageOperationResult<LocaleDetectionHistory> {
+  return getDetectionHistory();
+}
+
+/**
+ * 导出历史记录为JSON字符串
+ * Export history as JSON string
+ */
+export function exportHistoryAsJson(): StorageOperationResult<string> {
+  const historyResult = exportHistory();
+  
+  if (!historyResult.success) {
+    return {
+      ...historyResult,
+      data: undefined,
+    } as StorageOperationResult<string>;
+  }
+
+  try {
+    const jsonString = JSON.stringify(historyResult.data, null, 2);
+    return {
+      ...historyResult,
+      data: jsonString,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to serialize history',
+      source: 'localStorage',
+      timestamp: Date.now(),
+    };
+  }
+}
+
+/**
+ * 导入历史记录
+ * Import history
+ */
+export function importHistory(history: LocaleDetectionHistory): StorageOperationResult<LocaleDetectionHistory> {
+  const startTime = Date.now();
+  
+  try {
+    // 验证导入的数据
+    if (!validateHistoryData(history)) {
+      return {
+        success: false,
+        error: 'Invalid history data format',
+        source: 'localStorage',
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+      };
+    }
+
+    // 更新时间戳
+    const updatedHistory: LocaleDetectionHistory = {
+      ...history,
+      lastUpdated: Date.now(),
+    };
+
+    // 保存到存储
+    const saveResult = LocalStorageManager.set('locale_detection_history', updatedHistory);
+    
+    if (saveResult.success) {
+      HistoryCacheManager.clearCache();
+      return {
+        success: true,
+        data: updatedHistory,
+        source: 'localStorage',
+        timestamp: Date.now(),
+        responseTime: Date.now() - startTime,
+      };
+    }
+    return {
+      success: false,
+      error: saveResult.error || 'Failed to save imported history',
+      source: 'localStorage',
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      source: 'localStorage',
+      timestamp: Date.now(),
+      responseTime: Date.now() - startTime,
+    };
+  }
+}
+
+/**
+ * 从JSON字符串导入历史记录
+ * Import history from JSON string
+ */
+export function importHistoryFromJson(jsonString: string): StorageOperationResult<LocaleDetectionHistory> {
+  try {
+    const history = JSON.parse(jsonString) as LocaleDetectionHistory;
+    return importHistory(history);
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to parse JSON',
+      source: 'localStorage',
+      timestamp: Date.now(),
+    };
+  }
+}

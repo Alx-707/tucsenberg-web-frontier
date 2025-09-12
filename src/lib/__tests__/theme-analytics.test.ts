@@ -187,7 +187,7 @@ describe('ThemeAnalytics', () => {
       });
 
       // Cleanup
-      delete (global as any).window;
+      delete (global as unknown).window;
     });
 
     it('should analyze switch patterns when behavior analysis enabled', () => {
@@ -247,12 +247,13 @@ describe('ThemeAnalytics', () => {
       const summary = analytics.getPerformanceSummary();
 
       expect(summary).toEqual({
-        avgSwitchTime: 0,
-        maxSwitchTime: 0,
-        minSwitchTime: 0,
+        averageDuration: 0,
+        slowestSwitch: 0,
+        fastestSwitch: 0,
         totalSwitches: 0,
         slowSwitches: 0,
-        viewTransitionsUsage: 0,
+        mostUsedTheme: 'system',
+        viewTransitionSupport: false,
       });
     });
 
@@ -275,11 +276,11 @@ describe('ThemeAnalytics', () => {
       const summary = analytics.getPerformanceSummary();
 
       expect(summary.totalSwitches).toBe(3);
-      expect(summary.avgSwitchTime).toBeCloseTo((50 + 200 + 75) / 3, 2);
-      expect(summary.maxSwitchTime).toBe(200);
-      expect(summary.minSwitchTime).toBe(50);
+      expect(summary.averageDuration).toBeCloseTo((50 + 200 + 75) / 3, 2);
+      expect(summary.slowestSwitch).toBe(200);
+      expect(summary.fastestSwitch).toBe(50);
       expect(summary.slowSwitches).toBe(1); // Only 200ms exceeds 100ms threshold
-      expect(summary.viewTransitionsUsage).toBe(2); // Two switches used view transitions
+      expect(summary.viewTransitionSupport).toBe(true); // View transitions are supported
     });
   });
 
@@ -413,7 +414,7 @@ describe('ThemeAnalytics', () => {
 
     it('should fallback to Math.random when crypto unavailable', () => {
       // Remove crypto mock
-      delete (global as any).crypto;
+      delete (global as unknown).crypto;
 
       const mathRandomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.05); // 5%
 
@@ -495,7 +496,7 @@ describe('ThemeAnalytics', () => {
 
     it('should call methods on global instance', () => {
       // Completely reset global instance configuration for testing
-      (themeAnalytics as any).config = {
+      (themeAnalytics as unknown).config = {
         enabled: true,
         performanceThreshold: 100,
         sampleRate: 1.0, // 100% sampling
@@ -504,19 +505,19 @@ describe('ThemeAnalytics', () => {
       };
 
       // Test that convenience function works by checking the result
-      const initialMetricsCount = (themeAnalytics as any).performanceMetrics
+      const initialMetricsCount = (themeAnalytics as unknown).performanceMetrics
         .length;
 
       // Call convenience function
       recordThemeSwitch('light', 'dark', 1000, 1100);
 
       // Verify that the global instance was affected
-      const finalMetricsCount = (themeAnalytics as any).performanceMetrics
+      const finalMetricsCount = (themeAnalytics as unknown).performanceMetrics
         .length;
       expect(finalMetricsCount).toBe(initialMetricsCount + 1);
 
       // Verify the recorded data
-      const lastMetric = (themeAnalytics as any).performanceMetrics[
+      const lastMetric = (themeAnalytics as unknown).performanceMetrics[
         finalMetricsCount - 1
       ];
       expect(lastMetric.fromTheme).toBe('light');
@@ -526,7 +527,7 @@ describe('ThemeAnalytics', () => {
 
     it('should call recordThemePreference on global instance', () => {
       // Configure global instance for testing
-      (themeAnalytics as any).config = {
+      (themeAnalytics as unknown).config = {
         enabled: true,
         performanceThreshold: 100,
         sampleRate: 1.0, // 100% sampling
@@ -535,18 +536,18 @@ describe('ThemeAnalytics', () => {
       };
 
       // Set initial state
-      (themeAnalytics as any).currentTheme = 'light';
+      (themeAnalytics as unknown).currentTheme = 'light';
 
       // Call convenience function
       recordThemePreference('dark');
 
       // Verify state was updated
-      expect((themeAnalytics as any).currentTheme).toBe('dark');
+      expect((themeAnalytics as unknown).currentTheme).toBe('dark');
     });
 
     it('should call sendPerformanceReport on global instance', () => {
       // Configure global instance for testing
-      (themeAnalytics as any).config = {
+      (themeAnalytics as unknown).config = {
         enabled: true,
         performanceThreshold: 100,
         sampleRate: 1.0, // 100% sampling
@@ -555,7 +556,7 @@ describe('ThemeAnalytics', () => {
       };
 
       // Add test data to ensure there's something to report
-      (themeAnalytics as any).performanceMetrics = [
+      (themeAnalytics as unknown).performanceMetrics = [
         {
           fromTheme: 'light',
           toTheme: 'dark',
@@ -577,7 +578,7 @@ describe('ThemeAnalytics', () => {
   describe('Edge Cases and Error Handling', () => {
     it('should handle navigator unavailable', () => {
       // Remove navigator mock
-      delete (global as any).navigator;
+      delete (global as unknown).navigator;
 
       mockGetRandomValues.mockImplementation((array) => {
         array[0] = 0;
@@ -609,9 +610,9 @@ describe('ThemeAnalytics', () => {
       analytics.recordThemeSwitch('light', 'dark', 1000, 1000); // Same start and end time
 
       const summary = analytics.getPerformanceSummary();
-      expect(summary.avgSwitchTime).toBe(0);
-      expect(summary.minSwitchTime).toBe(0);
-      expect(summary.maxSwitchTime).toBe(0);
+      expect(summary.averageDuration).toBe(0);
+      expect(summary.fastestSwitch).toBe(0);
+      expect(summary.slowestSwitch).toBe(0);
     });
 
     it('should handle negative duration switches', () => {
@@ -624,8 +625,8 @@ describe('ThemeAnalytics', () => {
       analytics.recordThemeSwitch('light', 'dark', 1100, 1000); // End before start
 
       const summary = analytics.getPerformanceSummary();
-      expect(summary.avgSwitchTime).toBe(-100);
-      expect(summary.minSwitchTime).toBe(-100);
+      expect(summary.averageDuration).toBe(-100);
+      expect(summary.fastestSwitch).toBe(-100);
     });
 
     it('should handle disabled behavior analysis', () => {
@@ -693,7 +694,7 @@ describe('ThemeAnalytics', () => {
 
       const summary = analytics.getPerformanceSummary();
       expect(summary.totalSwitches).toBe(10);
-      expect(summary.avgSwitchTime).toBeGreaterThan(0);
+      expect(summary.averageDuration).toBeGreaterThan(0);
 
       const stats = analytics.getUsageStatistics();
       expect(stats.length).toBeGreaterThan(0);

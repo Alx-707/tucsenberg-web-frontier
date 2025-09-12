@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-09-07T11:08:26.697Z",
+  "qualityScore": 0,
+  "totalErrors": 876,
+  "totalWarnings": 106,
+  "totalFiles": 377,
+  "topViolations": [
+    {
+      "rule": "no-unused-vars",
+      "count": 273,
+      "severity": "error"
+    },
+    {
+      "rule": "@typescript-eslint/no-unused-vars",
+      "count": 178,
+      "severity": "error"
+    },
+    {
+      "rule": "@typescript-eslint/no-explicit-any",
+      "count": 90,
+      "severity": "error"
+    },
+    {
+      "rule": "max-lines-per-function",
+      "count": 81,
+      "severity": "warning"
+    },
+    {
+      "rule": "no-console",
+      "count": 59,
+      "severity": "error"
+    },
+    {
+      "rule": "security/detect-object-injection",
+      "count": 57,
+      "severity": "error"
+    },
+    {
+      "rule": "max-depth",
+      "count": 49,
+      "severity": "error"
+    },
+    {
+      "rule": "max-lines",
+      "count": 44,
+      "severity": "error"
+    },
+    {
+      "rule": "max-params",
+      "count": 28,
+      "severity": "error"
+    },
+    {
+      "rule": "no-plusplus",
+      "count": 26,
+      "severity": "error"
+    }
+  ],
+  "thresholdStatus": {
+    "passed": false,
+    "violations": [
+      {
+        "type": "errors",
+        "current": 876,
+        "threshold": 0,
+        "message": "错误数量超过阈值: 876 > 0"
+      },
+      {
+        "type": "any-type",
+        "current": 90,
+        "threshold": 0,
+        "message": "any类型使用超过阈值: 90 > 0"
+      }
+    ]
+  }
+}

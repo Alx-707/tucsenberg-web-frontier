@@ -1,7 +1,7 @@
 // Mock React for useState
+import { fireEvent, render } from '@/test/utils';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render } from '@/test/utils';
 
 // Mock a responsive navigation component
 const ResponsiveNavigation = ({ children }: { children?: React.ReactNode }) => {

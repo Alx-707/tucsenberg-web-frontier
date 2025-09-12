@@ -54,7 +54,7 @@ describe('useEnhancedTranslations', () => {
     mockPerformanceNow.mockReturnValue(1000);
 
     // Setup mock translations
-    mockT.mockImplementation((key: string, values?: any) => {
+    mockT.mockImplementation((key: string, values?: unknown) => {
       if (key === 'missing.key') {
         throw new Error('Translation not found');
       }
@@ -242,7 +242,7 @@ describe('useEnhancedTranslations', () => {
   describe('rich text translations', () => {
     it('should handle rich text translations', () => {
       const { result } = renderHook(() => useEnhancedTranslations());
-      const components = { bold: (chunks: any) => `<b>${chunks}</b>` };
+      const components = { bold: (chunks: unknown) => `<b>${chunks}</b>` };
 
       const translation = result.current.richT('rich.text', components);
       expect(translation).toBe('rich-rich.text');
@@ -312,7 +312,7 @@ describe('useEnhancedTranslations', () => {
       const originalNumberFormat = Intl.NumberFormat;
       const mockNumberFormat = vi.fn().mockImplementation(() => {
         throw new Error('Format error');
-      }) as any;
+      }) as unknown;
       // Add required static method
       mockNumberFormat.supportedLocalesOf = vi.fn().mockReturnValue([]);
       Intl.NumberFormat = mockNumberFormat;
@@ -340,7 +340,7 @@ describe('useEnhancedTranslations', () => {
       const originalDateTimeFormat = Intl.DateTimeFormat;
       const mockDateTimeFormat = vi.fn().mockImplementation(() => {
         throw new Error('Format error');
-      }) as any;
+      }) as unknown;
       // Add required static method
       mockDateTimeFormat.supportedLocalesOf = vi.fn().mockReturnValue([]);
       Intl.DateTimeFormat = mockDateTimeFormat;
@@ -390,8 +390,8 @@ describe('useEnhancedTranslations', () => {
 
   describe('performance monitoring', () => {
     it('should record performance metrics when analytics enabled', async () => {
-      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
       mockPerformanceNow
         .mockReturnValueOnce(1000)
@@ -409,8 +409,8 @@ describe('useEnhancedTranslations', () => {
     });
 
     it('should not record performance metrics when analytics disabled', async () => {
-      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
       const { result } = renderHook(() =>
         useEnhancedTranslations({ analytics: false }),
@@ -422,8 +422,8 @@ describe('useEnhancedTranslations', () => {
     });
 
     it('should record errors when analytics enabled', async () => {
-      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
       const { result } = renderHook(() =>
         useEnhancedTranslations({ analytics: true }),
@@ -435,8 +435,8 @@ describe('useEnhancedTranslations', () => {
     });
 
     it('should get performance metrics', async () => {
-      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+      const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+      const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
       const { result } = renderHook(() => useEnhancedTranslations());
 
@@ -499,8 +499,8 @@ describe('useI18nPerformance', () => {
   });
 
   it('should get performance metrics', async () => {
-    const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-    const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+    const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+    const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
     const { result } = renderHook(() => useI18nPerformance());
 
@@ -512,8 +512,8 @@ describe('useI18nPerformance', () => {
   });
 
   it('should reset performance metrics', async () => {
-    const mockModule = (await vi.importMock('@/lib/i18n-performance')) as any;
-    const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as any;
+    const mockModule = (await vi.importMock('@/lib/i18n-performance')) as unknown;
+    const I18nPerformanceMonitor = mockModule.I18nPerformanceMonitor as unknown;
 
     const { result } = renderHook(() => useI18nPerformance());
 

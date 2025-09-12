@@ -1,0 +1,288 @@
+'use client';
+
+/**
+ * 开发工具动态导入组件
+ * 
+ * React Scan、开发工具控制器等开发环境专用组件的动态导入
+ */
+import dynamic from 'next/dynamic';
+import { 
+  ComponentLoadingFallback,
+  DEV_TOOLS_CONFIG,
+  
+  withConditionalDynamic,
+  isDevelopment 
+} from './dynamic-imports-base';
+
+// ==================== React Scan 组件 ====================
+
+/**
+ * React Scan Provider - 动态导入
+ * React Scan Provider - Dynamic Import
+ * 原因：开发工具组件，仅开发环境使用，约1KB
+ */
+export const DynamicReactScanProvider = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanProvider,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+/**
+ * React Scan 指示器 - 动态导入
+ * React Scan Indicator - Dynamic Import
+ * 原因：开发工具UI组件，仅开发环境使用
+ */
+export const DynamicReactScanIndicator = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanIndicator,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+/**
+ * React Scan 控制面板 - 动态导入
+ * React Scan Control Panel - Dynamic Import
+ * 原因：开发工具控制组件，仅开发环境使用
+ */
+export const DynamicReactScanControlPanel = dynamic(
+  () =>
+    import('../dev-tools/react-scan-provider').then((mod) => ({
+      default: mod.ReactScanControlPanel,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+/**
+ * React Scan 演示组件 - 动态导入
+ * React Scan Demo - Dynamic Import
+ * 原因：开发工具演示组件，仅开发环境使用
+ */
+export const DynamicReactScanDemo = dynamic(
+  () =>
+    import('../dev-tools/react-scan-demo').then((mod) => ({
+      default: mod.ReactScanDemo,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * React Scan 压力测试组件 - 动态导入
+ * React Scan Stress Test - Dynamic Import
+ * 原因：开发工具测试组件，仅开发环境使用
+ */
+export const DynamicReactScanStressTest = dynamic(
+  () =>
+    import('../dev-tools/react-scan-demo').then((mod) => ({
+      default: mod.ReactScanStressTest,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+// ==================== 开发工具控制器 ====================
+
+/**
+ * 开发工具控制器 - 动态导入
+ * Dev Tools Controller - Dynamic Import
+ * 统一管理所有开发工具的显示和布局
+ */
+export const DynamicDevToolsController = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-controller').then((mod) => ({
+      default: mod.DevToolsController,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+/**
+ * 开发工具状态指示器 - 动态导入
+ * Dev Tools Status Indicator - Dynamic Import
+ * 显示当前活跃的开发工具数量
+ */
+export const DynamicDevToolsStatusIndicator = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-controller').then((mod) => ({
+      default: mod.DevToolsStatusIndicator,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+/**
+ * 开发工具设置面板 - 动态导入
+ * Dev Tools Settings Panel - Dynamic Import
+ * 开发工具的配置界面
+ */
+export const DynamicDevToolsSettings = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-settings').then((mod) => ({
+      default: mod.DevToolsSettings,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 开发工具快捷键面板 - 动态导入
+ * Dev Tools Shortcuts Panel - Dynamic Import
+ * 显示开发工具的快捷键
+ */
+export const DynamicDevToolsShortcuts = dynamic(
+  () =>
+    import('../dev-tools/dev-tools-shortcuts').then((mod) => ({
+      default: mod.DevToolsShortcuts,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+// ==================== 调试工具 ====================
+
+/**
+ * 组件树查看器 - 动态导入
+ * Component Tree Viewer - Dynamic Import
+ * 原因：开发调试工具
+ */
+export const DynamicComponentTreeViewer = dynamic(
+  () =>
+    import('../dev-tools/component-tree-viewer').then((mod) => ({
+      default: mod.ComponentTreeViewer,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 状态检查器 - 动态导入
+ * State Inspector - Dynamic Import
+ * 原因：开发调试工具
+ */
+export const DynamicStateInspector = dynamic(
+  () =>
+    import('../dev-tools/state-inspector').then((mod) => ({
+      default: mod.StateInspector,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 网络请求监控 - 动态导入
+ * Network Request Monitor - Dynamic Import
+ * 原因：开发调试工具
+ */
+export const DynamicNetworkRequestMonitor = dynamic(
+  () =>
+    import('../dev-tools/network-request-monitor').then((mod) => ({
+      default: mod.NetworkRequestMonitor,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 控制台日志查看器 - 动态导入
+ * Console Log Viewer - Dynamic Import
+ * 原因：开发调试工具
+ */
+export const DynamicConsoleViewer = dynamic(
+  () =>
+    import('../dev-tools/console-viewer').then((mod) => ({
+      default: mod.ConsoleViewer,
+    })),
+  { 
+    loading: () => <ComponentLoadingFallback />,
+    ssr: false,
+  },
+);
+
+/**
+ * 错误边界查看器 - 动态导入
+ * Error Boundary Viewer - Dynamic Import
+ * 原因：开发调试工具
+ */
+export const DynamicErrorBoundaryViewer = dynamic(
+  () =>
+    import('../dev-tools/error-boundary-viewer').then((mod) => ({
+      default: mod.ErrorBoundaryViewer,
+    })),
+  { loading: () => null, ssr: false },
+);
+
+// ==================== 开发环境专用组件包装器 ====================
+
+/**
+ * 开发环境React Scan套件
+ * Development React Scan Suite
+ * 只在开发环境加载完整的React Scan功能
+ */
+export const DevelopmentReactScanSuite = withConditionalDynamic(
+  dynamic(
+    () =>
+      import('../dev-tools/react-scan-suite').then((mod) => ({
+        default: mod.ReactScanSuite,
+      })),
+    { 
+      loading: () => <ComponentLoadingFallback />,
+      ssr: false,
+    },
+  ),
+  isDevelopment,
+);
+
+/**
+ * 开发环境调试工具套件
+ * Development Debug Tools Suite
+ * 只在开发环境加载完整的调试工具
+ */
+export const DevelopmentDebugToolsSuite = withConditionalDynamic(
+  dynamic(
+    () =>
+      import('../dev-tools/debug-tools-suite').then((mod) => ({
+        default: mod.DebugToolsSuite,
+      })),
+    { 
+      loading: () => <ComponentLoadingFallback />,
+      ssr: false,
+    },
+  ),
+  isDevelopment,
+);
+
+// ==================== 导出所有开发工具组件 ====================
+
+export const DevToolsDynamicComponents = {
+  ReactScanProvider: DynamicReactScanProvider,
+  ReactScanIndicator: DynamicReactScanIndicator,
+  ReactScanControlPanel: DynamicReactScanControlPanel,
+  ReactScanDemo: DynamicReactScanDemo,
+  ReactScanStressTest: DynamicReactScanStressTest,
+  DevToolsController: DynamicDevToolsController,
+  DevToolsStatusIndicator: DynamicDevToolsStatusIndicator,
+  DevToolsSettings: DynamicDevToolsSettings,
+  DevToolsShortcuts: DynamicDevToolsShortcuts,
+  ComponentTreeViewer: DynamicComponentTreeViewer,
+  StateInspector: DynamicStateInspector,
+  NetworkRequestMonitor: DynamicNetworkRequestMonitor,
+  ConsoleViewer: DynamicConsoleViewer,
+  ErrorBoundaryViewer: DynamicErrorBoundaryViewer,
+} as const;
+
+export const DevelopmentOnlyComponents = {
+  ReactScanSuite: DevelopmentReactScanSuite,
+  DebugToolsSuite: DevelopmentDebugToolsSuite,
+} as const;

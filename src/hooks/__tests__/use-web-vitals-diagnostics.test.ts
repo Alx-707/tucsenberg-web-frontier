@@ -72,7 +72,7 @@ const verifyMockSetup = async () => {
 };
 
 // 辅助函数：验证Hook返回值的完整性
-const validateHookResult = (result: any) => {
+const validateHookResult = (result: unknown) => {
   // 在测试环境中，Hook应该立即返回有效对象
   expect(result.current).toBeTruthy();
   expect(result.current).not.toBeNull();
@@ -138,10 +138,10 @@ describe('useWebVitalsDiagnostics', () => {
       '@/lib/enhanced-web-vitals'
     );
     (
-      enhancedWebVitalsCollector.generateDiagnosticReport as any
+      enhancedWebVitalsCollector.generateDiagnosticReport as unknown
     ).mockReturnValue(mockGenerateReportResult);
-    (enhancedWebVitalsCollector.getDetailedMetrics as any).mockReturnValue({});
-    (enhancedWebVitalsCollector.cleanup as any).mockImplementation(() => {});
+    (enhancedWebVitalsCollector.getDetailedMetrics as unknown).mockReturnValue({});
+    (enhancedWebVitalsCollector.cleanup as unknown).mockImplementation(() => {});
 
     // 4. 设置浏览器API Mock的默认行为
     mockLocalStorage.getItem.mockReturnValue(null);
@@ -160,10 +160,10 @@ describe('useWebVitalsDiagnostics', () => {
       '@/lib/enhanced-web-vitals'
     );
     (
-      enhancedWebVitalsCollector.generateDiagnosticReport as any
+      enhancedWebVitalsCollector.generateDiagnosticReport as unknown
     ).mockReturnValue(mockGenerateReportResult);
-    (enhancedWebVitalsCollector.getDetailedMetrics as any).mockReturnValue({});
-    (enhancedWebVitalsCollector.cleanup as any).mockImplementation(() => {});
+    (enhancedWebVitalsCollector.getDetailedMetrics as unknown).mockReturnValue({});
+    (enhancedWebVitalsCollector.cleanup as unknown).mockImplementation(() => {});
 
     // 重置浏览器API Mock
     mockLocalStorage.getItem.mockReturnValue(null);
@@ -293,7 +293,7 @@ describe('useWebVitalsDiagnostics', () => {
         '@/lib/enhanced-web-vitals'
       );
       (
-        enhancedWebVitalsCollector.generateDiagnosticReport as any
+        enhancedWebVitalsCollector.generateDiagnosticReport as unknown
       ).mockImplementation(() => {
         throw new Error('Report generation failed');
       });
@@ -323,7 +323,7 @@ describe('useWebVitalsDiagnostics', () => {
         '@/lib/enhanced-web-vitals'
       );
       (
-        enhancedWebVitalsCollector.generateDiagnosticReport as any
+        enhancedWebVitalsCollector.generateDiagnosticReport as unknown
       ).mockImplementation(() => {
         throw new Error('String error');
       });
@@ -514,7 +514,7 @@ describe('useWebVitalsDiagnostics', () => {
         '@/lib/enhanced-web-vitals'
       );
       (
-        enhancedWebVitalsCollector.generateDiagnosticReport as any
+        enhancedWebVitalsCollector.generateDiagnosticReport as unknown
       ).mockReturnValue({
         ...mockGenerateReportResult,
         metrics: {

@@ -25,7 +25,7 @@ class SystemErrorSimulator {
           this.message = 'Maximum call stack size exceeded';
         }
       }
-    } as any;
+    } as unknown;
   }
 
   // 模拟文件系统错误
@@ -44,8 +44,8 @@ class SystemErrorSimulator {
         ? errorMessages[errorType]
         : 'Unknown error',
     );
-    (error as any).code = errorType;
-    (error as any).errno = -2;
+    (error as unknown).code = errorType;
+    (error as unknown).errno = -2;
     return error;
   }
 
@@ -73,14 +73,14 @@ class SystemErrorSimulator {
 
 // 错误处理器类
 class ErrorHandler {
-  private errorLog: Array<{ error: Error; timestamp: Date; context?: any }> =
+  private errorLog: Array<{ error: Error; timestamp: Date; context?: Record<string, unknown> }> =
     [];
   private retryAttempts: Map<string, number> = new Map();
 
   // 处理系统错误
   handleSystemError(
     error: Error,
-    context?: any,
+    context?: Record<string, unknown>,
   ): { handled: boolean; action: string } {
     this.logError(error, context);
 
@@ -169,7 +169,7 @@ class ErrorHandler {
   }
 
   // 记录错误
-  private logError(error: Error, context?: any): void {
+  private logError(error: Error, context?: Record<string, unknown>): void {
     this.errorLog.push({
       error,
       timestamp: new Date(),
@@ -178,7 +178,7 @@ class ErrorHandler {
   }
 
   // 获取错误日志
-  getErrorLog(): Array<{ error: Error; timestamp: Date; context?: any }> {
+  getErrorLog(): Array<{ error: Error; timestamp: Date; context?: Record<string, unknown> }> {
     return [...this.errorLog];
   }
 
@@ -295,7 +295,7 @@ describe('System Error and Exception Handling Tests', () => {
     });
 
     it('should handle unhandled promise rejections', async () => {
-      const unhandledRejections: Array<{ reason: any; promise: Promise<any> }> =
+      const unhandledRejections: Array<{ reason: unknown; promise: Promise<unknown> }> =
         [];
 
       // Mock unhandled rejection handler
@@ -320,7 +320,7 @@ describe('System Error and Exception Handling Tests', () => {
       // Restore original handlers
       process.removeAllListeners('unhandledRejection');
       originalHandler.forEach((handler) => {
-        process.on('unhandledRejection', handler as any);
+        process.on('unhandledRejection', handler as unknown);
       });
     });
 
@@ -525,7 +525,7 @@ describe('System Error and Exception Handling Tests', () => {
       const nonErrorObject = { message: 'Not an Error object', code: 500 };
 
       // Simulate handling non-Error objects
-      const handleNonError = (obj: any) => {
+      const handleNonError = (obj: unknown) => {
         try {
           throw obj;
         } catch (caught) {
@@ -533,7 +533,7 @@ describe('System Error and Exception Handling Tests', () => {
             return errorHandler.handleSystemError(caught);
           }
           // Convert to Error
-          const error = new Error(String((caught as any)?.message || caught));
+          const error = new Error(String((caught as unknown)?.message || caught));
           return errorHandler.handleSystemError(error);
         }
       };

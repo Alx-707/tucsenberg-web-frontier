@@ -188,7 +188,7 @@ Object.defineProperty(global, 'performance', {
 });
 
 // Also set performance on global scope directly
-(global as any).performance = mockPerformance;
+(global as unknown).performance = mockPerformance;
 
 // Mock performance on globalThis as well
 Object.defineProperty(globalThis, 'performance', {
@@ -430,7 +430,7 @@ describe('enhanced-web-vitals', () => {
 
     it('should handle performance.now() not available', () => {
       const originalNow = mockPerformance.now;
-      mockPerformance.now = undefined as any;
+      mockPerformance.now = undefined as unknown;
 
       const analyzer = new EnhancedWebVitalsCollector();
       expect(analyzer).toBeInstanceOf(EnhancedWebVitalsCollector);

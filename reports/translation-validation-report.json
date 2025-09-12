@@ -1,0 +1,46 @@
+{
+  "timestamp": "2025-09-04T05:34:10.976Z",
+  "summary": {
+    "totalKeys": 391,
+    "validatedKeys": 391,
+    "issueCount": 2,
+    "warningCount": 0,
+    "errorCount": 0
+  },
+  "statistics": {
+    "coverage": {
+      "en": {
+        "total": 391,
+        "translated": 391,
+        "percentage": "100.00"
+      },
+      "zh": {
+        "total": 391,
+        "translated": 391,
+        "percentage": "100.00"
+      }
+    },
+    "quality": {}
+  },
+  "issues": [
+    {
+      "type": "suspicious_translation",
+      "severity": "warning",
+      "key": "footer.sections.resources.vercel",
+      "value": "Vercel",
+      "message": "翻译键 \"footer.sections.resources.vercel\" 在所有语言中都是相同的值，可能未翻译"
+    },
+    {
+      "type": "length_ratio_high",
+      "severity": "warning",
+      "key": "home.internationalization",
+      "lengths": {
+        "en": 20,
+        "zh": 3
+      },
+      "ratio": "6.67",
+      "message": "翻译键 \"home.internationalization\" 的长度比例过高 (6.67)，可能存在翻译质量问题"
+    }
+  ],
+  "warnings": []
+}

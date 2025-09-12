@@ -16,29 +16,29 @@ import {
 } from './utils';
 
 export default function DiagnosticsPage() {
-  const [currentMetrics, setCurrentMetrics] = useState<SimpleWebVitals | null>(
+  const [currentMetrics, _setCurrentMetrics] = useState<SimpleWebVitals | null>(
     null,
   );
-  const [historicalData, setHistoricalData] = useState<SimpleWebVitals[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [historicalData, _setHistoricalData] = useState<SimpleWebVitals[]>([]);
+  const [isLoading, _setIsLoading] = useState(false);
 
   // 刷新数据
   const refreshData = useCallback(async () => {
-    setIsLoading(true);
+    _setIsLoading(true);
     try {
       // 模拟异步数据收集
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const metrics = collectCurrentMetrics();
-      setCurrentMetrics(metrics);
+      _setCurrentMetrics(metrics);
 
       // 保存到历史记录
       const updatedHistory = saveCurrentData(metrics);
-      setHistoricalData(updatedHistory);
+      _setHistoricalData(updatedHistory);
     } catch (error) {
       console.error('Failed to refresh data:', error);
     } finally {
-      setIsLoading(false);
+      _setIsLoading(false);
     }
   }, []);
 
@@ -50,7 +50,7 @@ export default function DiagnosticsPage() {
   // 初始化数据加载
   useEffect(() => {
     const historical = loadHistoricalData();
-    setHistoricalData(historical);
+    _setHistoricalData(historical);
 
     // 自动刷新一次
     refreshData();

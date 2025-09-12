@@ -8,12 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  getMetricLabel,
-  getMetricStatus,
-  PERFORMANCE_CONSTANTS,
-  TestResults,
-} from './utils';
+import type { TestResults } from './utils';
+import { getMetricLabel, getMetricStatus, PERFORMANCE_CONSTANTS,  } from './utils';;
 
 // 子组件：页面头部
 export function PageHeader() {

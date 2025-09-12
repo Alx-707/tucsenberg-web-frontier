@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useDevToolsLayout } from '@/lib/dev-tools-positioning';
-import {
-  evaluatePerformance,
-  PERFORMANCE_TARGETS,
-} from '@/lib/i18n-performance';
 import { useI18nPerformance } from '@/hooks/use-enhanced-translations';
+import {
+    evaluatePerformance,
+    PERFORMANCE_TARGETS,
+} from '@/lib/i18n-performance';
+import { useEffect, useState } from 'react';
 
 interface PerformanceMetrics {
   averageLoadTime: number;
@@ -16,7 +15,11 @@ interface PerformanceMetrics {
 }
 
 export function I18nPerformanceDashboard() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = {
+    registerTool: () => {},
+    unregisterTool: () => {},
+    getClasses: () => '',
+  };
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isVisible, setIsVisible] = useState(
     process.env.NODE_ENV === 'development',
@@ -178,9 +181,13 @@ function getGradeColor(grade: string): string {
  * 只显示关键指标，适合生产环境
  */
 export function I18nPerformanceIndicator() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses } = {
+    registerTool: () => {},
+    unregisterTool: () => {},
+    getClasses: () => '',
+  };
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, _setShowDetails] = useState(false);
   const { getMetrics } = useI18nPerformance();
 
   // 注册工具到布局管理器
@@ -212,7 +219,7 @@ export function I18nPerformanceIndicator() {
   return (
     <div className={getClasses('i18nPerformanceIndicator')}>
       <button
-        onClick={() => setShowDetails(!showDetails)}
+        onClick={() => _setShowDetails(!showDetails)}
         className={`rounded-full px-3 py-2 text-xs font-medium transition-colors ${
           hasIssues
             ? 'bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-200'

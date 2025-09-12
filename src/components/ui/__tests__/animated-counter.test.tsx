@@ -1,16 +1,16 @@
-import React from 'react';
+import {
+    TEST_COUNT_CONSTANTS,
+    TEST_EASING_CONSTANTS,
+    TEST_SAMPLE_CONSTANTS,
+    TEST_TIMEOUT_CONSTANTS,
+} from '@/constants/test-constants';
 import { act, render, screen, waitFor } from '@testing-library/react';
+import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  TEST_COUNT_CONSTANTS,
-  TEST_EASING_CONSTANTS,
-  TEST_SAMPLE_CONSTANTS,
-  TEST_TIMEOUT_CONSTANTS,
-} from '@/constants/test-constants';
-import {
-  AnimatedCounter,
-  easingFunctions,
-  formatters,
+    AnimatedCounter,
+    easingFunctions,
+    formatters,
 } from '../animated-counter';
 
 // Mock dependencies
@@ -54,7 +54,7 @@ describe('AnimatedCounter Component', () => {
     global.requestAnimationFrame = mockRequestAnimationFrame;
     global.cancelAnimationFrame = mockCancelAnimationFrame;
     Object.defineProperty(global.performance, 'now', {
-      value: mockPerformanceNow,
+      _to: mockPerformanceNow,
       writable: true,
     });
   });
@@ -260,8 +260,8 @@ describe('AnimatedCounter Component', () => {
 
   describe('Custom Formatters', () => {
     it('uses custom formatter function', () => {
-      const customFormatter = (value: number) =>
-        `${value.toFixed(TEST_COUNT_CONSTANTS.SMALL)} units`;
+      const customFormatter = (to: number) =>
+        `${to.toFixed(TEST_COUNT_CONSTANTS.SMALL)} units`;
 
       render(
         <AnimatedCounter

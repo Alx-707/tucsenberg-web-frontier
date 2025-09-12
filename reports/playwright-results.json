@@ -10,7 +10,9 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 4
+    },
     "preserveOutput": "always",
     "reporter": [
       [
@@ -42,7 +44,9 @@
         "outputDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/e2e",
@@ -56,7 +60,9 @@
         "outputDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/e2e",
@@ -70,7 +76,9 @@
         "outputDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/e2e",
@@ -84,7 +92,9 @@
         "outputDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/e2e",
@@ -98,7 +108,9 @@
         "outputDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 4
+        },
         "id": "Mobile Safari",
         "name": "Mobile Safari",
         "testDir": "/Users/Data/Warehouse/Focus/tucsenberg-web-frontier/tests/e2e",
@@ -112,7 +124,7 @@
     "shard": null,
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
-    "version": "1.54.2",
+    "version": "1.55.0",
     "workers": 4,
     "webServer": {
       "command": "pnpm dev",
@@ -121,17 +133,325 @@
       "timeout": 120000
     }
   },
-  "suites": [],
-  "errors": [
+  "suites": [
     {
-      "message": "Error: Timed out waiting 120000ms from config.webServer.",
-      "stack": "Error: Timed out waiting 120000ms from config.webServer."
+      "title": "debug-language-dropdown.spec.ts",
+      "file": "debug-language-dropdown.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Debug Language Dropdown",
+          "file": "debug-language-dropdown.spec.ts",
+          "line": 3,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should debug language dropdown rendering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1540,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing root path redirect...\n"
+                        },
+                        {
+                          "text": "Current URL after redirect: http://localhost:3000/en\n"
+                        },
+                        {
+                          "text": "=== PAGE HTML ===\n"
+                        },
+                        {
+                          "text": "<!DOCTYPE html><html lang=\"en\"><head><link rel=\"stylesheet\" href=\"/_next/static/chunks/src_app_globals_91e4631d.css\" data-precedence=\"next_static/chunks/src_app_globals_91e4631d.css\"><script src=\"/_next/static/chunks/e492c_next_dist_compiled_react-dom_824d2210._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_next-devtools_index_77c08edb.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_8251300c._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_client_c1752946._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_a02301e9._.js\" async=\"\"></script><script src=\"/_next/static/chunks/69652_%40swc_helpers_cjs_77b72907._.js\" async=\"\"></script><script src=\"/_next/static/chunks/instrumentation-client_ts_15a74a80._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_a0ff3932._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_515278f0._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_3d7a9bf6._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_favicon_ico_mjs_18716020._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_layout_tsx_3787cbc5._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_be31f802._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_26fa107b._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_global-error_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_54c37e25._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_%5Blocale%5D_layout_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_build_polyfills_polyfill-nomodule.js\" nomodule=\"\"></script><style>@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:url(/__nextjs_font/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+0\n"
+                        },
+                        {
+                          "text": "Language dropdown count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Total buttons on page: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Header count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Elements containing language text: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-03T07:37:18.362Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "208a93736caa9b662c20-a66ab410df17da2f73e8",
+              "file": "debug-language-dropdown.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "should debug language dropdown rendering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2629,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing root path redirect...\n"
+                        },
+                        {
+                          "text": "Current URL after redirect: http://localhost:3000/en\n"
+                        },
+                        {
+                          "text": "=== PAGE HTML ===\n"
+                        },
+                        {
+                          "text": "<!DOCTYPE html><html lang=\"en\"><head><link rel=\"stylesheet\" href=\"/_next/static/chunks/src_app_globals_91e4631d.css\" data-precedence=\"next_static/chunks/src_app_globals_91e4631d.css\"><script src=\"/_next/static/chunks/e492c_next_dist_compiled_react-dom_824d2210._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_next-devtools_index_77c08edb.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_8251300c._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_client_c1752946._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_a02301e9._.js\" async=\"\"></script><script src=\"/_next/static/chunks/69652_%40swc_helpers_cjs_77b72907._.js\" async=\"\"></script><script src=\"/_next/static/chunks/instrumentation-client_ts_15a74a80._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_a0ff3932._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_515278f0._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_3d7a9bf6._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_favicon_ico_mjs_18716020._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_layout_tsx_3787cbc5._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_be31f802._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_26fa107b._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_global-error_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_54c37e25._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_%5Blocale%5D_layout_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_build_polyfills_polyfill-nomodule.js\" nomodule=\"\"></script><style>@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:url(/__nextjs_font/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+0\n"
+                        },
+                        {
+                          "text": "Language dropdown count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Total buttons on page: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Header count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Elements containing language text: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-03T07:37:18.365Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "208a93736caa9b662c20-e06b4a23829a808968e7",
+              "file": "debug-language-dropdown.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "should debug language dropdown rendering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2169,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing root path redirect...\n"
+                        },
+                        {
+                          "text": "Current URL after redirect: http://localhost:3000/en\n"
+                        },
+                        {
+                          "text": "=== PAGE HTML ===\n"
+                        },
+                        {
+                          "text": "<!DOCTYPE html><html lang=\"en\"><head><link rel=\"stylesheet\" href=\"/_next/static/chunks/src_app_globals_91e4631d.css\" data-precedence=\"next_static/chunks/src_app_globals_91e4631d.css\"><script src=\"/_next/static/chunks/e492c_next_dist_compiled_react-dom_824d2210._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_next-devtools_index_77c08edb.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_8251300c._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_client_c1752946._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_a02301e9._.js\" async=\"\"></script><script src=\"/_next/static/chunks/69652_%40swc_helpers_cjs_77b72907._.js\" async=\"\"></script><script src=\"/_next/static/chunks/instrumentation-client_ts_15a74a80._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_a0ff3932._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_515278f0._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_3d7a9bf6._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_favicon_ico_mjs_18716020._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_layout_tsx_3787cbc5._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_be31f802._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_26fa107b._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_global-error_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_54c37e25._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_%5Blocale%5D_layout_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_build_polyfills_polyfill-nomodule.js\" nomodule=\"\"></script><style>@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:url(/__nextjs_font/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+0\n"
+                        },
+                        {
+                          "text": "Language dropdown count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Total buttons on page: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Header count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Elements containing language text: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-03T07:37:18.362Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "208a93736caa9b662c20-7457485365fe1f376fe8",
+              "file": "debug-language-dropdown.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "should debug language dropdown rendering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1775,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing root path redirect...\n"
+                        },
+                        {
+                          "text": "Current URL after redirect: http://localhost:3000/en\n"
+                        },
+                        {
+                          "text": "=== PAGE HTML ===\n"
+                        },
+                        {
+                          "text": "<!DOCTYPE html><html lang=\"en\"><head><link rel=\"stylesheet\" href=\"/_next/static/chunks/src_app_globals_91e4631d.css\" data-precedence=\"next_static/chunks/src_app_globals_91e4631d.css\"><script src=\"/_next/static/chunks/e492c_next_dist_compiled_react-dom_824d2210._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_next-devtools_index_77c08edb.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_8251300c._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_client_c1752946._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_a02301e9._.js\" async=\"\"></script><script src=\"/_next/static/chunks/69652_%40swc_helpers_cjs_77b72907._.js\" async=\"\"></script><script src=\"/_next/static/chunks/instrumentation-client_ts_15a74a80._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_a0ff3932._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_515278f0._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_3d7a9bf6._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_favicon_ico_mjs_18716020._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_layout_tsx_3787cbc5._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_be31f802._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_26fa107b._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_global-error_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_54c37e25._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_%5Blocale%5D_layout_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_build_polyfills_polyfill-nomodule.js\" nomodule=\"\"></script><style>@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:url(/__nextjs_font/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+0\n"
+                        },
+                        {
+                          "text": "Language dropdown count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Total buttons on page: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Header count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Elements containing language text: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-03T07:37:18.362Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "208a93736caa9b662c20-0ce70f049600f5816ebc",
+              "file": "debug-language-dropdown.spec.ts",
+              "line": 4,
+              "column": 7
+            },
+            {
+              "title": "should debug language dropdown rendering",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1396,
+                      "errors": [],
+                      "stdout": [
+                        {
+                          "text": "Testing root path redirect...\n"
+                        },
+                        {
+                          "text": "Current URL after redirect: http://localhost:3000/en\n"
+                        },
+                        {
+                          "text": "=== PAGE HTML ===\n"
+                        },
+                        {
+                          "text": "<!DOCTYPE html><html lang=\"en\"><head><link rel=\"stylesheet\" href=\"/_next/static/chunks/src_app_globals_91e4631d.css\" data-precedence=\"next_static/chunks/src_app_globals_91e4631d.css\"><script src=\"/_next/static/chunks/e492c_next_dist_compiled_react-dom_824d2210._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_next-devtools_index_77c08edb.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_compiled_8251300c._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_client_c1752946._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_a02301e9._.js\" async=\"\"></script><script src=\"/_next/static/chunks/69652_%40swc_helpers_cjs_77b72907._.js\" async=\"\"></script><script src=\"/_next/static/chunks/instrumentation-client_ts_15a74a80._.js\" async=\"\"></script><script src=\"/_next/static/chunks/_a0ff3932._.js\" async=\"\"></script><script src=\"/_next/static/chunks/turbopack-_515278f0._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_3d7a9bf6._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_favicon_ico_mjs_18716020._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_layout_tsx_3787cbc5._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_be31f802._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_26fa107b._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_global-error_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/node_modules__pnpm_54c37e25._.js\" async=\"\"></script><script src=\"/_next/static/chunks/src_app_%5Blocale%5D_layout_tsx_8e25136e._.js\" async=\"\"></script><script src=\"/_next/static/chunks/e492c_next_dist_build_polyfills_polyfill-nomodule.js\" nomodule=\"\"></script><style>@font-face{font-family:'__nextjs-Geist';font-style:normal;font-weight:400 600;font-display:swap;src:url(/__nextjs_font/geist-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+0\n"
+                        },
+                        {
+                          "text": "Language dropdown count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Total buttons on page: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Header count: \u001b[33m0\u001b[39m\n"
+                        },
+                        {
+                          "text": "Elements containing language text: \u001b[33m0\u001b[39m\n"
+                        }
+                      ],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-09-03T07:37:20.688Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "208a93736caa9b662c20-2eee78aa47c85f19da51",
+              "file": "debug-language-dropdown.spec.ts",
+              "line": 4,
+              "column": 7
+            }
+          ]
+        }
+      ]
     }
   ],
+  "errors": [],
   "stats": {
-    "startTime": "2025-08-19T06:51:02.703Z",
-    "duration": 123312.55900000001,
-    "expected": 0,
+    "startTime": "2025-09-03T07:36:30.389Z",
+    "duration": 52472.342,
+    "expected": 5,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

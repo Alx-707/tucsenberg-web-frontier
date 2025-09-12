@@ -1,0 +1,100 @@
+/**
+ * WhatsApp API Type Definitions - Main Entry Point
+ *
+ * This file serves as a unified entry point for all WhatsApp Business API type definitions,
+ * re-exporting all related functionality from modular type files.
+ */
+
+// 基础类型 - Base Types
+export type {
+  WhatsAppContact, WhatsAppMessage, WhatsAppError, MessageStatus,
+  MessageStatusUpdate, LocationData, ContactData, MessageType, MediaType,
+  MediaObject, ImageMedia, DocumentMedia, VideoMedia, AudioMedia,
+  ContactName, ContactPhone, ContactEmail, ContactUrl, ContactAddress, ContactOrg,
+  MessageValidationResult,
+  Contact, Message, Error, StatusUpdate, Location, ContactInfo,
+} from './whatsapp-base-types';
+
+export {
+  isTextMessage, isImageMessage, isDocumentMessage, isAudioMessage, isVideoMessage, isLocationMessage, isContactsMessage,
+  validateWhatsAppMessage,
+  WHATSAPP_MESSAGE_TYPES, WHATSAPP_MESSAGE_STATUSES, SUPPORTED_MEDIA_TYPES,
+  isValidMessageType, isValidMessageStatus, isValidMediaType,
+} from './whatsapp-base-types';
+
+// 模板消息类型 - Template Types
+export {
+  type TemplateParameter, type TemplateComponent, type TemplateLanguage, type TemplateMessage,
+  type HeaderComponent, type BodyComponent, type FooterComponent, type ButtonComponent,
+  type TemplateBuilder, type TemplateValidationResult, type TextParameterBuilder, type CurrencyParameterBuilder,
+  type DateTimeParameterBuilder, type MediaParameterBuilder, type TemplateComponentType, type TemplateParameterType, type ButtonSubType,
+  TEMPLATE_COMPONENT_TYPES, TEMPLATE_PARAMETER_TYPES, BUTTON_SUB_TYPES, SUPPORTED_LANGUAGE_CODES,
+  isValidTemplateComponentType, isValidTemplateParameterType, isValidButtonSubType, isValidLanguageCode,
+  isHeaderComponent, isBodyComponent, isFooterComponent, isButtonComponent,
+  validateTemplateParameter, validateTemplateComponent, validateTemplateMessage,
+  createTextParameter, createCurrencyParameter, createDateTimeParameter, createMediaParameter,
+  type Template, type Component, type Parameter, type Language,
+} from './whatsapp-template-types';
+
+// 特定消息类型 - Message Types
+export {
+  type TextMessage, type ImageMessage, type DocumentMessage, type AudioMessage, type VideoMessage,
+  type LocationMessage, type ContactsMessage, type TemplateMessageRequest, type InteractiveMessage,
+  type InteractiveButton, type InteractiveListRow, type InteractiveListSection, type InteractiveHeader,
+  type InteractiveBody, type InteractiveFooter, type InteractiveButtonAction, type InteractiveListAction,
+  type ReactionMessage, type StickerMessage, type WhatsAppOutgoingMessage, type MediaMessage, type InteractiveMessageType,
+  type MessageBuilder, type TextMessageBuilder, type MediaMessageBuilder, type InteractiveMessageBuilder,
+  isTextMessage as isOutgoingTextMessage, isImageMessage as isOutgoingImageMessage, isDocumentMessage as isOutgoingDocumentMessage,
+  isAudioMessage as isOutgoingAudioMessage, isVideoMessage as isOutgoingVideoMessage, isLocationMessage as isOutgoingLocationMessage,
+  isContactsMessage as isOutgoingContactsMessage, isTemplateMessage, isInteractiveMessage, isReactionMessage, isStickerMessage,
+  isMediaMessage, isButtonInteractive, isListInteractive, validateTextMessage, validateInteractiveMessage,
+  MESSAGE_TYPES, MEDIA_MESSAGE_TYPES, INTERACTIVE_TYPES,
+  type OutgoingMessage, type Text, type Image, type Interactive, type Template as TemplateRequest,
+} from './whatsapp-message-types';
+
+// API 请求和响应类型 - API Types
+export {
+  type SendMessageRequest, type SendMessageResponse, type WhatsAppApiResponse, type WhatsAppServiceResponse,
+  type WhatsAppApiErrorResponse, type WhatsAppApiError, type MediaUploadRequest, type MediaUploadResponse, type MediaRetrieveResponse,
+  type PhoneNumberInfo, type PhoneNumbersResponse, type BusinessProfile, type BusinessProfileResponse,
+  type TemplateStatus, type TemplatesResponse, type AnalyticsRequest, type AnalyticsDataPoint, type AnalyticsResponse,
+  type RateLimitInfo, type ApiConfig, type ApiRequestOptions, type PaginationCursors, type PaginationInfo, type PaginatedResponse,
+  type ApiRequest, type ApiResponse, type BatchRequest, type BatchResponse, type ApiEndpoint, type HttpMethod,
+  isSuccessResponse, isErrorResponse, isWhatsAppApiError, API_ENDPOINTS, HTTP_METHODS, API_VERSIONS, DEFAULT_API_CONFIG,
+  type SendRequest, type SendResponse, type ApiResponse as ApiResponseType, type ServiceResponse, type ApiError, type UploadRequest, type UploadResponse,
+} from './whatsapp-api-types';
+
+// Webhook 类型 - Webhook Types
+export {
+  type WebhookEntry, type WebhookPayload, type MessageStatusUpdate, type WebhookError,
+  type IncomingTextMessage, type IncomingImageMessage, type IncomingDocumentMessage, type IncomingAudioMessage,
+  type IncomingVideoMessage, type IncomingLocationMessage, type IncomingContactsMessage, type IncomingInteractiveMessage,
+  type IncomingReactionMessage, type IncomingStickerMessage, type IncomingWhatsAppMessage, type MessageContext,
+  type MessageReceivedEvent, type MessageStatusEvent, type WebhookErrorEvent, type WebhookEvent,
+  type WebhookVerificationRequest, type WebhookVerificationResponse, type WebhookConfig, type WebhookSubscription,
+  type WebhookProcessor, type WebhookProcessingResult,
+  isIncomingTextMessage, isIncomingImageMessage, isIncomingDocumentMessage, isIncomingAudioMessage,
+  isIncomingVideoMessage, isIncomingLocationMessage, isIncomingContactsMessage, isIncomingInteractiveMessage,
+  isIncomingReactionMessage, isIncomingStickerMessage, isMessageReceivedEvent, isMessageStatusEvent, isWebhookErrorEvent,
+  isValidWebhookPayload, isValidWebhookVerification, WEBHOOK_FIELDS, INCOMING_MESSAGE_TYPES, WEBHOOK_EVENT_TYPES,
+  type Webhook, type IncomingMessage, type MessageEvent, type StatusEvent, type Processor,
+} from './whatsapp-webhook-types';
+
+// 服务配置和错误类型 - Service Types
+export {
+  type WhatsAppConfig, type WhatsAppServiceOptions, type ServiceEnvironmentConfig,
+  WhatsAppError, WhatsAppApiError, WhatsAppValidationError, WhatsAppRateLimitError, WhatsAppNetworkError,
+  type ServiceHealth, type ServiceMetrics, type ServiceStatus, type RetryConfig, type CircuitBreakerConfig, type CircuitBreakerState,
+  type LogEntry, type Logger, type CacheConfig, type CacheEntry, type Cache,
+  type ServiceEvent, type MessageSentEvent, type MessageDeliveredEvent, type ErrorEvent, type WhatsAppServiceEvent,
+  type WhatsAppServiceInterface, type MessageType as ServiceMessageType, type MessageStatus as ServiceMessageStatus,
+  type ServiceEnvironment, type LogLevel, DEFAULT_SERVICE_OPTIONS, DEFAULT_RETRY_CONFIG, DEFAULT_CIRCUIT_BREAKER_CONFIG, DEFAULT_CACHE_CONFIG,
+  isWhatsAppError, isWhatsAppApiError, isWhatsAppValidationError, isWhatsAppRateLimitError, isWhatsAppNetworkError,
+  type Config, type ServiceOptions, type Status, type Health, type Metrics, type ServiceInterface,
+} from './whatsapp-service-types';
+
+// 向后兼容的通用别名 - Backward Compatibility Aliases
+export type {
+  WhatsAppConfig as Config, WhatsAppMessage as Message, SendMessageRequest as SendRequest,
+  SendMessageResponse as SendResponse, TemplateMessage as Template, WebhookPayload as Webhook
+};

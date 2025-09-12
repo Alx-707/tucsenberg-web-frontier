@@ -269,7 +269,7 @@ describe('TestComponent', () => {
 /**
  * 创建测试用的React组件包装器
  */
-export const createTestWrapper = (_props: any = {}) => {
+export const createTestWrapper = (_props: unknown = {}) => {
   return () => {
     // JSX已注释，实际使用时请取消注释
     // return (
@@ -298,7 +298,7 @@ export const waitForElement = (testId: string, timeout = 1000) => {
 /**
  * 验证Mock调用的辅助函数
  */
-export const expectMockCalled = (mockFn: any, times = 1, args?: any[]) => {
+export const expectMockCalled = (mockFn: unknown, times = 1, args?: unknown[]) => {
   expect(mockFn).toHaveBeenCalledTimes(times);
   if (args) {
     expect(mockFn).toHaveBeenCalledWith(...args);

@@ -27,6 +27,27 @@ pre-commit:
       fail_text: '包大小检查失败 - 包大小超出预算限制，请检查依赖变更'
       stage_fixed: false
 
+    # 架构守卫 - 禁止新增export *和相对路径导入
+    architecture-guard:
+      run: |
+        # 检查staged文件中是否有新增的export *
+        if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | xargs -I {} sh -c 'git diff --cached {} | grep -q "^+.*export \* from" && echo "❌ 发现新增export *重新导出: {}" && exit 1 || true'; then
+          echo "🚫 架构重构期间禁止新增 export * 重新导出"
+          echo "请使用命名导出：export { specificExport } from './module'"
+          exit 1
+        fi
+
+        # 检查staged文件中是否有新增的相对路径导入
+        if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | xargs -I {} sh -c 'git diff --cached {} | grep -q "^+.*from ['\''\"]\\.\\./\\|^+.*from ['\''\"]\\./" && echo "❌ 发现新增相对路径导入: {}" && exit 1 || true'; then
+          echo "🚫 请使用 @/ 路径别名替代相对路径导入"
+          echo "例如：import { something } from '@/lib/module'"
+          exit 1
+        fi
+
+        echo "✅ 架构守卫检查通过"
+      fail_text: '架构守卫检查失败 - 发现违反架构重构规则的代码变更'
+      stage_fixed: false
+
 commit-msg:
   commands:
     commitlint:
