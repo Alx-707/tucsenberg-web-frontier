@@ -17,7 +17,6 @@ export function UnderConstructionV3({
   pageType,
   className,
 }: UnderConstructionV3Props) {
-  const _t = useTranslations('underConstruction');
   const tPage = useTranslations(`underConstruction.pages.${pageType}`);
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);

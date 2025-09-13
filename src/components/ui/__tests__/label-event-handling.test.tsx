@@ -31,7 +31,7 @@ describe('Label Event Handling - Main Tests', () => {
     it('handles click events', async () => {
       const handleClick = vi.fn();
       render(
-        <Label _onClick={handleClick} data-testid='clickable-label'>
+        <Label onClick={handleClick} data-testid='clickable-label'>
           Clickable Label
         </Label>
       );
@@ -156,8 +156,8 @@ describe('Label Event Handling - Main Tests', () => {
       });
 
       render(
-        <div _onClick={parentClick}>
-          <Label _onClick={labelClick} data-testid='propagation-label'>
+        <div onClick={parentClick}>
+          <Label onClick={labelClick} data-testid='propagation-label'>
             Propagation Label
           </Label>
         </div>
@@ -176,7 +176,7 @@ describe('Label Event Handling - Main Tests', () => {
 
       render(
         <div>
-          <Label htmlFor='test-input' _onClick={handleLabelClick}>Test Label</Label>
+          <Label htmlFor='test-input' onClick={handleLabelClick}>Test Label</Label>
           <input id='test-input' onFocus={handleInputFocus} />
         </div>
       );
@@ -194,7 +194,7 @@ describe('Label Event Handling - Main Tests', () => {
       render(
         <Label
           data-testid='custom-event'
-          _onClick={(e: any) => customHandler('click', e.currentTarget)}
+          onClick={(e: any) => customHandler('click', e.currentTarget)}
         >
           Custom Event Label
         </Label>
@@ -213,7 +213,7 @@ describe('Label Event Handling - Main Tests', () => {
       render(
         <Label
           data-testid='multiple-handlers'
-          _onClick={(_e: any) => {
+          onClick={(_e: any) => {
             handler1();
             handler2();
           }}
@@ -235,7 +235,7 @@ describe('Label Event Handling - Main Tests', () => {
       });
 
       render(
-        <Label _onClick={handleClick} data-testid='prevent-default-label'>
+        <Label onClick={handleClick} data-testid='prevent-default-label'>
           Prevent Default Label
         </Label>
       );
@@ -279,9 +279,9 @@ describe('Label Event Handling - Main Tests', () => {
       const labelClick = vi.fn();
 
       render(
-        <div _onClick={grandparentClick}>
-          <div _onClick={parentClick}>
-            <Label _onClick={labelClick} data-testid='bubbling-label'>
+        <div onClick={grandparentClick}>
+          <div onClick={parentClick}>
+            <Label onClick={labelClick} data-testid='bubbling-label'>
               Bubbling Label
             </Label>
           </div>
@@ -302,7 +302,7 @@ describe('Label Event Handling - Main Tests', () => {
 
       render(
         <div onClickCapture={captureHandler}>
-          <Label _onClick={bubbleHandler} data-testid='capture-label'>
+          <Label onClick={bubbleHandler} data-testid='capture-label'>
             Capture Label
           </Label>
         </div>

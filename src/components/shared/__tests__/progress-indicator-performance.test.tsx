@@ -44,11 +44,6 @@ describe('ProgressIndicator - 性能和边界情况测试', () => {
 
   describe('性能优化', () => {
     it('大量步骤时性能良好', () => {
-      const _manySteps = Array.from({ length: 50 }, (_, i) => ({
-        key: `step-${i}`,
-        label: `步骤 ${i + 1}`,
-      }));
-
       const _startTime = performance.now();
       render(<ProgressIndicator currentStep={2} />);
       const endTime = performance.now();
@@ -98,11 +93,7 @@ describe('ProgressIndicator - 性能和边界情况测试', () => {
     });
 
     it('处理特殊字符在步骤标签中', () => {
-      const _specialSteps = [
-        { key: 'emoji', label: '🚀 启动阶段' },
-        { key: 'symbols', label: '测试 & 验证' },
-        { key: 'unicode', label: '部署 → 上线' },
-      ];
+
 
       render(<ProgressIndicator currentStep={1} />);
 

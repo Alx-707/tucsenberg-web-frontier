@@ -81,7 +81,7 @@ describe('Label Edge Cases - Main Tests', () => {
       render(
         <Label
           className={undefined}
-          style={null as React.CSSProperties | null}
+          style={null as any}
           onClick={undefined}
           data-testid='null-props'
         >

@@ -1,0 +1,1256 @@
+{
+  "tasks": [
+    {
+      "id": "d70d6366-b27a-43dd-b507-e91f1dd58aaf",
+      "name": "建立架构度量基线脚本",
+      "description": "开发scripts/architecture-metrics.js统一度量脚本，统计export *数量、类型文件数、i18n文件数、TypeScript/ESLint错误数。集成到CI pipeline，每次构建自动生成度量报告，建立可追踪的重构进度基线。",
+      "notes": "基于现有scripts目录结构，复用quality-monitor.js的报告生成模式",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/quality-monitor.js",
+          "type": "REFERENCE",
+          "description": "参考现有质量监控脚本的实现模式"
+        },
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "添加architecture:metrics命令"
+        },
+        {
+          "path": "scripts/architecture-metrics.js",
+          "type": "CREATE",
+          "description": "新建架构度量脚本"
+        }
+      ],
+      "implementationGuide": "1. 创建scripts/architecture-metrics.js脚本\\n2. 使用glob模式扫描src/lib目录统计文件数量\\n3. 解析TypeScript和ESLint输出获取错误统计\\n4. 生成JSON格式度量报告到reports/architecture/\\n5. 集成到package.json的ci:quality命令中\\n6. 配置GitHub Actions自动执行和报告存储",
+      "verificationCriteria": "生成完整基线报告包含所有关键指标，CI集成成功，报告格式符合项目标准",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "e9907aaa-9804-4182-8f82-6e6c6cc23472",
+      "name": "增强dependency-cruiser跨域规则",
+      "description": "在现有.dependency-cruiser.js基础上添加跨域直连禁止规则，配置src/lib各功能域边界规则，仅允许通过公开API访问，禁止相对路径跨层导入。",
+      "notes": "基于现有完善的dependency-cruiser配置，仅增强跨域规则，保持现有架构检查功能",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": ".dependency-cruiser.js",
+          "type": "TO_MODIFY",
+          "description": "添加跨域直连禁止规则"
+        },
+        {
+          "path": "docs/architecture/dependency-rules.md",
+          "type": "TO_MODIFY",
+          "description": "更新依赖规则文档"
+        }
+      ],
+      "implementationGuide": "1. 分析现有.dependency-cruiser.js的6项规则\\n2. 添加no-cross-domain-direct-imports规则\\n3. 配置i18n、locale-storage、security、whatsapp等域边界\\n4. 设置pathNot例外允许访问utils、types、index\\n5. 测试规则有效性，确保零false positive\\n6. 更新文档说明新增规则用途",
+      "verificationCriteria": "arch:check命令能检测跨域违规，现有合法导入不受影响，新规则文档完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "d8930e4f-a6e9-42ae-9351-20565925c549",
+      "name": "开发export *转换codemod脚本",
+      "description": "基于@babel/parser和@babel/traverse开发scripts/transform-barrel-exports.js，自动将export *转换为命名导出，保持功能等价性，支持批量处理和增量转换。",
+      "notes": "参考现有translation-scanner.js的AST解析模式，确保转换的安全性和准确性",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/translation-scanner.js",
+          "type": "REFERENCE",
+          "description": "参考AST解析和文件处理模式"
+        },
+        {
+          "path": "scripts/transform-barrel-exports.js",
+          "type": "CREATE",
+          "description": "新建export *转换脚本"
+        },
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "添加codemod:barrel命令"
+        }
+      ],
+      "implementationGuide": "1. 安装@babel/parser、@babel/traverse依赖\\n2. 创建AST解析逻辑识别export * from语句\\n3. 分析目标模块的具体导出内容\\n4. 生成等价的命名导出语句\\n5. 实现文件批量处理和备份机制\\n6. 添加dry-run模式预览变更\\n7. 集成到package.json作为codemod:barrel命令",
+      "verificationCriteria": "能正确转换测试用例，保持导入导出功能一致，支持批量处理和回滚",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "19e372bf-ffd5-49d2-b265-37b6dc5acc5e",
+      "name": "配置ESLint禁止新增export *规则",
+      "description": "在现有eslint.config.mjs基础上添加no-export-star自定义规则，仅对新代码生效，集成到pre-commit hooks，防止新增export *重新导出。",
+      "notes": "基于现有严格的ESLint配置，仅添加export *限制，不影响现有重构计划",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "eslint.config.mjs",
+          "type": "TO_MODIFY",
+          "description": "添加no-export-star规则到ultra-strict-quality-config"
+        },
+        {
+          "path": "lefthook.yml",
+          "type": "REFERENCE",
+          "description": "确认pre-commit hooks集成"
+        }
+      ],
+      "implementationGuide": "1. 分析现有505行ESLint配置结构\\n2. 在ultra-strict-quality-config中添加no-restricted-syntax规则\\n3. 配置禁止ExportAllDeclaration AST节点\\n4. 设置合理的例外情况（如index.ts统一导出）\\n5. 测试规则对现有代码的影响\\n6. 确保lefthook pre-commit集成正常",
+      "verificationCriteria": "新增export *会被ESLint阻止，现有代码不受影响，pre-commit集成正常",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "fix-import-type-issues",
+      "name": "修复verbatimModuleSyntax导致的import type问题",
+      "description": "修复启用verbatimModuleSyntax后暴露的大量import type问题，批量转换需要使用import type的导入语句，减少TypeScript错误数量。",
+      "notes": "已修复41个文件的import type问题和4个_error属性错误，但仍有其他TypeScript错误需要处理",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:30:00.000Z",
+      "updatedAt": "2025-09-12T00:00:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/",
+          "type": "TO_MODIFY",
+          "description": "批量修复import type问题"
+        }
+      ],
+      "implementationGuide": "1. 运行TypeScript编译器获取详细错误信息\\n2. 识别需要使用import type的导入语句\\n3. 批量转换为import type语法\\n4. 验证TypeScript错误数量显著减少",
+      "verificationCriteria": "TypeScript错误数量从2908减少到2500以下，编译通过"
+    },
+    {
+      "id": "fix-pre-commit-quality-check",
+      "name": "修复pre-commit质量检查路径问题",
+      "description": "修复lefthook.yml中quality-check脚本的ESLint路径问题，确保pre-commit hooks正常工作。",
+      "notes": "紧急任务：pre-commit检查可能因为路径问题失败",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:30:00.000Z",
+      "updatedAt": "2025-09-11T16:30:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "lefthook.yml",
+          "type": "TO_MODIFY",
+          "description": "修复质量检查脚本路径"
+        }
+      ],
+      "implementationGuide": "1. 检查lefthook.yml中的quality-check命令\\n2. 修复ESLint路径问题\\n3. 测试pre-commit hooks正常工作",
+      "verificationCriteria": "pre-commit hooks正常执行，质量检查通过"
+    },
+    {
+      "id": "332c9831-fc3e-4b70-81cf-a499f0454034",
+      "name": "团队重构流程培训对齐",
+      "description": "制作重构流程文档和最佳实践指南，组织团队培训会，建立代码审查checklist和质量门禁标准，确保团队理解小步快跑策略和过渡期兼容层。",
+      "notes": "已创建完整的重构文档体系：README.md、best-practices.md、code-review-checklist.md，并更新项目README",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "docs/refactoring/",
+          "type": "CREATE",
+          "description": "新建重构流程文档目录"
+        },
+        {
+          "path": "README.md",
+          "type": "TO_MODIFY",
+          "description": "添加重构指南链接"
+        },
+        {
+          "path": "docs/architecture/",
+          "type": "REFERENCE",
+          "description": "参考现有架构文档格式"
+        }
+      ],
+      "implementationGuide": "1. 创建docs/refactoring/目录结构\\n2. 编写重构流程指南和最佳实践文档\\n3. 制作小步快跑策略和过渡期兼容层说明\\n4. 建立代码审查checklist模板\\n5. 准备团队培训材料和演示用例\\n6. 组织培训会议并收集反馈\\n7. 更新项目README添加重构指南链接",
+      "verificationCriteria": "团队成员理解重构流程，能独立执行任务，代码审查checklist可用",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "d4ccba7b-c13f-445c-afa4-c3351145137b",
+      "name": "完善导入路径统一化脚本",
+      "description": "基于现有@/别名配置，开发scripts/normalize-imports.js脚本，统一所有导入路径使用@/别名，消除相对路径导入，确保路径规范一致性。",
+      "notes": "基于现有tsconfig.json的@/*配置，确保与项目路径别名策略一致",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d70d6366-b27a-43dd-b507-e91f1dd58aaf"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "tsconfig.json",
+          "type": "REFERENCE",
+          "description": "参考现有@/*路径别名配置"
+        },
+        {
+          "path": "scripts/normalize-imports.js",
+          "type": "CREATE",
+          "description": "新建导入路径统一化脚本"
+        },
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "添加normalize:imports命令"
+        }
+      ],
+      "implementationGuide": "1. 分析tsconfig.json中的@/*路径配置\\n2. 使用AST解析识别相对路径导入语句\\n3. 转换为@/别名格式的绝对路径\\n4. 处理不同层级的相对路径（../、./等）\\n5. 实现批量文件处理和预览功能\\n6. 集成到package.json作为normalize:imports命令",
+      "verificationCriteria": "所有相对路径转换为@/别名，导入功能保持正常，支持批量处理",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "6a42d519-ff4d-4ff6-a3db-42d42176b44e",
+      "name": "开发barrel导出检测工具",
+      "description": "集成到现有quality-monitor.js，添加barrel导出（export *）检测功能，生成详细的重新导出统计报告，支持进度跟踪和趋势分析。",
+      "notes": "复用现有quality-monitor.js的架构和报告格式，保持工具一致性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d70d6366-b27a-43dd-b507-e91f1dd58aaf"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/quality-monitor.js",
+          "type": "TO_MODIFY",
+          "description": "添加barrel导出检测功能"
+        },
+        {
+          "path": "reports/quality/",
+          "type": "REFERENCE",
+          "description": "现有质量报告目录"
+        }
+      ],
+      "implementationGuide": "1. 分析现有quality-monitor.js的报告生成逻辑\\n2. 添加export *检测函数使用AST解析\\n3. 统计各文件的重新导出数量和类型\\n4. 生成barrel导出详细报告到reports/quality/\\n5. 集成到现有质量监控流程\\n6. 添加趋势分析和进度跟踪功能",
+      "verificationCriteria": "准确检测所有export *语句，生成详细统计报告，集成到质量监控流程",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "b4be0f59-ea1b-4301-9482-08de7dbbd269",
+      "name": "实现import type系统化转换脚本",
+      "description": "开发scripts/convert-import-types.js，系统化使用import type语句，结合verbatimModuleSyntax减少编译负担，优化TypeScript编译性能。",
+      "notes": "配合tsconfig.json的verbatimModuleSyntax设置，优化编译性能",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d4ccba7b-c13f-445c-afa4-c3351145137b"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/convert-import-types.js",
+          "type": "CREATE",
+          "description": "新建import type转换脚本"
+        },
+        {
+          "path": "tsconfig.json",
+          "type": "REFERENCE",
+          "description": "参考verbatimModuleSyntax配置"
+        },
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "添加convert:import-types命令"
+        }
+      ],
+      "implementationGuide": "1. 分析TypeScript导入语句的类型使用情况\\n2. 识别仅用于类型的导入语句\\n3. 转换为import type语法\\n4. 处理混合导入（值和类型）的拆分\\n5. 验证转换后的类型检查正确性\\n6. 集成到package.json作为convert:import-types命令",
+      "verificationCriteria": "正确识别和转换类型导入，TypeScript编译通过，性能有所提升",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "297f9d75-d914-4f84-9ff4-f65d738fd4be",
+      "name": "建立第一阶段验收基准",
+      "description": "集成到CI质量门禁，建立第一阶段的验收基准和自动化检查，包括export *数量、TypeScript错误数、ESLint问题数的目标阈值。",
+      "notes": "基于现有CI质量门禁架构，添加架构重构专项检查",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d70d6366-b27a-43dd-b507-e91f1dd58aaf"
+        },
+        {
+          "taskId": "6a42d519-ff4d-4ff6-a3db-42d42176b44e"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": ".github/workflows/",
+          "type": "TO_MODIFY",
+          "description": "添加架构重构质量检查"
+        },
+        {
+          "path": "package.json",
+          "type": "REFERENCE",
+          "description": "现有ci:quality命令"
+        }
+      ],
+      "implementationGuide": "1. 基于architecture-metrics.js建立基准数据\\n2. 设置第一阶段目标：export * 97→<30，TS错误减少50%\\n3. 配置CI质量门禁阈值检查\\n4. 集成到现有ci:quality命令\\n5. 添加GitHub Actions状态检查\\n6. 建立失败时的报告和通知机制",
+      "verificationCriteria": "CI能自动检查重构进度，阈值设置合理，失败时有明确报告",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "85722d4d-bb0a-4fca-90c6-440d4ee11b89",
+      "name": "security域export *拆解",
+      "description": "拆解security域的export *重新导出（7个文件），将src/lib/security.ts的大量重新导出转换为命名导出，建立清晰的API边界。",
+      "notes": "security域已有良好的模块划分，重点是导出方式优化",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d8930e4f-a6e9-42ae-9351-20565925c549"
+        },
+        {
+          "taskId": "e9907aaa-9804-4182-8f82-6e6c6cc23472"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/security.ts",
+          "type": "TO_MODIFY",
+          "description": "转换export *为命名导出"
+        },
+        {
+          "path": "src/lib/security-*.ts",
+          "type": "REFERENCE",
+          "description": "security域相关文件"
+        }
+      ],
+      "implementationGuide": "1. 分析security.ts的87行重新导出结构\\n2. 使用transform-barrel-exports.js转换工具\\n3. 保持现有API兼容性，仅改变导出方式\\n4. 更新相关导入语句使用命名导入\\n5. 运行安全测试确保功能完整性\\n6. 验证dependency-cruiser规则通过",
+      "verificationCriteria": "export *转换完成，API功能保持一致，安全测试通过，依赖规则验证通过",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "d0018f2c-b035-46c2-badf-7997da9f866e",
+      "name": "content域export *拆解",
+      "description": "拆解content域的export *重新导出（5个文件），优化src/lib/content.ts的重新导出结构，建立内容管理系统的清晰API。",
+      "notes": "content域结构相对简单，是练习重构流程的好起点",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "85722d4d-bb0a-4fca-90c6-440d4ee11b89"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/content.ts",
+          "type": "TO_MODIFY",
+          "description": "转换重新导出结构"
+        },
+        {
+          "path": "src/lib/content-*.ts",
+          "type": "REFERENCE",
+          "description": "content域相关文件"
+        }
+      ],
+      "implementationGuide": "1. 分析content.ts的重新导出模式\\n2. 转换export *为具体的命名导出\\n3. 优化content-query、content-parser、content-utils的导出\\n4. 更新相关组件的导入语句\\n5. 运行内容相关测试验证功能\\n6. 检查MDX内容处理功能完整性",
+      "verificationCriteria": "重新导出优化完成，内容管理功能正常，MDX处理无问题",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "e8f8b1a0-109a-4a97-b51b-dbc51be3de15",
+      "name": "accessibility域export *拆解",
+      "description": "拆解accessibility域的export *重新导出（6个文件），优化无障碍功能模块的导出结构，确保a11y功能的清晰组织。",
+      "notes": "accessibility域功能独立，重构风险较低",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d0018f2c-b035-46c2-badf-7997da9f866e"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/accessibility.ts",
+          "type": "TO_MODIFY",
+          "description": "优化导出结构"
+        },
+        {
+          "path": "src/lib/accessibility-*.ts",
+          "type": "REFERENCE",
+          "description": "accessibility域文件"
+        }
+      ],
+      "implementationGuide": "1. 分析accessibility.ts和相关6个文件的结构\\n2. 转换重新导出为命名导出\\n3. 保持无障碍功能的完整性\\n4. 更新相关组件的a11y导入\\n5. 运行accessibility测试套件\\n6. 验证axe-core集成功能正常",
+      "verificationCriteria": "导出结构优化完成，a11y功能完整，axe-core测试通过",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "32c2b662-3448-44f7-952e-121b11475333",
+      "name": "resend域export *拆解",
+      "description": "拆解resend域的export *重新导出（4个文件），优化邮件服务集成的导出结构，确保邮件发送功能的清晰API。",
+      "notes": "resend域是外部服务集成，需要特别注意API稳定性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e8f8b1a0-109a-4a97-b51b-dbc51be3de15"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/resend.ts",
+          "type": "TO_MODIFY",
+          "description": "优化邮件服务导出"
+        },
+        {
+          "path": "src/lib/resend-*.ts",
+          "type": "REFERENCE",
+          "description": "resend域相关文件"
+        }
+      ],
+      "implementationGuide": "1. 分析resend.ts和相关4个文件的结构\\n2. 转换重新导出为命名导出\\n3. 保持邮件服务API的稳定性\\n4. 更新邮件相关组件的导入\\n5. 测试邮件发送功能\\n6. 验证Resend服务集成正常",
+      "verificationCriteria": "邮件服务导出优化完成，发送功能正常，外部集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "2e5333ad-811b-4c4c-92e6-fd7c837c92fd",
+      "name": "whatsapp域export *拆解",
+      "description": "拆解whatsapp域的export *重新导出（6个文件），优化WhatsApp服务集成的导出结构，确保消息服务功能的清晰组织。",
+      "notes": "whatsapp域是外部服务集成，需要确保服务稳定性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "32c2b662-3448-44f7-952e-121b11475333"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/whatsapp.ts",
+          "type": "TO_MODIFY",
+          "description": "优化WhatsApp服务导出"
+        },
+        {
+          "path": "src/lib/whatsapp-*.ts",
+          "type": "REFERENCE",
+          "description": "whatsapp域相关文件"
+        }
+      ],
+      "implementationGuide": "1. 分析whatsapp.ts和相关6个文件的结构\\n2. 转换重新导出为命名导出\\n3. 保持WhatsApp API的完整性\\n4. 更新消息相关组件的导入\\n5. 测试WhatsApp消息功能\\n6. 验证外部服务集成稳定",
+      "verificationCriteria": "WhatsApp服务导出优化完成，消息功能正常，外部集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "688664e9-ed5c-4634-882c-3f2082c40ec7",
+      "name": "performance-monitoring域export *拆解",
+      "description": "拆解performance-monitoring域的export *重新导出（10个文件），优化性能监控模块的导出结构，这是第一阶段最复杂的域重构。",
+      "notes": "performance-monitoring域最复杂，需要特别小心处理",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "2e5333ad-811b-4c4c-92e6-fd7c837c92fd"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/performance-monitoring-*.ts",
+          "type": "TO_MODIFY",
+          "description": "performance-monitoring域文件群"
+        },
+        {
+          "path": "src/lib/web-vitals/",
+          "type": "REFERENCE",
+          "description": "相关性能监控目录"
+        }
+      ],
+      "implementationGuide": "1. 分析performance-monitoring相关10个文件的复杂结构\\n2. 分批转换重新导出，避免大规模破坏\\n3. 保持性能监控功能的完整性\\n4. 更新相关组件的性能监控导入\\n5. 运行性能测试套件验证功能\\n6. 确保Web Vitals集成正常",
+      "verificationCriteria": "性能监控导出优化完成，监控功能正常，Web Vitals集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "c844a36b-1961-4fd9-be10-c76b1a7515f4",
+      "name": "统一@/路径别名使用",
+      "description": "基于现有tsconfig.json配置，统一所有导入使用@/路径别名，消除项目中的相对路径导入，建立一致的导入规范。",
+      "notes": "基于现有tsconfig.json的@/*配置，确保路径别名一致性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "d4ccba7b-c13f-445c-afa4-c3351145137b"
+        },
+        {
+          "taskId": "688664e9-ed5c-4634-882c-3f2082c40ec7"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/",
+          "type": "TO_MODIFY",
+          "description": "所有源码文件的导入路径"
+        },
+        {
+          "path": "tsconfig.json",
+          "type": "REFERENCE",
+          "description": "路径别名配置"
+        }
+      ],
+      "implementationGuide": "1. 使用normalize-imports.js脚本批量处理\\n2. 扫描src目录下所有TypeScript文件\\n3. 转换相对路径为@/别名格式\\n4. 特别处理测试文件的导入路径\\n5. 验证所有导入路径解析正确\\n6. 运行完整测试套件确保功能正常",
+      "verificationCriteria": "所有相对路径转换完成，导入解析正常，测试套件通过",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "91ccad82-9668-4998-b274-03cc5a74a98f",
+      "name": "实施跨域导入规则验证",
+      "description": "使用增强的dependency-cruiser配置，验证跨域导入规则的有效性，确保各功能域边界清晰，禁止不当的跨域直连。",
+      "notes": "基于增强的dependency-cruiser规则，确保架构边界清晰",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e9907aaa-9804-4182-8f82-6e6c6cc23472"
+        },
+        {
+          "taskId": "c844a36b-1961-4fd9-be10-c76b1a7515f4"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": ".dependency-cruiser.js",
+          "type": "REFERENCE",
+          "description": "增强的依赖规则配置"
+        },
+        {
+          "path": "src/lib/",
+          "type": "TO_MODIFY",
+          "description": "修复跨域导入违规"
+        }
+      ],
+      "implementationGuide": "1. 运行增强的arch:check命令\\n2. 检查所有跨域导入违规情况\\n3. 修复发现的违规导入\\n4. 确保仅通过公开API访问其他域\\n5. 验证dependency-cruiser规则覆盖完整\\n6. 生成架构依赖图确认边界清晰",
+      "verificationCriteria": "arch:check通过，无跨域违规，架构边界清晰，依赖图合理",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "8a29e305-d124-425c-a448-82020ad207dc",
+      "name": "第一阶段度量验证",
+      "description": "执行第一阶段的度量验证，确认export *数量从97减少到<30，TypeScript错误减少50%以上，ESLint问题显著改善。",
+      "notes": "基于建立的度量基线，验证第一阶段重构效果",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "297f9d75-d914-4f84-9ff4-f65d738fd4be"
+        },
+        {
+          "taskId": "91ccad82-9668-4998-b274-03cc5a74a98f"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/architecture-metrics.js",
+          "type": "REFERENCE",
+          "description": "度量脚本"
+        },
+        {
+          "path": "reports/architecture/",
+          "type": "CREATE",
+          "description": "第一阶段完成报告"
+        }
+      ],
+      "implementationGuide": "1. 运行architecture-metrics.js生成最新度量报告\\n2. 对比基线数据验证改善程度\\n3. 确认export *数量达到<30的目标\\n4. 验证TypeScript错误减少50%以上\\n5. 检查ESLint问题改善情况\\n6. 生成第一阶段完成报告",
+      "verificationCriteria": "export * <30个，TS错误减少50%+，ESLint问题显著改善，度量报告完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "2ae7084c-6391-44ac-be70-431a6b389e45",
+      "name": "性能基准测试",
+      "description": "执行构建时间和IDE响应速度的性能基准测试，验证第一阶段重构对性能的积极影响，确保无性能回归。",
+      "notes": "重点验证重构对开发体验的积极影响",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "8a29e305-d124-425c-a448-82020ad207dc"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "reports/performance/",
+          "type": "CREATE",
+          "description": "性能基准测试报告"
+        }
+      ],
+      "implementationGuide": "1. 测量当前构建时间基准\\n2. 测试IDE TypeScript服务响应速度\\n3. 对比重构前后的性能数据\\n4. 验证构建性能提升10-15%\\n5. 确认IDE响应速度改善\\n6. 生成性能对比报告",
+      "verificationCriteria": "构建时间提升10-15%，IDE响应速度改善，无性能回归",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "0e9b29c7-081f-44b3-ae93-5f348ef58b7a",
+      "name": "回归测试执行",
+      "description": "执行完整的回归测试套件，包括单元测试、集成测试和E2E测试，确保第一阶段重构没有破坏任何现有功能。",
+      "notes": "确保重构过程的零破坏性，所有功能保持正常",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "2ae7084c-6391-44ac-be70-431a6b389e45"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "vitest.config.ts",
+          "type": "REFERENCE",
+          "description": "测试配置"
+        },
+        {
+          "path": "playwright.config.ts",
+          "type": "REFERENCE",
+          "description": "E2E测试配置"
+        }
+      ],
+      "implementationGuide": "1. 运行完整的Vitest单元测试套件\\n2. 执行Playwright E2E测试\\n3. 运行国际化功能测试\\n4. 测试所有重构域的功能完整性\\n5. 验证测试覆盖率保持或提升\\n6. 生成测试执行报告",
+      "verificationCriteria": "所有测试通过，功能完整性确认，测试覆盖率保持",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "a7b1e05c-c1ef-495b-9a31-f92214fb6aa8",
+      "name": "第一阶段总结和经验提炼",
+      "description": "总结第一阶段重构的经验教训，提炼最佳实践，为第二阶段i18n域试点重构提供指导和模板。",
+      "notes": "为后续阶段提供经验指导，建立重构知识库",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "0e9b29c7-081f-44b3-ae93-5f348ef58b7a"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "docs/refactoring/phase1-summary.md",
+          "type": "CREATE",
+          "description": "第一阶段总结报告"
+        },
+        {
+          "path": "docs/refactoring/best-practices.md",
+          "type": "TO_MODIFY",
+          "description": "更新最佳实践"
+        }
+      ],
+      "implementationGuide": "1. 整理第一阶段的重构经验\\n2. 总结成功的重构模式和工具\\n3. 识别遇到的问题和解决方案\\n4. 提炼可复用的重构模板\\n5. 更新重构流程文档\\n6. 为第二阶段制定改进计划",
+      "verificationCriteria": "经验总结完整，最佳实践提炼清晰，第二阶段计划明确",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "eec48bfc-471e-4253-b1b7-4696846c3208",
+      "name": "设计i18n域目录蓝图",
+      "description": "设计i18n域的新目录结构蓝图，将31个i18n相关文件重组为8-10个文件的清晰结构，建立第二阶段重构的模板。",
+      "notes": "基于第一阶段经验，设计清晰的域内组织结构",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a7b1e05c-c1ef-495b-9a31-f92214fb6aa8"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n/",
+          "type": "CREATE",
+          "description": "新建i18n域目录结构"
+        },
+        {
+          "path": "docs/refactoring/i18n-migration-plan.md",
+          "type": "CREATE",
+          "description": "i18n迁移计划文档"
+        }
+      ],
+      "implementationGuide": "1. 分析现有31个i18n文件的功能分类\\n2. 设计src/lib/i18n/新目录结构\\n3. 规划cache/、preloader/、monitoring/、validation/子域\\n4. 设计统一的types.ts文件结构\\n5. 制定文件迁移映射表\\n6. 创建目录结构和占位文件",
+      "verificationCriteria": "目录结构设计合理，文件映射清晰，迁移计划完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "8af01f85-41f8-4dac-8751-26a76fb5beb5",
+      "name": "创建i18n统一types.ts",
+      "description": "合并7个i18n-*-types文件为统一的src/lib/i18n/types.ts，建立清晰的类型定义结构，消除类型文件分散问题。",
+      "notes": "统一类型定义，建立清晰的类型系统",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "eec48bfc-471e-4253-b1b7-4696846c3208"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-*-types*.ts",
+          "type": "REFERENCE",
+          "description": "现有i18n类型文件"
+        },
+        {
+          "path": "src/lib/i18n/types.ts",
+          "type": "CREATE",
+          "description": "统一的i18n类型文件"
+        }
+      ],
+      "implementationGuide": "1. 分析现有7个i18n类型文件的内容\\n2. 识别重复和冲突的类型定义\\n3. 设计统一的类型组织结构\\n4. 合并所有类型到types.ts\\n5. 建立清晰的类型导出结构\\n6. 更新相关文件的类型导入",
+      "verificationCriteria": "类型合并完成，无重复定义，导入导出清晰，TypeScript编译通过",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "ca9b4ccf-8f93-4176-b07f-baa4919e02c2",
+      "name": "建立i18n/cache/子域结构",
+      "description": "整合7个i18n-cache相关文件到src/lib/i18n/cache/子域，建立缓存功能的清晰组织结构，包括index.ts、manager.ts、storage.ts等。",
+      "notes": "cache子域是i18n的核心功能，需要特别小心处理",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "8af01f85-41f8-4dac-8751-26a76fb5beb5"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-cache*.ts",
+          "type": "REFERENCE",
+          "description": "现有cache相关文件"
+        },
+        {
+          "path": "src/lib/i18n/cache/",
+          "type": "CREATE",
+          "description": "新建cache子域"
+        }
+      ],
+      "implementationGuide": "1. 创建src/lib/i18n/cache/目录\\n2. 分析7个cache相关文件的功能\\n3. 重组为index.ts（公开API）、manager.ts（管理器）、storage.ts（存储层）\\n4. 建立清晰的模块边界\\n5. 实现功能等价的重组\\n6. 建立过渡期兼容层",
+      "verificationCriteria": "cache功能重组完成，API保持兼容，功能测试通过",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "4e425ab1-559c-4829-9ece-d0898a4723b7",
+      "name": "建立i18n/preloader/子域结构",
+      "description": "整合6个i18n-preloader相关文件到src/lib/i18n/preloader/子域，建立预加载功能的清晰组织，包括strategies.ts、utils.ts等。",
+      "notes": "preloader涉及复杂的策略模式，需要保持策略的完整性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "ca9b4ccf-8f93-4176-b07f-baa4919e02c2"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-preloader*.ts",
+          "type": "REFERENCE",
+          "description": "现有preloader文件"
+        },
+        {
+          "path": "src/lib/i18n-preloader-*/",
+          "type": "REFERENCE",
+          "description": "preloader子目录"
+        },
+        {
+          "path": "src/lib/i18n/preloader/",
+          "type": "CREATE",
+          "description": "新建preloader子域"
+        }
+      ],
+      "implementationGuide": "1. 创建src/lib/i18n/preloader/目录\\n2. 分析6个preloader相关文件和子目录\\n3. 重组为index.ts、strategies.ts、utils.ts结构\\n4. 整合preloader-strategies和preloader-utils子目录内容\\n5. 建立清晰的预加载API\\n6. 实现功能完整的重组",
+      "verificationCriteria": "preloader功能重组完成，策略模式保持，预加载功能正常",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "79ccbb4c-7224-4d06-9d79-8caf57e35056",
+      "name": "迁移i18n/monitoring/子域",
+      "description": "整合4个i18n-monitoring相关文件到src/lib/i18n/monitoring/子域，建立监控功能的清晰组织，包括collector.ts、performance.ts等。",
+      "notes": "monitoring功能与性能监控系统集成，需要保持兼容性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "4e425ab1-559c-4829-9ece-d0898a4723b7"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-monitoring*.ts",
+          "type": "REFERENCE",
+          "description": "现有monitoring文件"
+        },
+        {
+          "path": "src/lib/i18n/monitoring/",
+          "type": "CREATE",
+          "description": "新建monitoring子域"
+        }
+      ],
+      "implementationGuide": "1. 创建src/lib/i18n/monitoring/目录\\n2. 分析4个monitoring相关文件\\n3. 重组为index.ts、collector.ts、performance.ts结构\\n4. 保持监控数据收集的完整性\\n5. 确保性能监控功能正常\\n6. 集成到整体监控系统",
+      "verificationCriteria": "monitoring功能重组完成，数据收集正常，性能监控集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "701c54ed-e2d8-4f77-95c0-41aecbd3cb37",
+      "name": "迁移i18n/validation/子域",
+      "description": "整合2个i18n-validation相关文件到src/lib/i18n/validation/子域，建立验证功能的清晰组织，完成i18n域的结构重组。",
+      "notes": "validation是i18n质量保证的重要组成部分",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "79ccbb4c-7224-4d06-9d79-8caf57e35056"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-validation*.ts",
+          "type": "REFERENCE",
+          "description": "现有validation文件"
+        },
+        {
+          "path": "src/lib/i18n/validation/",
+          "type": "CREATE",
+          "description": "新建validation子域"
+        },
+        {
+          "path": "scripts/translation-validator.js",
+          "type": "REFERENCE",
+          "description": "翻译验证脚本"
+        }
+      ],
+      "implementationGuide": "1. 创建src/lib/i18n/validation/目录\\n2. 分析2个validation相关文件\\n3. 重组为index.ts、validators.ts结构\\n4. 保持翻译验证功能完整\\n5. 确保与translation-validator.js集成\\n6. 完成i18n域整体重组",
+      "verificationCriteria": "validation功能重组完成，翻译验证正常，与脚本集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "e3d849af-8cd7-4c69-89b1-5735ea8c7c9c",
+      "name": "建立过渡期兼容层",
+      "description": "为重组的i18n域建立过渡期兼容层，使用@deprecated标记和重新导出，确保现有代码在迁移期间正常工作。",
+      "notes": "兼容层是零风险迁移的关键，需要确保完全兼容",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "701c54ed-e2d8-4f77-95c0-41aecbd3cb37"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-*.ts",
+          "type": "TO_MODIFY",
+          "description": "添加@deprecated和重新导出"
+        },
+        {
+          "path": "src/lib/i18n/",
+          "type": "REFERENCE",
+          "description": "新的i18n域结构"
+        }
+      ],
+      "implementationGuide": "1. 在原有i18n文件位置建立兼容层\\n2. 使用@deprecated JSDoc标记标注\\n3. 重新导出新位置的功能\\n4. 添加迁移指导注释\\n5. 设置合理的迁移时间表\\n6. 确保所有现有导入正常工作",
+      "verificationCriteria": "兼容层建立完成，现有导入正常，@deprecated标记清晰",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "98b8ce39-ea5b-44c5-be42-f813fe126921",
+      "name": "批量更新i18n导入路径",
+      "description": "使用codemod脚本批量更新项目中的i18n导入路径，从旧的分散文件导入转换为新的域结构导入。",
+      "notes": "批量转换需要特别小心，确保功能不受影响",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e3d849af-8cd7-4c69-89b1-5735ea8c7c9c"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/migrate-i18n-imports.js",
+          "type": "CREATE",
+          "description": "i18n导入迁移脚本"
+        },
+        {
+          "path": "src/",
+          "type": "TO_MODIFY",
+          "description": "更新所有i18n导入"
+        }
+      ],
+      "implementationGuide": "1. 开发i18n专用的导入路径转换脚本\\n2. 扫描所有使用i18n功能的文件\\n3. 批量转换导入路径到新结构\\n4. 处理复杂的导入情况\\n5. 验证转换后的功能正确性\\n6. 生成转换报告",
+      "verificationCriteria": "导入路径批量更新完成，功能测试通过，转换报告完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "3a4658f2-e6f5-4a18-a561-b85b529bb3af",
+      "name": "i18n功能回归测试",
+      "description": "执行i18n相关的完整回归测试，包括翻译加载、缓存功能、预加载策略、监控数据收集等所有i18n功能。",
+      "notes": "确保i18n重构没有破坏任何国际化功能",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "98b8ce39-ea5b-44c5-be42-f813fe126921"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/__tests__/i18n*.test.ts",
+          "type": "REFERENCE",
+          "description": "i18n测试文件"
+        },
+        {
+          "path": "tests/e2e/i18n/",
+          "type": "REFERENCE",
+          "description": "i18n E2E测试"
+        }
+      ],
+      "implementationGuide": "1. 运行所有i18n相关的单元测试\\n2. 测试翻译加载和缓存功能\\n3. 验证预加载策略正常工作\\n4. 检查监控数据收集功能\\n5. 测试翻译验证功能\\n6. 运行国际化E2E测试",
+      "verificationCriteria": "所有i18n测试通过，功能完整性确认，性能无回归",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "c471c25e-62a3-44b2-b35b-6a7af5d964b7",
+      "name": "i18n性能验证测试",
+      "description": "验证i18n域重构后的性能表现，确保翻译加载性能不降级，缓存效率保持或提升。",
+      "notes": "i18n性能直接影响用户体验，需要特别关注",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "3a4658f2-e6f5-4a18-a561-b85b529bb3af"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "reports/i18n-performance/",
+          "type": "CREATE",
+          "description": "i18n性能测试报告"
+        }
+      ],
+      "implementationGuide": "1. 测量翻译加载时间\\n2. 验证缓存命中率\\n3. 检查预加载策略效果\\n4. 对比重构前后的性能数据\\n5. 确保性能无回归\\n6. 生成性能验证报告",
+      "verificationCriteria": "i18n性能无回归，缓存效率保持，加载时间稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "7aa6b047-e41e-4593-a983-b70f20367495",
+      "name": "清理i18n过渡文件",
+      "description": "清理i18n域的过渡期兼容层文件，移除@deprecated标记的文件，完成i18n域重构的最终清理。",
+      "notes": "清理工作需要确保没有遗留的依赖",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "c471c25e-62a3-44b2-b35b-6a7af5d964b7"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n-*.ts",
+          "type": "TO_MODIFY",
+          "description": "清理过渡文件"
+        },
+        {
+          "path": "docs/refactoring/",
+          "type": "TO_MODIFY",
+          "description": "更新文档"
+        }
+      ],
+      "implementationGuide": "1. 确认所有导入已迁移到新结构\\n2. 移除@deprecated标记的兼容层文件\\n3. 清理不再使用的旧文件\\n4. 更新相关文档和注释\\n5. 运行最终的功能验证\\n6. 生成清理报告",
+      "verificationCriteria": "过渡文件清理完成，无遗留依赖，文档更新完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "afebf594-c7f0-4146-b2c4-5201a0603f7e",
+      "name": "i18n域重构验收",
+      "description": "完成i18n域重构的最终验收，确认31个文件成功重组为8-10个文件，功能完整，性能稳定，为第三阶段提供模板。",
+      "notes": "i18n域重构是第二阶段的核心成果，需要全面验收",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "7aa6b047-e41e-4593-a983-b70f20367495"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/i18n/",
+          "type": "REFERENCE",
+          "description": "重构完成的i18n域"
+        },
+        {
+          "path": "docs/refactoring/i18n-completion-report.md",
+          "type": "CREATE",
+          "description": "i18n重构完成报告"
+        }
+      ],
+      "implementationGuide": "1. 统计最终的文件数量（目标8-10个）\\n2. 验证所有i18n功能正常\\n3. 确认性能指标达标\\n4. 生成i18n重构完成报告\\n5. 提炼重构模板和经验\\n6. 为第三阶段制定推广计划",
+      "verificationCriteria": "文件数量达标（8-10个），功能完整，性能稳定，重构模板可用",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "480c9fe8-e431-4971-8856-5c7f9c18d5d9",
+      "name": "locale-storage域模板化重构",
+      "description": "按照i18n域重构模板，将locale-storage域的35个文件重组为6-8个文件，这是第三阶段最大的重构任务。",
+      "notes": "locale-storage是最大的域，需要分批处理避免风险",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "afebf594-c7f0-4146-b2c4-5201a0603f7e"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/locale-storage*.ts",
+          "type": "TO_MODIFY",
+          "description": "locale-storage域文件群"
+        },
+        {
+          "path": "src/lib/locale-storage/",
+          "type": "CREATE",
+          "description": "新建locale-storage域结构"
+        }
+      ],
+      "implementationGuide": "1. 应用i18n重构模板到locale-storage域\\n2. 设计新的目录结构：preference/、history/、analytics/、maintenance/\\n3. 合并8个types文件为统一types.ts\\n4. 重组35个文件为6-8个核心文件\\n5. 建立过渡期兼容层\\n6. 批量更新导入路径",
+      "verificationCriteria": "35个文件重组为6-8个，功能完整，语言存储功能正常",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "8de6a92c-85d6-4cb0-9626-419b758a6e8f",
+      "name": "web-vitals域模板化重构",
+      "description": "按照i18n重构模板，将web-vitals目录下的多个文件重组为3-4个文件，优化Web Vitals监控功能的组织结构。",
+      "notes": "web-vitals与性能监控系统紧密集成，需要保持兼容性",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "480c9fe8-e431-4971-8856-5c7f9c18d5d9"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/web-vitals/",
+          "type": "TO_MODIFY",
+          "description": "web-vitals目录重构"
+        },
+        {
+          "path": "src/lib/performance-monitoring*.ts",
+          "type": "REFERENCE",
+          "description": "相关性能监控文件"
+        }
+      ],
+      "implementationGuide": "1. 分析web-vitals目录下的文件结构\\n2. 应用重构模板重组为核心文件\\n3. 保持Web Vitals监控功能完整\\n4. 优化性能监控的API结构\\n5. 确保与现有监控系统集成\\n6. 验证性能监控功能正常",
+      "verificationCriteria": "web-vitals重组为3-4个文件，性能监控功能正常，集成稳定",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "85337b96-9c9a-4888-aba2-116397e90968",
+      "name": "其他小域模板化重构",
+      "description": "按照重构模板，重构theme-analytics等其他小功能域，每个域重组为2-3个文件，完成所有域的结构优化。",
+      "notes": "小域重构相对简单，可以批量处理",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "8de6a92c-85d6-4cb0-9626-419b758a6e8f"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/theme-analytics*.ts",
+          "type": "TO_MODIFY",
+          "description": "theme-analytics等小域"
+        },
+        {
+          "path": "src/lib/translation-*.ts",
+          "type": "TO_MODIFY",
+          "description": "其他功能域文件"
+        }
+      ],
+      "implementationGuide": "1. 识别剩余的小功能域\\n2. 应用重构模板到每个小域\\n3. 重组为2-3个文件的简洁结构\\n4. 保持各域功能的完整性\\n5. 统一导出和导入规范\\n6. 验证所有小域功能正常",
+      "verificationCriteria": "所有小域重组完成，每域2-3个文件，功能保持完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "bad9d3e7-4c59-46e4-aa96-6117c92f3761",
+      "name": "YAGNI清理策略实施",
+      "description": "使用ts-prune工具扫描未使用的导出，实施YAGNI（You Aren't Gonna Need It）清理策略，移除冗余代码。",
+      "notes": "YAGNI清理需要谨慎，避免误删重要代码",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "85337b96-9c9a-4888-aba2-116397e90968"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/experimental/",
+          "type": "CREATE",
+          "description": "实验性代码目录"
+        },
+        {
+          "path": "reports/yagni-cleanup/",
+          "type": "CREATE",
+          "description": "YAGNI清理报告"
+        }
+      ],
+      "implementationGuide": "1. 运行ts-prune扫描未使用的导出\\n2. 分析扫描结果，识别真正未使用的代码\\n3. 区分暂时未使用和永久不需要的代码\\n4. 安全移除确认不需要的代码\\n5. 将可能需要的代码迁移到experimental目录\\n6. 生成清理报告",
+      "verificationCriteria": "未使用代码清理完成，实验代码隔离，清理报告详细",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "cf2aa208-52b4-40ff-8263-1c1fe61dec2e",
+      "name": "未使用代码清理执行",
+      "description": "基于YAGNI清理策略的结果，执行实际的未使用代码清理，移除确认不需要的文件和导出。",
+      "notes": "实际清理操作需要格外小心，确保不影响功能",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "bad9d3e7-4c59-46e4-aa96-6117c92f3761"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/",
+          "type": "TO_MODIFY",
+          "description": "清理未使用的代码"
+        },
+        {
+          "path": "reports/cleanup-log.md",
+          "type": "CREATE",
+          "description": "清理操作日志"
+        }
+      ],
+      "implementationGuide": "1. 基于YAGNI分析结果执行清理\\n2. 移除确认不需要的文件\\n3. 清理未使用的导出和函数\\n4. 更新相关的导入语句\\n5. 运行完整测试确保无破坏\\n6. 记录清理的详细信息",
+      "verificationCriteria": "未使用代码清理完成，功能测试通过，清理日志完整",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "3c367492-e97a-4f66-8b38-0bf0fb364013",
+      "name": "实验性代码隔离",
+      "description": "将识别出的实验性代码迁移到src/experimental/目录，建立清晰的实验代码管理机制。",
+      "notes": "实验代码隔离有助于保持主代码库的整洁",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "cf2aa208-52b4-40ff-8263-1c1fe61dec2e"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "src/experimental/",
+          "type": "CREATE",
+          "description": "实验性代码目录"
+        },
+        {
+          "path": "docs/experimental-code-guide.md",
+          "type": "CREATE",
+          "description": "实验代码管理指南"
+        }
+      ],
+      "implementationGuide": "1. 创建src/experimental/目录结构\\n2. 迁移实验性和试验性代码\\n3. 建立实验代码的管理规范\\n4. 添加实验代码的文档说明\\n5. 配置构建系统排除实验代码\\n6. 建立实验代码的评估机制",
+      "verificationCriteria": "实验代码隔离完成，管理规范建立，构建系统配置正确",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "3b81a3f6-ff9d-4dae-85c2-2e7e4939af3f",
+      "name": "最终质量门禁验证",
+      "description": "执行最终的质量门禁验证，确认所有重构目标达成：文件总数~300，TypeScript错误为0，ESLint问题<200。",
+      "notes": "最终验证是整个重构项目的成果检验",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "3c367492-e97a-4f66-8b38-0bf0fb364013"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "scripts/architecture-metrics.js",
+          "type": "REFERENCE",
+          "description": "最终度量脚本"
+        },
+        {
+          "path": "reports/final-quality-report.md",
+          "type": "CREATE",
+          "description": "最终质量报告"
+        }
+      ],
+      "implementationGuide": "1. 运行完整的architecture-metrics.js度量\\n2. 验证文件总数达到~300的目标\\n3. 确认TypeScript错误降至0\\n4. 验证ESLint问题<200\\n5. 检查所有质量指标达标\\n6. 生成最终质量报告",
+      "verificationCriteria": "文件数~300，TS错误=0，ESLint问题<200，所有目标达成",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    },
+    {
+      "id": "e9de4052-fb5b-4779-a84b-5f07550c4cf5",
+      "name": "项目总结和文档更新",
+      "description": "完成整个架构重构项目的总结，更新项目文档，记录重构经验和最佳实践，为未来的架构维护提供指导。",
+      "notes": "项目总结是知识沉淀和经验传承的重要环节",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "3b81a3f6-ff9d-4dae-85c2-2e7e4939af3f"
+        }
+      ],
+      "createdAt": "2025-09-11T16:01:37.317Z",
+      "updatedAt": "2025-09-11T16:01:37.317Z",
+      "relatedFiles": [
+        {
+          "path": "docs/architecture/refactoring-summary.md",
+          "type": "CREATE",
+          "description": "重构项目总结"
+        },
+        {
+          "path": "docs/architecture/maintenance-guide.md",
+          "type": "CREATE",
+          "description": "架构维护指南"
+        },
+        {
+          "path": "README.md",
+          "type": "TO_MODIFY",
+          "description": "更新项目说明"
+        }
+      ],
+      "implementationGuide": "1. 编写完整的项目重构总结报告\\n2. 更新项目架构文档\\n3. 记录重构过程中的经验教训\\n4. 建立架构维护的最佳实践指南\\n5. 更新开发者文档和贡献指南\\n6. 制作重构成果展示材料",
+      "verificationCriteria": "项目总结完整，文档更新完成，经验沉淀充分，维护指南可用",
+      "analysisResult": "tucsenberg-web-frontier架构重构项目：三阶段系统性重构，解决export *泛滥（97个→<30）、文件过度细分（644个→~300）、类型文件分散等问题。目标实现TypeScript错误从2,759降至0，ESLint问题从2,075降至<200，提升构建性能20-30%，IDE响应速度40-50%，开发效率50%+。项目采用小步快跑策略，每次PR限制300-600行代码改动，通过过渡期兼容层确保零风险迁移。基于现有优秀工具基础设施（dependency-cruiser、ESLint严格配置、质量监控脚本），充分重用避免重复建设。"
+    }
+  ]
+}

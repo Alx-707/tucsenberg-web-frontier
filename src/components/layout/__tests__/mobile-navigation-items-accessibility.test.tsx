@@ -57,7 +57,6 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
       await user.click(toggleButton);
 
       // Test complex keyboard navigation
-      const _navigation = screen.getByRole('navigation');
       const links = screen.getAllByRole('link');
 
       // Tab through all links

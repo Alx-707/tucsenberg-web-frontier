@@ -31,16 +31,16 @@ vi.mock('lucide-react', () => ({
 // Shared test setup function
 function setupInteractionTest() {
   const user = userEvent.setup();
-  
+
   // Mock ResizeObserver for all tests
   const mockResizeObserver = vi.fn(() => ({
     observe: vi.fn(),
     disconnect: vi.fn(),
     unobserve: vi.fn(),
   }));
-  
+
   vi.stubGlobal('ResizeObserver', mockResizeObserver);
-  
+
   return { user, mockResizeObserver };
 }
 
@@ -69,7 +69,7 @@ describe('NavigationMenu - Interactions', () => {
       const trigger = screen.getByTestId('nav-trigger');
       expect(trigger).toBeInTheDocument();
       expect(trigger).toHaveTextContent('Products');
-      
+
       const chevronIcon = screen.getByTestId('chevron-down-icon');
       expect(chevronIcon).toBeInTheDocument();
     });
@@ -125,13 +125,13 @@ describe('NavigationMenu - Interactions', () => {
       );
 
       const trigger = screen.getByTestId('nav-trigger');
-      
+
       // Initially content should not be visible
       expect(screen.queryByTestId('nav-content')).not.toBeInTheDocument();
-      
+
       // Click trigger to open content
       await user.click(trigger);
-      
+
       // Content should now be visible
       expect(screen.getByTestId('nav-content')).toBeInTheDocument();
     });
@@ -236,9 +236,9 @@ describe('NavigationMenu - Interactions', () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink 
-                href='/products' 
-                className='custom-link' 
+              <NavigationMenuLink
+                href='/products'
+                className='custom-link'
                 data-testid='nav-link'
               >
                 Products
@@ -254,14 +254,14 @@ describe('NavigationMenu - Interactions', () => {
 
     it('handles click interactions', async () => {
       const handleClick = vi.fn();
-      
+
       render(
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavigationMenuLink 
-                href='/products' 
-                _onClick={handleClick}
+              <NavigationMenuLink
+                href='/products'
+                onClick={handleClick}
                 data-testid='nav-link'
               >
                 Products
@@ -273,7 +273,7 @@ describe('NavigationMenu - Interactions', () => {
 
       const link = screen.getByTestId('nav-link');
       await user.click(link);
-      
+
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
   });

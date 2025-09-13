@@ -6,7 +6,6 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import React from 'react';
@@ -30,10 +29,7 @@ vi.mock('lucide-react', () => ({
 }));
 
 describe('Mobile Navigation - 高级边界情况测试', () => {
-  let _user: ReturnType<typeof userEvent.setup>;
-
   beforeEach(() => {
-    _user = userEvent.setup();
     vi.clearAllMocks();
 
     // Setup default mocks

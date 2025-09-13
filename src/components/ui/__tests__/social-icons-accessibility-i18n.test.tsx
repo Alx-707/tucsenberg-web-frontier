@@ -13,12 +13,10 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
-  SocialIconLink,
+    SocialIconLink,
 } from '../social-icons';
 
 describe('Social Icons Accessibility - Internationalization Tests', () => {
-  let _user: ReturnType<typeof userEvent.setup>;
-
   beforeEach(() => {
     user = userEvent.setup();
   });

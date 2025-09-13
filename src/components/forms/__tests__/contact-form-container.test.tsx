@@ -139,56 +139,7 @@ const fillValidForm = async () => {
   });
 };
 
-// 填写除指定字段外的所有有效数据
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _fillValidFormExcept = async (excludeFields: string[] = []) => {
-  await act(async () => {
-    if (!excludeFields.includes('firstName')) {
-      fireEvent.change(screen.getByLabelText(/first name/i), {
-        target: { value: validFormData.firstName },
-      });
-    }
-    if (!excludeFields.includes('lastName')) {
-      fireEvent.change(screen.getByLabelText(/last name/i), {
-        target: { value: validFormData.lastName },
-      });
-    }
-    if (!excludeFields.includes('email')) {
-      fireEvent.change(screen.getByLabelText(/email/i), {
-        target: { value: validFormData.email },
-      });
-    }
-    if (!excludeFields.includes('company')) {
-      fireEvent.change(screen.getByLabelText(/company/i), {
-        target: { value: validFormData.company },
-      });
-    }
-    if (!excludeFields.includes('phone')) {
-      fireEvent.change(screen.getByLabelText(/phone/i), {
-        target: { value: validFormData.phone },
-      });
-    }
-    if (!excludeFields.includes('subject')) {
-      fireEvent.change(screen.getByLabelText(/subject/i), {
-        target: { value: validFormData.subject },
-      });
-    }
-    if (!excludeFields.includes('message')) {
-      fireEvent.change(screen.getByLabelText(/message/i), {
-        target: { value: validFormData.message },
-      });
-    }
 
-    // 总是勾选隐私政策（除非明确排除）
-    if (!excludeFields.includes('acceptPrivacy')) {
-      const privacyCheckbox = screen.getByLabelText(/accept.*privacy/i);
-      fireEvent.click(privacyCheckbox);
-    }
-
-    // 启用 Turnstile
-    fireEvent.click(screen.getByTestId('turnstile-success'));
-  });
-};
 
 describe('ContactFormContainer - 剩余高级测试', () => {
   beforeEach(() => {

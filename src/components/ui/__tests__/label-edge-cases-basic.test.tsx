@@ -114,7 +114,7 @@ describe('Label Edge Cases - Basic Tests', () => {
       render(
         <Label
           className={undefined}
-          style={null as React.CSSProperties | null}
+          style={null as any}
           onClick={undefined}
           data-testid='null-props'
         >
@@ -281,10 +281,6 @@ describe('Label Edge Cases - Basic Tests', () => {
     });
 
     it('handles error boundaries gracefully', () => {
-      const _ErrorComponent = () => {
-        throw new Error('Test error');
-      };
-
       // This would normally be wrapped in an error boundary in a real app
       render(
         <Label data-testid='error-boundary'>

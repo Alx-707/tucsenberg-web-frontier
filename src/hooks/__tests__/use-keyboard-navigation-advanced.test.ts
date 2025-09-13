@@ -201,7 +201,7 @@ describe('useKeyboardNavigation Advanced Tests', () => {
         { key: '' } as KeyboardEvent,
       ];
 
-      malformedEvents.forEach((event) => {
+      malformedEvents.forEach((_event) => {
         expect(() => {
           act(() => {
             result.current.focusNext();

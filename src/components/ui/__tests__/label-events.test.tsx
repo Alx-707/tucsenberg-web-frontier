@@ -30,7 +30,7 @@ describe('Label Events & States Tests - Index', () => {
     it('handles click events', async () => {
       const handleClick = vi.fn();
       render(
-        <Label _onClick={handleClick} data-testid='clickable-label'>
+        <Label onClick={handleClick} data-testid='clickable-label'>
           Clickable Label
         </Label>
       );
@@ -108,7 +108,7 @@ describe('Label Events & States Tests - Index', () => {
 
       render(
         <div>
-          <Label htmlFor='event-input' _onClick={handleLabelClick}>
+          <Label htmlFor='event-input' onClick={handleLabelClick}>
             Event Label
           </Label>
           <input id='event-input' type='text' onFocus={handleInputFocus} />
@@ -129,8 +129,8 @@ describe('Label Events & States Tests - Index', () => {
       });
 
       render(
-        <div _onClick={parentClick}>
-          <Label _onClick={labelClick} data-testid='stop-propagation'>
+        <div onClick={parentClick}>
+          <Label onClick={labelClick} data-testid='stop-propagation'>
             Stop Propagation
           </Label>
         </div>
@@ -149,7 +149,7 @@ describe('Label Events & States Tests - Index', () => {
       render(
         <Label
           data-testid='custom-event'
-          _onClick={(e: any) => {
+          onClick={(e: any) => {
             customHandler(e.type, e.target);
           }}
         >
@@ -167,7 +167,7 @@ describe('Label Events & States Tests - Index', () => {
   describe('Basic State Management', () => {
     it('handles disabled state correctly', () => {
       render(
-        <Label disabled data-testid='disabled-label'>
+        <Label data-testid='disabled-label'>
           Disabled Label
         </Label>
       );
@@ -179,7 +179,7 @@ describe('Label Events & States Tests - Index', () => {
     it('disables associated input when label is disabled', async () => {
       render(
         <div>
-          <Label htmlFor='disabled-input' disabled data-testid='disabled-label'>
+          <Label htmlFor='disabled-input' data-testid='disabled-label'>
             Disabled Input Label
           </Label>
           <input id='disabled-input' type='text' />
@@ -329,7 +329,7 @@ describe('Label Events & States Tests - Index', () => {
 
         return (
           <Label
-            _onClick={() => setCount(c => c + 1)}
+            onClick={() => setCount(c => c + 1)}
             data-testid='state-changing'
           >
             Count: {count}
@@ -353,8 +353,8 @@ describe('Label Events & States Tests - Index', () => {
       render(
         <Label
           className={undefined}
-          style={null as React.CSSProperties | null}
-          _onClick={undefined}
+          style={null as any}
+          onClick={undefined}
           data-testid='null-props'
         >
           Null Props

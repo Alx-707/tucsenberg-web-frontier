@@ -59,7 +59,7 @@ describe('Label Form Advanced Integration Core Tests', () => {
                 {fields.length > 1 && (
                   <button
                     type="button"
-                    _onClick={() => removeField(field.id)}
+                    onClick={() => removeField(field.id)}
                     data-testid={`remove-${field.id}`}
                   >
                     Remove
@@ -69,7 +69,7 @@ describe('Label Form Advanced Integration Core Tests', () => {
             ))}
             <button
               type="button"
-              _onClick={addField}
+              onClick={addField}
               data-testid="add-field"
             >
               Add Field

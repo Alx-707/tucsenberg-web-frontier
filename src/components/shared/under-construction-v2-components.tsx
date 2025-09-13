@@ -93,7 +93,6 @@ interface SocialLinksProps {
 }
 
 export function SocialLinks({ showSocialLinks }: SocialLinksProps) {
-  const _t = useTranslations('underConstruction');
 
   const socialLinks = [
     { icon: Twitter, href: '#', label: 'Twitter' },

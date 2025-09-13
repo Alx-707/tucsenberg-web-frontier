@@ -30,7 +30,7 @@ describe('Label State Management - Main Tests', () => {
   describe('核心状态管理验证', () => {
     it('handles disabled state correctly', () => {
       render(
-        <Label disabled data-testid='disabled-label'>
+        <Label data-testid='disabled-label'>
           Disabled Label
         </Label>
       );
@@ -42,7 +42,7 @@ describe('Label State Management - Main Tests', () => {
     it('disables associated input when label is disabled', async () => {
       render(
         <div>
-          <Label htmlFor='disabled-input' disabled data-testid='disabled-label'>
+          <Label htmlFor='disabled-input' data-testid='disabled-label'>
             Disabled Input Label
           </Label>
           <input id='disabled-input' type='text' disabled />
@@ -59,7 +59,7 @@ describe('Label State Management - Main Tests', () => {
 
     it('applies custom disabled styling', () => {
       render(
-        <Label className='disabled:opacity-50' disabled data-testid='custom-disabled'>
+        <Label className='disabled:opacity-50' data-testid='custom-disabled'>
           Custom Disabled
         </Label>
       );
@@ -227,7 +227,7 @@ describe('Label State Management - Main Tests', () => {
         return (
           <Label
             className={isActive ? 'bg-blue-100' : 'bg-gray-100'}
-            _onClick={() => setIsActive(!isActive)}
+            onClick={() => setIsActive(!isActive)}
             data-testid='dynamic-label'
           >
             Dynamic State: {isActive ? 'Active' : 'Inactive'}
@@ -305,7 +305,7 @@ describe('Label State Management - Main Tests', () => {
     it('handles conflicting states gracefully', () => {
       expect(() => {
         render(
-          <Label className='disabled:opacity-50 enabled:opacity-100' disabled data-testid='conflicting-state-label'>
+          <Label className='disabled:opacity-50 enabled:opacity-100' data-testid='conflicting-state-label'>
             Label with conflicting states
           </Label>
         );

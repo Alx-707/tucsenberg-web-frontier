@@ -34,7 +34,7 @@ describe('Label State Management - Core Tests', () => {
   describe('核心状态管理功能', () => {
     it('handles disabled state correctly', () => {
       render(
-        <Label disabled data-testid='disabled-label'>
+        <Label data-testid='disabled-label'>
           Disabled Label
         </Label>
       );
@@ -46,7 +46,7 @@ describe('Label State Management - Core Tests', () => {
     it('disables associated input when label is disabled', async () => {
       render(
         <div>
-          <Label htmlFor='disabled-input' disabled data-testid='disabled-label'>
+          <Label htmlFor='disabled-input' data-testid='disabled-label'>
             Disabled Input Label
           </Label>
           <input id='disabled-input' type='text' disabled />
@@ -63,7 +63,7 @@ describe('Label State Management - Core Tests', () => {
 
     it('applies custom disabled styling', () => {
       render(
-        <Label className='disabled:opacity-50' disabled data-testid='custom-disabled'>
+        <Label className='disabled:opacity-50' data-testid='custom-disabled'>
           Custom Disabled
         </Label>
       );
@@ -249,7 +249,7 @@ describe('Label State Management - Core Tests', () => {
         return (
           <Label
             className={isActive ? 'bg-blue-100' : 'bg-gray-100'}
-            _onClick={() => setIsActive(!isActive)}
+            onClick={() => setIsActive(!isActive)}
             data-testid='dynamic-label'
           >
             Dynamic State: {isActive ? 'Active' : 'Inactive'}
