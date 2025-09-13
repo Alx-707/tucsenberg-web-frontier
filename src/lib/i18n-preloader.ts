@@ -8,9 +8,8 @@
 // 重新导出所有模块的功能
 export type { PreloadOptions, SmartPreloadConfig, PreloadStrategyConfig, PreloaderConfig, PreloaderFactoryConfig, IPreloader, PreloadConfigKey } from './i18n-preloader-types';
 export { PRELOADER_CONSTANTS, PRELOADER_EVENTS, isPreloadResult, isPreloadState, isPreloaderError } from './i18n-preloader-types';
-export type { PreloaderStateManager, PreloaderCache, PreloaderNetwork, PreloaderScheduler, PreloaderMonitor, PreloadStrategy, PreloaderFactory, PreloaderMiddleware, PreloaderPlugin, PreloaderError, PreloaderTimeoutError, PreloaderNetworkError, PreloaderCacheError } from './i18n-preloader-types';
+export type { PreloaderStateManager, PreloaderCache, PreloaderNetwork, PreloaderScheduler, PreloaderMonitor, PreloadStrategy, PreloaderMiddleware, PreloaderPlugin, PreloaderError, PreloaderTimeoutError, PreloaderNetworkError, PreloaderCacheError } from './i18n-preloader-types';
 export type { PreloadState, PreloadStats, PreloadResult, BatchResult, PreloaderMetrics, PreloaderEvents, PreloadEventHandler, PreloadEventMap, PreloadStateKey, PreloadStatsKey } from './i18n-preloader-types';
-export { TranslationPreloader } from './i18n-preloader-core';;
 export * from './i18n-preloader-strategies';
 export * from './i18n-preloader-utils';
 
