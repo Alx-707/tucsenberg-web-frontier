@@ -1,7 +1,7 @@
 /* eslint-disable security/detect-object-injection */
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import type { type Locale } from '@/config/paths';
+import type { Locale } from '@/config/paths';
 import { SITE_CONFIG, type PageType } from '@/config/paths';;
 import {
   generateCanonicalURL,
