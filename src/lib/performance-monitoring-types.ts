@@ -5,8 +5,9 @@
  */
 
 import { MAGIC_2500 } from "@/constants/count";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, MAGIC_0_1, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THIRTY_SECONDS_MS, THREE_SECONDS_MS, ZERO } from '@/constants';
+
 import { MAGIC_0_9 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, MAGIC_0_1, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THIRTY_SECONDS_MS, THREE_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import { PERFORMANCE_CONSTANTS } from '@/constants/performance';
 
 // ==================== 基础类型定义 ====================

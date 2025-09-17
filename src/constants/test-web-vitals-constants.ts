@@ -1,3 +1,5 @@
+
+import { SECONDS_PER_MINUTE, MINUTES_PER_HOUR, HOURS_PER_DAY } from '@/constants';
 /**
  * Web Vitals 测试常量定义
  * 专门用于性能监控和Web Vitals相关的测试

@@ -5,35 +5,35 @@ import {
   BundleAnalyzerUtils,
   useBundleAnalyzerIntegration,
   validateBundleAnalyzerConfig,
-} from './performance-monitoring-integrations-bundle';
+} from '@/lib/performance-monitoring-integrations-bundle';
 import type { ReactScanIntegration } from '@/lib/performance-monitoring-integrations-react-scan';
 import {
   ReactScanAnalyzer,
   ReactScanUtils,
   useReactScanIntegration,
   validateReactScanConfig,
-} from './performance-monitoring-integrations-react-scan';
+} from '@/lib/performance-monitoring-integrations-react-scan';
 import type {
   EnvironmentCompatibilityResult,
   WebVitalsIntegration,
-} from './performance-monitoring-integrations-vitals';
+} from '@/lib/performance-monitoring-integrations-vitals';
 import {
   checkEnvironmentCompatibility,
   performHealthCheck,
   useWebVitalsIntegration,
   validateWebVitalsConfig,
   WebVitalsAnalyzer,
-} from './performance-monitoring-integrations-vitals';
+} from '@/lib/performance-monitoring-integrations-vitals';
 import type { WebEvalAgentIntegration } from '@/lib/performance-monitoring-integrations-web-eval';
 import {
   useWebEvalAgentIntegration,
   validateWebEvalAgentConfig,
   WebEvalAgentAnalyzer,
-} from './performance-monitoring-integrations-web-eval';
+} from '@/lib/performance-monitoring-integrations-web-eval';
 import type {
   PerformanceConfig,
   PerformanceMetrics,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 性能监控集成钩子和工具 - 主入口
@@ -49,31 +49,31 @@ export {
   validateReactScanConfig,
   ReactScanAnalyzer,
   ReactScanUtils,
-} from './performance-monitoring-integrations-react-scan';
+} from '@/lib/performance-monitoring-integrations-react-scan';
 export type { WebEvalAgentIntegration } from '@/lib/performance-monitoring-integrations-web-eval';
 export {
   useWebEvalAgentIntegration,
   validateWebEvalAgentConfig,
   WebEvalAgentAnalyzer,
-} from './performance-monitoring-integrations-web-eval';
+} from '@/lib/performance-monitoring-integrations-web-eval';
 export type { BundleAnalyzerIntegration } from '@/lib/performance-monitoring-integrations-bundle';
 export {
   useBundleAnalyzerIntegration,
   validateBundleAnalyzerConfig,
   BundleAnalyzerAnalyzer,
   BundleAnalyzerUtils,
-} from './performance-monitoring-integrations-bundle';
+} from '@/lib/performance-monitoring-integrations-bundle';
 export type {
   WebVitalsIntegration,
   EnvironmentCompatibilityResult,
-} from './performance-monitoring-integrations-vitals';
+} from '@/lib/performance-monitoring-integrations-vitals';
 export {
   useWebVitalsIntegration,
   checkEnvironmentCompatibility,
   performHealthCheck,
   validateWebVitalsConfig,
   WebVitalsAnalyzer,
-} from './performance-monitoring-integrations-vitals';
+} from '@/lib/performance-monitoring-integrations-vitals';
 
 // ==================== 向后兼容的类型别名 ====================
 

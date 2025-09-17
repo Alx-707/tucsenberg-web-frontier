@@ -7,7 +7,8 @@
  */
 
 import { DEC_0_4, MAGIC_0_2 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TRIPLE, MAGIC_0_3, MAGIC_0_5, MAGIC_0_6, MAGIC_1_5, MAGIC_20, MAGIC_40, MAGIC_80, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TRIPLE, MAGIC_20, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO, MAGIC_0_5, MAGIC_80, MAGIC_40, MAGIC_0_3, MAGIC_0_6, MAGIC_1_5 } from '@/constants';
+
 import type {
   BundlePerformanceData,
   ComponentPerformanceData,
@@ -16,7 +17,7 @@ import type {
   PerformanceMetrics,
   PerformanceMetricSource,
   PerformanceMetricType,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 性能报告接口

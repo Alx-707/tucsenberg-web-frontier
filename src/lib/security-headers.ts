@@ -4,7 +4,7 @@
  */
 
 import { env } from '@/../env.mjs';
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { logger } from '@/lib/logger';
 
 /**

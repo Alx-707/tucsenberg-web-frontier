@@ -5,8 +5,9 @@
  */
 
 import { MAGIC_70, MAGIC_80 } from "@/constants/count";
+import { ANGLE_90_DEG, ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, HTTP_OK, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { CACHE_DURATIONS, CACHE_LIMITS } from '@/constants/i18n-constants';
-import { ANGLE_90_DEG, ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, HTTP_OK, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { LRUCache } from '@/lib/i18n-lru-cache';
 import { I18nMetricsCollector } from '@/lib/i18n-metrics-collector';
 import { TranslationPreloader } from '@/lib/i18n-preloader';
@@ -19,7 +20,7 @@ import type {
   CacheManager,
   CacheStats,
   PreloadConfig,
-} from './i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 
 // 主缓存管理器实现
 export class I18nCacheManager implements CacheManager {

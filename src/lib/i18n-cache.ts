@@ -41,7 +41,7 @@ export {
   type Event,
   type Manager,
   type Metrics,
-} from './i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 
 // 性能指标收集器
 export {
@@ -50,7 +50,7 @@ export {
   formatMetrics,
   defaultMetricsCollector,
   type MetricsCollector as Collector,
-} from './i18n-metrics-collector';
+} from '@/lib/i18n-metrics-collector';
 
 // LRU 缓存实现
 export { LRUCache, createLRUCache, type Cache } from '@/lib/i18n-lru-cache';
@@ -62,7 +62,7 @@ export {
   PreloadStrategies,
   type Preloader as PreloaderImpl,
   type PreloadState,
-} from './i18n-preloader';
+} from '@/lib/i18n-preloader';
 
 // 主缓存管理器
 export {
@@ -70,4 +70,4 @@ export {
   createI18nCacheManager,
   i18nCache,
   type CacheManager as ManagerImpl,
-} from './i18n-cache-manager';
+} from '@/lib/i18n-cache-manager';

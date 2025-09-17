@@ -7,13 +7,13 @@ import {
   generateOrganizationData,
   generateProductData,
   generateWebSiteData,
-} from './structured-data-generators';
+} from '@/lib/structured-data-generators';
 // 导入需要的函数
-import { COUNT_PAIR } from "@/constants/magic-numbers";
+import { COUNT_PAIR } from "@/constants";
 import {
   generateArticleSchema,
   generateProductSchema,
-} from './structured-data-helpers';
+} from '@/lib/structured-data-helpers';
 import type {
   ArticleData,
   BreadcrumbData,
@@ -22,7 +22,7 @@ import type {
   ProductData,
   StructuredDataType,
   WebSiteData,
-} from './structured-data-types';
+} from '@/lib/structured-data-types';
 
 // 重新导出类型
 export type { Locale } from '@/lib/structured-data-types';
@@ -88,7 +88,7 @@ export {
   generateFAQSchema,
   generateLocalBusinessSchema,
   generateProductSchema
-} from './structured-data-helpers';
+} from '@/lib/structured-data-helpers';
 
 // 函数重载：根据页面类型返回不同长度的元组，便于测试中按索引访问
 export function generateStructuredData(

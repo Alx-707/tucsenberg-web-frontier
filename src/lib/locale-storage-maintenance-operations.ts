@@ -7,8 +7,9 @@
 
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, HTTP_OK, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { LocalStorageManager } from '@/lib/locale-storage-local';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, HTTP_OK, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { LocaleCleanupManager } from '@/lib/locale-storage-maintenance-cleanup';
 import { LocaleValidationManager } from '@/lib/locale-storage-maintenance-validation';
 import { STORAGE_KEYS } from '@/lib/locale-storage-types';
@@ -17,7 +18,7 @@ import type {
   MaintenanceOptions,
   StorageOperationResult,
   UserLocalePreference,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 语言存储维护操作管理器

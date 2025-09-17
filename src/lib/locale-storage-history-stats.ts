@@ -8,8 +8,9 @@
 'use client';
 
 import { MAGIC_6 } from "@/constants/count";
+import { ANGLE_90_DEG, ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { MAGIC_0_1, MAGIC_0_5, MAGIC_0_8 } from "@/constants/decimal";
-import { ANGLE_90_DEG, ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { DAYS_PER_WEEK } from "@/constants/time";
 import { getDetectionHistory } from '@/lib/locale-storage-history-core';
 import type { } from '@/lib/locale-storage-types';
@@ -17,7 +18,7 @@ import type { Locale } from '@/types/i18n';
 import {
   getLocaleGroupStats,
   getSourceGroupStats,
-} from './locale-storage-history-query';
+} from '@/lib/locale-storage-history-query';
 
 // ==================== 基础统计功能 ====================
 

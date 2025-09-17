@@ -1,6 +1,7 @@
 // 导入主要类型用于向后兼容
-import { PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { DEFAULT_SERVICE_OPTIONS } from '@/types/whatsapp-service-config';
+import { PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type {
   Cache,
   CacheConfig,

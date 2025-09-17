@@ -1,21 +1,22 @@
 // 导入主要功能用于向后兼容
-import { ANIMATION_DURATION_VERY_SLOW, SECONDS_PER_MINUTE } from "@/constants/magic-numbers";
 import { PerformanceConfigManager } from '@/lib/performance-monitoring-core-config';
+import { ANIMATION_DURATION_VERY_SLOW, SECONDS_PER_MINUTE } from '@/constants';
+
 import { PerformanceMetricsManager } from '@/lib/performance-monitoring-core-metrics';
 import {
   PerformanceToolConflictChecker,
   type ToolConflictResult,
-} from './performance-monitoring-core-conflicts';
+} from '@/lib/performance-monitoring-core-conflicts';
 import {
   PerformanceReportGenerator,
   type PerformanceReport,
-} from './performance-monitoring-core-reports';
+} from '@/lib/performance-monitoring-core-reports';
 import type {
   PerformanceConfig,
   PerformanceMetrics,
   PerformanceMetricSource,
   PerformanceMetricType,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 性能监控核心协调器 - 主入口
@@ -30,16 +31,16 @@ export type { PerformanceReport } from '@/lib/performance-monitoring-core-report
 export {
   createConfigManager,
   getDefaultConfig, PerformanceConfigManager, validatePerformanceConfig
-} from './performance-monitoring-core-config';
+} from '@/lib/performance-monitoring-core-config';
 export {
   createConflictChecker, PerformanceToolConflictChecker, quickConflictCheck
-} from './performance-monitoring-core-conflicts';
+} from '@/lib/performance-monitoring-core-conflicts';
 export {
   createMetricsManager, PerformanceMetricsManager
-} from './performance-monitoring-core-metrics';
+} from '@/lib/performance-monitoring-core-metrics';
 export {
   createReportGenerator, PerformanceReportGenerator
-} from './performance-monitoring-core-reports';
+} from '@/lib/performance-monitoring-core-reports';
 
 /**
  * 性能监控核心协调器类 - 向后兼容

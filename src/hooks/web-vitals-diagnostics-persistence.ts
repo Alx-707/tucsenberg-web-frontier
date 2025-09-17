@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { MAGIC_300000, DAYS_PER_WEEK, HOURS_PER_DAY, SECONDS_PER_MINUTE, COUNT_PAIR, COUNT_FIVE, COUNT_TEN } from '@/constants/magic-numbers';
+import { MAGIC_300000, DAYS_PER_WEEK, HOURS_PER_DAY, SECONDS_PER_MINUTE, COUNT_PAIR, COUNT_FIVE, COUNT_TEN  } from '@/constants';
 
 import { logger } from '@/lib/logger';
 import { MB } from '@/constants/app-constants';
@@ -7,7 +7,7 @@ import type {
   DiagnosticReport,
   WebVitalsDataPersistence,
   WebVitalsInitializationData,
-} from './web-vitals-diagnostics-types';
+} from '@/hooks/web-vitals-diagnostics-types';
 
 /**
  * Web Vitals 数据持久化相关功能

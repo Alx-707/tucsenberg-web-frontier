@@ -8,16 +8,18 @@
 'use client';
 
 import { COUNT_23, MAGIC_12, MAGIC_17, MAGIC_18, MAGIC_6, MAGIC_9, MAGIC_95, MAGIC_99 } from "@/constants/count";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { DEC_0_75, MAGIC_0_2, MAGIC_0_25, MAGIC_0_3, MAGIC_0_7, MAGIC_0_8 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { DAYS_PER_WEEK } from "@/constants/time";
 import { calculateStorageStats } from '@/lib/locale-storage-analytics-core';
+import { hasOwn, safeGet, safeGetWithDefault } from '@/lib/security/object-guards';
 import type { StorageStats } from '@/lib/locale-storage-types';
 import {
   AccessLogger,
   ErrorLogger,
   type AccessLogEntry,
-} from './locale-storage-analytics-events';
+} from '@/lib/locale-storage-analytics-events';
 
 // ==================== 使用模式分析 ====================
 
@@ -54,7 +56,7 @@ export function getUsagePatterns(): UsagePatterns {
   const hourlyUsage: Record<number, number> = {};
   for (const entry of accessLog) {
     const hour = new Date(entry.timestamp).getHours();
-    hourlyUsage[hour] = (hourlyUsage[hour] || ZERO) + ONE;
+    hourlyUsage[hour] = safeGetWithDefault(hourlyUsage, hour, ZERO) + ONE;
   }
 
   const peakUsageHours = Object.entries(hourlyUsage)
@@ -361,8 +363,8 @@ function calculateDailyOperations(
   for (const entry of accessLog) {
     const date = new Date(entry.timestamp);
     const dateStr = date.toISOString().split('T')[ZERO] || date.toISOString();
-    if (Object.prototype.hasOwnProperty.call(dailyOps, dateStr)) {
-      dailyOps[dateStr] = (dailyOps[dateStr] || ZERO) + ONE;
+    if (hasOwn(dailyOps, dateStr)) {
+      dailyOps[dateStr] = safeGetWithDefault(dailyOps, dateStr, ZERO) + ONE;
     }
   }
 

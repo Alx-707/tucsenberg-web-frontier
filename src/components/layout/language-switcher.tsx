@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LOCALES_CONFIG } from '@/config/paths';
 import { UI_TIMINGS } from '@/constants/i18n-constants';
-import { COUNT_PAIR } from "@/constants/magic-numbers";
+import { COUNT_PAIR } from "@/constants";
 import { Link, usePathname } from '@/i18n/routing';
 import { NAVIGATION_ARIA } from '@/lib/navigation';
 import { cn } from '@/lib/utils';
@@ -57,49 +57,57 @@ const useLanguageSwitch = () => {
   const [switchingTo, setSwitchingTo] = useState<string | null>(null);
   const [switchSuccess, setSwitchSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const timersRef = useRef<{
-    transition?: ReturnType<typeof setTimeout>;
-    success?: ReturnType<typeof setTimeout>;
-  }>({});
 
-  // Cleanup timers on unmount
-  useEffect(() => {
-    const timers = timersRef.current;
-    return () => {
-      if (timers.transition) {
-        clearTimeout(timers.transition);
-      }
-      if (timers.success) {
-        clearTimeout(timers.success);
-      }
-    };
+  type TimeoutHandle = ReturnType<typeof setTimeout>;
+
+  const transitionTimeoutRef = useRef<TimeoutHandle | null>(null);
+  const successTimeoutRef = useRef<TimeoutHandle | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (transitionTimeoutRef.current !== null) {
+      clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
+    if (successTimeoutRef.current !== null) {
+      clearTimeout(successTimeoutRef.current);
+      successTimeoutRef.current = null;
+    }
   }, []);
 
-  const handleLanguageSwitch = (newLocale: string) => {
-    // Clear any existing timers
-    if (timersRef.current.transition) {
-      clearTimeout(timersRef.current.transition);
-    }
-    if (timersRef.current.success) {
-      clearTimeout(timersRef.current.success);
-    }
-
-    setSwitchingTo(newLocale);
+  const resetSuccessIndicator = useCallback(() => {
     setSwitchSuccess(false);
+    successTimeoutRef.current = null;
+  }, []);
 
-    startTransition(() => {
-      // The transition will be handled by the Link component
-      timersRef.current.transition = setTimeout(() => {
-        setSwitchingTo(null);
-        setSwitchSuccess(true);
+  const scheduleSuccessReset = useCallback(() => {
+    successTimeoutRef.current = setTimeout(
+      resetSuccessIndicator,
+      SUCCESS_INDICATOR_TIMEOUT,
+    );
+  }, [resetSuccessIndicator]);
 
-        // Hide success indicator after timeout
-        timersRef.current.success = setTimeout(() => {
-          setSwitchSuccess(false);
-        }, SUCCESS_INDICATOR_TIMEOUT);
-      }, TRANSITION_TIMEOUT);
-    });
-  };
+  const finalizeSwitch = useCallback(() => {
+    setSwitchingTo(null);
+    setSwitchSuccess(true);
+    scheduleSuccessReset();
+    transitionTimeoutRef.current = null;
+  }, [scheduleSuccessReset]);
+
+  const scheduleTransition = useCallback(() => {
+    transitionTimeoutRef.current = setTimeout(finalizeSwitch, TRANSITION_TIMEOUT);
+  }, [finalizeSwitch]);
+
+  const handleLanguageSwitch = useCallback(
+    (newLocale: string) => {
+      clearTimers();
+      setSwitchingTo(newLocale);
+      setSwitchSuccess(false);
+      startTransition(scheduleTransition);
+    },
+    [clearTimers, scheduleTransition],
+  );
+
+  useEffect(() => clearTimers, [clearTimers]);
 
   return {
     switchingTo,

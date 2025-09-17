@@ -28,7 +28,7 @@ interface SemanticAnalysis {
  */
 function generateMeaningfulConstantName(numStr: string, analysis: any): string {
   const num = parseFloat(numStr);
-  const category = analysis.category;
+  const {category} = analysis;
   
   // 根据分类生成更有意义的常量名
   switch (category) {

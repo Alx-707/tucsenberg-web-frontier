@@ -1,7 +1,8 @@
 'use client';
 
 import { MAGIC_80 } from "@/constants/count";
-import { FIVE_SECONDS_MS, ONE, TEN_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
+import { FIVE_SECONDS_MS, ONE, TEN_SECONDS_MS, ZERO } from '@/constants';
+
 import { useI18nPerformance } from '@/hooks/use-enhanced-translations';
 import {
   evaluatePerformance,
@@ -17,22 +18,12 @@ interface PerformanceMetrics {
 }
 
 export function I18nPerformanceDashboard() {
-  const { registerTool, unregisterTool, getClasses } = {
-    registerTool: (_toolId: string) => {},
-    unregisterTool: (_toolId: string) => {},
-    getClasses: () => '',
-  };
+  const getClasses = () => '';
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [isVisible, setIsVisible] = useState(
     process.env.NODE_ENV === 'development',
   );
   const { getMetrics, resetMetrics } = useI18nPerformance();
-
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool('i18nPerformanceDashboard');
-    return () => unregisterTool('i18nPerformanceDashboard');
-  }, [registerTool, unregisterTool]);
 
   useEffect(() => {
     const updateMetrics = () => {
@@ -183,20 +174,10 @@ function getGradeColor(grade: string): string {
  * 只显示关键指标，适合生产环境
  */
 export function I18nPerformanceIndicator() {
-  const { registerTool, unregisterTool, getClasses } = {
-    registerTool: (_toolId: string) => {},
-    unregisterTool: (_toolId: string) => {},
-    getClasses: () => '',
-  };
+  const getClasses = () => '';
   const [metrics, setMetrics] = useState<PerformanceMetrics | null>(null);
   const [showDetails, _setShowDetails] = useState(false);
   const { getMetrics } = useI18nPerformance();
-
-  // 注册工具到布局管理器
-  useEffect(() => {
-    registerTool('i18nPerformanceIndicator');
-    return () => unregisterTool('i18nPerformanceIndicator');
-  }, [registerTool, unregisterTool]);
 
   useEffect(() => {
     const updateMetrics = () => {

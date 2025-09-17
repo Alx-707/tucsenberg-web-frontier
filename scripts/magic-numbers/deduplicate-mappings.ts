@@ -172,7 +172,7 @@ async function main() {
     
     // 生成报告
     const report = deduplicator.generateReport();
-    console.log('\n' + report);
+    console.log(`\n${  report}`);
     
     // 保存报告
     const reportPath = path.resolve(__dirname, 'mapping-dedup-report.md');

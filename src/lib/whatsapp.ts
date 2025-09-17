@@ -1,5 +1,6 @@
 import { env } from '@/../env.mjs';
-import { COUNT_TEN, ZERO } from "@/constants/magic-numbers";
+import { COUNT_TEN, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import WhatsApp from 'whatsapp';
 

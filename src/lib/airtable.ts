@@ -10,7 +10,7 @@ export type {
   AirtableQueryOptions,
   AirtableStatistics,
   ContactStatus,
-} from './airtable/types';
+} from '@/lib/airtable/types';
 
 // 重新导出服务类
 export { AirtableService } from '@/lib/airtable/service';

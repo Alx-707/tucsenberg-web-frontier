@@ -5,8 +5,9 @@
  * 负责性能指标的记录、存储、清理和实时分析功能
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, MAGIC_1_1, MAGIC_36, MAGIC_9, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { MB } from '@/constants/units';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, MAGIC_36, MAGIC_9, MAGIC_1_1, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import type {
   BundlePerformanceData,
@@ -16,7 +17,7 @@ import type {
   PerformanceMetrics,
   PerformanceMetricSource,
   PerformanceMetricType,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 指标管理器

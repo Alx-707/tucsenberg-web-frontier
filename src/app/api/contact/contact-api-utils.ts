@@ -3,8 +3,9 @@
  * Contact form API utility functions
  */
 
-import { COUNT_FIVE, COUNT_PAIR, MAGIC_36, MAGIC_9, ONE, ZERO } from "@/constants/magic-numbers";
 import { MINUTE_MS } from "@/constants/time";
+import { ONE, ZERO, COUNT_FIVE, MAGIC_36, COUNT_PAIR, MAGIC_9 } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import { NextRequest } from 'next/server';
 
@@ -105,7 +106,8 @@ export function getClientIP(request: NextRequest): string {
   const realIP = request.headers.get('x-real-ip');
 
   if (forwarded) {
-    return forwarded.split(',')[ZERO]?.trim() || 'unknown';
+    const first = forwarded.split(',').shift()?.trim();
+    return first || 'unknown';
   }
 
   if (realIP) {
@@ -164,18 +166,19 @@ export function validateEnvironmentConfig(): {
   isValid: boolean;
   missingVars: string[];
 } {
-  const requiredVars = [
-    'TURNSTILE_SECRET_KEY',
-    'RESEND_API_KEY',
-    'AIRTABLE_API_KEY',
-    'AIRTABLE_BASE_ID',
-  ];
+  // 使用受限白名单映射，避免对 process.env 的动态键访问
+  const envMap = {
+    TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
+    AIRTABLE_BASE_ID: process.env.AIRTABLE_BASE_ID,
+  };
 
-  const missingVars = requiredVars.filter((varName) => {
-    // 安全的环境变量访问，避免对象注入
-    const envValue = process.env[varName as keyof typeof process.env];
-    return !envValue;
-  });
+  const missingVars: string[] = [];
+  if (!envMap.TURNSTILE_SECRET_KEY) missingVars.push('TURNSTILE_SECRET_KEY');
+  if (!envMap.RESEND_API_KEY) missingVars.push('RESEND_API_KEY');
+  if (!envMap.AIRTABLE_API_KEY) missingVars.push('AIRTABLE_API_KEY');
+  if (!envMap.AIRTABLE_BASE_ID) missingVars.push('AIRTABLE_BASE_ID');
 
   return {
     isValid: missingVars.length === ZERO,

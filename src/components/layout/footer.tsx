@@ -8,8 +8,9 @@
 'use client';
 
 import { ExternalLinkIcon, SocialIconLink } from '@/components/ui/social-icons';
+import { ZERO  } from '@/constants';
+
 import { COUNT_14 } from "@/constants/count";
-import { ZERO } from "@/constants/magic-numbers";
 import {
   FOOTER_CONFIG,
   getCopyrightText,

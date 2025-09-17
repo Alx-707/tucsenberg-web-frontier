@@ -4,18 +4,19 @@
  */
 
 import type { Locale } from '@/types/i18n';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_0_5, MAGIC_0_7, MAGIC_0_8, MAGIC_0_9, MAGIC_9, MAGIC_17, MAGIC_18, MAGIC_22, ZERO } from '@/constants';
+
 import type {
   IPreloader,
   PreloadOptions,
   PreloadStrategy,
-} from '../i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 // 导入基础策略以便复用
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_0_5, MAGIC_0_7, MAGIC_0_8, MAGIC_0_9, MAGIC_17, MAGIC_18, MAGIC_22, MAGIC_9, ZERO } from "@/constants/magic-numbers";
 import {
   immediateStrategy,
   lazyStrategy,
   progressiveStrategy,
-} from './basic-strategies';
+} from '@/lib/i18n-preloader-strategies/basic-strategies';
 
 /**
  * 批量预加载策略

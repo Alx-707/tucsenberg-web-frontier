@@ -14,11 +14,11 @@ import {
 import {
   DemoComponentsContainer,
   PerformanceTestComponent,
-} from './react-scan-components';
+} from '@/app/[locale]/react-scan-demo/react-scan-components';
 import {
   ReactScanControlPanel,
   ReactScanInstructions,
-} from './react-scan-stats';
+} from '@/app/[locale]/react-scan-demo/react-scan-stats';
 
 /**
  * React Scan 演示客户端组件

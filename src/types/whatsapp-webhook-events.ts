@@ -5,8 +5,9 @@
  * 提供WhatsApp webhook事件的类型定义和处理接口
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_QUAD, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_WEEK, HOURS_PER_DAY, MAGIC_6, MAGIC_8, MAGIC_9, ONE, SECONDS_PER_MINUTE } from "@/constants/magic-numbers";
 import type { WhatsAppContact } from '@/types/whatsapp-base-types';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_QUAD, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_WEEK, HOURS_PER_DAY, MAGIC_6, MAGIC_8, MAGIC_9, ONE, SECONDS_PER_MINUTE } from '@/constants';
+
 import type { IncomingWhatsAppMessage } from '@/types/whatsapp-webhook-messages';
 import type {
   MessageStatusUpdate,

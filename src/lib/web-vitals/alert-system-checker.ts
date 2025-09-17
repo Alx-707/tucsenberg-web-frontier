@@ -3,7 +3,7 @@
  * Performance Alert System - Metrics Checker
  */
 
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import {
   extractCoreMetrics,
   formatMetricValue,
@@ -11,12 +11,12 @@ import {
   getDefaultDevice,
   getDefaultPage,
   getDefaultResourceTiming,
-} from './alert-helpers';
+} from '@/lib/web-vitals/alert-helpers';
 import type {
   DetailedWebVitals,
   PerformanceAlertConfig,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 /**
  * 预警信息接口

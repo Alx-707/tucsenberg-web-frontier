@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import type { Locale } from '@/lib/seo-metadata';
 import {
   createPageSEOConfig,
   generateLocalizedMetadata,
+  type Locale,
 } from '@/lib/seo-metadata';
 import { routing } from '@/i18n/routing';
 

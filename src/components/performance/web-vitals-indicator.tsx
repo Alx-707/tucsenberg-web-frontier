@@ -101,21 +101,8 @@ function useWebVitalsMonitoring() {
  * 生产环境静默收集数据并定期发送报告。
  */
 export function WebVitalsIndicator() {
-  const { registerTool, unregisterTool, getClasses } = {
-    registerTool: (_toolId: string) => {},
-    unregisterTool: (_toolId: string) => {},
-    getClasses: () => '',
-  };
+  const getClasses = () => '';
   const { metrics, isVisible } = useWebVitalsMonitoring();
-
-  // 注册工具到布局管理器
-  useEffect(() => {
-    if (isVisible) {
-      registerTool('webVitalsIndicator');
-      return () => unregisterTool('webVitalsIndicator');
-    }
-    return undefined; // 明确返回 undefined 当不需要清理时
-  }, [isVisible, registerTool, unregisterTool]);
 
   // 生产环境不渲染任何UI
   if (!isVisible || !metrics) {

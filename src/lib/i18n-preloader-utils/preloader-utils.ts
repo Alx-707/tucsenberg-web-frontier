@@ -3,15 +3,16 @@
  * Preloader Utility Functions
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, FIVE_SECONDS_MS, HOURS_PER_DAY, MAGIC_0_1, MAGIC_0_2, MAGIC_0_8, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import { MINUTE_MS } from "@/constants/time";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, FIVE_SECONDS_MS, HOURS_PER_DAY, MAGIC_0_1, MAGIC_0_2, MAGIC_0_8, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from '@/constants';
+
 import type { Locale, Messages } from '@/types/i18n';
 import type {
   IPreloader,
   PreloaderConfig,
   PreloaderMetrics,
   PreloadResult,
-} from '../i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 
 /**
  * 预加载器工具函数

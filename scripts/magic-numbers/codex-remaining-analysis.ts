@@ -214,7 +214,7 @@ function categorizeRemainingNumber(value: string, files: string[]): RemainingNum
         reason: '尺寸数字，单文件使用',
         action: '在使用文件中定义局部常量'
       };
-    } else {
+    } 
       return {
         value,
         files,
@@ -222,7 +222,7 @@ function categorizeRemainingNumber(value: string, files: string[]): RemainingNum
         reason: '尺寸数字，多文件使用',
         action: `使用 pixels(${num}) 或相关单位函数替代`
       };
-    }
+    
   }
 
   // 8. 坐标和精确小数 - 保持魔法数字

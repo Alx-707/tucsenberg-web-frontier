@@ -5,7 +5,7 @@ import { useTheme } from 'next-themes';
 import {
   executeBasicThemeTransition,
   executeCircularThemeTransition,
-} from './theme-transition-core';
+} from '@/hooks/theme-transition-core';
 import type { EnhancedThemeHook } from '@/hooks/theme-transition-types';
 import { createDebounce, DEFAULT_CONFIG } from '@/hooks/theme-transition-utils';
 
@@ -98,4 +98,4 @@ export type {
   ThemeTransitionConfig,
   ViewTransition,
   ViewTransitionAPI,
-} from './theme-transition-types';
+} from '@/hooks/theme-transition-types';

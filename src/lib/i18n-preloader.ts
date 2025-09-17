@@ -8,7 +8,7 @@ import {
   PreloadStrategies,
   PreloadStrategyManager,
   StrategyUtils,
-} from './i18n-preloader-strategies';
+} from '@/lib/i18n-preloader-strategies';
 import type {
   IPreloader,
   PreloaderConfig,
@@ -21,7 +21,7 @@ import type {
   PreloadState,
   PreloadStats,
   PreloadStrategy,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 import {
   cleanupPreloaders,
   createTranslationPreloader,
@@ -34,7 +34,7 @@ import {
   preloadLocale,
   setupPreloader,
   smartPreload,
-} from './i18n-preloader-utils';
+} from '@/lib/i18n-preloader-utils';
 
 /**
  * 翻译预加载器 - 主入口
@@ -52,14 +52,14 @@ export type {
   PreloaderFactoryConfig,
   IPreloader,
   PreloadConfigKey,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 export {
   PRELOADER_CONSTANTS,
   PRELOADER_EVENTS,
   isPreloadResult,
   isPreloadState,
   isPreloaderError,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 export type {
   PreloaderStateManager,
   PreloaderCache,
@@ -73,7 +73,7 @@ export type {
   PreloaderTimeoutError,
   PreloaderNetworkError,
   PreloaderCacheError,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 export type {
   PreloadState,
   PreloadStats,
@@ -85,7 +85,7 @@ export type {
   PreloadEventMap,
   PreloadStateKey,
   PreloadStatsKey,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 export { TranslationPreloader as CorePreloader } from '@/lib/i18n-preloader-core';
 export * from '@/lib/i18n-preloader-strategies';
 export * from '@/lib/i18n-preloader-utils';

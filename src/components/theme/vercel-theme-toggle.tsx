@@ -2,4 +2,4 @@
 export {
   VercelThemeToggle,
   type VercelThemeToggleProps,
-} from './vercel-theme-toggle-simple';
+} from '@/components/theme/vercel-theme-toggle-simple';

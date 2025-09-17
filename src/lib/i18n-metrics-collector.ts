@@ -5,8 +5,9 @@
  */
 
 import { COUNT_35, MAGIC_20, MAGIC_40, MAGIC_70, MAGIC_80, MAGIC_95 } from "@/constants/count";
+import { ANGLE_90_DEG, COUNT_PAIR, COUNT_TEN, DAYS_PER_MONTH, HTTP_OK, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, PERCENTAGE_QUARTER, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { MAGIC_0_1, MAGIC_0_5, MAGIC_0_9, MAGIC_0_95, MAGIC_0_99 } from "@/constants/decimal";
-import { ANGLE_90_DEG, COUNT_PAIR, COUNT_TEN, DAYS_PER_MONTH, HTTP_OK, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, PERCENTAGE_QUARTER, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { MINUTE_MS } from "@/constants/time";
 import { logger } from '@/lib/logger';
 import type { I18nMetrics, Locale } from '@/types/i18n';
@@ -14,7 +15,7 @@ import type {
   CacheEvent,
   CacheEventListener,
   MetricsCollector,
-} from './i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 
 // 性能指标收集器实现
 export class I18nMetricsCollector implements MetricsCollector {

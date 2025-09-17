@@ -4,13 +4,13 @@
  */
 
 import { MONITORING_CONFIG } from '@/constants/i18n-constants';
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import { logger } from '@/lib/logger';
 import type {
   ErrorLevel,
   MonitoringConfig,
   MonitoringEvent,
-} from './i18n-monitoring-types';
+} from '@/lib/i18n-monitoring-types';
 
 // 事件收集器
 export class EventCollector {

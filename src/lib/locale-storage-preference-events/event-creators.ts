@@ -9,7 +9,7 @@ import type { Locale } from '@/types/i18n';
 import type {
   StorageEvent,
   UserLocalePreference,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 事件创建工具

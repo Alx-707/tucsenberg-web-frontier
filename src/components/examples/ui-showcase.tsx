@@ -8,7 +8,7 @@ import {
   ProgressBarDemoSection,
   ToastDemoSection,
   TypographyDemoSection,
-} from './ui-showcase-sections';
+} from '@/components/examples/ui-showcase-sections';
 
 /**
  * UI Showcase component demonstrating the new UI enhancement components

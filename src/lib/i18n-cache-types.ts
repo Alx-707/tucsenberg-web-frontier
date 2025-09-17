@@ -4,7 +4,7 @@ import type {
   AdvancedCacheConfig,
   CacheClusterConfig,
   CacheShardingConfig,
-} from './i18n-cache-types-advanced';
+} from '@/lib/i18n-cache-types-advanced';
 import type {
   CacheConfig,
   CacheEvent,
@@ -13,14 +13,14 @@ import type {
   CacheItem,
   CacheStats,
   CacheStrategy,
-} from './i18n-cache-types-base';
+} from '@/lib/i18n-cache-types-base';
 import type {
   CacheManager,
   CacheStorage,
   MetricsCollector,
   PersistentStorage,
   Preloader,
-} from './i18n-cache-types-interfaces';
+} from '@/lib/i18n-cache-types-interfaces';
 import {
   CacheDebugUtils,
   CacheEventUtils,
@@ -30,7 +30,7 @@ import {
   CacheStatsUtils,
   CacheTimeUtils,
   CacheValidationUtils,
-} from './i18n-cache-types-utils';
+} from '@/lib/i18n-cache-types-utils';
 
 /**
  * 国际化缓存基础类型定义 - 主入口
@@ -57,7 +57,7 @@ export type {
   CacheValidationError,
   CacheStorageError,
   CacheSerializationError,
-} from './i18n-cache-types-base';
+} from '@/lib/i18n-cache-types-base';
 
 // 常量和函数导出
 export {
@@ -70,7 +70,7 @@ export {
   createCacheKey,
   parseCacheKey,
   validateCacheConfig,
-} from './i18n-cache-types-base';
+} from '@/lib/i18n-cache-types-base';
 
 export type {
   CacheStorage,
@@ -98,7 +98,7 @@ export type {
   CachePlugin,
   CacheLifecycleHooks,
   CacheStatsCollector,
-} from './i18n-cache-types-interfaces';
+} from '@/lib/i18n-cache-types-interfaces';
 
 export type {
   AdvancedCacheConfig,
@@ -111,12 +111,12 @@ export type {
   CacheQualityConfig,
   CacheExtensionConfig,
   CacheEnvironmentConfig,
-} from './i18n-cache-types-advanced';
+} from '@/lib/i18n-cache-types-advanced';
 
 export {
   DEFAULT_ADVANCED_CACHE_CONFIG,
   CacheConfigFactory,
-} from './i18n-cache-types-advanced';
+} from '@/lib/i18n-cache-types-advanced';
 
 export {
   CacheKeyUtils,
@@ -127,7 +127,7 @@ export {
   CacheSerializationUtils,
   CacheEventUtils,
   CacheDebugUtils,
-} from './i18n-cache-types-utils';
+} from '@/lib/i18n-cache-types-utils';
 
 // ==================== 向后兼容的类型别名 ====================
 

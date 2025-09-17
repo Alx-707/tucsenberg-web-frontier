@@ -8,13 +8,14 @@
 'use client';
 
 import { MAGIC_6 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { DAYS_PER_WEEK } from "@/constants/time";
 import { logger } from '@/lib/logger';
 import type {
   StorageEvent,
   StorageEventListener,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 事件管理 ====================
 

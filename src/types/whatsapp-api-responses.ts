@@ -1,4 +1,4 @@
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 
 /**
  * WhatsApp API 响应类型定义

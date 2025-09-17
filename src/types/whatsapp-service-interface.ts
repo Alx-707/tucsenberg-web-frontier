@@ -5,8 +5,9 @@
  * utility types, and common type aliases for the WhatsApp service.
  */
 
-import { PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import type { WhatsAppError } from '@/types/whatsapp-service-errors';
+import { PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type {
   LogLevel,
   MessageStatus,

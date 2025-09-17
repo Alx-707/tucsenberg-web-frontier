@@ -4,8 +4,9 @@
  * 提供浏览器检测、地理位置检测、时区检测等基础检测方法
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/locale-constants';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { Locale } from '@/types/i18n';
 import {
   COUNTRY_CODE_TO_LOCALE_MAP,
@@ -13,7 +14,7 @@ import {
   GEO_API_CONFIG,
   LANGUAGE_CODE_TO_LOCALE_MAP,
   TIMEZONE_TO_LOCALE_MAP,
-} from './locale-detector-constants';
+} from '@/lib/locale-detector-constants';
 
 /**
  * 基础语言检测器

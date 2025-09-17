@@ -1,7 +1,8 @@
 import { COUNT_4 } from "@/constants/count";
-import { BREAKPOINT_FULL_HD } from "@/constants/magic-numbers";
+import { BREAKPOINT_FULL_HD  } from '@/constants';
+
 import { TEST_APP_CONSTANTS, WEB_VITALS_CONSTANTS } from "@/constants/test-constants";
-const STANDARD_HEIGHT = TEST_APP_CONSTANTS.STANDARD_HEIGHT;
+const {STANDARD_HEIGHT} = TEST_APP_CONSTANTS;
 
 /**
  * Web Vitals 性能阈值常量

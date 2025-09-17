@@ -12,7 +12,7 @@ import type {
   StorageEvent,
   StorageEventListener,
   UserLocalePreference,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 import { recordPreferenceHistory } from '@/lib/locale-storage-preference-events/history-manager';
 
 /**

@@ -1,4 +1,4 @@
-import { COUNT_FIVE, MAGIC_16, ZERO } from "@/constants/magic-numbers";
+import { COUNT_FIVE, MAGIC_16, ZERO } from '@/constants';
 
 /**
  * 语言存储系统存储工具函数

@@ -172,10 +172,9 @@ export function PerformanceTestComponent({
     // 测试低效组件
     const inefficientStart = performance.now();
     for (let i = 0; i < iterations; i++) {
-      // 模拟低效组件的计算
-      let result = 0;
+      // 模拟低效组件的计算（丢弃中间结果以避免未使用变量）
       for (let j = 0; j < 1000; j++) {
-        result += Math.random();
+        Math.random();
       }
     }
     const inefficientTime = performance.now() - inefficientStart;
@@ -187,8 +186,8 @@ export function PerformanceTestComponent({
       cachedResult += Math.random();
     }
     for (let i = 0; i < iterations; i++) {
-      // 模拟使用缓存的结果
-      const result = cachedResult;
+      // 模拟使用缓存的结果（显式丢弃）
+      void cachedResult;
     }
     const optimizedTime = performance.now() - optimizedStart;
 

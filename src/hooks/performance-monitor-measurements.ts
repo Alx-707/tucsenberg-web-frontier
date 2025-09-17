@@ -1,5 +1,6 @@
-import { FIVE_SECONDS_MS, MAGIC_10000, ONE, ZERO } from "@/constants/magic-numbers";
 import { checkMemoryUsageAlert } from '@/hooks/performance-monitor-utils';
+import { FIVE_SECONDS_MS, MAGIC_10000, ONE, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import React from 'react';
 import type {
@@ -7,7 +8,7 @@ import type {
   PerformanceAlertThresholds,
   PerformanceMeasurements,
   PerformanceMetrics,
-} from './performance-monitor-types';
+} from '@/hooks/performance-monitor-types';
 
 /**
  * 创建性能测量函数的辅助函数

@@ -5,14 +5,14 @@ import type {
   ThemeTransitionConfig,
   ViewTransition,
   ViewTransitionAPI,
-} from './theme-transition-types';
+} from '@/hooks/theme-transition-types';
 import {
   calculateEndRadius,
   DEFAULT_CONFIG,
   getClickCoordinates,
   recordThemeTransition,
   supportsViewTransitions,
-} from './theme-transition-utils';
+} from '@/hooks/theme-transition-utils';
 
 /**
  * 执行主题切换的核心逻辑

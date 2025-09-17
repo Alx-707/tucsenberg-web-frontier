@@ -17,7 +17,7 @@ import {
   optimizeStoragePerformance,
   PreferenceCacheManager,
   syncPreferenceData,
-} from './locale-storage-preference-cache';
+} from '@/lib/locale-storage-preference-cache';
 import {
   clearUserPreference,
   comparePreferences,
@@ -29,7 +29,7 @@ import {
   saveUserPreference,
   updatePreferenceConfidence,
   validatePreferenceData,
-} from './locale-storage-preference-core';
+} from '@/lib/locale-storage-preference-core';
 import {
   cleanupEventSystem,
   clearPreferenceHistory,
@@ -45,7 +45,7 @@ import {
   PreferenceEventManager,
   recordPreferenceHistory,
   setupDefaultListeners,
-} from './locale-storage-preference-events';
+} from '@/lib/locale-storage-preference-events';
 import {
   clearUserOverride,
   exportOverrideData,
@@ -55,12 +55,12 @@ import {
   hasUserOverride,
   importOverrideData,
   setUserOverride,
-} from './locale-storage-preference-override';
+} from '@/lib/locale-storage-preference-override';
 import type {
   StorageEventListener,
   StorageOperationResult,
   UserLocalePreference,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 export {
   validatePreferenceData,
@@ -74,7 +74,7 @@ export {
   comparePreferences,
   getPreferenceSummary,
   clearUserPreference,
-} from './locale-storage-preference-core';
+} from '@/lib/locale-storage-preference-core';
 export {
   setUserOverride,
   getUserOverride,
@@ -86,7 +86,7 @@ export {
   clearOverrideHistory,
   exportOverrideData,
   importOverrideData,
-} from './locale-storage-preference-override';
+} from '@/lib/locale-storage-preference-override';
 export {
   PreferenceCacheManager,
   syncPreferenceData,
@@ -94,7 +94,7 @@ export {
   fixDataInconsistency,
   getStorageUsage,
   optimizeStoragePerformance,
-} from './locale-storage-preference-cache';
+} from '@/lib/locale-storage-preference-cache';
 export {
   PreferenceEventManager,
   createPreferenceSavedEvent,
@@ -112,7 +112,7 @@ export {
   setupDefaultListeners,
   cleanupEventSystem,
   getEventSystemStatus,
-} from './locale-storage-preference-events';
+} from '@/lib/locale-storage-preference-events';
 
 /**
  * 用户偏好管理器 - 向后兼容类

@@ -3,8 +3,9 @@
  * 提供翻译质量评估、AI翻译验证和质量基准对比功能
  */
 import { MAGIC_12, MAGIC_15, MAGIC_8 } from "@/constants/count";
+import { COUNT_FIVE, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import { DEC_0_05, MAGIC_0_1, MAGIC_0_2, MAGIC_0_8 } from "@/constants/decimal";
-import { COUNT_FIVE, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { TranslationBenchmarks } from '@/lib/translation-benchmarks';
 import { TranslationManager } from '@/lib/translation-manager';
 import { TranslationValidators } from '@/lib/translation-validators';
@@ -23,7 +24,7 @@ export type {
   AITranslationService, BatchTranslationInput, QualityBenchmark,
   QualityComparison,
   ValidationResult
-} from './translation-quality-types';
+} from '@/lib/translation-quality-types';
 
 /**
  * 翻译质量分析器

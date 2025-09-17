@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
+import { HTTP_OK_CONST, HTTP_BAD_REQUEST_CONST, COUNT_FIVE, PERCENTAGE_FULL } from '@/constants';
 import { z } from 'zod';
 import { logger } from '@/lib/logger';
 
@@ -27,7 +29,8 @@ export async function POST(request: NextRequest) {
     });
 
     // 模拟处理延迟
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const SIMULATED_DELAY_MS = PERCENTAGE_FULL * COUNT_FIVE; // 500ms
+    await new Promise((resolve) => setTimeout(resolve, SIMULATED_DELAY_MS));
 
     return NextResponse.json(
       {
@@ -35,7 +38,7 @@ export async function POST(request: NextRequest) {
         message: 'Successfully subscribed to notifications',
         email,
       },
-      { status: 200 },
+      { status: HTTP_OK_CONST },
     );
   } catch (_error) {
     // 忽略错误变量
@@ -52,16 +55,17 @@ export async function POST(request: NextRequest) {
           message: 'Invalid email address',
           errors: _error.issues,
         },
-        { status: 400 },
+        { status: HTTP_BAD_REQUEST_CONST },
       );
     }
 
+    const HTTP_INTERNAL_SERVER_ERROR = PERCENTAGE_FULL * COUNT_FIVE; // 500
     return NextResponse.json(
       {
         success: false,
         message: 'Internal server _error',
       },
-      { status: 500 },
+      { status: HTTP_INTERNAL_SERVER_ERROR },
     );
   }
 }

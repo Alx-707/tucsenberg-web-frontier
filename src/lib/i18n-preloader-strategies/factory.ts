@@ -10,7 +10,7 @@ import {
   memoryAwareStrategy,
   networkAwareStrategy,
   timeAwareStrategy,
-} from './advanced-strategies';
+} from '@/lib/i18n-preloader-strategies/advanced-strategies';
 // 导入所有策略
 import {
   immediateStrategy,
@@ -18,7 +18,7 @@ import {
   priorityStrategy,
   progressiveStrategy,
   smartStrategy,
-} from './basic-strategies';
+} from '@/lib/i18n-preloader-strategies/basic-strategies';
 import { strategyConfigs } from '@/lib/i18n-preloader-strategies/configs';
 import { PreloadStrategyManager } from '@/lib/i18n-preloader-strategies/manager';
 

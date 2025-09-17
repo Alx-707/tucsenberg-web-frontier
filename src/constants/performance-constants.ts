@@ -1,3 +1,6 @@
+
+import { SECONDS_PER_MINUTE, MINUTES_PER_HOUR } from '@/constants';
+
 /**
  * 性能监控常量定义
  * 集中管理Web Vitals、性能阈值、监控间隔等相关的魔法数字

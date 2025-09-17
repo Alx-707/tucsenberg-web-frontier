@@ -178,7 +178,7 @@ async function main() {
     
     // 生成报告
     const report = fixer.generateReport();
-    console.log('\n' + report);
+    console.log(`\n${  report}`);
     
     // 保存报告
     const reportPath = path.resolve(__dirname, 'mapping-fix-report.md');

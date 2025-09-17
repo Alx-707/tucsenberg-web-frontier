@@ -18,7 +18,7 @@ import type {
   ImportData,
   MaintenanceOptions,
   StorageOperationResult,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 export { LocaleCleanupManager } from '@/lib/locale-storage-maintenance-cleanup';
 export { LocaleValidationManager } from '@/lib/locale-storage-maintenance-validation';

@@ -1,8 +1,9 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ONE  } from '@/constants';
+
 import { MAGIC_0_2 } from "@/constants/decimal";
-import { ONE } from "@/constants/magic-numbers";
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { PROJECT_STATS } from '@/lib/site-config';
 import { useTranslations } from 'next-intl';
@@ -14,7 +15,7 @@ import {
   InteractiveShowcase,
   ResponsiveShowcase,
   ThemeShowcase,
-} from './showcase';
+} from '@/components/home/showcase';
 
 export function ComponentShowcase() {
   const t = useTranslations('home.showcase');

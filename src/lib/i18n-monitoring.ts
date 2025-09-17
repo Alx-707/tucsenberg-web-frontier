@@ -13,7 +13,7 @@ export type {
   PerformanceThresholds,
   QualityThresholds,
   PerformanceData,
-} from './i18n-monitoring-types';
+} from '@/lib/i18n-monitoring-types';
 
 export { ErrorLevel, MonitoringEventType } from '@/lib/i18n-monitoring-types';
 

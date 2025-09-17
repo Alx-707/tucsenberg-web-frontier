@@ -3,14 +3,15 @@
  * Theme analytics utility functions
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import * as Sentry from '@sentry/nextjs';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type {
   ThemePerformanceMetrics,
   ThemePerformanceSummary,
   ThemeSwitchPattern,
   ThemeUsageStats,
-} from './theme-analytics-types';
+} from '@/lib/theme-analytics-types';
 
 /**
  * 主题分析工具类

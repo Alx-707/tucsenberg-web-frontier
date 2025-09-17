@@ -3,8 +3,9 @@
  * WhatsApp Webhook Utility Class
  */
 
-import { MAGIC_0_95, MAGIC_0_99, ONE, ZERO } from "@/constants/magic-numbers";
 import type { WebhookEntry, WebhookPayload } from '@/types/whatsapp-webhook-base';
+import { MAGIC_0_95, MAGIC_0_99, ONE, ZERO } from '@/constants';
+
 import type { IncomingWhatsAppMessage } from '@/types/whatsapp-webhook-messages';
 import type {
   EventFilter,

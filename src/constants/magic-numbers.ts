@@ -1,3 +1,5 @@
+// 移除自引入，避免循环依赖
+
 /**
  * CODEX分层治理：魔法数字常量库 - 叶子常量聚合模式
  *
@@ -20,11 +22,8 @@
 // 🔄 叶子常量聚合 - 仅聚合无依赖的基础常量模块
 // ============================================================================
 
-// 基础领域常量文件 - 无循环依赖
-export * from './time';
-export * from './hex';
-export * from './count';
-export * from './decimal';
+// 移除re-export语句，避免循环依赖
+// 各常量文件应直接导入，不通过此文件聚合
 
 // ============================================================================
 // 🔴 核心业务常量 - 保留在此文件的高频核心常量
@@ -69,11 +68,8 @@ export const ANGLE_360_DEG = 360;
  * 常量使用方式：
  *
  * 1. 统一导入入口：
- *    import { MAGIC_36, DAYS_PER_WEEK, HEX_BYTE_MAX } from '@/constants/magic-numbers';
- *
+ *    *
  * 2. 按领域导入（可选）：
- *    import { DAYS_PER_WEEK } from '@/constants/time';
- *    import { HEX_BYTE_MAX } from '@/constants/hex';
  *
  * 3. 时间相关 → 优先使用领域常量或单位工具库
  *    import { seconds, minutes } from '@/lib/units';

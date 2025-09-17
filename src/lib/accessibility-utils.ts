@@ -4,15 +4,16 @@
  */
 
 import { OPACITY_CONSTANTS } from '@/constants/app-constants';
+import { COUNT_TRIPLE, ONE, ZERO } from '@/constants';
+
 import { MAGIC_6 } from "@/constants/count";
-import { COUNT_TRIPLE, ONE, ZERO } from "@/constants/magic-numbers";
 import { checkContrastCompliance, type OKLCHColor } from '@/lib/colors';
 import { logger } from '@/lib/logger';
 import {
   KEYBOARD_KEYS,
   type ColorSchemePreference,
   type WCAGLevel,
-} from './accessibility-types';
+} from '@/lib/accessibility-types';
 
 /**
  * 无障碍性工具类

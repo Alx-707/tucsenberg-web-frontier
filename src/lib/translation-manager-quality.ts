@@ -1,6 +1,7 @@
 import { MAGIC_0_8 } from "@/constants/decimal";
+import { COUNT_FIVE, COUNT_TRIPLE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from '@/constants';
+
 import { QUALITY_SCORING } from '@/constants/i18n-constants';
-import { COUNT_FIVE, COUNT_TRIPLE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
 import { TranslationManagerSecurity } from '@/lib/translation-manager-security';
 import { TranslationQualityChecker } from '@/lib/translation-quality-checker';
 import type { Locale } from '@/types/i18n';
@@ -19,7 +20,7 @@ import {
   generateRecommendations,
   generateSuggestions,
   isEmptyTranslation,
-} from './translation-utils';
+} from '@/lib/translation-utils';
 
 /**
  * 翻译质量管理器

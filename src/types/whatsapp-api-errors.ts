@@ -1,4 +1,4 @@
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_36, MAGIC_9, ONE, THIRTY_SECONDS_MS } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_36, MAGIC_9, ONE, THIRTY_SECONDS_MS } from '@/constants';
 
 /**
  * WhatsApp API 错误处理类型定义

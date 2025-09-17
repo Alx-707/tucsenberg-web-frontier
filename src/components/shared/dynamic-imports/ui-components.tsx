@@ -5,11 +5,11 @@
  *
  * UI组件的动态导入定义
  */
-import dynamic from 'next/dynamic';
 import {
-  ComponentLoadingFallback,
-  MinimalLoadingFallback,
-} from '../dynamic-imports-base';
+    ComponentLoadingFallback,
+    MinimalLoadingFallback,
+} from '@/components/shared/dynamic-imports-base';
+import dynamic from 'next/dynamic';
 
 // ==================== UI组件 ====================
 
@@ -20,7 +20,7 @@ import {
  */
 export const DynamicAnimatedCounter = dynamic(
   () =>
-    import('../../ui/animated-counter').then((mod) => ({
+    import('@/components/ui/animated-counter').then((mod) => ({
       default: mod.AnimatedCounter,
     })),
   {
@@ -36,7 +36,7 @@ export const DynamicAnimatedCounter = dynamic(
  */
 export const DynamicDropdownMenu = dynamic(
   () =>
-    import('../../ui/dropdown-menu').then((mod) => ({
+    import('@/components/ui/dropdown-menu').then((mod) => ({
       default: mod.DropdownMenu,
     })),
   {
@@ -52,7 +52,7 @@ export const DynamicDropdownMenu = dynamic(
  */
 export const DynamicTabs = dynamic(
   () =>
-    import('../../ui/tabs').then((mod) => ({
+    import('@/components/ui/tabs').then((mod) => ({
       default: mod.Tabs,
     })),
   { loading: () => <MinimalLoadingFallback />, ssr: true },
@@ -65,7 +65,7 @@ export const DynamicTabs = dynamic(
  */
 export const DynamicCarousel = dynamic(
   () =>
-    import('../../ui/carousel').then((mod) => ({
+    import('@/components/ui/carousel').then((mod) => ({
       default: mod.Carousel,
     })),
   {

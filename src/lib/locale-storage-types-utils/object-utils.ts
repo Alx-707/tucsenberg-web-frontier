@@ -3,6 +3,8 @@
  * Locale Storage System Object Utility Functions
  */
 
+import { hasOwn } from '@/lib/security/object-guards';
+
 /**
  * 深度克隆对象
  * Deep clone object
@@ -23,7 +25,7 @@ export function deepClone<T>(obj: T): T {
   if (typeof obj === 'object') {
     const cloned = {} as T;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
+      if (hasOwn(obj, key)) {
         cloned[key] = deepClone(obj[key]);
       }
     }
@@ -44,7 +46,7 @@ export function mergeObjects<T extends Record<string, unknown>>(
   const result = { ...target };
 
   for (const key in source) {
-    if (source.hasOwnProperty(key)) {
+    if (hasOwn(source, key)) {
       const sourceValue = source[key];
       const targetValue = result[key];
 

@@ -8,18 +8,19 @@
 'use client';
 
 import { MAGIC_0_1 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { AccessLogger, ErrorLogger } from '@/lib/locale-storage-analytics-events';
 import type { StorageHealthCheck, StorageStats } from '@/lib/locale-storage-types';
 import {
   getStorageStats,
   performHealthCheck,
-} from './locale-storage-analytics-core';
+} from '@/lib/locale-storage-analytics-core';
 import {
   getPerformanceMetrics,
   getUsagePatterns,
   getUsageTrends,
-} from './locale-storage-analytics-performance';
+} from '@/lib/locale-storage-analytics-performance';
 
 // ==================== 缓存管理 ====================
 

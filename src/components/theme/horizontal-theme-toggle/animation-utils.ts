@@ -1,4 +1,11 @@
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, PERCENTAGE_FULL } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, PERCENTAGE_FULL } from '@/constants';
+
+interface ViewTransitionDocument extends Document {
+  startViewTransition(callback: () => void): void;
+}
+
+const supportsViewTransition = (doc: Document): doc is ViewTransitionDocument =>
+  'startViewTransition' in doc;
 
 /**
  * 主题切换动画工具函数
@@ -41,41 +48,46 @@ export const createCircleBlurAnimation = (
 /**
  * 应用主题切换动画
  */
-export const applyThemeAnimation = (
-  newTheme: string,
-  buttonElement: HTMLButtonElement | null,
-  animationVariant: 'circle-blur' | 'framer-motion',
-  shouldDisableAnimations: boolean,
-  setTheme: (theme: string) => void,
-) => {
-  // 确定使用的动画变体
-  const shouldUseCircleBlur =
+interface ThemeAnimationOptions {
+  newTheme: string;
+  buttonElement: HTMLButtonElement | null;
+  animationVariant: 'circle-blur' | 'framer-motion';
+  shouldDisableAnimations: boolean;
+  setTheme: (theme: string) => void;
+}
+
+export const applyThemeAnimation = ({
+  newTheme,
+  buttonElement,
+  animationVariant,
+  shouldDisableAnimations,
+  setTheme,
+}: ThemeAnimationOptions) => {
+  const canUseCircleBlur =
     animationVariant === 'circle-blur' &&
     !shouldDisableAnimations &&
-    'startViewTransition' in document;
+    typeof document !== 'undefined' &&
+    supportsViewTransition(document);
 
-  if (shouldUseCircleBlur && buttonElement) {
-    // 创建动画样式
+  if (canUseCircleBlur && buttonElement) {
     const styleId = `theme-transition-${Date.now()}`;
     const style = document.createElement('style');
     style.id = styleId;
     style.textContent = createCircleBlurAnimation(buttonElement);
     document.head.appendChild(style);
 
-    // 使用 View Transition API
-    (document as any).startViewTransition(() => {
+    document.startViewTransition(() => {
       setTheme(newTheme);
     });
 
-    // 清理动画样式
     setTimeout(() => {
       const styleEl = document.getElementById(styleId);
       if (styleEl) {
         styleEl.remove();
       }
     }, ANIMATION_DURATION_VERY_SLOW);
-  } else {
-    // 直接切换主题，不使用动画
-    setTheme(newTheme);
+    return;
   }
+
+  setTheme(newTheme);
 };

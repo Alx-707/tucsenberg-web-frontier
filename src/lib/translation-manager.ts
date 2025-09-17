@@ -44,7 +44,7 @@ export {
   getTranslationKeyDepth,
   isEmptyTranslation,
   normalizeTranslationText,
-} from './translation-utils';
+} from '@/lib/translation-utils';
 
 export { TranslationQualityChecker } from '@/lib/translation-quality-checker';
 export { TranslationManagerCore } from '@/lib/translation-manager-core';

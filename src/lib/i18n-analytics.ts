@@ -1,4 +1,4 @@
-import { ANIMATION_DURATION_VERY_SLOW, ONE, PERCENTAGE_FULL, THIRTY_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, ONE, PERCENTAGE_FULL, THIRTY_SECONDS_MS, ZERO } from '@/constants';
 
 interface I18nEvent {
   type: 'locale_change' | 'translation_error' | 'fallback_used' | 'load_time';

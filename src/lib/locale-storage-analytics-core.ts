@@ -8,7 +8,8 @@
 'use client';
 
 import { DEC_0_4, MAGIC_0_1, MAGIC_0_2, MAGIC_0_3, MAGIC_0_5, MAGIC_0_6, MAGIC_0_7, MAGIC_0_8 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { DAYS_PER_WEEK } from "@/constants/time";
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import { estimateStorageSize } from '@/lib/locale-storage-types';
@@ -19,7 +20,7 @@ import type {
   StorageHealthCheck,
   StorageOperationResult,
   StorageStats,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 核心统计功能 ====================
 

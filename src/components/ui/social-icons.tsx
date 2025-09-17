@@ -5,9 +5,8 @@
  * Based on the reference design with clean, minimal styling.
  */
 
-import { MAGIC_16, MAGIC_20 } from "@/constants/count";
-import type { FC } from 'react';
-import React from 'react';
+import { MAGIC_16, MAGIC_20 } from '@/constants/count';
+import { type FC, type ReactNode } from 'react';
 
 interface SocialIconProps {
   'className'?: string;
@@ -126,7 +125,7 @@ interface SocialIconLinkPropsV2 {
   'className'?: string;
   'iconSize'?: number;
   'data-testid'?: string;
-  'children'?: React.ReactNode;
+  'children'?: ReactNode;
 }
 
 type SocialIconLinkProps = SocialIconLinkPropsV1 | SocialIconLinkPropsV2;

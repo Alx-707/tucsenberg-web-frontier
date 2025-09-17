@@ -9,18 +9,19 @@
 
 // 重新导出所有模块的功能
 // 导入主要功能用于向后兼容
-import { ANIMATION_DURATION_VERY_SLOW, HOURS_PER_DAY, SECONDS_PER_MINUTE } from "@/constants/magic-numbers";
 import { DAYS_PER_WEEK } from "@/constants/time";
+import { ANIMATION_DURATION_VERY_SLOW, HOURS_PER_DAY, SECONDS_PER_MINUTE } from '@/constants';
+
 import {
   calculateStorageStats,
   performHealthCheck,
-} from './locale-storage-analytics-core';
+} from '@/lib/locale-storage-analytics-core';
 import {
   AccessLogger,
   cleanupAnalyticsData,
   ErrorLogger,
   EventManager,
-} from './locale-storage-analytics-events';
+} from '@/lib/locale-storage-analytics-events';
 import {
   getPerformanceMetrics,
   getUsagePatterns,
@@ -28,41 +29,41 @@ import {
   type PerformanceMetrics,
   type UsagePatterns,
   type UsageTrends,
-} from './locale-storage-analytics-performance';
+} from '@/lib/locale-storage-analytics-performance';
 import {
   CacheManager,
   exportAnalyticsData,
   type ExportData
-} from './locale-storage-analytics-utils';
+} from '@/lib/locale-storage-analytics-utils';
 import type {
   StorageEventListener,
   StorageHealthCheck,
   StorageOperationResult,
   StorageStats,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 export {
   calculateHealthCheck, calculateStorageEfficiency, calculateStorageStats,
   getStorageStats, performHealthCheck
-} from './locale-storage-analytics-core';
+} from '@/lib/locale-storage-analytics-core';
 export {
   cleanupAnalyticsData, EventManager
-} from './locale-storage-analytics-events';
+} from '@/lib/locale-storage-analytics-events';
 export type {
   AccessLogEntry,
   AccessLogger,
   ErrorLogEntry,
   ErrorLogger
-} from './locale-storage-analytics-events';
+} from '@/lib/locale-storage-analytics-events';
 export {
   getPerformanceMetrics, getUsagePatterns, getUsageTrends
-} from './locale-storage-analytics-performance';
+} from '@/lib/locale-storage-analytics-performance';
 export {
   CacheManager, compressAnalyticsData, exportAnalyticsData, formatByteSize,
   formatDuration,
   formatPercentage,
   generateUniqueId, optimizeAnalyticsStorage, validateAnalyticsData
-} from './locale-storage-analytics-utils';
+} from '@/lib/locale-storage-analytics-utils';
 
 /**
  * 存储分析管理器 - 向后兼容类

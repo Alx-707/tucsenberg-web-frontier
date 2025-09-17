@@ -5,8 +5,9 @@
 
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { getPreferenceHistory } from '@/lib/locale-storage-preference-events/history-manager';
+import { ANIMATION_DURATION_VERY_SLOW, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { Locale } from '@/types/i18n';
 
 /**

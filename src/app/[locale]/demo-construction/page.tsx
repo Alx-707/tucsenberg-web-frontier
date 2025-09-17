@@ -1,5 +1,5 @@
 import { UnderConstructionV2 } from '@/components/shared/under-construction-v2';
-import { COUNT_PAIR } from "@/constants/magic-numbers";
+import { COUNT_PAIR } from "@/constants";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

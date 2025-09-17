@@ -1,5 +1,5 @@
 import { MAGIC_0_8 } from "@/constants/decimal";
-import { BYTES_PER_KB, COUNT_FIVE, ZERO } from "@/constants/magic-numbers";
+import { BYTES_PER_KB, COUNT_FIVE, ZERO } from '@/constants';
 
 'use client';
 

@@ -6,17 +6,18 @@
 'use client';
 
 import { CACHE_LIMITS } from '@/constants/i18n-constants';
-import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import {
   createDefaultHistory,
   getDetectionHistory,
   HistoryCacheManager,
-} from '../locale-storage-history-core';
+} from '@/lib/locale-storage-history-core';
 import type {
   LocaleDetectionRecord,
   StorageOperationResult,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 清理过期的检测记录

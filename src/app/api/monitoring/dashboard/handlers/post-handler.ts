@@ -1,5 +1,5 @@
 import { validateMonitoringData } from '@/app/api/monitoring/dashboard/types';
-import { HTTP_BAD_REQUEST } from "@/constants/magic-numbers";
+import { HTTP_BAD_REQUEST } from "@/constants";
 import { logger } from '@/lib/logger';
 import { NextRequest, NextResponse } from 'next/server';
 

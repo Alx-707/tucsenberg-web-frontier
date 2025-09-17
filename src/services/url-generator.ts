@@ -13,7 +13,7 @@ import {
   SITE_CONFIG,
   type PageType,
 } from '@/config/paths';
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { SEO_CONSTANTS } from '@/constants/seo-constants';
 
 // URL生成选项接口

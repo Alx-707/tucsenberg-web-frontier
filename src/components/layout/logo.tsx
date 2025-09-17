@@ -7,7 +7,7 @@
 'use client';
 
 import { COUNT_120 } from "@/constants/count";
-import { HOURS_PER_DAY } from "@/constants/magic-numbers";
+import { HOURS_PER_DAY } from "@/constants";
 import { Link } from '@/i18n/routing';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';

@@ -1,6 +1,5 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
@@ -50,17 +49,14 @@ export function VercelThemeToggle({
   showTitle = true,
   'data-testid': testId = 'vercel-theme-toggle',
 }: VercelThemeToggleProps) {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const t = useTranslations();
 
-  // 防止 hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const isReady = typeof resolvedTheme !== 'undefined';
+  const activeTheme = resolvedTheme ?? theme;
 
   // 加载状态的骨架屏
-  if (!mounted) {
+  if (!isReady) {
     return (
       <div
         className={cn('space-y-3', className)}
@@ -102,7 +98,7 @@ export function VercelThemeToggle({
       >
         {THEME_OPTIONS.map((themeOption) => {
           const Icon = themeOption.icon;
-          const isActive = theme === themeOption.value;
+          const isActive = activeTheme === themeOption.value;
           const label = t(themeOption.labelKey);
           const ariaLabel = t(themeOption.ariaLabelKey);
 

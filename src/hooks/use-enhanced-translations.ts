@@ -1,7 +1,7 @@
 'use client';
 
 /* eslint-disable max-lines-per-function, security/detect-object-injection, no-shadow */
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import { I18nPerformanceMonitor } from '@/lib/i18n-performance';
 import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useMemo } from 'react';

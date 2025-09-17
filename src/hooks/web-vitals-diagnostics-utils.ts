@@ -14,7 +14,7 @@ export {
   type PagePerformanceGroup,
   type TrendAnalysisResult,
   type ScoreCalculationConfig,
-} from './web-vitals-diagnostics-constants';
+} from '@/hooks/web-vitals-diagnostics-constants';
 
 // 导出计算器函数
 export {
@@ -27,7 +27,7 @@ export {
   calculateMetricStats,
   calculatePerformanceGrade,
   calculateImprovementPotential,
-} from './web-vitals-diagnostics-calculator';
+} from '@/hooks/web-vitals-diagnostics-calculator';
 
 // 导出分析器函数
 export {
@@ -38,4 +38,4 @@ export {
   exportReportData,
   generateCSVData,
   analyzeOverallTrend,
-} from './web-vitals-diagnostics-analyzer';
+} from '@/hooks/web-vitals-diagnostics-analyzer';

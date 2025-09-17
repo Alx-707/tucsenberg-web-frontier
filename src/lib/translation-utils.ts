@@ -1,5 +1,6 @@
 import { QUALITY_CHECK_THRESHOLDS } from '@/constants/i18n-constants';
-import { COUNT_FIVE, HTTP_OK, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { COUNT_FIVE, HTTP_OK, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type { QualityIssue } from '@/types/translation-manager';
 
 /**

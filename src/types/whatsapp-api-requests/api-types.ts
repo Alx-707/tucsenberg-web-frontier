@@ -7,36 +7,36 @@
 import type {
   AccountInfoRequest,
   AppSettingsRequest,
-} from './account-app-requests';
+} from '@/types/whatsapp-api-requests/account-app-requests';
 import type {
   BatchRequest,
   BusinessProfileUpdateRequest,
-} from './batch-business-requests';
+} from '@/types/whatsapp-api-requests/batch-business-requests';
 import type {
   AnalyticsRequest,
   MediaUploadRequest,
-} from './media-analytics-requests';
+} from '@/types/whatsapp-api-requests/media-analytics-requests';
 import type {
   GroupMessageRequest,
   MessageForwardRequest,
   MessageReactionRequest,
-} from './message-actions-requests';
+} from '@/types/whatsapp-api-requests/message-actions-requests';
 import type { SendMessageRequest } from '@/types/whatsapp-api-requests/message-requests';
 import type {
   MessageMarkRequest,
   PhoneNumberRegistrationRequest,
   PhoneNumberVerificationRequest,
   WebhookSubscriptionRequest,
-} from './phone-webhook-requests';
+} from '@/types/whatsapp-api-requests/phone-webhook-requests';
 import type {
   TemplateCreateRequest,
   TemplateDeleteRequest,
   TemplateStatusUpdateRequest,
-} from './template-requests';
+} from '@/types/whatsapp-api-requests/template-requests';
 import type {
   QualityRatingRequest,
   UserBlockRequest,
-} from './user-quality-requests';
+} from '@/types/whatsapp-api-requests/user-quality-requests';
 
 /**
  * 请求选项

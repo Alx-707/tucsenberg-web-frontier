@@ -1,5 +1,5 @@
 import { UnderConstruction } from '@/components/shared/under-construction';
-import { ONE } from "@/constants/magic-numbers";
+import { ONE } from "@/constants";
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 

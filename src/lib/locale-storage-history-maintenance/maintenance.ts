@@ -6,14 +6,15 @@
 'use client';
 
 import { CACHE_LIMITS } from '@/constants/i18n-constants';
-import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, MAGIC_1_5, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO, MAGIC_1_5 } from '@/constants';
+
 import { getDetectionHistory } from '@/lib/locale-storage-history-core';
 import type { StorageOperationResult } from '@/lib/locale-storage-types';
 import {
   cleanupDuplicateDetections,
   cleanupExpiredDetections,
   limitHistorySize,
-} from './cleanup';
+} from '@/lib/locale-storage-history-maintenance/cleanup';
 
 /**
  * 执行完整的历史维护

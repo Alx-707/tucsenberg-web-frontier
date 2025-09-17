@@ -3,8 +3,9 @@
  * 提供通用的工具方法和辅助函数
  */
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { MINUTES_PER_HOUR, ONE, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { PERFORMANCE_THRESHOLDS } from '@/lib/web-vitals/constants';
 import type { DetailedWebVitals, PerformanceBaseline } from '@/lib/web-vitals/types';
 

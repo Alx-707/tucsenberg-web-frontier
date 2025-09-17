@@ -40,7 +40,7 @@ async function preflight() {
   const fileUsage = new Map<string, Set<string>>();
 
   for (const sourceFile of sourceFiles) {
-    const filePath = sourceFile.getFilePath().replace(process.cwd() + '/', '');
+    const filePath = sourceFile.getFilePath().replace(`${process.cwd()  }/`, '');
     const numbersInFile = new Set<string>();
 
     sourceFile.forEachDescendant((node) => {

@@ -14,17 +14,17 @@ export {
   AnimatedInput,
   AnimatedProgress,
   AnimatedSuccess,
-} from './animations/form-status';
+} from '@/components/shared/animations/form-status';
 
 // 重新导出社交和交互动画
 export {
   AnimatedCollapsible,
   AnimatedSkeleton,
   AnimatedSocialLink,
-} from './animations/social-interactive';
+} from '@/components/shared/animations/social-interactive';
 
 // 重新导出示例和配置
 export {
   AnimationShowcase,
   customAnimations,
-} from './animations/showcase-config';
+} from '@/components/shared/animations/showcase-config';

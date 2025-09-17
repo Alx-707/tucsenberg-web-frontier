@@ -3,7 +3,7 @@ import {
   HistoricalData,
   ThresholdReference,
   type SimpleWebVitals,
-} from './components';
+} from '@/app/[locale]/diagnostics/components';
 
 /**
  * 页面标题组件

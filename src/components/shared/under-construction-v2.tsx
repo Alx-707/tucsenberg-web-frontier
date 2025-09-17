@@ -1,6 +1,6 @@
 'use client';
 
-import { ONE } from "@/constants/magic-numbers";
+import { ONE } from "@/constants";
 import { cn } from '@/lib/utils';
 
 interface UnderConstructionV2Props {

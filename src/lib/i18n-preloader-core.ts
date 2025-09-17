@@ -6,7 +6,8 @@
  */
 
 import { MAGIC_0_1 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_TRIPLE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_TRIPLE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from '@/constants';
+
 import { MINUTE_MS } from "@/constants/time";
 import { logger } from '@/lib/logger';
 import type { Locale, Messages } from '@/types/i18n';
@@ -15,19 +16,19 @@ import type {
   CacheStorage,
   MetricsCollector,
   Preloader,
-} from './i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 import type {
   IPreloader,
   PreloaderConfig,
   PreloadOptions,
   PreloadState,
   PreloadStats,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 import {
   PreloaderError,
   PreloaderNetworkError,
   PreloaderTimeoutError,
-} from './i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 
 /**
  * 翻译预加载器核心实现

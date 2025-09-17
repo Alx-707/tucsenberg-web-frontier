@@ -17,7 +17,7 @@ export {
   checkContrastCompliance,
   generateCSSVariables,
   validateThemeContrast,
-} from './colors/utils';
+} from '@/lib/colors/utils';
 
 // 重新导出颜色系统类
 export { ColorSystem } from '@/lib/colors/color-system';

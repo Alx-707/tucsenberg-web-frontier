@@ -2,17 +2,16 @@
 
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from '@/components/ui/card';
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import { logger } from '@/lib/logger';
 import { useTranslations } from 'next-intl';
-import type { ReactNode } from 'react';
-import { Component, type ErrorInfo } from 'react';
+import { Component, type ErrorInfo, type ReactNode } from 'react';
 
 interface ErrorBoundaryState {
   hasError: boolean;

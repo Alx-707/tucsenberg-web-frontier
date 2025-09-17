@@ -93,9 +93,9 @@ export function normalize(text: string): string {
   // 处理整数和小数
   if (Number.isInteger(num)) {
     return num.toString();
-  } else {
+  } 
     return num.toString();
-  }
+  
 }
 
 /**
@@ -131,7 +131,7 @@ export function ensureConstDefined(map: Record<string, MappingEntry | string>, t
  * 跳过类型域、BigInt、字符串/模板/JSX/正则/注释、测试文件、数据型数字等
  */
 export function shouldSkipNode(node: Node): boolean {
-  const compilerNode = node.compilerNode;
+  const {compilerNode} = node;
   const sourceFile = node.getSourceFile();
   const filePath = sourceFile.getFilePath();
 
@@ -147,13 +147,17 @@ export function shouldSkipNode(node: Node): boolean {
 
   // 3. 跳过常量定义文件和单位工具库，避免循环引用
   if (filePath.includes('constants/magic-numbers.ts') ||
+      filePath.includes('constants/count.ts') ||
+      filePath.includes('constants/decimal.ts') ||
+      filePath.includes('constants/hex.ts') ||
+      filePath.includes('constants/time.ts') ||
       filePath.includes('lib/units.ts') ||
       filePath.includes('constants/app-constants.ts') ||
       filePath.includes('constants/performance-constants.ts') ||
       filePath.includes('constants/security-constants.ts') ||
       filePath.includes('constants/i18n-constants.ts') ||
       filePath.includes('constants/performance.ts') ||
-      filePath.includes('constants/') && filePath.includes('-constants.ts')) {
+      (filePath.includes('constants/') && filePath.includes('-constants.ts'))) {
     return true;
   }
 
@@ -460,7 +464,7 @@ function shouldSkipBySemanticContext(node: Node): boolean {
 
     // 检查变量声明：const lat = 39.9042
     if (ts.isVariableDeclaration(currentNode)) {
-      const name = currentNode.name;
+      const {name} = currentNode;
       if (ts.isIdentifier(name)) {
         const varName = name.getText().toLowerCase();
         if (isCoordinatePropertyName(varName)) {

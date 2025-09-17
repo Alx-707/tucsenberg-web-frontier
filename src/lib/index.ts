@@ -7,14 +7,14 @@
 export { formatDate, validateEmail } from '@/shared/utils';
 
 // 未来可以添加更多工具模块的导出
-// export type { validationConfig } from './validations';
+// export type { validationConfig } from '@/lib/validations';
 export {
   contactFormSchema,
   apiResponseSchema,
   airtableRecordSchema,
   emailTemplateDataSchema,
   validationHelpers,
-} from './validations';
+} from '@/lib/validations';
 export type {
   ContactFormData,
   ApiResponse,
@@ -22,7 +22,7 @@ export type {
   EmailTemplateData,
   FormValidationError,
   FormSubmissionStatus,
-} from './validations';
-// export * from './constants';
-// export * from './api';
-// export * from './auth';
+} from '@/lib/validations';
+// export * from '@/lib/constants';
+// export * from '@/lib/api';
+// export * from '@/lib/auth';

@@ -16,14 +16,14 @@ export {
   createOverrideClearedEvent,
   createSyncEvent,
   createPreferenceErrorEvent,
-} from './locale-storage-preference-events/event-creators';
+} from '@/lib/locale-storage-preference-events/event-creators';
 
 // 重新导出偏好历史管理
 export {
   getPreferenceHistory,
   recordPreferenceHistory,
   clearPreferenceHistory,
-} from './locale-storage-preference-events/history-manager';
+} from '@/lib/locale-storage-preference-events/history-manager';
 
 // 重新导出统计分析
 export { getPreferenceChangeStats } from '@/lib/locale-storage-preference-events/stats-analyzer';
@@ -32,11 +32,11 @@ export { getPreferenceChangeStats } from '@/lib/locale-storage-preference-events
 export {
   consoleLogListener,
   historyRecordingListener,
-} from './locale-storage-preference-events/event-listeners';
+} from '@/lib/locale-storage-preference-events/event-listeners';
 
 // 重新导出系统管理
 export {
   setupDefaultListeners,
   cleanupEventSystem,
   getEventSystemStatus,
-} from './locale-storage-preference-events/system-manager';
+} from '@/lib/locale-storage-preference-events/system-manager';

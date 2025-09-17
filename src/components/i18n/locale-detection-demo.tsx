@@ -1,6 +1,8 @@
 'use client';
 
 import { EnhancedLocaleSwitcher } from '@/components/i18n/enhanced-locale-switcher';
+import { PERCENTAGE_FULL, ZERO } from '@/constants';
+import { MAGIC_0_5, MAGIC_0_8 } from '@/constants/decimal';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,13 +13,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { MAGIC_0_5, MAGIC_0_8 } from "@/constants/decimal";
-import { PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
-import type { LocaleDetectionResult } from '@/lib/locale-detection';
-import { useClientLocaleDetection } from '@/lib/locale-detection';
-import type { UserLocalePreference } from '@/lib/locale-storage';
-import { useLocaleStorage } from '@/lib/locale-storage';
+import {
+  useClientLocaleDetection,
+  type LocaleDetectionResult,
+} from '@/lib/locale-detection';
+import {
+  useLocaleStorage,
+  type UserLocalePreference,
+} from '@/lib/locale-storage';
+import type {
+  StorageOperationResult,
+  StorageStats,
+} from '@/lib/locale-storage-manager';
 import { useCallback, useEffect, useState } from 'react';
+
+type StorageStatsResult = StorageOperationResult<StorageStats>;
 
 // 工具函数
 const getConfidenceColor = (confidence: number) => {
@@ -79,45 +89,50 @@ const DetectionResult = ({ detection }: DetectionResultProps) => (
 
 // 存储状态显示组件
 interface StorageStatsProps {
-  stats: unknown;
+  hasPreference: boolean;
+  hasOverride: boolean;
+  currentLocale: string | null;
+  detectionCount: number;
   onClearOverride: () => void;
 }
 
-const StorageStats = ({ stats, onClearOverride }: StorageStatsProps) => (
+const StorageStats = ({
+  hasPreference,
+  hasOverride,
+  currentLocale,
+  detectionCount,
+  onClearOverride,
+}: StorageStatsProps) => (
   <div>
     <h4 className='mb-2 font-semibold'>存储状态</h4>
     <div className='grid grid-cols-2 gap-4'>
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <span>有偏好设置:</span>
-          <Badge
-            variant={(stats as any).hasPreference ? 'default' : 'secondary'}
-          >
-            {(stats as any).hasPreference ? '是' : '否'}
+          <Badge variant={hasPreference ? 'default' : 'secondary'}>
+            {hasPreference ? '是' : '否'}
           </Badge>
         </div>
         <div className='flex items-center space-x-2'>
           <span>有用户覆盖:</span>
-          <Badge variant={(stats as any).hasOverride ? 'default' : 'secondary'}>
-            {(stats as any).hasOverride ? '是' : '否'}
+          <Badge variant={hasOverride ? 'default' : 'secondary'}>
+            {hasOverride ? '是' : '否'}
           </Badge>
         </div>
       </div>
       <div className='space-y-2'>
         <div className='flex items-center space-x-2'>
           <span>当前语言:</span>
-          <Badge variant='outline'>
-            {(stats as any).currentLocale || '未设置'}
-          </Badge>
+          <Badge variant='outline'>{currentLocale || '未设置'}</Badge>
         </div>
         <div className='flex items-center space-x-2'>
           <span>检测次数:</span>
-          <Badge variant='secondary'>{(stats as any).detectionCount}</Badge>
+          <Badge variant='secondary'>{detectionCount}</Badge>
         </div>
       </div>
     </div>
 
-    {(stats as any).hasOverride && (
+    {hasOverride && (
       <div className='mt-4'>
         <Button
           onClick={onClearOverride}
@@ -170,7 +185,9 @@ const LocaleDetectionDemoComponent = () => {
   const { getStats, getUserPreference, clearUserOverride } = useLocaleStorage();
   const { detectClientLocale } = useClientLocaleDetection();
 
-  const [stats, setStats] = useState<any>(null);
+  const [statsResult, setStatsResult] = useState<StorageStatsResult | null>(
+    null,
+  );
   const [detection, setDetection] = useState<LocaleDetectionResult | null>(
     null,
   );
@@ -179,7 +196,7 @@ const LocaleDetectionDemoComponent = () => {
   );
 
   const refreshData = useCallback(() => {
-    setStats(getStats());
+    setStatsResult(getStats());
     setDetection(detectClientLocale());
     setPreference(getUserPreference());
   }, [getStats, detectClientLocale, getUserPreference]);
@@ -192,6 +209,15 @@ const LocaleDetectionDemoComponent = () => {
     clearUserOverride();
     refreshData();
   };
+
+  const statsData = statsResult?.data ?? null;
+  const hasPreference = Boolean(preference);
+  const hasOverride = Boolean(
+    preference?.source === 'user_override' || statsData?.hasOverride,
+  );
+  const currentLocale = preference?.locale ?? detection?.locale ?? null;
+  const detectionCount = statsData?.historyStats.totalEntries ?? ZERO;
+  const canShowStats = Boolean(statsResult?.success && statsData);
 
   return (
     <div className='space-y-6'>
@@ -218,9 +244,12 @@ const LocaleDetectionDemoComponent = () => {
 
           <Separator />
 
-          {stats && (
+          {canShowStats && (
             <StorageStats
-              stats={stats}
+              hasPreference={hasPreference}
+              hasOverride={hasOverride}
+              currentLocale={currentLocale}
+              detectionCount={detectionCount}
               onClearOverride={handleClearOverride}
             />
           )}

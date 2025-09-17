@@ -3,15 +3,16 @@
  * 负责生成各种性能监控报告
  */
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { ONE, ZERO  } from '@/constants';
+
 import { MonitoringUtils } from '@/lib/web-vitals/monitoring-utils';
 import { PerformanceRegressionDetector } from '@/lib/web-vitals/regression-detector';
 import type {
   DetailedWebVitals,
   PerformanceBaseline,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 /**
  * 性能监控报告生成器类

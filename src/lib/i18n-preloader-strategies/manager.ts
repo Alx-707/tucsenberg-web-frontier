@@ -3,12 +3,12 @@
  * Translation Preloader Strategy Manager
  */
 
-import { ONE } from "@/constants/magic-numbers";
+import { ONE } from "@/constants";
 import type {
   PreloaderMetrics,
   PreloadStrategy,
   PreloadStrategyConfig,
-} from '../i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 
 /**
  * 预加载策略管理器

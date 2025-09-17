@@ -1,6 +1,7 @@
 import { COUNT_4, MAGIC_16 } from "@/constants/count";
+import { COUNT_PAIR, ONE, ZERO } from '@/constants';
+
 import { MAGIC_0_5 } from "@/constants/decimal";
-import { COUNT_PAIR, ONE, ZERO } from "@/constants/magic-numbers";
 import * as React from 'react';
 
 /**
@@ -68,15 +69,15 @@ export function formatNumber(
   const { decimals = ZERO, separator = ',', prefix = '', suffix = '' } = options;
 
   const formattedValue = value.toFixed(decimals);
-  const parts = formattedValue.split('.');
+  const [integerPart = '', fractionalPart] = formattedValue.split('.');
 
-  // Add thousand separators - using safe static regex pattern
-  if (parts[ZERO]) {
-    // eslint-disable-next-line security/detect-unsafe-regex
-    parts[ZERO] = parts[ZERO].replace(/\B(?=(\d{3})+(?!\d))/g, separator);
-  }
+  // Add thousand separators - static pattern validated for numeric grouping
+  // eslint-disable-next-line security/detect-unsafe-regex
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+  const formattedParts =
+    fractionalPart !== undefined ? [formattedInteger, fractionalPart] : [formattedInteger];
 
-  return prefix + parts.join('.') + suffix;
+  return prefix + formattedParts.join('.') + suffix;
 }
 
 /**

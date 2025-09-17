@@ -1,10 +1,11 @@
-import { ONE, ZERO } from "@/constants/magic-numbers";
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { ONE, ZERO  } from '@/constants';
+
 import type {
   DetailedWebVitals,
   PerformanceBaseline,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 /**
  * 性能回归检测器

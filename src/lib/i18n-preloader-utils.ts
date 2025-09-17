@@ -24,4 +24,4 @@ export {
   preloadLocale,
   smartPreload,
   cleanupPreloaders,
-} from './i18n-preloader-utils/global-instances';
+} from '@/lib/i18n-preloader-utils/global-instances';

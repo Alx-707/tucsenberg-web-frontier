@@ -5,15 +5,16 @@
  * 负责性能监控的配置管理、验证和合并功能
  */
 
-import { COUNT_PAIR, COUNT_TEN, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { PERFORMANCE_CONSTANTS } from '@/constants/performance';
+import { COUNT_PAIR, COUNT_TEN, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import { MB } from '@/constants/units';
 import { logger } from '@/lib/logger';
 import type { PerformanceConfig } from '@/lib/performance-monitoring-types';
 import {
   generateEnvironmentConfig,
   validateConfig,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 配置管理器

@@ -7,7 +7,7 @@
 export type {
   StorageConfig,
   EnvironmentConfig,
-} from './locale-storage-types-config/interfaces';
+} from '@/lib/locale-storage-types-config/interfaces';
 
 // 重新导出默认配置常量
 export { DEFAULT_STORAGE_CONFIG } from '@/lib/locale-storage-types-config/defaults';

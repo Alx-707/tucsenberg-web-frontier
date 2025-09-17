@@ -6,12 +6,12 @@
  */
 
 import { logger } from '@/lib/logger';
-import { COUNT_FIVE, COUNT_TEN, MAGIC_16, COUNT_PAIR, MAGIC_8, MAGIC_32, MAGIC_0_3 } from '@/constants/magic-numbers';
+import { COUNT_FIVE, COUNT_TEN, MAGIC_16, COUNT_PAIR, MAGIC_8, MAGIC_32, MAGIC_0_3  } from '@/constants';
 
 import type {
   PerformanceConfig,
   PerformanceMetrics,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * React Scan 集成钩子返回类型

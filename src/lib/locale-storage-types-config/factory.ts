@@ -3,7 +3,7 @@
  * Locale Storage System Configuration Factory
  */
 
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import type { EnvironmentType } from '@/lib/locale-storage-types-base';
 import { DEFAULT_STORAGE_CONFIG } from '@/lib/locale-storage-types-config/defaults';
 import type { StorageConfig } from '@/lib/locale-storage-types-config/interfaces';

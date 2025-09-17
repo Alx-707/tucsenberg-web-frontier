@@ -19,7 +19,7 @@ export {
   validatePathsConfig,
   getSitemapConfig,
   getRoutingConfig,
-} from './paths/utils';
+} from '@/config/paths/utils';
 
 // 重新导出类型
 export type { PathsConfig } from '@/config/paths/paths-config';

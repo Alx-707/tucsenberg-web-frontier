@@ -8,7 +8,8 @@
 'use client';
 
 import { MAGIC_0_5, MAGIC_0_6, MAGIC_0_7 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { CookieManager } from '@/lib/locale-storage-cookie';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import type { Locale } from '@/types/i18n';
@@ -16,11 +17,11 @@ import {
   getUserPreference,
   saveUserPreference,
   validatePreferenceData,
-} from './locale-storage-preference-core';
+} from '@/lib/locale-storage-preference-core';
 import type {
   StorageOperationResult,
   UserLocalePreference,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 缓存管理器 ====================
 

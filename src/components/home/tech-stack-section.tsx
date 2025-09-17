@@ -194,6 +194,16 @@ function TechStackTabs({
   );
 }
 
+function filterTechByCategory(category: TechStackCategory) {
+  const items: typeof techStackData = [];
+  for (const tech of techStackData) {
+    if (tech.category === category) {
+      items.push(tech);
+    }
+  }
+  return items;
+}
+
 export function TechStackSection() {
   const t = useTranslations('home.techStack');
   const [selectedCategory, setSelectedCategory] =
@@ -213,15 +223,17 @@ export function TechStackSection() {
     });
 
   const categorizedTech = useMemo(() => {
-    return Object.keys(techStackCategories).reduce(
-      (acc, category) => {
-        acc[category as TechStackCategory] = techStackData.filter(
-          (item) => item.category === category,
-        );
-        return acc;
-      },
-      {} as Record<TechStackCategory, typeof techStackData>,
-    );
+    const categories = Object.keys(techStackCategories) as TechStackCategory[];
+    const entries: Array<[TechStackCategory, typeof techStackData]> = [];
+
+    for (const category of categories) {
+      entries.push([category, filterTechByCategory(category)]);
+    }
+
+    return Object.fromEntries(entries) as Record<
+      TechStackCategory,
+      typeof techStackData
+    >;
   }, []);
 
   return (

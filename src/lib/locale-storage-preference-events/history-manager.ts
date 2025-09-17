@@ -6,7 +6,8 @@
 'use client';
 
 import { MAGIC_20 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW  } from '@/constants';
+
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import type { UserLocalePreference } from '@/lib/locale-storage-types';
 import { logger } from '@/lib/logger';

@@ -24,7 +24,7 @@ export {
   OS_TYPES,
   TimestampUtils,
   BaseValidators,
-} from './locale-storage-types-base';
+} from '@/lib/locale-storage-types-base';
 // 导出基础类型
 export type {
   StorageKey,
@@ -43,7 +43,7 @@ export type {
   DeviceType,
   OSType,
   VersionInfo,
-} from './locale-storage-types-base';
+} from '@/lib/locale-storage-types-base';
 // 导出数据结构类型
 export type {
   UserLocalePreference,
@@ -70,26 +70,26 @@ export type {
   ConfigSnapshot,
   DataExport,
   DataImportResult,
-} from './locale-storage-types-data';
+} from '@/lib/locale-storage-types-data';
 export type { MaintenanceOptions } from '@/lib/locale-storage-types-data';
 export type {
   ExportData,
   ImportData,
-} from './locale-storage-maintenance-import-export';
+} from '@/lib/locale-storage-maintenance-import-export';
 // 导出配置相关
 export {
   DEFAULT_STORAGE_CONFIG,
   CONFIG_PRESETS,
   CONFIG_VALIDATION_RULES,
   CONFIG_MIGRATIONS,
-} from './locale-storage-types-config';
+} from '@/lib/locale-storage-types-config';
 export type {
   StorageConfig,
   EnvironmentConfig,
   ConfigValidationRules,
   ConfigMigration,
   ConfigFactory,
-} from './locale-storage-types-config';
+} from '@/lib/locale-storage-types-config';
 // 导出工具函数
 export {
   isUserLocalePreference,
@@ -112,7 +112,7 @@ export {
   retry,
   safeJsonParse,
   safeJsonStringify,
-} from './locale-storage-types-utils';
+} from '@/lib/locale-storage-types-utils';
 
 // ==================== 向后兼容的别名导出（正确的 from 语法） ====================
 
@@ -120,7 +120,7 @@ export {
 export type {
   LocaleSource as Source,
   StorageEventType as EventType,
-} from './locale-storage-types-base';
+} from '@/lib/locale-storage-types-base';
 
 // 数据结构类型别名（来自 data 模块）
 export type {
@@ -131,7 +131,7 @@ export type {
   StorageEvent as Event,
   StorageEventListener as EventListener,
   ValidationResult as Validation,
-} from './locale-storage-types-data';
+} from '@/lib/locale-storage-types-data';
 
 // 配置别名（值与类型分别导出）
 export { DEFAULT_STORAGE_CONFIG as DefaultConfig } from '@/lib/locale-storage-types-config';

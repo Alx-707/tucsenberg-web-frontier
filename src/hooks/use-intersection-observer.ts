@@ -1,7 +1,8 @@
 'use client';
 
 import { MAGIC_0_1 } from "@/constants/decimal";
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO  } from '@/constants';
+
 import { AccessibilityUtils } from '@/lib/accessibility';
 import { logger } from '@/lib/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';

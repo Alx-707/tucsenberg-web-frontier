@@ -3,7 +3,7 @@
  * Preloader Factory Class
  */
 
-import { ONE } from "@/constants/magic-numbers";
+import { ONE } from "@/constants";
 import type { CacheStorage, MetricsCollector } from '@/lib/i18n-cache-types';
 import { TranslationPreloader } from '@/lib/i18n-preloader-core';
 import type { Messages } from '@/types/i18n';
@@ -12,7 +12,7 @@ import type {
   PreloaderConfig,
   PreloaderPlugin,
   PreloadEventHandler,
-} from '../i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 
 /**
  * 预加载器工厂类

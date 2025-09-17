@@ -3,7 +3,7 @@ import type {
   PageComparison,
   PagePerformanceGroup,
   PerformanceTrend,
-} from './web-vitals-diagnostics-constants';
+} from '@/hooks/web-vitals-diagnostics-constants';
 
 /**
  * Web Vitals 诊断相关类型定义

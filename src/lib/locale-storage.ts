@@ -23,7 +23,7 @@ export {
   STORAGE_KEYS,
   type UserLocalePreference,
   type LocaleDetectionHistory,
-} from './locale-storage-manager';
+} from '@/lib/locale-storage-manager';
 
 // React Hooks
 export {
@@ -35,4 +35,4 @@ export {
   useStorageAvailability,
   useAutoCleanup,
   useStorageEvents,
-} from './locale-storage-hooks';
+} from '@/lib/locale-storage-hooks';

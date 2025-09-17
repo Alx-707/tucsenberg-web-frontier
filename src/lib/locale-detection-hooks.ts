@@ -1,5 +1,6 @@
 import { MAGIC_0_5, MAGIC_0_7 } from "@/constants/decimal";
-import { ONE } from "@/constants/magic-numbers";
+import { ONE  } from '@/constants';
+
 import type { LocaleDetectionResult } from '@/lib/locale-detection-types';
 import { LocaleStorageManager } from '@/lib/locale-storage';
 import type { Locale } from '@/types/i18n';
@@ -7,7 +8,7 @@ import {
   BROWSER_LOCALE_MAP,
   DEFAULT_LOCALE,
   SUPPORTED_LOCALES,
-} from './locale-constants';
+} from '@/lib/locale-constants';
 
 /**
  * 客户端语言检测 Hook

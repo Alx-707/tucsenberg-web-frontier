@@ -6,12 +6,12 @@
 import type {
   EnvironmentType,
   StorageType,
-} from '../locale-storage-types-base';
+} from '@/lib/locale-storage-types-base';
 import type {
   StorageCompressionConfig,
   StorageEncryptionConfig,
   StorageSyncConfig,
-} from '../locale-storage-types-data';
+} from '@/lib/locale-storage-types-data';
 
 /**
  * 存储配置

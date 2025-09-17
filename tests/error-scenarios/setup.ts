@@ -9,8 +9,7 @@
  * - 错误恢复机制
  */
 
-import type { ReactElement, RenderOptions } from 'react';
-import React from 'react';
+import React, { type ReactElement, type RenderOptions } from 'react';
 import { render } from '@testing-library/react';
 import { vi } from 'vitest';
 

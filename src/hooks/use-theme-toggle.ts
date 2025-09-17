@@ -1,6 +1,6 @@
 'use client';
 
-import { PERCENTAGE_HALF } from "@/constants/magic-numbers";
+import { PERCENTAGE_HALF } from "@/constants";
 import { supportsViewTransitions } from '@/hooks/theme-transition-utils';
 import { useEnhancedTheme } from '@/hooks/use-enhanced-theme';
 import { useAccessibility } from '@/lib/accessibility';

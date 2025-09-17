@@ -1,9 +1,10 @@
-import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HTTP_BAD_REQUEST_CONST, HTTP_OK_CONST, MAGIC_0_9, OFFSET_NEGATIVE_EXTRA_LARGE, OFFSET_NEGATIVE_MASSIVE, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { logger } from '@/lib/logger';
+import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HTTP_BAD_REQUEST_CONST, HTTP_OK_CONST, ONE, PERCENTAGE_FULL, ZERO, OFFSET_NEGATIVE_EXTRA_LARGE, OFFSET_NEGATIVE_MASSIVE, MAGIC_0_9 } from '@/constants';
+
 import type {
   PerformanceConfig,
   PerformanceMetrics,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * Web Eval Agent 集成钩子返回类型

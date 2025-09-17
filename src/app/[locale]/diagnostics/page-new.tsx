@@ -6,14 +6,14 @@ import {
   CurrentMetrics,
   HistoricalData,
   ThresholdReference,
-} from './components';
+} from '@/app/[locale]/diagnostics/components';
 import {
   collectCurrentMetrics,
   exportDiagnosticsData,
   loadHistoricalData,
   saveCurrentData,
   type SimpleWebVitals,
-} from './utils';
+} from '@/app/[locale]/diagnostics/utils';
 
 export default function DiagnosticsPage() {
   const [currentMetrics, _setCurrentMetrics] = useState<SimpleWebVitals | null>(

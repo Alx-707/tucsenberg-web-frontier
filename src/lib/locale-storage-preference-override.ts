@@ -8,18 +8,19 @@
 'use client';
 
 import { MAGIC_0_8 } from "@/constants/decimal";
-import { ONE, PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
+import { ONE, PERCENTAGE_HALF, ZERO } from '@/constants';
+
 import { CookieManager } from '@/lib/locale-storage-cookie';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import type { Locale } from '@/types/i18n';
 import {
   getUserPreference,
   saveUserPreference,
-} from './locale-storage-preference-core';
+} from '@/lib/locale-storage-preference-core';
 import type {
   StorageOperationResult,
   UserLocalePreference,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 用户覆盖管理 ====================
 

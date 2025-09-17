@@ -5,8 +5,8 @@
  * 提供缓存系统所需的基础类型、接口和常量定义
  */
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, FIVE_SECONDS_MS, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import type { I18nMetrics, Locale } from '@/types/i18n';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, FIVE_SECONDS_MS, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from '@/constants';
 
 /**
  * 缓存配置接口

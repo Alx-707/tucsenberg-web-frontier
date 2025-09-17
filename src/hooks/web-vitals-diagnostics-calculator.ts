@@ -4,13 +4,13 @@
  */
 
 import type { DetailedWebVitals } from '@/lib/enhanced-web-vitals';
-import { COUNT_PAIR, MAGIC_0_95, MAGIC_90, MAGIC_80, MAGIC_70, SECONDS_PER_MINUTE } from '@/constants/magic-numbers';
+import { COUNT_PAIR, MAGIC_0_95, MAGIC_90, MAGIC_80, MAGIC_70, SECONDS_PER_MINUTE  } from '@/constants';
 
 import {
   WEB_VITALS_CONSTANTS,
   type DiagnosticReport,
   type PerformanceTrend,
-} from './web-vitals-diagnostics-constants';
+} from '@/hooks/web-vitals-diagnostics-constants';
 
 /**
  * 计算性能趋势

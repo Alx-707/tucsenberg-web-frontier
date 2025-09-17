@@ -1,3 +1,6 @@
+
+import { PERCENTAGE_FULL, SECONDS_PER_MINUTE, MINUTES_PER_HOUR, HOURS_PER_DAY } from '@/constants';
+
 /**
  * 应用程序常量定义
  * 集中管理应用中的魔法数字，提高代码可维护性和可读性

@@ -1,4 +1,4 @@
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 
 /**
  * WhatsApp Template Message Type Definitions

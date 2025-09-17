@@ -24,7 +24,7 @@ export {
   getStatusIcon,
   getStatusLabel,
   type SimpleWebVitals,
-} from './diagnostics-constants';
+} from '@/app/[locale]/diagnostics/diagnostics-constants';
 
 // 控制面板组件
 export {
@@ -33,7 +33,7 @@ export {
   QuickActions,
   SimpleControlPanel,
   StatusIndicator,
-} from './diagnostics-control-panel';
+} from '@/app/[locale]/diagnostics/diagnostics-control-panel';
 
 // 当前指标组件
 export {
@@ -41,7 +41,7 @@ export {
   MetricsComparison,
   MetricsSummary,
   SimpleMetrics,
-} from './diagnostics-current-metrics';
+} from '@/app/[locale]/diagnostics/diagnostics-current-metrics';
 
 // 历史数据组件
 export {
@@ -50,11 +50,11 @@ export {
   HistoricalStats,
   HistoricalTrend,
   SimpleHistoricalData,
-} from './diagnostics-historical-data';
+} from '@/app/[locale]/diagnostics/diagnostics-historical-data';
 
 // 阈值参考组件
 export {
   DetailedThresholdReference,
   SimpleThresholdReference,
   ThresholdReference,
-} from './diagnostics-threshold-reference';
+} from '@/app/[locale]/diagnostics/diagnostics-threshold-reference';

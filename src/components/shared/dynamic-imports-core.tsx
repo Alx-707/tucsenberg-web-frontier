@@ -8,7 +8,7 @@
 export {
   DynamicAnimatedIcon,
   DynamicProgressIndicator,
-} from './dynamic-imports/high-priority';
+} from '@/components/shared/dynamic-imports/high-priority';
 
 // 重新导出UI组件
 export {
@@ -16,7 +16,7 @@ export {
   DynamicCarousel,
   DynamicDropdownMenu,
   DynamicTabs,
-} from './dynamic-imports/ui-components';
+} from '@/components/shared/dynamic-imports/ui-components';
 
 // 重新导出配置
 export { CoreDynamicComponents } from '@/components/shared/dynamic-imports/exports';

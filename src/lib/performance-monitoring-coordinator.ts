@@ -1,5 +1,5 @@
 // 导入核心功能
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import { PerformanceMonitoringCore } from '@/lib/performance-monitoring-core';
 import type { PerformanceConfig } from '@/lib/performance-monitoring-types';
 import { generateEnvironmentConfig } from '@/lib/performance-monitoring-types';
@@ -20,15 +20,15 @@ import { generateEnvironmentConfig } from '@/lib/performance-monitoring-types';
 export {
   createConfigManager, createConflictChecker, createMetricsManager, createReportGenerator, getDefaultConfig, PerformanceConfigManager, PerformanceCoordinator, PerformanceMetricsManager, PerformanceMonitoringCore, PerformanceReport,
   PerformanceReportGenerator, PerformanceToolConflictChecker, quickConflictCheck, ToolConflictResult, validatePerformanceConfig
-} from './performance-monitoring-core';
+} from '@/lib/performance-monitoring-core';
 export {
   BundleAnalyzer, BundleAnalyzerAnalyzer, BundleAnalyzerIntegration, BundleAnalyzerUtils, checkEnvironmentCompatibility, EnvironmentCheck, EnvironmentCompatibilityResult, performHealthCheck, ReactScan, ReactScanAnalyzer, ReactScanIntegration, ReactScanUtils, useBundleAnalyzerIntegration, useReactScanIntegration, useWebEvalAgentIntegration, useWebVitalsIntegration, validateBundleAnalyzerConfig, validateReactScanConfig, validateWebEvalAgentConfig, validateWebVitalsConfig, WebEvalAgent, WebEvalAgentAnalyzer, WebEvalAgentIntegration, WebVitals, WebVitalsAnalyzer, WebVitalsIntegration
-} from './performance-monitoring-integrations';
+} from '@/lib/performance-monitoring-integrations';
 export {
   BundleAnalyzerConfig, Environment, generateEnvironmentConfig, getCurrentEnvironment, isDevelopmentEnvironment,
   isProductionEnvironment, isTestEnvironment, PerformanceConfig, PerformanceMetrics, PerformanceMetricSource,
   PerformanceMetricType, ReactScanConfig, SizeLimitConfig, validateConfig, WebEvalAgentConfig, WebVitalsConfig
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * 性能监控协调器 - 向后兼容的主类

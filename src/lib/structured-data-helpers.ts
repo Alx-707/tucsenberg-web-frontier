@@ -8,7 +8,7 @@ import {
   generateOrganizationData,
   generateProductData,
   generateWebSiteData,
-} from './structured-data-generators';
+} from '@/lib/structured-data-generators';
 import type {
   ArticleData,
   BreadcrumbData,
@@ -16,7 +16,7 @@ import type {
   OrganizationData,
   ProductData,
   WebSiteData,
-} from './structured-data-types';
+} from '@/lib/structured-data-types';
 
 /**
  * 创建面包屑导航结构化数据

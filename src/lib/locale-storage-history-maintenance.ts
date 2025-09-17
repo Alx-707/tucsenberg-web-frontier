@@ -9,7 +9,7 @@ export {
   cleanupDuplicateDetections,
   limitHistorySize,
   clearAllHistory,
-} from './locale-storage-history-maintenance/cleanup';
+} from '@/lib/locale-storage-history-maintenance/cleanup';
 
 // 重新导出导入导出功能
 export {
@@ -17,16 +17,16 @@ export {
   exportHistoryAsJson,
   importHistory,
   importHistoryFromJson,
-} from './locale-storage-history-maintenance/import-export';
+} from '@/lib/locale-storage-history-maintenance/import-export';
 
 // 重新导出备份和恢复功能
 export {
   createBackup,
   restoreFromBackup,
-} from './locale-storage-history-maintenance/backup';
+} from '@/lib/locale-storage-history-maintenance/backup';
 
 // 重新导出维护工具功能
 export {
   performMaintenance,
   getMaintenanceRecommendations,
-} from './locale-storage-history-maintenance/maintenance';
+} from '@/lib/locale-storage-history-maintenance/maintenance';

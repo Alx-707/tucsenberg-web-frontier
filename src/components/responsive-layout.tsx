@@ -1,7 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
 
 // 自定义hook处理hydration
@@ -77,15 +76,13 @@ function getSpecificLayoutContent(
 // 生成响应式CSS类名的辅助函数
 function generateResponsiveClasses(
   className: string,
-  isMobile: boolean,
-  isTablet: boolean,
-  isDesktop: boolean,
+  flags: { isMobile: boolean; isTablet: boolean; isDesktop: boolean },
 ): string {
   const classes = [className];
 
-  if (isMobile) classes.push('responsive-mobile');
-  if (isTablet) classes.push('responsive-tablet');
-  if (isDesktop) classes.push('responsive-desktop');
+  if (flags.isMobile) classes.push('responsive-mobile');
+  if (flags.isTablet) classes.push('responsive-tablet');
+  if (flags.isDesktop) classes.push('responsive-desktop');
 
   return classes.filter(Boolean).join(' ').trim();
 }
@@ -144,12 +141,11 @@ export function ResponsiveLayout({
   }
 
   // Default responsive behavior
-  const responsiveClasses = generateResponsiveClasses(
-    className,
+  const responsiveClasses = generateResponsiveClasses(className, {
     isMobile,
     isTablet,
     isDesktop,
-  );
+  });
 
   return (
     <div

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { COUNT_TRIPLE, MAGIC_0_25, MAGIC_0_1, MAGIC_4000, MAGIC_2500, ANIMATION_DURATION_NORMAL, COUNT_FIVE, OFFSET_NEGATIVE_MEDIUM, MAGIC_90, MAGIC_75, PERCENTAGE_HALF } from '@/constants/magic-numbers';
+import { ANIMATION_DURATION_NORMAL, COUNT_FIVE, COUNT_TRIPLE, MAGIC_0_1, MAGIC_0_25, MAGIC_2500, MAGIC_4000, MAGIC_75, MAGIC_90, PERCENTAGE_HALF } from '@/constants';
 
 import { TEST_COUNT_CONSTANTS } from '@/constants/test-constants';
 import type {
@@ -7,7 +7,7 @@ import type {
   ExportFormat,
   WebVitalsDiagnosticsState,
   WebVitalsReportExport,
-} from './web-vitals-diagnostics-types';
+} from '@/hooks/web-vitals-diagnostics-types';
 
 /**
  * Web Vitals 报告导出功能

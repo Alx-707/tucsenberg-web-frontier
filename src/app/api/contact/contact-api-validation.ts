@@ -4,12 +4,12 @@
  */
 
 import { verifyTurnstile } from '@/app/api/contact/contact-api-utils';
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, DAYS_PER_WEEK, ONE, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, ONE, ZERO, COUNT_TEN, SECONDS_PER_MINUTE, DAYS_PER_WEEK } from '@/constants';
+
 import { airtableService } from '@/lib/airtable';
 import { logger } from '@/lib/logger';
 import { resendService } from '@/lib/resend';
-import type { ContactFormData } from '@/lib/validations';
-import { contactFormSchema } from '@/lib/validations';
+import { contactFormSchema, type ContactFormData } from '@/lib/validations';
 import { z } from 'zod';
 
 /**
@@ -36,7 +36,7 @@ export async function validateFormData(body: unknown, clientIP: string) {
       clientIP,
     });
 
-    const errorMessages = validationResult.error.issues.map((error: any) => {
+    const errorMessages = validationResult.error.issues.map((error: z.ZodIssue) => {
       const field = error.path.join('.');
       return `${field}: ${error.message}`;
     });

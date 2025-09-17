@@ -1,5 +1,6 @@
-import { COUNT_FIVE, ONE } from "@/constants/magic-numbers";
 import { routing } from '@/i18n/routing';
+import { COUNT_FIVE, ONE } from '@/constants';
+
 import {
   getCachedMessages,
   I18nPerformanceMonitor,

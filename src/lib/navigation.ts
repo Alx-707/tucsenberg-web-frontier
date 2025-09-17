@@ -5,8 +5,9 @@
  * and utility functions for the responsive navigation system.
  */
 import { LOCALES_CONFIG } from '@/config/paths';
+import { BREAKPOINT_MD, BREAKPOINT_XL, BYTES_PER_KB, PERCENTAGE_FULL } from '@/constants';
+
 import { COUNT_250 } from "@/constants/count";
-import { BREAKPOINT_MD, BREAKPOINT_XL, BYTES_PER_KB, PERCENTAGE_FULL } from "@/constants/magic-numbers";
 import type { Locale } from '@/types/i18n';
 
 // Navigation item interface

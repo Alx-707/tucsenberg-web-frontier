@@ -1,4 +1,4 @@
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 
 /**
  * 安全对象访问工具库

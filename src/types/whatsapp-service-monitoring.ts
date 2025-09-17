@@ -1,4 +1,4 @@
-import { COUNT_FIVE, COUNT_TEN, FIVE_SECONDS_MS, MAGIC_0_1, MAGIC_2000, MAGIC_95, MAGIC_99, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { COUNT_FIVE, COUNT_TEN, FIVE_SECONDS_MS, MAGIC_0_1, MAGIC_2000, MAGIC_95, MAGIC_99, PERCENTAGE_FULL, ZERO } from '@/constants';
 
 /**
  * WhatsApp Service Monitoring and Health Types

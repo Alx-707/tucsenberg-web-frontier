@@ -5,7 +5,8 @@
  * Theme analytics core class
  */
 import { MAGIC_0_1 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, COUNT_TRIPLE, DAYS_PER_MONTH, HOURS_PER_DAY, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { ThemeAnalyticsUtils } from '@/lib/theme-analytics-utils';
 import * as Sentry from '@sentry/nextjs';
 import type {
@@ -14,7 +15,7 @@ import type {
   ThemePerformanceSummary,
   ThemeSwitchPattern,
   ThemeUsageStats,
-} from './theme-analytics-types';
+} from '@/lib/theme-analytics-types';
 
 /**
  * 主题分析管理器

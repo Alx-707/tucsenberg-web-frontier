@@ -19,7 +19,7 @@ export type {
   PerformanceMonitoringConfig,
   PerformanceMonitoringStatus,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 // 导出常量
 export { PERFORMANCE_THRESHOLDS } from '@/lib/web-vitals/constants';

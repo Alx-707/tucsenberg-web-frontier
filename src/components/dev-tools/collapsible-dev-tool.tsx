@@ -1,8 +1,7 @@
 // @ts-nocheck - 开发工具豁免：仅开发环境使用，不影响生产代码质量
 'use client';
 
-import type { type ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, type ReactNode } from 'react';
 
 interface CollapsibleDevToolProps {
   toolId: string;

@@ -6,7 +6,7 @@
  * 提供加载状态组件、高阶组件包装器等基础功能
  */
 import { LoadingSpinner } from '@/components/loading-spinner';
-import { PERCENTAGE_FULL } from "@/constants/magic-numbers";
+import { PERCENTAGE_FULL } from "@/constants";
 import { logger } from '@/lib/logger';
 import React, { Suspense } from 'react';
 

@@ -1,16 +1,37 @@
 'use client';
 
 /* eslint-disable no-case-declarations */
-import { MAGIC_2000 } from "@/constants/count";
-import { ANGLE_90_DEG, COUNT_FIVE, HTTP_OK, PERCENTAGE_FULL } from "@/constants/magic-numbers";
-import { MINUTE_MS } from '@/constants/units';
+import { ANGLE_90_DEG, COUNT_FIVE, HTTP_OK, MINUTE_MS, PERCENTAGE_FULL } from '@/constants';
+import { MAGIC_2000 } from '@/constants/count';
 import {
-  I18nPerformanceMonitor,
-  preloadTranslations,
+    I18nPerformanceMonitor,
+    preloadTranslations,
 } from '@/lib/i18n-performance';
 import { logger } from '@/lib/logger';
 import { useLocale } from 'next-intl';
 import { useEffect } from 'react';
+
+interface SchedulerPostTaskOptions {
+  priority?: 'user-blocking' | 'user-visible' | 'background';
+}
+
+interface SchedulerWithPostTask {
+  postTask: (callback: () => Promise<void> | void, options?: SchedulerPostTaskOptions) => void;
+}
+
+const getSchedulerWithPostTask = (): SchedulerWithPostTask | null => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const candidate = (window as typeof window & { scheduler?: unknown }).scheduler;
+  if (typeof candidate !== 'object' || candidate === null) {
+    return null;
+  }
+
+  const { postTask } = candidate as Partial<SchedulerWithPostTask>;
+  return typeof postTask === 'function' ? (candidate as SchedulerWithPostTask) : null;
+};
 
 interface TranslationPreloaderProps {
   /**
@@ -91,6 +112,15 @@ export function TranslationPreloader({
               once: true,
             });
             break;
+
+          default:
+            // 默认回退到空闲时预加载策略
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(async () => {
+                await preloadTranslations(targetLocales);
+              });
+            }
+            break;
         }
 
         // 记录性能指标
@@ -143,8 +173,9 @@ export function CriticalTranslationPreloader() {
     };
 
     // 使用高优先级预加载
-    if ('scheduler' in window && 'postTask' in (window as any).scheduler) {
-      (window as any).scheduler.postTask(preloadCriticalTranslations, {
+    const scheduler = getSchedulerWithPostTask();
+    if (scheduler) {
+      scheduler.postTask(preloadCriticalTranslations, {
         priority: 'user-blocking',
       });
     } else {
@@ -209,20 +240,25 @@ export function SmartTranslationPreloader() {
  * 根据页面路径预测需要的翻译命名空间
  */
 function getPredictedNamespaces(path: string): string[] {
-  const namespaceMap: Record<string, string[]> = {
-    '/': ['home', 'hero', 'features'],
-    '/about': ['about', 'team', 'company'],
-    '/guanyu': ['about', 'team', 'company'],
-    '/contact': ['contact', 'form', 'support'],
-    '/lianxi': ['contact', 'form', 'support'],
-    '/blog': ['blog', 'articles', 'content'],
-    '/products': ['products', 'catalog', 'pricing'],
-  };
-
   // 获取基础路径（移除语言前缀）
   const basePath = path.replace(/^\/[a-z]{2}(?=\/|$)/, '') || '/';
 
-  return namespaceMap[basePath] || ['common'];
+  switch (basePath) {
+    case '/':
+      return ['home', 'hero', 'features'];
+    case '/about':
+    case '/guanyu':
+      return ['about', 'team', 'company'];
+    case '/contact':
+    case '/lianxi':
+      return ['contact', 'form', 'support'];
+    case '/blog':
+      return ['blog', 'articles', 'content'];
+    case '/products':
+      return ['products', 'catalog', 'pricing'];
+    default:
+      return ['common'];
+  }
 }
 
 /**

@@ -20,7 +20,7 @@ export {
   sanitizeHtml,
   isValidJson,
   sanitizeForDatabase,
-} from './security-validation';
+} from '@/lib/security-validation';
 
 // 令牌生成
 export {
@@ -38,7 +38,7 @@ export {
   createTokenWithExpiry,
   isTokenExpired,
   type TokenWithExpiry,
-} from './security-tokens';
+} from '@/lib/security-tokens';
 
 // 速率限制
 export {
@@ -52,7 +52,7 @@ export {
   slidingWindowRateLimit,
   cleanupSlidingWindow,
   type RateLimitTier,
-} from './security-rate-limit';
+} from '@/lib/security-rate-limit';
 
 // 文件上传验证
 export {
@@ -66,7 +66,7 @@ export {
   validateMultipleFiles,
   ALLOWED_FILE_TYPES,
   type FileValidationResult,
-} from './security-file-upload';
+} from '@/lib/security-file-upload';
 
 // 加密和密码哈希
 export {
@@ -83,7 +83,7 @@ export {
   exportKey,
   importKey,
   constantTimeCompare,
-} from './security-crypto';
+} from '@/lib/security-crypto';
 
 // 安全头部和配置
 export {
@@ -98,7 +98,7 @@ export {
   validateSecurityHeaders,
   generateSecurityReport,
   type SecurityMiddlewareConfig,
-} from './security-headers';
+} from '@/lib/security-headers';
 
 // 向后兼容性：保留一些常用的直接导出
 // Backward compatibility: keep some commonly used direct exports

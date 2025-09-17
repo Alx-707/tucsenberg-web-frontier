@@ -6,7 +6,7 @@ import type { QualityScore } from '@/types/translation-manager';
 import type {
   QualityBenchmark,
   QualityComparison,
-} from './translation-quality-types';
+} from '@/lib/translation-quality-types';
 
 export class TranslationBenchmarks {
   private benchmarks: Map<Locale, QualityBenchmark> = new Map();

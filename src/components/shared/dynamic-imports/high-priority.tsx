@@ -5,8 +5,8 @@
  *
  * 高优先级和核心UI组件的动态导入定义
  */
-import dynamic from 'next/dynamic';
 import { MinimalLoadingFallback } from '@/components/shared/dynamic-imports-base';
+import dynamic from 'next/dynamic';
 
 // ==================== 高优先级动态导入组件 ====================
 
@@ -17,7 +17,7 @@ import { MinimalLoadingFallback } from '@/components/shared/dynamic-imports-base
  */
 export const DynamicProgressIndicator = dynamic(
   () =>
-    import('../progress-indicator').then((mod) => ({
+    import('@/components/shared/progress-indicator').then((mod) => ({
       default: mod.ProgressIndicator,
     })),
   {
@@ -33,7 +33,9 @@ export const DynamicProgressIndicator = dynamic(
  */
 export const DynamicAnimatedIcon = dynamic(
   () =>
-    import('../animated-icon').then((mod) => ({ default: mod.AnimatedIcon })),
+    import('@/components/shared/animated-icon').then((mod) => ({
+      default: mod.AnimatedIcon,
+    })),
   {
     loading: () => <MinimalLoadingFallback />,
     ssr: false,

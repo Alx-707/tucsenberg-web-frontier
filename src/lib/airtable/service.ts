@@ -3,36 +3,40 @@
  */
 
 import { env } from '@/../env.mjs';
-import { ANIMATION_DURATION_VERY_SLOW, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import { airtableRecordSchema, validationHelpers } from '@/lib/validations';
-import Airtable from 'airtable';
+// 动态引入 Airtable，避免构建期和初始化顺序问题
+// import type 仅用于类型提示，实际模块在运行时按需加载
+import type AirtableNS from 'airtable';
 import type {
   AirtableQueryOptions,
   AirtableRecord,
   ContactFormData,
   ContactStatus,
-} from './types';
+} from '@/lib/airtable/types';
 
 /**
  * Airtable配置和初始化
  * Airtable configuration and initialization
  */
 export class AirtableService {
-  private base: Airtable.Base | null = null;
+  private base: AirtableNS.Base | null = null;
   private tableName: string;
   private isConfigured: boolean = false;
+  private airtableModule: any = null;
 
   constructor() {
     this.tableName = env.AIRTABLE_TABLE_NAME || 'Contacts';
-    this.initializeAirtable();
+    // 不在构造函数中执行初始化，延迟到首次调用方法时
   }
 
   /**
    * 初始化Airtable连接
    * Initialize Airtable connection
    */
-  private initializeAirtable(): void {
+  private async initializeAirtable(): Promise<void> {
     try {
       if (!env.AIRTABLE_API_KEY || !env.AIRTABLE_BASE_ID) {
         logger.warn(
@@ -44,6 +48,11 @@ export class AirtableService {
         );
         return;
       }
+      // 动态加载 airtable 模块
+      if (!this.airtableModule) {
+        this.airtableModule = (await import('airtable')) as any;
+      }
+      const Airtable: any = this.airtableModule.default || this.airtableModule;
 
       Airtable.configure({
         endpointUrl: 'https://api.airtable.com',
@@ -61,6 +70,14 @@ export class AirtableService {
         error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
+  }
+
+  /**
+   * 确保 Airtable 已初始化
+   */
+  private async ensureReady(): Promise<void> {
+    if (this.isConfigured && this.base) return;
+    await this.initializeAirtable();
   }
 
   /**
@@ -101,6 +118,7 @@ export class AirtableService {
   public async createContact(
     formData: ContactFormData,
   ): Promise<AirtableRecord> {
+    await this.ensureReady();
     if (!this.isReady()) {
       throw new Error('Airtable service is not configured');
     }
@@ -169,6 +187,7 @@ export class AirtableService {
   public async getContacts(
     options: AirtableQueryOptions = {},
   ): Promise<AirtableRecord[]> {
+    await this.ensureReady();
     if (!this.isReady()) {
       throw new Error('Airtable service is not configured');
     }
@@ -213,6 +232,7 @@ export class AirtableService {
     recordId: string,
     status: ContactStatus,
   ): Promise<void> {
+    await this.ensureReady();
     if (!this.isReady()) {
       throw new Error('Airtable service is not configured');
     }
@@ -247,6 +267,7 @@ export class AirtableService {
    * Delete contact record
    */
   public async deleteContact(recordId: string): Promise<void> {
+    await this.ensureReady();
     if (!this.isReady()) {
       throw new Error('Airtable service is not configured');
     }
@@ -271,6 +292,7 @@ export class AirtableService {
    * Check for duplicate email addresses
    */
   public async isDuplicateEmail(email: string): Promise<boolean> {
+    await this.ensureReady();
     if (!this.isReady()) {
       return false;
     }
@@ -303,6 +325,7 @@ export class AirtableService {
     completedContacts: number;
     recentContacts: number;
   }> {
+    await this.ensureReady();
     if (!this.isReady()) {
       throw new Error('Airtable service is not configured');
     }

@@ -3,8 +3,9 @@ import {
   QUALITY_WEIGHTS,
   VALIDATION_THRESHOLDS,
 } from '@/constants/i18n-constants';
-import { ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import type { Locale } from '@/types/i18n';
+import { ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import '@/types/translation-manager';
 import type {
   LocaleQualityReport,
@@ -21,7 +22,7 @@ import {
   generateRecommendations,
   generateSuggestions,
   getNestedValue,
-} from './translation-utils';
+} from '@/lib/translation-utils';
 
 /**
  * 翻译质量检查器

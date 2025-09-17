@@ -1,13 +1,14 @@
+import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_VERY_SLOW, MAGIC_600 } from '@/constants';
+
 /**
  * WhatsApp Webhook 工具函数
  * WhatsApp Webhook Utility Functions
  */
 
-import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_VERY_SLOW, MAGIC_600 } from "@/constants/magic-numbers";
 import type {
   WebhookError,
   WebhookVerificationRequest,
-} from '../whatsapp-webhook-base';
+} from '@/types/whatsapp-webhook-base';
 
 /**
  * Webhook验证工具函数

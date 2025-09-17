@@ -1,11 +1,12 @@
-import { BREAKPOINT_MD, BYTES_PER_KB, COUNT_PAIR, PERCENTAGE_FULL } from "@/constants/magic-numbers";
 import { logger } from '@/lib/logger';
+import { BREAKPOINT_MD, BYTES_PER_KB, COUNT_PAIR, PERCENTAGE_FULL } from '@/constants';
+
 import { recordThemeSwitch } from '@/lib/theme-analytics';
 import React from 'react';
 import type {
   ThemeTransitionConfig,
   ThemeTransitionRecord,
-} from './theme-transition-types';
+} from '@/hooks/theme-transition-types';
 
 /**
  * 默认屏幕尺寸常量（用于 SSR 环境）

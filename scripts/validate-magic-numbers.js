@@ -108,13 +108,13 @@ function validateConstantDefinitions() {
   if (uniqueMissing.length === 0) {
     console.log('✅ 所有需要的常量都已定义');
     return true;
-  } else {
+  } 
     console.log('❌ 发现缺失的常量定义:');
     uniqueMissing.forEach(missing => {
       console.log(`  - ${missing.constantName} = ${missing.number}; // 用于 ${missing.files.length} 个文件`);
     });
     return false;
-  }
+  
 }
 
 // 检查导入语句正确性
@@ -159,14 +159,14 @@ function validateImports() {
   if (importIssues.length === 0) {
     console.log('✅ 所有导入语句都正确');
     return true;
-  } else {
+  } 
     console.log('❌ 发现导入问题:');
     importIssues.forEach(issue => {
       console.log(`  文件: ${path.relative(process.cwd(), issue.file)}`);
       console.log(`    缺失导入: ${issue.missing.join(', ')}`);
     });
     return false;
-  }
+  
 }
 
 // 生成修复报告

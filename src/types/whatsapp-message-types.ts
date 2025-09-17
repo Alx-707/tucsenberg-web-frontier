@@ -5,8 +5,9 @@
  * including text, image, interactive, and other specialized message formats.
  */
 
-import { COUNT_TEN, COUNT_TRIPLE, MAGIC_20, MAGIC_4096, ONE, ZERO } from "@/constants/magic-numbers";
 import type { TemplateMessage } from '@/types/whatsapp-template-types';
+import { COUNT_TEN, COUNT_TRIPLE, MAGIC_20, MAGIC_4096, ONE, ZERO } from '@/constants';
+
 import type {
   ContactData,
   LocationData

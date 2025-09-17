@@ -2,7 +2,7 @@
  * 内容排序和分页函数
  */
 
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import type {
   BlogPost,
   ContentError,

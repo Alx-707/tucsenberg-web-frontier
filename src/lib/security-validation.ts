@@ -1,7 +1,7 @@
 import { INPUT_VALIDATION_CONSTANTS } from "@/constants/security-constants";
-const EMAIL_MAX_LENGTH = INPUT_VALIDATION_CONSTANTS.EMAIL_MAX_LENGTH;
-import { ANIMATION_DURATION_VERY_SLOW, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, ZERO  } from '@/constants';
 
+const {EMAIL_MAX_LENGTH} = INPUT_VALIDATION_CONSTANTS;
 /**
  * 安全验证工具
  * Security validation utilities

@@ -16,7 +16,7 @@ import type {
   PerformanceAlertConfig,
   PerformanceBaseline,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 /**
  * 集成的性能监控管理器

@@ -4,7 +4,7 @@
  */
 
 import type { DetailedWebVitals } from '@/lib/enhanced-web-vitals';
-import { COUNT_TRIPLE, COUNT_PAIR, OFFSET_NEGATIVE_MEDIUM, OFFSET_NEGATIVE_LARGE } from '@/constants/magic-numbers';
+import { COUNT_TRIPLE, COUNT_PAIR, OFFSET_NEGATIVE_MEDIUM, OFFSET_NEGATIVE_LARGE  } from '@/constants';
 
 import { calculatePercentageChange } from '@/hooks/web-vitals-diagnostics-calculator';
 import {
@@ -13,7 +13,7 @@ import {
   type ExportData,
   type PageComparison,
   type PagePerformanceGroup,
-} from './web-vitals-diagnostics-constants';
+} from '@/hooks/web-vitals-diagnostics-constants';
 
 /**
  * 生成诊断建议

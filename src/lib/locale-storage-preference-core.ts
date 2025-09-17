@@ -8,7 +8,8 @@
 'use client';
 
 import { DEC_0_01, MAGIC_0_5, MAGIC_0_7 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, COUNT_TRIPLE, ONE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, COUNT_TRIPLE, ONE, ZERO } from '@/constants';
+
 import { CookieManager } from '@/lib/locale-storage-cookie';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import { isUserLocalePreference } from '@/lib/locale-storage-types';
@@ -17,7 +18,7 @@ import type {
   StorageOperationResult,
   UserLocalePreference,
   ValidationResult,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 数据验证功能 ====================
 

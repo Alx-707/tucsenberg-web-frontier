@@ -5,7 +5,8 @@
  */
 
 import { DEC_0_05, MAGIC_0_1, MAGIC_0_8 } from "@/constants/decimal";
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO  } from '@/constants';
+
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from '@/lib/locale-constants';
 import type { LocaleDetectionResult } from '@/lib/locale-detection-types';
 import { BaseLocaleDetector } from '@/lib/locale-detector-base';
@@ -17,7 +18,7 @@ import {
   CONFIDENCE_WEIGHTS,
   DETECTION_SOURCES,
   QUALITY_THRESHOLDS,
-} from './locale-detector-constants';
+} from '@/lib/locale-detector-constants';
 
 /**
  * 检测结果接口

@@ -4,7 +4,9 @@
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
-  "eslint.workingDirectories": ["."],
+  "eslint.workingDirectories": [
+    "."
+  ],
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.organizeImportsIgnoreCase": false,
   "typescript.preferences.organizeImportsNumericCollation": true,
@@ -20,7 +22,10 @@
     "typescript": "html",
     "typescriptreact": "html"
   },
-  "editor.rulers": [80, 100],
+  "editor.rulers": [
+    80,
+    100
+  ],
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "files.trimTrailingWhitespace": true,
@@ -57,5 +62,6 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "never"
     }
-  }
+  },
+  "kiroAgent.configureMCP": "Enabled"
 }

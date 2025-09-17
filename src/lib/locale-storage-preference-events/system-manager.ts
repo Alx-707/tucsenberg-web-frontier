@@ -5,12 +5,12 @@
 
 'use client';
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { PreferenceEventManager } from '@/lib/locale-storage-preference-events/event-manager';
 import {
   consoleLogListener,
   historyRecordingListener,
-} from './event-listeners';
+} from '@/lib/locale-storage-preference-events/event-listeners';
 
 /**
  * 事件管理工具函数

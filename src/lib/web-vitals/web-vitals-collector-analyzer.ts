@@ -5,8 +5,9 @@
 
 'use client';
 
-import { BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, MAGIC_15, MAGIC_1800, MAGIC_600, MAGIC_800, ONE, PERCENTAGE_FULL, PERCENTAGE_QUARTER, THREE_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
+import { BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, DAYS_PER_MONTH, MAGIC_15, MAGIC_600, MAGIC_800, MAGIC_1800, ONE, PERCENTAGE_FULL, PERCENTAGE_QUARTER, THREE_SECONDS_MS, ZERO } from '@/constants';
+
 import { PERFORMANCE_THRESHOLDS } from '@/lib/web-vitals/constants';
 import type { DetailedWebVitals } from '@/lib/web-vitals/types';
 

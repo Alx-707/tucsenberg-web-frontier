@@ -1,3 +1,6 @@
+
+// Aggregated constants entrypoint. Avoid self-imports to prevent circular deps.
+
 /**
  * 常量模块统一导出
  * 提供项目中所有常量的集中访问点
@@ -11,6 +14,9 @@ export * from './decimal';
 
 // 魔法数字常量 - Facade聚合入口
 export * from './magic-numbers';
+
+// 单位工具常量
+export * from './units';
 
 // 国际化常量
 export {

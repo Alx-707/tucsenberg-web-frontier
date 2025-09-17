@@ -5,13 +5,14 @@
  * 提供与Bundle Analyzer工具的集成钩子，用于监控打包大小和优化
  */
 
-import { ANIMATION_DURATION_SLOW, ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, MAGIC_0_8, MAGIC_512, MAGIC_8, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, PERCENTAGE_QUARTER, ZERO } from "@/constants/magic-numbers";
 import { KB, MB } from '@/constants/units';
+import { ANIMATION_DURATION_SLOW, ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, MAGIC_0_8, MAGIC_8, MAGIC_512, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, PERCENTAGE_QUARTER, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import type {
   PerformanceConfig,
   PerformanceMetrics,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * Bundle Analyzer 集成钩子返回类型

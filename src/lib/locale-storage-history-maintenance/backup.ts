@@ -8,7 +8,7 @@
 import type {
   LocaleDetectionHistory,
   StorageOperationResult,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 import { exportHistory, importHistory } from '@/lib/locale-storage-history-maintenance/import-export';
 
 /**

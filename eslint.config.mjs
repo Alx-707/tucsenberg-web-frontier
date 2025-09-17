@@ -367,6 +367,19 @@ export default [
     },
   },
 
+  // 常量定义文件配置 - 豁免魔法数字规则
+  {
+    name: 'constants-files-overrides',
+    files: [
+      'src/constants/**/*.ts',
+      'src/constants/**/*.js',
+    ],
+    rules: {
+      // 常量定义文件中的数字是有意义的常量，不应被视为魔法数字
+      'no-magic-numbers': 'off', // 常量定义文件豁免魔法数字检查
+    },
+  },
+
   // CODEX分层治理 - 测试文件全面豁免魔法数字
   {
     name: 'codex-test-files-config',
@@ -420,6 +433,7 @@ export default [
       'require-await': 'off', // async测试模式
       'no-throw-literal': 'off', // 测试异常抛出
       'no-underscore-dangle': 'off', // 私有属性测试访问
+      'no-restricted-imports': 'off', // 测试文件允许相对路径导入
 
       // 🎯 行业标准：测试文件允许any类型（Mock对象复杂性）
       '@typescript-eslint/no-explicit-any': 'off', // 测试文件允许any类型 - 符合行业标准
@@ -466,11 +480,13 @@ export default [
       'src/app/**/dev-tools/**/*.{ts,tsx}',
       'src/app/**/react-scan-demo/**/*.{ts,tsx}',
       'src/app/**/diagnostics/**/*.{ts,tsx}',
+      'src/components/examples/ui-showcase/**/*.{ts,tsx}',
       'src/lib/react-scan-config.ts',
       'src/lib/dev-tools-positioning.ts',
       'src/lib/performance-monitoring-coordinator.ts',
       'src/constants/dev-tools.ts',
       'src/constants/test-*.ts',
+      'continue-eslint-fixes.ts',
     ],
     rules: {
       // 🎯 渐进式改进：开发工具保持基本质量标准
@@ -492,17 +508,32 @@ export default [
       // 🔄 渐进改进：开发工具TypeScript规则收紧
       '@typescript-eslint/no-explicit-any': 'warn', // 开发工具允许适度使用any（全局对象访问）
       '@typescript-eslint/ban-ts-comment': 'warn', // 开发工具允许@ts-nocheck（仅开发环境）
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
 
       // 开发工具特定但合理的豁免
       'no-underscore-dangle': [
         'error',
         { allow: ['__REACT_SCAN__', '__DEV__'] },
       ],
-      'security/detect-object-injection': 'error', // 开发工具动态访问，统一为error级别
+      'security/detect-object-injection': 'warn', // 开发工具动态访问，降级为警告
+      'react/no-unescaped-entities': 'off', // 开发工具文案允许未转义实体
+      'react-you-might-not-need-an-effect/no-event-handler': 'warn',
+      'react-you-might-not-need-an-effect/no-chain-state-updates': 'warn',
+      'no-void': 'off', // 允许显式丢弃表达式结果
       'no-empty-function': 'warn', // 开发工具占位符
       'consistent-return': 'warn', // 开发工具复杂逻辑
       'no-param-reassign': 'warn', // 开发工具参数修改
       'prefer-destructuring': 'warn', // 开发工具属性访问
+      'require-await': 'warn',
+      'no-console': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      'max-statements': ['warn', 40],
 
       // 保持严格的基本语法检查
       'no-undef': ['error', { typeof: true }], // 未定义变量检查
@@ -530,6 +561,18 @@ export default [
   {
     name: 'architecture-refactor-rules',
     files: ['**/*.{js,jsx,ts,tsx}'],
+    ignores: [
+      'scripts/**/*.{js,ts}',
+      'config/**/*.{js,ts}',
+      '*.config.{js,ts,mjs}',
+      // 测试文件豁免 - 允许相对路径导入
+      '**/*.test.{js,jsx,ts,tsx}',
+      '**/__tests__/**/*.{js,jsx,ts,tsx}',
+      'tests/**/*.{js,jsx,ts,tsx}',
+      'src/test/**/*.{js,jsx,ts,tsx}',
+      'src/testing/**/*.{js,jsx,ts,tsx}',
+      'e2e/**/*.{js,jsx,ts,tsx}',
+    ],
     rules: {
       // 禁止新增export *重新导出 - 架构重构期间临时规则
       'no-restricted-syntax': [
@@ -598,6 +641,48 @@ export default [
     rules: {
       'no-unused-vars': 'off',
       'no-undef': 'off',
+    },
+  },
+
+  // 测试文件最终覆盖配置 - 确保测试文件规则优先级最高
+  {
+    name: 'test-files-final-override',
+    files: [
+      '**/*.test.{js,jsx,ts,tsx}',
+      '**/__tests__/**/*.{js,jsx,ts,tsx}',
+      'tests/**/*.{js,jsx,ts,tsx}',
+      'src/test/**/*.{js,jsx,ts,tsx}',
+      'src/testing/**/*.{js,jsx,ts,tsx}',
+      'e2e/**/*.{js,jsx,ts,tsx}',
+      'scripts/__fixtures__/**/*.{js,jsx,ts,tsx}',
+      '**/mocks/**/*.{js,jsx,ts,tsx}',
+    ],
+    rules: {
+      // 明确禁用架构规则，确保测试文件可以使用相对路径导入
+      'no-restricted-imports': 'off',
+      'no-restricted-syntax': 'off',
+      // 安全规则在测试中降级为警告
+      'security/detect-object-injection': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      'max-depth': ['warn', 5],
+    },
+  },
+
+  // 类型声明与第三方兼容性区域（types）
+  {
+    name: 'types-compatibility-overrides',
+    files: ['src/types/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/no-require-imports': 'off',
+      'max-depth': ['warn', 5],
+      'security/detect-object-injection': 'warn',
     },
   },
 

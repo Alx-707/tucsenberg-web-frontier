@@ -1,3 +1,6 @@
+
+import { SECONDS_PER_MINUTE, MINUTES_PER_HOUR, HOURS_PER_DAY } from '@/constants';
+
 /**
  * i18n系统常量定义
  * 集中管理所有魔法数字，提高代码可维护性和可读性

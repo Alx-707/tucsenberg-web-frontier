@@ -65,12 +65,8 @@ function getClientIP(request: NextRequest): string {
 /**
  * 调用 Cloudflare Turnstile 验证 API
  */
-async function verifyWithCloudflare(
-  secretKey: string,
-  token: string,
-  clientIP: string,
-  remoteip?: string,
-) {
+interface VerifyParams { secretKey: string; token: string; clientIP: string; remoteip?: string }
+async function verifyWithCloudflare({ secretKey, token, clientIP, remoteip }: VerifyParams) {
   const verificationData = new URLSearchParams({
     secret: secretKey,
     response: token,
@@ -179,12 +175,9 @@ export async function POST(request: NextRequest) {
     const clientIP = getClientIP(request);
 
     // Verify with Cloudflare
-    const result = await verifyWithCloudflare(
-      secretKey,
-      body.token,
-      clientIP,
-      body.remoteip,
-    );
+    const payload: VerifyParams = { secretKey, token: body.token, clientIP };
+    if (body.remoteip) payload.remoteip = body.remoteip;
+    const result = await verifyWithCloudflare(payload);
 
     if (result instanceof NextResponse) {
       return result;

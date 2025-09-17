@@ -19,7 +19,7 @@ import type {
   StorageEventType,
   SyncStatus,
   VersionInfo,
-} from './locale-storage-types-base';
+} from '@/lib/locale-storage-types-base';
 
 /**
  * 用户偏好数据结构

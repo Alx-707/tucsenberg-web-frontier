@@ -3,13 +3,14 @@
  * Basic Translation Preloader Strategy Implementations
  */
 
-import { COUNT_PAIR, MAGIC_999, ONE, ZERO } from "@/constants/magic-numbers";
 import type { Locale } from '@/types/i18n';
+import { COUNT_PAIR, MAGIC_999, ONE, ZERO } from '@/constants';
+
 import type {
   IPreloader,
   PreloadOptions,
   PreloadStrategy,
-} from '../i18n-preloader-types';
+} from '@/lib/i18n-preloader-types';
 
 /**
  * 立即预加载策略

@@ -1,8 +1,11 @@
-import { ANIMATION_DURATION_VERY_SLOW } from "@/constants/magic-numbers";
 import type { Locale } from '@/types/i18n';
+import { ANIMATION_DURATION_VERY_SLOW } from '@/constants';
+
 import { Globe, MapPin, Monitor } from 'lucide-react';
 
 export const TRANSITION_TIMEOUT = ANIMATION_DURATION_VERY_SLOW;
+
+export const SUPPORTED_LOCALES = ['en', 'zh'] as const satisfies readonly Locale[];
 
 // 语言配置
 export const LANGUAGE_CONFIG = {
@@ -28,6 +31,11 @@ export const SOURCE_ICONS = {
   geo: MapPin,
   browser: Globe,
 } as const;
+
+export const getLanguageConfig = (locale: Locale) => (locale === 'zh' ? LANGUAGE_CONFIG.zh : LANGUAGE_CONFIG.en);
+
+export const isSupportedLocale = (value: string): value is (typeof SUPPORTED_LOCALES)[number] =>
+  SUPPORTED_LOCALES.includes(value as (typeof SUPPORTED_LOCALES)[number]);
 
 // 语言项渲染组件
 export interface LanguageItemProps {

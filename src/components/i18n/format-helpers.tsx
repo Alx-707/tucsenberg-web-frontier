@@ -1,7 +1,8 @@
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import type { DateFormatOptions } from '@/types/i18n-enhanced';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { useFormatter, useLocale, useTranslations } from 'next-intl';
 import { memo } from 'react';
 
@@ -12,6 +13,18 @@ interface FormatDateProps {
 }
 
 const MILLISECONDS_PER_DAY = ANIMATION_DURATION_VERY_SLOW * SECONDS_PER_MINUTE * SECONDS_PER_MINUTE * HOURS_PER_DAY;
+
+const applyFractionDigits = (
+  baseOptions: Intl.NumberFormatOptions,
+  minimum?: number,
+  maximum?: number,
+): Intl.NumberFormatOptions => ({
+  ...baseOptions,
+  ...(typeof minimum === 'number' ? { minimumFractionDigits: minimum } : {}),
+  ...(typeof maximum === 'number' ? { maximumFractionDigits: maximum } : {}),
+});
+
+const resolveCurrency = (locale: string, fallback: string) => (locale === 'zh' ? 'CNY' : fallback);
 
 const FormatDateComponent = ({
   date,
@@ -88,47 +101,35 @@ const FormatNumberComponent = ({
   const formatter = useFormatter();
   const locale = useLocale();
 
-  let formattedNumber: string;
+  const formatValue = (): string => {
+    if (type === 'currency') {
+      const options = applyFractionDigits(
+        {
+          style: 'currency',
+          currency: resolveCurrency(locale, currency),
+        },
+        minimumFractionDigits,
+        maximumFractionDigits,
+      );
+      return formatter.number(value, options);
+    }
 
-  switch (type) {
-    case 'currency': {
-      const currencyOptions: Intl.NumberFormatOptions = {
-        style: 'currency',
-        currency: locale === 'zh' ? 'CNY' : currency,
-      };
-      if (minimumFractionDigits !== undefined) {
-        currencyOptions.minimumFractionDigits = minimumFractionDigits;
-      }
-      if (maximumFractionDigits !== undefined) {
-        currencyOptions.maximumFractionDigits = maximumFractionDigits;
-      }
-      formattedNumber = formatter.number(value, currencyOptions as any);
-      break;
+    if (type === 'percentage') {
+      const options = applyFractionDigits(
+        {
+          style: 'percent',
+        },
+        minimumFractionDigits,
+        maximumFractionDigits,
+      );
+      return formatter.number(value / PERCENTAGE_FULL, options);
     }
-    case 'percentage': {
-      const percentOptions: Intl.NumberFormatOptions = {
-        style: 'percent',
-      };
-      if (minimumFractionDigits !== undefined) {
-        percentOptions.minimumFractionDigits = minimumFractionDigits;
-      }
-      if (maximumFractionDigits !== undefined) {
-        percentOptions.maximumFractionDigits = maximumFractionDigits;
-      }
-      formattedNumber = formatter.number(value / PERCENTAGE_FULL, percentOptions as any);
-      break;
-    }
-    default: {
-      const numberOptions: Intl.NumberFormatOptions = {};
-      if (minimumFractionDigits !== undefined) {
-        numberOptions.minimumFractionDigits = minimumFractionDigits;
-      }
-      if (maximumFractionDigits !== undefined) {
-        numberOptions.maximumFractionDigits = maximumFractionDigits;
-      }
-      formattedNumber = formatter.number(value, numberOptions as any);
-    }
-  }
+
+    const options = applyFractionDigits({}, minimumFractionDigits, maximumFractionDigits);
+    return formatter.number(value, options);
+  };
+
+  const formattedNumber = formatValue();
 
   return (
     <span
@@ -152,9 +153,9 @@ interface PluralProps {
 const PluralComponent = ({ count, category, className }: PluralProps) => {
   const t = useTranslations(`formatting.plurals.${category}`);
 
-  const getPluralKey = (count: number): 'zero' | 'one' | 'other' => {
-    if (count === ZERO) return 'zero';
-    if (count === ONE) return 'one';
+  const getPluralKey = (value: number): 'zero' | 'one' | 'other' => {
+    if (value === ZERO) return 'zero';
+    if (value === ONE) return 'one';
     return 'other';
   };
 
@@ -175,16 +176,13 @@ interface RichTextProps {
 
 const RichTextComponent = ({ text, values = {}, className }: RichTextProps) => {
   // Simple rich text processor for basic formatting
-  const processText = (text: string): React.ReactNode => {
+  const processText = (rawText: string): React.ReactNode => {
     // Replace {key} with values
-    let processed = text;
+    let processed = rawText;
     Object.entries(values).forEach(([key, value]) => {
-      const placeholder = `{${key}}`;
       if (typeof value === 'string' || typeof value === 'number') {
-        processed = processed.replace(
-          new RegExp(placeholder, 'g'),
-          String(value),
-        );
+        const placeholder = `{${key}}`;
+        processed = processed.split(placeholder).join(String(value));
       }
     });
 

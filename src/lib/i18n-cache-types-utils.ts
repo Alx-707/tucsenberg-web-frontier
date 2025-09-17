@@ -6,7 +6,8 @@
  */
 
 import { COUNT_100000, COUNT_256, MAGIC_9 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_PAIR, COUNT_TEN, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_PAIR, COUNT_TEN, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { AdvancedCacheConfig } from '@/lib/i18n-cache-types-advanced';
 import type { Locale } from '@/types/i18n';
 import type {
@@ -16,7 +17,7 @@ import type {
   CacheEventType,
   CacheItem,
   CacheStats,
-} from './i18n-cache-types-base';
+} from '@/lib/i18n-cache-types-base';
 
 /**
  * 缓存键工具函数

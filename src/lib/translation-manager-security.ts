@@ -1,4 +1,4 @@
-import { HTTP_OK, ZERO } from "@/constants/magic-numbers";
+import { HTTP_OK, ZERO } from "@/constants";
 import { logger } from '@/lib/logger';
 import type { Locale } from '@/types/i18n';
 import type { QualityScore } from '@/types/translation-manager';

@@ -3,12 +3,12 @@ import {
   analyzePerformance,
   testWebVitalsCollection,
 } from '@/scripts/test-web-vitals';
-import type { TestResults } from '@/app/[locale]/diagnostics/demo/utils';
 import {
   exportTestResults,
   PERFORMANCE_CONSTANTS,
   simulatePerformanceIssues,
-} from './utils';
+  type TestResults,
+} from '@/app/[locale]/diagnostics/demo/utils';
 
 // 诊断功能 Hook
 export function useDiagnostics() {

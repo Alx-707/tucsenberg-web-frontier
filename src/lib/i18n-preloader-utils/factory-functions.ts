@@ -8,7 +8,7 @@ import type {
   CacheStorage,
   MetricsCollector,
   PreloadConfig,
-} from '../i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 import { TranslationPreloader } from '@/lib/i18n-preloader-core';
 
 /**

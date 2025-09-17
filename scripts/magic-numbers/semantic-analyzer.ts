@@ -233,9 +233,9 @@ const categories: NumberCategory[] = [
     generateName: (num, str) => {
       if (Number.isInteger(num)) {
         return `NUMBER_${num}`;
-      } else {
+      } 
         return `DECIMAL_${str.replace('.', '_').replace('-', 'NEG_')}`;
-      }
+      
     },
     priority: 99
   }

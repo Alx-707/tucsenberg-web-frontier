@@ -2,7 +2,7 @@
  * 内容统计函数
  */
 
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 import { getAllPages, getAllPosts } from '@/lib/content-query/queries';
 import { getContentConfig } from '@/lib/content-utils';
 import type { ContentStats, Locale } from '@/types/content';

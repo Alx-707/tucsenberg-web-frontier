@@ -11,7 +11,7 @@ import {
 import {
   THEME_ANNOUNCEMENTS,
   type ScreenReaderConfig,
-} from './accessibility-types';
+} from '@/lib/accessibility-types';
 import { logger } from '@/lib/logger';
 
 /**

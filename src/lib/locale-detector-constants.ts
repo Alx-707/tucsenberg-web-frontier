@@ -5,7 +5,8 @@
  */
 
 import { DEC_0_4, MAGIC_0_1, MAGIC_0_3, MAGIC_0_6, MAGIC_0_7, MAGIC_0_8, MAGIC_0_95 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THREE_SECONDS_MS } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THREE_SECONDS_MS } from '@/constants';
+
 import type { Locale } from '@/types/i18n';
 
 // ==================== 语言代码映射常量 ====================

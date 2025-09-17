@@ -1,7 +1,8 @@
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, DAYS_PER_MONTH, HOURS_PER_DAY, SECONDS_PER_MINUTE } from "@/constants/magic-numbers";
 import { LocaleStorageManager } from '@/lib/locale-storage-manager';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE, DAYS_PER_MONTH, HOURS_PER_DAY, SECONDS_PER_MINUTE } from '@/constants';
+
 import { STORAGE_KEYS } from '@/lib/locale-storage-types';
 import { logger } from '@/lib/logger';
 import type { Locale } from '@/types/i18n';
@@ -9,7 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type {
   LocaleDetectionHistory,
   UserLocalePreference,
-} from './locale-storage-manager';
+} from '@/lib/locale-storage-manager';
 
 /**
  * React Hook: 使用语言偏好存储
@@ -244,8 +245,8 @@ export function useStorageAvailability() {
     const checkAvailability = async () => {
       try {
         // 动态导入以避免 SSR 问题
-        const { LocalStorageManager } = await import('./locale-storage-local');
-        const { CookieManager } = await import('./locale-storage-cookie');
+        const { LocalStorageManager } = await import('@/lib/locale-storage-local');
+        const { CookieManager } = await import('@/lib/locale-storage-cookie');
 
         setIsLocalStorageAvailable(LocalStorageManager.isAvailable());
         setIsCookieAvailable(CookieManager.isSupported());

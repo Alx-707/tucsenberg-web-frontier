@@ -6,8 +6,9 @@
  */
 
 import { COUNT_14, COUNT_256, MAGIC_16, MAGIC_32, MAGIC_512, MAGIC_6 } from "@/constants/count";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THIRTY_SECONDS_MS, ZERO } from '@/constants';
+
 import { DEC_0_05, MAGIC_0_8 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, THIRTY_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import { MINUTE_MS } from "@/constants/time";
 import { DAYS_PER_WEEK } from "@/constants/time";
 import type { Locale } from '@/types/i18n';
@@ -20,7 +21,7 @@ import type {
   CachePerformanceConfig,
   CacheSecurityConfig,
   CacheSyncOptions,
-} from './i18n-cache-types-interfaces';
+} from '@/lib/i18n-cache-types-interfaces';
 
 /**
  * 高级缓存配置

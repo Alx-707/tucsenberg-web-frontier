@@ -9,14 +9,14 @@ import {
   getDetectionHistory,
   HistoryCacheManager,
   validateHistoryData,
-} from '../locale-storage-history-core';
+} from '@/lib/locale-storage-history-core';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
-import { COUNT_PAIR } from '@/constants/magic-numbers';
+import { COUNT_PAIR  } from '@/constants';
 
 import type {
   LocaleDetectionHistory,
   StorageOperationResult,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 导出历史记录

@@ -4,18 +4,19 @@
  */
 
 import { MAGIC_70 } from "@/constants/count";
-import { PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
+import { PERCENTAGE_HALF, ZERO } from '@/constants';
+
 import { WEB_VITALS_CONSTANTS } from '@/constants/test-constants';
 import { AlertSystemChecker, type AlertInfo } from '@/lib/web-vitals/alert-system-checker';
 import {
   AlertSystemSender,
   type AlertHistoryEntry,
-} from './alert-system-sender';
+} from '@/lib/web-vitals/alert-system-sender';
 import type {
   DetailedWebVitals,
   PerformanceAlertConfig,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';
 
 /**
  * 性能预警系统核心类

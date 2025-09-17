@@ -1,9 +1,4 @@
-// 移除循环导入 - 直接定义基础常量，避免依赖magic-numbers
-import { MINUTE_MS } from "./time";
-import { DAYS_PER_WEEK } from "./time";
-import { ALERT_SYSTEM_CONSTANTS } from "./performance-constants";
-import { FILE_SECURITY_CONSTANTS } from "./security-constants";
-import { WEB_VITALS_CONSTANTS } from "./test-web-vitals-constants";
+// 计数与数值常量定义（无跨模块依赖，避免循环引用）
 
 // 基础常量直接定义，避免循环依赖
 const ANGLE_90_DEG = 90 as const;
@@ -11,9 +6,7 @@ const ONE = 1 as const;
 const TEN_SECONDS_MS = 10000 as const;
 const ZERO = 0 as const;
 
-const RANDOM_ID_BASE = ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE;
-const FILENAME_MAX_LENGTH = FILE_SECURITY_CONSTANTS.FILENAME_MAX_LENGTH;
-const TEST_DOM_INTERACTIVE = WEB_VITALS_CONSTANTS.TEST_DOM_INTERACTIVE;
+// 保持该文件纯常量定义，避免引入其他模块依赖导致循环引用
 
 /**
  * 计数相关常量

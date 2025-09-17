@@ -13,7 +13,7 @@ export {
   progressiveStrategy,
   priorityStrategy,
   lazyStrategy,
-} from './i18n-preloader-strategies/basic-strategies';
+} from '@/lib/i18n-preloader-strategies/basic-strategies';
 
 // 重新导出高级策略
 export {
@@ -22,7 +22,7 @@ export {
   networkAwareStrategy,
   timeAwareStrategy,
   memoryAwareStrategy,
-} from './i18n-preloader-strategies/advanced-strategies';
+} from '@/lib/i18n-preloader-strategies/advanced-strategies';
 
 // 重新导出策略配置
 export { strategyConfigs } from '@/lib/i18n-preloader-strategies/configs';
@@ -32,7 +32,7 @@ export {
   PreloadStrategies,
   createStrategyManager,
   getRecommendedStrategy,
-} from './i18n-preloader-strategies/factory';
+} from '@/lib/i18n-preloader-strategies/factory';
 
 // 重新导出工具函数
 export { StrategyUtils } from '@/lib/i18n-preloader-strategies/utils';

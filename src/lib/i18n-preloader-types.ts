@@ -6,8 +6,9 @@
  */
 
 import { COUNT_4 } from "@/constants/count";
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS } from '@/constants';
+
 import { MAGIC_0_1, MAGIC_0_8 } from "@/constants/decimal";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_FIVE, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, SECONDS_PER_MINUTE, TEN_SECONDS_MS } from "@/constants/magic-numbers";
 import type { CacheOperationResult } from '@/lib/i18n-cache-types';
 import type { Locale, Messages } from '@/types/i18n';
 

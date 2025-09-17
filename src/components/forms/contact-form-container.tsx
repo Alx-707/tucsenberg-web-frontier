@@ -1,22 +1,22 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE } from "@/constants/magic-numbers";
-import { logger } from '@/lib/logger';
-import type { ContactFormData, FormSubmissionStatus } from '@/lib/validations';
-import { contactFormSchema } from '@/lib/validations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Turnstile } from '@marsidev/react-turnstile';
-import { useTranslations } from 'next-intl';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import {
     AdditionalFields,
     CheckboxFields,
     ContactFields,
     NameFields,
-} from './contact-form-fields';
+} from '@/components/forms/contact-form-fields';
+import { Button } from '@/components/ui/button';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_FIVE } from '@/constants';
+
+import { Card } from '@/components/ui/card';
+import { logger } from '@/lib/logger';
+import { contactFormSchema, type ContactFormData, type FormSubmissionStatus } from '@/lib/validations';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Turnstile } from '@marsidev/react-turnstile';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import { useForm, type Resolver } from 'react-hook-form';
 
 /**
  * Status message component
@@ -67,15 +67,19 @@ function StatusMessage({ status, t }: StatusMessageProps) {
 /**
  * Form submission handler
  */
+interface SubmitDeps {
+  setSubmitStatus: (_status: FormSubmissionStatus) => void;
+  setLastSubmissionTime: (_time: Date) => void;
+  reset: () => void;
+}
+
 async function handleFormSubmission(
   data: ContactFormData,
   turnstileToken: string,
-  setSubmitStatus: (_status: FormSubmissionStatus) => void,
-  setLastSubmissionTime: (_time: Date) => void,
-  reset: () => void,
+  deps: SubmitDeps,
 ) {
   try {
-    setSubmitStatus('submitting');
+    deps.setSubmitStatus('submitting');
 
     // Rate limiting check
     const submissionData = {
@@ -100,9 +104,9 @@ async function handleFormSubmission(
     const result = await response.json();
 
     if (result.success) {
-      setSubmitStatus('success');
-      setLastSubmissionTime(new Date());
-      reset();
+      deps.setSubmitStatus('success');
+      deps.setLastSubmissionTime(new Date());
+      deps.reset();
 
       // Log successful submission
       logger.info('Contact form submitted successfully', {
@@ -113,7 +117,7 @@ async function handleFormSubmission(
       throw new Error(result.message || 'Submission failed');
     }
   } catch (error) {
-    setSubmitStatus('error');
+    deps.setSubmitStatus('error');
 
     // Log submission error
     logger.error('Contact form submission failed', {
@@ -136,7 +140,9 @@ function useContactForm() {
 
   // React Hook Form setup
   const form = useForm<ContactFormData>({
-    resolver: zodResolver(contactFormSchema as any),
+    resolver: (zodResolver as unknown as (s: unknown) => Resolver<ContactFormData>)(
+      contactFormSchema,
+    ),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -159,13 +165,11 @@ function useContactForm() {
       return;
     }
 
-    await handleFormSubmission(
-      data,
-      turnstileToken,
+    await handleFormSubmission(data, turnstileToken, {
       setSubmitStatus,
       setLastSubmissionTime,
-      form.reset,
-    );
+      reset: form.reset,
+    });
   };
 
   // Rate limiting check (5 minutes = 300000ms)

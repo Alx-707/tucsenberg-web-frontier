@@ -1,4 +1,5 @@
-import { COUNT_TEN, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { COUNT_TEN, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import {
   TEST_APP_CONSTANTS,
   WEB_VITALS_CONSTANTS,

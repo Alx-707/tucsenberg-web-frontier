@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import {
   ArrowRight,
   Bell,
@@ -38,12 +38,12 @@ interface EmailSubscriptionProps {
 export function EmailSubscription({
   showEmailSubscription,
 }: EmailSubscriptionProps) {
-  const _t = useTranslations('underConstruction');
+  const translate = useTranslations('underConstruction');
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
 
-  const handleEmailSubscription = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEmailSubscription = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (!email) return;
 
     try {
@@ -73,16 +73,16 @@ export function EmailSubscription({
       <CardHeader className='text-center'>
         <CardTitle className='flex items-center justify-center gap-2'>
           <Bell className='h-5 w-5' />
-          {_t('emailSubscription.title')}
+          {translate('emailSubscription.title')}
         </CardTitle>
-        <CardDescription>{_t('emailSubscription.description')}</CardDescription>
+        <CardDescription>{translate('emailSubscription.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         {isSubscribed ? (
           <div className='space-y-2 text-center'>
             <CheckCircle className='mx-auto h-8 w-8 text-green-500' />
             <p className='text-muted-foreground text-sm'>
-              {_t('emailSubscription.success')}
+              {translate('emailSubscription.success')}
             </p>
           </div>
         ) : (
@@ -92,7 +92,7 @@ export function EmailSubscription({
           >
             <Input
               type='email'
-              placeholder={_t('emailSubscription.placeholder')}
+              placeholder={translate('emailSubscription.placeholder')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -101,7 +101,7 @@ export function EmailSubscription({
               type='submit'
               className='w-full'
             >
-              {_t('emailSubscription.button')}
+              {translate('emailSubscription.button')}
               <ArrowRight className='ml-2 h-4 w-4' />
             </Button>
           </form>
@@ -117,10 +117,10 @@ interface SocialLinksProps {
 
 export function SocialLinks({ showSocialLinks }: SocialLinksProps) {
   const socialLinks = [
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  ];
+    { icon: Twitter, href: 'https://twitter.com/tucsenberg', label: 'Twitter' },
+    { icon: Github, href: 'https://github.com/tucsenberg', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/company/tucsenberg', label: 'LinkedIn' },
+  ] as const;
 
   if (!showSocialLinks) return null;
 
@@ -134,12 +134,14 @@ export function SocialLinks({ showSocialLinks }: SocialLinksProps) {
           asChild
           className='transition-transform hover:scale-110'
         >
-          <Link
-            href={social.href as any}
+          <a
+            href={social.href}
             aria-label={social.label}
+            target='_blank'
+            rel='noreferrer noopener'
           >
             <social.icon className='h-4 w-4' />
-          </Link>
+          </a>
         </Button>
       ))}
     </div>
@@ -151,23 +153,23 @@ interface FeaturePreviewProps {
 }
 
 export function FeaturePreview({ showFeaturePreview }: FeaturePreviewProps) {
-  const _t = useTranslations('underConstruction');
+  const translate = useTranslations('underConstruction');
 
   const features = [
     {
       icon: Zap,
-      title: _t('features.performance'),
-      description: _t('features.performanceDesc'),
+      title: translate('features.performance'),
+      description: translate('features.performanceDesc'),
     },
     {
       icon: Users,
-      title: _t('features.collaboration'),
-      description: _t('features.collaborationDesc'),
+      title: translate('features.collaboration'),
+      description: translate('features.collaborationDesc'),
     },
     {
       icon: CheckCircle,
-      title: _t('features.quality'),
-      description: _t('features.qualityDesc'),
+      title: translate('features.quality'),
+      description: translate('features.qualityDesc'),
     },
   ];
 
@@ -176,7 +178,7 @@ export function FeaturePreview({ showFeaturePreview }: FeaturePreviewProps) {
   return (
     <div className='mx-auto w-full max-w-4xl'>
       <h3 className='mb-8 text-center text-xl font-semibold'>
-        {_t('features.title')}
+        {translate('features.title')}
       </h3>
       <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
         {features.map((feature, index) => (
@@ -204,7 +206,7 @@ interface HeaderSectionProps {
 }
 
 export function HeaderSection({ pageType, expectedDate }: HeaderSectionProps) {
-  const _t = useTranslations('underConstruction');
+  const translate = useTranslations('underConstruction');
   const tPage = useTranslations(`underConstruction.pages.${pageType}`);
 
   return (
@@ -231,13 +233,13 @@ export function HeaderSection({ pageType, expectedDate }: HeaderSectionProps) {
           className='px-4 py-2 text-sm'
         >
           <Clock className='mr-2 h-4 w-4' />
-          {_t('expectedLaunch')}: {expectedDate}
+          {translate('expectedLaunch')}: {expectedDate}
         </Badge>
         <Button
           asChild
           variant='outline'
         >
-          <Link href='/'>{_t('backToHome')}</Link>
+          <Link href='/'>{translate('backToHome')}</Link>
         </Button>
       </div>
     </div>
@@ -253,14 +255,14 @@ export function ProgressSection({
   showProgress,
   currentStep,
 }: ProgressSectionProps) {
-  const _t = useTranslations('underConstruction');
+  const translate = useTranslations('underConstruction');
 
   if (!showProgress) return null;
 
   return (
     <div className='mx-auto w-full max-w-2xl'>
       <h3 className='mb-6 text-center text-lg font-semibold'>
-        {_t('progress.title')}
+        {translate('progress.title')}
       </h3>
       <ProgressIndicator currentStep={currentStep} />
     </div>
@@ -272,16 +274,16 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ pageType: _pageType }: ContactSectionProps) {
-  const _t = useTranslations('underConstruction');
+  const translate = useTranslations('underConstruction');
 
   return (
     <Card className='mx-auto w-full max-w-md'>
       <CardHeader className='text-center'>
         <CardTitle className='flex items-center justify-center gap-2'>
           <Mail className='h-5 w-5' />
-          {_t('contact.title')}
+          {translate('contact.title')}
         </CardTitle>
-        <CardDescription>{_t('contact.description')}</CardDescription>
+        <CardDescription>{translate('contact.description')}</CardDescription>
       </CardHeader>
       <CardContent className='text-center'>
         <Button
@@ -289,7 +291,7 @@ export function ContactSection({ pageType: _pageType }: ContactSectionProps) {
           className='w-full'
         >
           <Link href='/contact'>
-            {_t('contact.button')}
+            {translate('contact.button')}
             <ArrowRight className='ml-2 h-4 w-4' />
           </Link>
         </Button>

@@ -26,7 +26,7 @@ export {
   DETECTION_SOURCES,
   GEO_API_CONFIG,
   QUALITY_THRESHOLDS,
-} from './locale-detector-constants';
+} from '@/lib/locale-detector-constants';
 export type { DetectionSource } from '@/lib/locale-detector-constants';
 export { BaseLocaleDetector } from '@/lib/locale-detector-base';
 export { SmartLocaleDetector as SmartDetector } from '@/lib/locale-detector-smart';

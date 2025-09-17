@@ -1,4 +1,4 @@
-import { COUNT_TRIPLE, MAGIC_0_8, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
+import { COUNT_TRIPLE, MAGIC_0_8, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from '@/constants';
 
 /**
  * 无障碍性测试工具

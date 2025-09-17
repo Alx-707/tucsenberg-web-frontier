@@ -4,7 +4,7 @@
  */
 
 import type { ApiConfig, WebhookConfig } from '@/types/whatsapp-api-config/interfaces';
-import { MAGIC_131, MAGIC_131000, MAGIC_131014, MAGIC_131016, MAGIC_131052, MAGIC_131053 } from '@/constants/magic-numbers';
+import { MAGIC_131, MAGIC_131000, MAGIC_131014, MAGIC_131016, MAGIC_131052, MAGIC_131053  } from '@/constants';
 
 import type { ErrorCode } from '@/types/whatsapp-api-config/types';
 

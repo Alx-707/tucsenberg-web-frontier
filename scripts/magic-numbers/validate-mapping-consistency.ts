@@ -143,16 +143,16 @@ class MappingValidator {
   private resolveModulePath(moduleSpecifier: string): string {
     // 处理 @/ 别名
     if (moduleSpecifier.startsWith('@/')) {
-      return path.resolve(this.srcPath, moduleSpecifier.slice(2) + '.ts');
+      return path.resolve(this.srcPath, `${moduleSpecifier.slice(2)  }.ts`);
     }
 
     // 处理相对路径
     if (moduleSpecifier.startsWith('./')) {
-      return path.resolve(this.srcPath, 'constants', moduleSpecifier.slice(2) + '.ts');
+      return path.resolve(this.srcPath, 'constants', `${moduleSpecifier.slice(2)  }.ts`);
     }
 
     // 处理绝对路径
-    return path.resolve(this.srcPath, moduleSpecifier + '.ts');
+    return path.resolve(this.srcPath, `${moduleSpecifier  }.ts`);
   }
 
   /**
@@ -191,11 +191,11 @@ class MappingValidator {
     let resolvedPath: string;
 
     if (moduleSpecifier.startsWith('./') || moduleSpecifier.startsWith('../')) {
-      resolvedPath = path.resolve(sourceDir, moduleSpecifier + '.ts');
+      resolvedPath = path.resolve(sourceDir, `${moduleSpecifier  }.ts`);
     } else if (moduleSpecifier.startsWith('@/')) {
-      resolvedPath = path.resolve(this.srcPath, moduleSpecifier.slice(2) + '.ts');
+      resolvedPath = path.resolve(this.srcPath, `${moduleSpecifier.slice(2)  }.ts`);
     } else {
-      resolvedPath = path.resolve(sourceDir, moduleSpecifier + '.ts');
+      resolvedPath = path.resolve(sourceDir, `${moduleSpecifier  }.ts`);
     }
 
     return this.project.getSourceFile(resolvedPath);

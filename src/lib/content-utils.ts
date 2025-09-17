@@ -5,7 +5,7 @@
  * including path validation, configuration, and constants.
  */
 import { COUNT_160 } from "@/constants/count";
-import { COUNT_TEN } from "@/constants/magic-numbers";
+import { COUNT_TEN } from "@/constants";
 import { logger } from '@/lib/logger';
 import type { ContentConfig } from '@/types/content';
 import { ContentError } from '@/types/content';

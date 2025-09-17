@@ -1,5 +1,21 @@
 import { COUNT_100000, COUNT_256 } from "@/constants/count";
-import { COUNT_PAIR, MAGIC_12, MAGIC_16, ZERO } from "@/constants/magic-numbers";
+import {
+  COUNT_PAIR,
+  HEX_MASK_6_BITS,
+  HEX_MASK_BIT_6,
+  HEX_MASK_HIGH_BIT,
+  HEX_MASK_LOW_NIBBLE,
+  MAGIC_8,
+  MAGIC_12,
+  MAGIC_16,
+  MAGIC_20,
+  MAGIC_32,
+  MAGIC_48,
+  MAGIC_64,
+  MAGIC_HEX_3,
+  MAGIC_HEX_8,
+  ZERO,
+} from '@/constants';
 
 /**
  * 加密和密码哈希工具

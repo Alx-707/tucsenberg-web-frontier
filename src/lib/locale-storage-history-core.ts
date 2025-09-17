@@ -8,7 +8,8 @@
 'use client';
 
 import { CACHE_LIMITS } from '@/constants/i18n-constants';
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import { isLocaleDetectionHistory } from '@/lib/locale-storage-types';
 import type { Locale } from '@/types/i18n';
@@ -17,7 +18,7 @@ import type {
   LocaleDetectionRecord,
   LocaleSource,
   StorageOperationResult,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 缓存管理 ====================
 

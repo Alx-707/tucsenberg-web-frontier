@@ -1,6 +1,8 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { ANIMATION_DURATION_VERY_SLOW  } from '@/constants';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +10,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { MAGIC_2000 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW } from "@/constants/magic-numbers";
 import { Link, usePathname } from '@/i18n/routing';
 import { Check, Languages, Loader2 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { memo, useState, useTransition } from 'react';
+import { memo, useCallback, useEffect, useRef, useState, useTransition } from 'react';
 
 const TRANSITION_TIMEOUT = ANIMATION_DURATION_VERY_SLOW; // 1 second timeout for language switch
 
@@ -22,20 +23,53 @@ const useLanguageSwitch = () => {
   const [switchSuccess, setSwitchSuccess] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  const handleLanguageSwitch = (newLocale: string) => {
-    setSwitchingTo(newLocale);
-    setSwitchSuccess(false);
+  type TimeoutHandle = ReturnType<typeof setTimeout>;
 
-    startTransition(() => {
-      // The transition will be handled by the Link component
-      setTimeout(() => {
-        setSwitchingTo(null);
-        setSwitchSuccess(true);
-        // Hide success indicator after 2 seconds
-        setTimeout(() => setSwitchSuccess(false), MAGIC_2000);
-      }, TRANSITION_TIMEOUT);
-    });
-  };
+  const transitionTimeoutRef = useRef<TimeoutHandle | null>(null);
+  const successResetRef = useRef<TimeoutHandle | null>(null);
+
+  const clearTimers = useCallback(() => {
+    if (transitionTimeoutRef.current !== null) {
+      clearTimeout(transitionTimeoutRef.current);
+      transitionTimeoutRef.current = null;
+    }
+    if (successResetRef.current !== null) {
+      clearTimeout(successResetRef.current);
+      successResetRef.current = null;
+    }
+  }, []);
+
+  const resetSuccessState = useCallback(() => {
+    setSwitchSuccess(false);
+    successResetRef.current = null;
+  }, []);
+
+  const scheduleSuccessReset = useCallback(() => {
+    successResetRef.current = setTimeout(resetSuccessState, MAGIC_2000);
+  }, [resetSuccessState]);
+
+  const finalizeSwitch = useCallback(() => {
+    setSwitchingTo(null);
+    setSwitchSuccess(true);
+    scheduleSuccessReset();
+    transitionTimeoutRef.current = null;
+  }, [scheduleSuccessReset]);
+
+  const scheduleTransition = useCallback(() => {
+    transitionTimeoutRef.current = setTimeout(finalizeSwitch, TRANSITION_TIMEOUT);
+  }, [finalizeSwitch]);
+
+  const handleLanguageSwitch = useCallback(
+    (newLocale: string) => {
+      clearTimers();
+      setSwitchingTo(newLocale);
+      setSwitchSuccess(false);
+      startTransition(scheduleTransition);
+    },
+    [clearTimers, scheduleTransition],
+  );
+
+  useEffect(() => clearTimers, [clearTimers]);
 
   return {
     switchingTo,

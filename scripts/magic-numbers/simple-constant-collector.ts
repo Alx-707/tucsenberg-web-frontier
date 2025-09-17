@@ -110,7 +110,7 @@ async function scanDirectory(dirPath: string, constants: ConstantInfo[]) {
 async function scanFile(filePath: string, constants: ConstantInfo[]) {
   const content = readFileSync(filePath, 'utf-8');
   const lines = content.split('\n');
-  const relativePath = filePath.replace(process.cwd() + '/', '');
+  const relativePath = filePath.replace(`${process.cwd()  }/`, '');
   const modulePath = relativePath.replace(/^src\//, '@/').replace(/\.ts$/, '');
   
   console.log(`🔍 分析文件: ${relativePath}`);

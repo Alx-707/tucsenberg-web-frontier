@@ -3,13 +3,14 @@
  * Locale Storage System Validation Functions
  */
 
-import { MAGIC_0_3, MAGIC_0_9, ONE, ZERO } from "@/constants/magic-numbers";
 import { BaseValidators } from '@/lib/locale-storage-types-base';
+import { MAGIC_0_3, MAGIC_0_9, ONE, ZERO } from '@/constants';
+
 import type {
   LocaleDetectionHistory,
   UserLocalePreference,
   ValidationResult,
-} from '../locale-storage-types-data';
+} from '@/lib/locale-storage-types-data';
 
 /**
  * 验证函数

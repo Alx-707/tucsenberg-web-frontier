@@ -1,12 +1,13 @@
 // 导入实例用于内部函数使用
 import { COUNT_800, MAGIC_1800, MAGIC_2500, MAGIC_4000, MAGIC_70 } from "@/constants/count";
+import { ANIMATION_DURATION_NORMAL, PERCENTAGE_FULL, PERCENTAGE_HALF, THREE_SECONDS_MS } from '@/constants';
+
 import { MAGIC_0_1, MAGIC_0_25 } from "@/constants/decimal";
-import { ANIMATION_DURATION_NORMAL, PERCENTAGE_FULL, PERCENTAGE_HALF, THREE_SECONDS_MS } from "@/constants/magic-numbers";
 import {
   enhancedWebVitalsCollector,
   performanceAlertSystem,
   performanceMonitoringManager,
-} from './web-vitals';
+} from '@/lib/web-vitals';
 
 /**
  * Enhanced Web Vitals - 统一导出接口
@@ -24,7 +25,7 @@ export type {
   PerformanceMonitoringConfig,
   PerformanceMonitoringStatus,
   RegressionDetectionResult
-} from './web-vitals/types';
+} from '@/lib/web-vitals/types';
 
 // 重新导出常量
 export { PERFORMANCE_THRESHOLDS } from '@/lib/web-vitals/constants';
@@ -44,13 +45,13 @@ export {
   performanceBaselineManager,
   performanceMonitoringManager,
   performanceRegressionDetector
-} from './web-vitals';
+} from '@/lib/web-vitals';
 
 // 为了向后兼容，也导出一些常用的别名
 export {
   performanceMonitoringManager as monitoringManager,
   enhancedWebVitalsCollector as webVitalsCollector
-} from './web-vitals';
+} from '@/lib/web-vitals';
 
 /**
  * 快速启动性能监控的便捷函数

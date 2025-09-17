@@ -3,8 +3,9 @@
  * Translation Preloader Strategy Utility Functions
  */
 
-import { COUNT_PAIR, MAGIC_0_5, MAGIC_0_9, MAGIC_17, MAGIC_18, MAGIC_22, MAGIC_9, ONE, ZERO } from "@/constants/magic-numbers";
 import { strategyConfigs } from '@/lib/i18n-preloader-strategies/configs';
+import { COUNT_PAIR, MAGIC_0_5, MAGIC_0_9, MAGIC_9, MAGIC_17, MAGIC_18, MAGIC_22, ONE, ZERO } from '@/constants';
+
 import type { PreloaderMetrics } from '@/lib/i18n-preloader-types';
 
 /**
@@ -21,11 +22,9 @@ export const StrategyUtils = {
       return 'offline';
     }
 
-    const connection = (
-      navigator as {
+    const {connection} = (navigator as {
         connection?: { effectiveType?: string; downlink?: number };
-      }
-    ).connection;
+      });
     if (connection) {
       const { effectiveType, downlink } = connection;
       if (effectiveType === '4g' && (downlink ?? ZERO) > COUNT_PAIR) {
@@ -41,11 +40,9 @@ export const StrategyUtils = {
    * Check memory usage
    */
   getMemoryUsage(): number {
-    const memory = (
-      performance as {
+    const {memory} = (performance as {
         memory?: { usedJSHeapSize: number; totalJSHeapSize: number };
-      }
-    ).memory;
+      });
     if (memory) {
       const { usedJSHeapSize, totalJSHeapSize } = memory;
       return usedJSHeapSize / totalJSHeapSize;

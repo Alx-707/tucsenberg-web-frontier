@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
@@ -90,19 +89,15 @@ export function HorizontalThemeToggle({
   'animationVariant': _animationVariant, // 忽略，简化版不支持动画变体
   'data-testid': testId = 'horizontal-theme-toggle',
 }: HorizontalThemeToggleProps) {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const t = useTranslations();
 
-  // 防止 hydration mismatch
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const sizeClasses = getSizeClasses(size);
+  const isReady = typeof resolvedTheme !== 'undefined';
+  const activeTheme = resolvedTheme ?? theme;
 
   // 加载状态的骨架屏
-  if (!mounted) {
+  if (!isReady) {
     return (
       <div
         className={cn(
@@ -150,7 +145,7 @@ export function HorizontalThemeToggle({
     >
       {THEME_OPTIONS.map((themeOption) => {
         const Icon = themeOption.icon;
-        const isActive = theme === themeOption.value;
+        const isActive = activeTheme === themeOption.value;
         const label = t(themeOption.labelKey);
         const ariaLabel = t(themeOption.ariaLabelKey);
 

@@ -5,12 +5,13 @@
 
 'use client';
 
-import { ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { logger } from '@/lib/logger';
+import { ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type {
   StorageEvent,
   StorageEventListener,
-} from '../locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 偏好事件管理器

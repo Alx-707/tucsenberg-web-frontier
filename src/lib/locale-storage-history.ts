@@ -8,14 +8,15 @@
 'use client';
 
 // 导入主要功能用于向后兼容
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, DAYS_PER_MONTH, HOURS_PER_DAY, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { DAYS_PER_WEEK } from "@/constants/time";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, DAYS_PER_MONTH, HOURS_PER_DAY, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { Locale } from '@/types/i18n';
 import {
   addDetectionRecord,
   getDetectionHistory,
   getHistorySummary
-} from './locale-storage-history-core';
+} from '@/lib/locale-storage-history-core';
 import {
   createCleanupEvent,
   createErrorEvent,
@@ -23,7 +24,7 @@ import {
   createImportEvent,
   createRecordAddedEvent,
   HistoryEventManager
-} from './locale-storage-history-events';
+} from '@/lib/locale-storage-history-events';
 import {
   cleanupExpiredDetections,
   clearAllHistory,
@@ -31,7 +32,7 @@ import {
   getMaintenanceRecommendations,
   importHistory,
   performMaintenance
-} from './locale-storage-history-maintenance';
+} from '@/lib/locale-storage-history-maintenance';
 import {
   getDetectionsByLocale,
   getDetectionsBySource,
@@ -39,45 +40,45 @@ import {
   queryDetections,
   searchDetections,
   type QueryConditions
-} from './locale-storage-history-query';
+} from '@/lib/locale-storage-history-query';
 import {
   generateHistoryInsights,
   getDetectionStats,
   getDetectionTrends,
   getPerformanceMetrics,
-} from './locale-storage-history-stats';
+} from '@/lib/locale-storage-history-stats';
 import type {
   LocaleDetectionHistory,
   LocaleDetectionRecord,
   LocaleSource,
   StorageEventListener,
   StorageOperationResult,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // 重新导出所有模块的功能
 export {
   addDetectionRecord, createDefaultHistory, getDetectionHistory, getHistorySummary, HistoryCacheManager, needsCleanup, updateDetectionHistory,
   validateHistoryData
-} from './locale-storage-history-core';
+} from '@/lib/locale-storage-history-core';
 export {
   addMultipleListeners, cleanupEventSystem, consoleLogListener, createCleanupEvent, createDebugListener, createErrorEvent, createErrorListener, createExportEvent,
   createImportEvent, createRecordAddedEvent, createStatsListener, getEventSystemStatus, HistoryEventManager, performanceListener, setupDefaultListeners
-} from './locale-storage-history-events';
+} from '@/lib/locale-storage-history-events';
 export {
   cleanupDuplicateDetections, cleanupExpiredDetections, clearAllHistory, createBackup, exportHistory,
   exportHistoryAsJson, getMaintenanceRecommendations, importHistory,
   importHistoryFromJson, limitHistorySize, performMaintenance, restoreFromBackup
-} from './locale-storage-history-maintenance';
+} from '@/lib/locale-storage-history-maintenance';
 export {
   getDetectionsByConfidence, getDetectionsByLocale, getDetectionsBySource, getDetectionsByTimeRange, getLocaleGroupStats, getRecentDetections, getSourceGroupStats,
   getTimeDistributionStats, getUniqueLocales,
   getUniqueSources, queryDetections,
   searchDetections
-} from './locale-storage-history-query';
+} from '@/lib/locale-storage-history-query';
 export {
   generateHistoryInsights, getDetectionStats,
   getDetectionTrends, getPerformanceMetrics
-} from './locale-storage-history-stats';
+} from '@/lib/locale-storage-history-stats';
 
 /**
  * 检测历史管理器 - 向后兼容类

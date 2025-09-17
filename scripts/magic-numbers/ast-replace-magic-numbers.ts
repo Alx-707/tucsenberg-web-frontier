@@ -1,8 +1,8 @@
 #!/usr/bin/env tsx
 
 import { Project, ts, SourceFile } from 'ts-morph';
-import { resolve } from 'node:path';
-import { writeFileSync } from 'node:fs';
+import { resolve, join } from 'node:path';
+import { writeFileSync, readdirSync, statSync } from 'node:fs';
 import { loadEnhancedMapping, ensureConstDefined, mergeAndAliasImports, shouldSkipNode } from './utils';
 
 export interface ReplaceLogEntry {
@@ -28,6 +28,35 @@ export interface Options {
 }
 
 /**
+ * 递归查找匹配的TypeScript文件
+ */
+function findTsFiles(dir: string, pattern: RegExp = /\.(ts|tsx)$/): string[] {
+  const results: string[] = [];
+
+  try {
+    const items = readdirSync(dir);
+
+    for (const item of items) {
+      const fullPath = join(dir, item);
+      const stat = statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        // 跳过node_modules和.git等目录
+        if (!item.startsWith('.') && item !== 'node_modules') {
+          results.push(...findTsFiles(fullPath, pattern));
+        }
+      } else if (stat.isFile() && pattern.test(item)) {
+        results.push(fullPath);
+      }
+    }
+  } catch (error) {
+    console.warn(`⚠️ 无法读取目录 ${dir}:`, error);
+  }
+
+  return results;
+}
+
+/**
  * AST-based magic numbers replacement
  */
 export async function run(opts: Options): Promise<ReplaceLogEntry[]> {
@@ -46,16 +75,48 @@ export async function run(opts: Options): Promise<ReplaceLogEntry[]> {
   });
 
   // 获取文件列表
-  let files: SourceFile[];
+  let filePaths: string[];
   if (opts.files) {
-    // 指定文件模式 - 处理相对路径
-    const filePattern = opts.files.startsWith('/') ? opts.files : resolve(rootDir, opts.files);
-    files = project.addSourceFilesAtPaths(filePattern);
+    // 检查是否是单个文件
+    if (opts.files.endsWith('.ts') || opts.files.endsWith('.tsx')) {
+      // 单个文件模式
+      const filePath = opts.files.startsWith('/') ? opts.files : resolve(rootDir, opts.files);
+      filePaths = [filePath];
+      console.log(`🎯 单个文件模式: ${filePath}`);
+    } else {
+      // 目录模式 - 处理相对路径
+      let searchDir: string;
+      if (opts.files.startsWith('/')) {
+        searchDir = opts.files;
+      } else {
+        // 处理相对路径，确保正确解析
+        searchDir = resolve(rootDir, opts.files.replace('/**/*.{ts,tsx}', ''));
+      }
+
+      console.log(`🔍 文件模式: ${opts.files}`);
+      console.log(`📁 根目录: ${rootDir}`);
+      console.log(`🎯 搜索目录: ${searchDir}`);
+
+      // 使用自定义文件查找
+      filePaths = findTsFiles(searchDir);
+      console.log(`📄 找到文件数量: ${filePaths.length}`);
+
+      if (filePaths.length > 0) {
+        console.log(`📋 前5个文件示例:`);
+        filePaths.slice(0, 5).forEach(file => {
+          console.log(`  ${file.replace(rootDir, '.')}`);
+        });
+      }
+    }
   } else {
     // 添加所有源文件
-    project.addSourceFilesAtPaths(resolve(rootDir, 'src/**/*.{ts,tsx}'));
-    files = project.getSourceFiles();
+    const srcDir = resolve(rootDir, 'src');
+    console.log(`📁 默认搜索目录: ${srcDir}`);
+    filePaths = findTsFiles(srcDir);
   }
+
+  // 添加文件到项目
+  const files = project.addSourceFilesAtPaths(filePaths);
 
   const targetFiles = files.slice(0, opts.limit ?? files.length);
 
@@ -74,7 +135,7 @@ export async function run(opts: Options): Promise<ReplaceLogEntry[]> {
 
   for (const sourceFile of targetFiles) {
     const filePath = sourceFile.getFilePath();
-    const relativePath = filePath.replace(process.cwd() + '/', '');
+    const relativePath = filePath.replace(`${process.cwd()  }/`, '');
 
     const fileLog: ReplaceLogEntry = {
       file: relativePath,

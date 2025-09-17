@@ -1,4 +1,4 @@
-import { ANIMATION_DURATION_VERY_SLOW, HTTP_BAD_REQUEST, HTTP_UNAUTHORIZED, MAGIC_429, SECONDS_PER_MINUTE } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, HTTP_BAD_REQUEST, HTTP_UNAUTHORIZED, MAGIC_429, SECONDS_PER_MINUTE } from '@/constants';
 
 /**
  * WhatsApp Service Error Types and Classes

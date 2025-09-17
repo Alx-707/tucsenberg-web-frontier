@@ -10,7 +10,7 @@ import {
   generateCSSVariables,
   oklchToCSS,
   validateThemeContrast,
-} from './utils';
+} from '@/lib/colors/utils';
 
 /**
  * 颜色系统工具类

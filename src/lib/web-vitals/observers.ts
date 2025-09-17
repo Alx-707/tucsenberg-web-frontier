@@ -1,6 +1,6 @@
 'use client';
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { logger } from '@/lib/logger';
 import type { DetailedWebVitals } from '@/lib/web-vitals/types';
 

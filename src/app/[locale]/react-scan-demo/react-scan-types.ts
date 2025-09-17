@@ -37,7 +37,7 @@ declare global {
   }
 }
 
-export interface ReactScanWindow extends Window {}
+export type ReactScanWindow = Window;
 
 /**
  * React Scan 配置选项

@@ -5,7 +5,8 @@
  * ensuring data integrity and type safety.
  */
 import { COUNT_160 } from "@/constants/count";
-import { SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
+import { SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { ContentType, ContentValidationResult } from '@/types/content';
 
 // SEO validation constants

@@ -1,7 +1,8 @@
 'use client';
 
 import { COUNT_1536 } from "@/constants/count";
-import { BREAKPOINT_MD, BREAKPOINT_SM, BREAKPOINT_XL, BYTES_PER_KB, ONE, ZERO } from "@/constants/magic-numbers";
+import { BREAKPOINT_MD, BREAKPOINT_SM, BREAKPOINT_XL, BYTES_PER_KB, ONE, ZERO  } from '@/constants';
+
 import { useEffect, useState } from 'react';
 
 export type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';

@@ -1,5 +1,4 @@
-import type { FullConfig } from '@playwright/test';
-import { chromium } from '@playwright/test';
+import { chromium, type FullConfig } from '@playwright/test';
 import {
   removeInterferingElements,
   setupTestEnvironment,

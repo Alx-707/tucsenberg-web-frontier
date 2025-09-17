@@ -1,4 +1,6 @@
 import { Footer } from '@/components/layout/footer';
+import { ANIMATION_DURATION_NORMAL, COUNT_1600, COUNT_TRIPLE } from '@/constants';
+
 import { Header } from '@/components/layout/header';
 import { EnterpriseAnalytics } from '@/components/monitoring/enterprise-analytics';
 import { generateJSONLD } from '@/lib/structured-data';
@@ -21,8 +23,6 @@ import { generateLocaleMetadata } from '@/app/[locale]/layout-metadata';
 import { generatePageStructuredData } from '@/app/[locale]/layout-structured-data';
 import '@/app/globals.css';
 import { ThemeProvider } from '@/components/theme-provider';
-import { COUNT_1600 } from "@/constants/count";
-import { ANIMATION_DURATION_NORMAL, COUNT_TRIPLE } from "@/constants/magic-numbers";
 import { routing } from '@/i18n/routing';
 
 // 重新导出元数据生成函数

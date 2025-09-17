@@ -21,7 +21,7 @@ import type {
   RequiredKeys,
   Theme,
   UserId,
-} from '../global';
+} from '@/types/global';
 
 describe('Global Types', () => {
   describe('ApiResponse', () => {

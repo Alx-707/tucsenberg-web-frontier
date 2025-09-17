@@ -1,6 +1,6 @@
 'use client';
 
-import { COUNT_PAIR, PERCENTAGE_FULL } from "@/constants/magic-numbers";
+import { COUNT_PAIR, PERCENTAGE_FULL } from "@/constants";
 import { usePerformanceMeasurements } from '@/hooks/performance-monitor-measurements';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type {
@@ -8,14 +8,14 @@ import type {
   PerformanceMetrics,
   UsePerformanceMonitorOptions,
   UsePerformanceMonitorReturn,
-} from './performance-monitor-types';
+} from '@/hooks/performance-monitor-types';
 import {
   createMonitoringControls,
   createPerformanceAlertSystem,
   createPerformanceMonitorReturn,
   generateAlertId,
   validateAndSanitizeOptions,
-} from './performance-monitor-utils';
+} from '@/hooks/performance-monitor-utils';
 
 /**
  * 性能监控 Hook
@@ -190,7 +190,7 @@ export type {
   PerformanceAlert,
   PerformanceAlertSystem, PerformanceMetrics, UsePerformanceMonitorOptions,
   UsePerformanceMonitorReturn
-} from './performance-monitor-types';
+} from '@/hooks/performance-monitor-types';
 
 /**
  * 导出工具函数
@@ -198,11 +198,11 @@ export type {
 export {
   checkPerformanceThresholds, formatMemoryUsage,
   formatTime, PERFORMANCE_CONSTANTS
-} from './performance-monitor-utils';
+} from '@/hooks/performance-monitor-utils';
 
 /**
  * 导出测量函数
  */
 export {
   measureComprehensivePerformance, measureCumulativeLayoutShift, measureFirstContentfulPaint, measureFirstInputDelay, measureLargestContentfulPaint, measureNetworkLatency
-} from './performance-monitor-measurements';
+} from '@/hooks/performance-monitor-measurements';

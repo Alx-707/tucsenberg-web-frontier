@@ -2,8 +2,8 @@
  * 企业级国际化验证工具
  * 提供翻译完整性检查、质量验证和同步机制
  */
-import { ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { routing } from '@/i18n/routing';
+import { ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
 
 export interface TranslationValidationResult {
   isValid: boolean;

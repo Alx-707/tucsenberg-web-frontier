@@ -7,8 +7,9 @@
 
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { getDetectionHistory } from '@/lib/locale-storage-history-core';
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_TEN, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import type { LocaleDetectionRecord } from '@/lib/locale-storage-types';
 import type { Locale } from '@/types/i18n';
 

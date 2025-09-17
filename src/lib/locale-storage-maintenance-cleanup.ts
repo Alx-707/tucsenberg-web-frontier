@@ -7,8 +7,9 @@
 
 'use client';
 
-import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from "@/constants/magic-numbers";
 import { MINUTE_MS } from "@/constants/time";
+import { ANIMATION_DURATION_VERY_SLOW, DAYS_PER_MONTH, HOURS_PER_DAY, ONE, SECONDS_PER_MINUTE, ZERO } from '@/constants';
+
 import { CookieManager } from '@/lib/locale-storage-cookie';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import { STORAGE_KEYS } from '@/lib/locale-storage-types';
@@ -17,7 +18,7 @@ import type {
   LocaleDetectionHistory,
   StorageOperationResult,
   UserLocalePreference,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 语言存储清理管理器

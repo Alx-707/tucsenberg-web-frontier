@@ -7,7 +7,7 @@ import type {
   OrganizationData,
   ProductData,
   WebSiteData,
-} from './structured-data-types';
+} from '@/lib/structured-data-types';
 
 /**
  * 生成组织结构化数据

@@ -3,7 +3,7 @@
  * Locale Storage System Async Utility Functions
  */
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { STORAGE_CONSTANTS } from '@/lib/locale-storage-types-base';
 
 /**

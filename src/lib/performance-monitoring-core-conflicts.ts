@@ -1,4 +1,4 @@
-import { COUNT_FIVE, COUNT_PAIR, COUNT_TRIPLE, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
+import { COUNT_FIVE, COUNT_PAIR, COUNT_TRIPLE, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from '@/constants';
 
 /**
  * 性能监控核心工具冲突检查

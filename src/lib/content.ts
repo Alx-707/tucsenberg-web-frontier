@@ -13,7 +13,7 @@ export {
   getContentBySlug,
   getPostBySlug,
   getPageBySlug,
-} from './content-query';
+} from '@/lib/content-query';
 
 // Re-export content parser functions
 export { parseContentFile, getContentFiles } from '@/lib/content-parser';
@@ -27,7 +27,7 @@ export {
   PAGES_DIR,
   CONFIG_DIR,
   ALLOWED_EXTENSIONS,
-} from './content-utils';
+} from '@/lib/content-utils';
 
 // Re-export content validation functions
 export { validateContentMetadata } from '@/lib/content-validation';

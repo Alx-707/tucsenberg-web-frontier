@@ -4,7 +4,7 @@ export {
   DEFAULT_LOCALE,
   GEO_LOCALE_MAP,
   BROWSER_LOCALE_MAP,
-} from './locale-constants';
+} from '@/lib/locale-constants';
 export { useClientLocaleDetection } from '@/lib/locale-detection-hooks';
 export type { LocaleDetectionResult } from '@/lib/locale-detection-types';
 export {
@@ -29,5 +29,5 @@ export {
   detectCurrentLocale,
   detectCurrentLocaleSync,
   default,
-} from './locale-detector';
+} from '@/lib/locale-detector';
 export type { DetectionSource } from '@/lib/locale-detector';

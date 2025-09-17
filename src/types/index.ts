@@ -23,7 +23,7 @@ export type {
   EventHandler,
   AsyncFunction,
   ConfigOptions,
-} from './global';
+} from '@/types/global';
 
 // 导出测试相关类型
 // 导出测试工具函数
@@ -31,7 +31,7 @@ export {
   isMockDOMElement,
   isMockKeyboardEvent,
   isValidThemeMode,
-} from './test-types';
+} from '@/types/test-types';
 // 导出测试类型定义
 export type {
   MockDOMElement,
@@ -66,7 +66,7 @@ export type {
   DateTimeFormatConstructor,
   MockStorageManager,
   MockGeolocation,
-} from './test-types';
+} from '@/types/test-types';
 
 // 导出Web Vitals类型
 export type {
@@ -78,7 +78,7 @@ export type {
 export type { ThemeColors } from '@/lib/colors/types';
 
 // 未来可以添加更多类型模块的导出
-// export * from './api';
-// export * from './auth';
-// export * from './forms';
-// export * from './components';
+// export * from '@/types/api';
+// export * from '@/types/auth';
+// export * from '@/types/forms';
+// export * from '@/types/components';

@@ -1,5 +1,5 @@
 import { MAGIC_4096 } from "@/constants/count";
-import { BYTES_PER_KB, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, HTTP_OK, MAGIC_20, MAGIC_256, MAGIC_36, MAGIC_72, MAGIC_9, ZERO } from "@/constants/magic-numbers";
+import { BYTES_PER_KB, COUNT_PAIR, COUNT_TEN, COUNT_TRIPLE, HOURS_PER_DAY, HTTP_OK, MAGIC_20, MAGIC_256, MAGIC_36, MAGIC_72, MAGIC_9, ZERO } from '@/constants';
 
 /**
  * WhatsApp Business API 工具函数

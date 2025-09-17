@@ -5,8 +5,9 @@
 
 'use client';
 
-import { COUNT_TEN, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { WebVitalsObservers } from '@/lib/web-vitals/observers';
+import { COUNT_TEN, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type { DetailedWebVitals } from '@/lib/web-vitals/types';
 
 /**

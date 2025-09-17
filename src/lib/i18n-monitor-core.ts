@@ -9,7 +9,7 @@ import {
   REPORTING_THRESHOLDS,
   TIME_UNITS,
 } from '@/constants/i18n-constants';
-import { COUNT_TEN, COUNT_TRIPLE } from "@/constants/magic-numbers";
+import { COUNT_TEN, COUNT_TRIPLE } from "@/constants";
 import { EventCollector } from '@/lib/i18n-event-collector';
 import { PerformanceMonitor } from '@/lib/i18n-performance-monitor';
 import type { I18nMetrics, Locale, TranslationError } from '@/types/i18n';
@@ -18,7 +18,7 @@ import type {
   MonitoringConfig,
   MonitoringEvent,
   MonitoringEventType,
-} from './i18n-monitoring-types';
+} from '@/lib/i18n-monitoring-types';
 
 // 主监控管理器
 export class I18nMonitor {

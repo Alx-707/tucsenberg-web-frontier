@@ -2,9 +2,10 @@
 
 /// <reference lib="dom" />
 import { animationUtils } from '@/components/ui/animated-counter-helpers';
+import { COUNT_PAIR, COUNT_TRIPLE, ONE, ZERO } from '@/constants';
+
 import { COUNT_4 } from "@/constants/count";
 import { MAGIC_0_3, MAGIC_0_5 } from "@/constants/decimal";
-import { COUNT_PAIR, COUNT_TRIPLE, ONE, ZERO } from "@/constants/magic-numbers";
 import { ANIMATION_DURATIONS } from '@/constants/performance-constants';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { AccessibilityUtils } from '@/lib/accessibility-utils';

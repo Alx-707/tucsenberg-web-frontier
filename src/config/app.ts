@@ -6,6 +6,16 @@
  * 🔄 配合env.mjs进行类型安全的环境变量验证
  */
 
+import { MAGIC_0_1 } from '@/constants/decimal';
+import { COUNT_PAIR, ONE } from '@/constants';
+import {
+  HOURS_PER_DAY,
+  MINUTE_MS,
+  SECONDS_PER_HOUR,
+  SECONDS_PER_MINUTE,
+  THIRTY_SECONDS_MS,
+} from '@/constants/time';
+import { WEB_VITALS_THRESHOLDS } from '@/constants/performance-constants';
 import { env } from '@/env.mjs';
 
 // ============================================================================
@@ -95,13 +105,14 @@ export const DEV_EXPERIENCE_CONFIG = {
  */
 export const CACHE_CONFIG = {
   /** 静态资源缓存时间 (秒) */
-  STATIC_CACHE_TTL: env.STATIC_CACHE_TTL ?? 86_400, // 24小时
+  STATIC_CACHE_TTL:
+    env.STATIC_CACHE_TTL ?? HOURS_PER_DAY * SECONDS_PER_HOUR,
   /** API响应缓存时间 (秒) */
-  API_CACHE_TTL: env.API_CACHE_TTL ?? 300, // 5分钟
+  API_CACHE_TTL: env.API_CACHE_TTL ?? 5 * SECONDS_PER_MINUTE,
   /** 用户会话缓存时间 (秒) */
-  SESSION_CACHE_TTL: env.SESSION_CACHE_TTL ?? 3_600, // 1小时
+  SESSION_CACHE_TTL: env.SESSION_CACHE_TTL ?? SECONDS_PER_HOUR,
   /** 国际化缓存时间 (秒) */
-  I18N_CACHE_TTL: env.I18N_CACHE_TTL ?? 1_800, // 30分钟
+  I18N_CACHE_TTL: env.I18N_CACHE_TTL ?? SECONDS_PER_HOUR / COUNT_PAIR,
 } as const;
 
 /**
@@ -127,13 +138,13 @@ export const MEMORY_CONFIG = {
  */
 export const MONITORING_CONFIG = {
   /** 性能指标采样率 (0-1) */
-  PERFORMANCE_SAMPLE_RATE: env.PERFORMANCE_SAMPLE_RATE ?? 0.1,
+  PERFORMANCE_SAMPLE_RATE: env.PERFORMANCE_SAMPLE_RATE ?? MAGIC_0_1,
   /** 错误采样率 (0-1) */
-  ERROR_SAMPLE_RATE: env.ERROR_SAMPLE_RATE ?? 1.0,
+  ERROR_SAMPLE_RATE: env.ERROR_SAMPLE_RATE ?? ONE,
   /** 监控数据上报间隔 (毫秒) */
-  MONITORING_INTERVAL: env.MONITORING_INTERVAL ?? 30_000,
+  MONITORING_INTERVAL: env.MONITORING_INTERVAL ?? THIRTY_SECONDS_MS,
   /** 健康检查间隔 (毫秒) */
-  HEALTH_CHECK_INTERVAL: env.HEALTH_CHECK_INTERVAL ?? 60_000,
+  HEALTH_CHECK_INTERVAL: env.HEALTH_CHECK_INTERVAL ?? MINUTE_MS,
 } as const;
 
 /**
@@ -141,13 +152,17 @@ export const MONITORING_CONFIG = {
  */
 export const WEB_VITALS_CONFIG = {
   /** LCP良好阈值 (毫秒) */
-  LCP_GOOD_THRESHOLD: env.LCP_GOOD_THRESHOLD ?? 2_500,
+  LCP_GOOD_THRESHOLD:
+    env.LCP_GOOD_THRESHOLD ?? WEB_VITALS_THRESHOLDS.LCP.GOOD,
   /** FID良好阈值 (毫秒) */
-  FID_GOOD_THRESHOLD: env.FID_GOOD_THRESHOLD ?? 100,
+  FID_GOOD_THRESHOLD:
+    env.FID_GOOD_THRESHOLD ?? WEB_VITALS_THRESHOLDS.FID.GOOD,
   /** CLS良好阈值 */
-  CLS_GOOD_THRESHOLD: env.CLS_GOOD_THRESHOLD ?? 0.1,
+  CLS_GOOD_THRESHOLD:
+    env.CLS_GOOD_THRESHOLD ?? WEB_VITALS_THRESHOLDS.CLS.GOOD,
   /** TTFB良好阈值 (毫秒) */
-  TTFB_GOOD_THRESHOLD: env.TTFB_GOOD_THRESHOLD ?? 800,
+  TTFB_GOOD_THRESHOLD:
+    env.TTFB_GOOD_THRESHOLD ?? WEB_VITALS_THRESHOLDS.TTFB.GOOD,
 } as const;
 
 // ============================================================================
@@ -159,13 +174,13 @@ export const WEB_VITALS_CONFIG = {
  */
 export const SECURITY_CONFIG = {
   /** JWT过期时间 (秒) */
-  JWT_EXPIRES_IN: env.JWT_EXPIRES_IN ?? 3_600, // 1小时
+  JWT_EXPIRES_IN: env.JWT_EXPIRES_IN ?? SECONDS_PER_HOUR,
   /** 密码哈希轮数 */
   BCRYPT_ROUNDS: env.BCRYPT_ROUNDS ?? 12,
   /** CSRF令牌长度 */
   CSRF_TOKEN_LENGTH: env.CSRF_TOKEN_LENGTH ?? 32,
   /** 会话超时时间 (秒) */
-  SESSION_TIMEOUT: env.SESSION_TIMEOUT ?? 1_800, // 30分钟
+  SESSION_TIMEOUT: env.SESSION_TIMEOUT ?? SECONDS_PER_HOUR / COUNT_PAIR,
 } as const;
 
 // ============================================================================

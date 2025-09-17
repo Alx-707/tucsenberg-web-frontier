@@ -8,7 +8,7 @@ import type {
   LocaleDetectionHistory,
   StorageSyncConfig,
   UserLocalePreference,
-} from '../locale-storage-types-data';
+} from '@/lib/locale-storage-types-data';
 
 /**
  * 类型守卫函数

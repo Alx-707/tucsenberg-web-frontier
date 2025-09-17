@@ -7,7 +7,7 @@ import {
   DynamicCarousel,
   DynamicDropdownMenu,
   DynamicTabs,
-} from './ui-components';
+} from '@/components/shared/dynamic-imports/ui-components';
 
 // ==================== 导出所有核心组件 ====================
 

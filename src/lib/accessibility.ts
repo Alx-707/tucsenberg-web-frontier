@@ -8,7 +8,7 @@ export type {
   ScreenReaderConfig,
   ColorSchemePreference,
   WCAGLevel,
-} from './accessibility-types';
+} from '@/lib/accessibility-types';
 
 export { THEME_ANNOUNCEMENTS, KEYBOARD_KEYS } from '@/lib/accessibility-types';
 
@@ -24,4 +24,4 @@ export {
   accessibilityManager,
   announceThemeChange,
   announceSwitching,
-} from './accessibility-hooks';
+} from '@/lib/accessibility-hooks';

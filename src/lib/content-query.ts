@@ -10,7 +10,7 @@ export {
   matchesTags,
   matchesCategories,
   filterPosts,
-} from './content-query/filters';
+} from '@/lib/content-query/filters';
 
 // 重新导出排序和分页函数
 export { sortPosts, paginatePosts } from '@/lib/content-query/sorting';
@@ -22,7 +22,7 @@ export {
   getContentBySlug,
   getPostBySlug,
   getPageBySlug,
-} from './content-query/queries';
+} from '@/lib/content-query/queries';
 
 // 重新导出统计函数
 export { getContentStats } from '@/lib/content-query/stats';

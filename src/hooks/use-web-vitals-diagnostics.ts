@@ -1,24 +1,24 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { MAGIC_85, MAGIC_15 } from '@/constants/magic-numbers';
+import { MAGIC_85, MAGIC_15  } from '@/constants';
 
 import { enhancedWebVitalsCollector } from '@/lib/enhanced-web-vitals';
 import { useReportExport } from '@/hooks/web-vitals-diagnostics-export';
 import {
   useWebVitalsDataPersistence,
   useWebVitalsInitialization,
-} from './web-vitals-diagnostics-persistence';
+} from '@/hooks/web-vitals-diagnostics-persistence';
 import type {
   DiagnosticsReturnParams,
   UseWebVitalsDiagnosticsReturn,
   WebVitalsDiagnosticsState,
-} from './web-vitals-diagnostics-types';
+} from '@/hooks/web-vitals-diagnostics-types';
 import {
   calculatePageComparison,
   calculatePerformanceTrends,
   type DiagnosticReport,
-} from './web-vitals-diagnostics-utils';
+} from '@/hooks/web-vitals-diagnostics-utils';
 
 /**
  * 创建诊断Hook的返回对象
@@ -201,7 +201,7 @@ export type {
   WebVitalsDiagnosticsState,
   UseWebVitalsDiagnosticsReturn,
   ExportFormat,
-} from './web-vitals-diagnostics-types';
+} from '@/hooks/web-vitals-diagnostics-types';
 
 /**
  * 导出工具函数
@@ -210,7 +210,7 @@ export {
   exportJsonReport,
   exportCsvReport,
   exportExcelReport,
-} from './web-vitals-diagnostics-export';
+} from '@/hooks/web-vitals-diagnostics-export';
 
 /**
  * 导出持久化函数
@@ -220,4 +220,4 @@ export {
   cleanupExpiredData,
   mergeHistoricalData,
   getStorageUsage,
-} from './web-vitals-diagnostics-persistence';
+} from '@/hooks/web-vitals-diagnostics-persistence';

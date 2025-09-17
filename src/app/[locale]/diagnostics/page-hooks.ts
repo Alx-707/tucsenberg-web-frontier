@@ -6,7 +6,7 @@ import {
   exportDiagnosticsData,
   loadHistoricalData,
   saveCurrentData,
-} from './page-utils';
+} from '@/app/[locale]/diagnostics/page-utils';
 
 /**
  * 诊断数据管理的自定义 Hook

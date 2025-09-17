@@ -7,8 +7,9 @@
 
 'use client';
 
-import { COUNT_FIVE, COUNT_PAIR, ONE, ZERO } from "@/constants/magic-numbers";
 import { CookieManager } from '@/lib/locale-storage-cookie';
+import { COUNT_FIVE, COUNT_PAIR, ONE, ZERO } from '@/constants';
+
 import { LocalStorageManager } from '@/lib/locale-storage-local';
 import { LocaleValidationManager } from '@/lib/locale-storage-maintenance-validation';
 import { STORAGE_KEYS } from '@/lib/locale-storage-types';
@@ -18,7 +19,7 @@ import type {
   LocaleDetectionHistory,
   StorageOperationResult,
   UserLocalePreference
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 导出数据接口

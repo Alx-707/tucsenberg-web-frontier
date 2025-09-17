@@ -126,9 +126,9 @@ function generateConstantDefinition(name: string, value: string): string {
   
   if (Number.isInteger(num)) {
     return `export const ${name} = ${num};`;
-  } else {
+  } 
     return `export const ${name} = ${num};`;
-  }
+  
 }
 
 /**
@@ -170,7 +170,7 @@ async function main() {
     content += `// ${group.description}\n`;
     
     for (const constant of group.constants) {
-      content += generateConstantDefinition(constant.name, constant.value) + '\n';
+      content += `${generateConstantDefinition(constant.name, constant.value)  }\n`;
     }
     
     content += '\n';

@@ -1,5 +1,6 @@
+import type { KeyboardEvent } from 'react';
 import { THEME_OPTIONS } from '@/components/theme/horizontal-theme-toggle/theme-config';
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from '@/constants';
 
 /**
  * 处理键盘导航
@@ -11,55 +12,54 @@ export const createKeyboardHandler = (
     buttonElement?: HTMLButtonElement,
   ) => void,
 ) => {
-  return (
-    event: React.KeyboardEvent<HTMLButtonElement>,
-    _themeValue: string,
+  const optionsLength = THEME_OPTIONS.length;
+
+  const moveToIndex = (
+    targetIndex: number,
+    buttonElement: HTMLButtonElement,
   ) => {
+    if (targetIndex < ZERO || targetIndex >= optionsLength) {
+      return;
+    }
+    const option = THEME_OPTIONS.find((_, index) => index === targetIndex);
+    if (option) {
+      handleThemeChange(option.value, buttonElement);
+    }
+  };
+
+  return (event: KeyboardEvent<HTMLButtonElement>) => {
     const currentIndex = THEME_OPTIONS.findIndex(
       (option) => option.value === theme,
     );
-    let nextIndex = currentIndex;
     const buttonElement = event.currentTarget;
 
     switch (event.key) {
       case 'ArrowLeft':
-      case 'ArrowUp': {
+      case 'ArrowUp':
         event.preventDefault();
-        nextIndex =
-          currentIndex > ZERO ? currentIndex - ONE : THEME_OPTIONS.length - ONE;
-        const prevOption = THEME_OPTIONS[nextIndex];
-        if (prevOption) {
-          handleThemeChange(prevOption.value, buttonElement);
-        }
+        moveToIndex(
+          currentIndex > ZERO ? currentIndex - ONE : optionsLength - ONE,
+          buttonElement,
+        );
         break;
-      }
       case 'ArrowRight':
-      case 'ArrowDown': {
+      case 'ArrowDown':
         event.preventDefault();
-        nextIndex =
-          currentIndex < THEME_OPTIONS.length - ONE ? currentIndex + ONE : ZERO;
-        const nextOption = THEME_OPTIONS[nextIndex];
-        if (nextOption) {
-          handleThemeChange(nextOption.value, buttonElement);
-        }
+        moveToIndex(
+          currentIndex < optionsLength - ONE ? currentIndex + ONE : ZERO,
+          buttonElement,
+        );
         break;
-      }
-      case 'Home': {
+      case 'Home':
         event.preventDefault();
-        const firstOption = THEME_OPTIONS[ZERO];
-        if (firstOption) {
-          handleThemeChange(firstOption.value, buttonElement);
-        }
+        moveToIndex(ZERO, buttonElement);
         break;
-      }
-      case 'End': {
+      case 'End':
         event.preventDefault();
-        const lastOption = THEME_OPTIONS[THEME_OPTIONS.length - ONE];
-        if (lastOption) {
-          handleThemeChange(lastOption.value, buttonElement);
-        }
+        moveToIndex(optionsLength - ONE, buttonElement);
         break;
-      }
+      default:
+        break;
     }
   };
 };

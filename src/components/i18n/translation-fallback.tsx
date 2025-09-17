@@ -1,10 +1,12 @@
 'use client';
 
-import { MAGIC_0_1 } from "@/constants/decimal";
-import { PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { MAGIC_0_1, PERCENTAGE_FULL } from '@/constants/decimal';
+import { ZERO } from '@/constants/magic-numbers';
+
 import { AlertTriangle } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { memo, useEffect, useState } from 'react';
+import type { TranslationParams } from '@/types/i18n';
 
 // import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -65,10 +67,11 @@ export const TranslationFallback = memo(
     return <span className={className}>{t(translationKey as never)}</span>;
   },
 );
+TranslationFallback.displayName = 'TranslationFallback';
 
 interface SafeTranslationProps {
   translationKey: string;
-  values?: Record<string, string | number | boolean>;
+  values?: TranslationParams;
   fallbackText?: string | undefined;
   className?: string | undefined;
 }
@@ -84,7 +87,9 @@ export const SafeTranslation = memo(
     const locale = useLocale();
 
     try {
-      const translation = t(translationKey as never, values as any);
+      const translation = values
+        ? t(translationKey as never, values)
+        : t(translationKey as never);
 
       // Check if translation actually exists (not just returning the key)
       if (translation === translationKey && !fallbackText) {
@@ -120,6 +125,7 @@ export const SafeTranslation = memo(
     }
   },
 );
+SafeTranslation.displayName = 'SafeTranslation';
 
 interface TranslationStatusProps {
   className?: string;
@@ -159,6 +165,7 @@ export const TranslationStatus = memo(
     );
   },
 );
+TranslationStatus.displayName = 'TranslationStatus';
 
 // Hook for checking translation completeness
 export function useTranslationStatus() {
@@ -182,7 +189,7 @@ export function useTranslationStatus() {
           const data = await response.json();
           setStatus(data);
         }
-      } catch (_error) {
+      } catch {
         // Fallback to optimistic status
         setStatus({
           isComplete: true,

@@ -1,3 +1,5 @@
+import { COUNT_PAIR, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO, MAGIC_0_9, MAGIC_1_1, OFFSET_NEGATIVE_MEDIUM, OFFSET_NEGATIVE_LARGE, OFFSET_NEGATIVE_EXTRA_LARGE } from '@/constants';
+
 /**
  * Web Vitals 和环境检查性能监控集成
  * Web Vitals and Environment Check Performance Monitoring Integration
@@ -5,15 +7,14 @@
  * 提供与Web Vitals工具的集成钩子和环境兼容性检查功能
  */
 
-import { COUNT_PAIR, MAGIC_0_9, MAGIC_1_1, OFFSET_NEGATIVE_EXTRA_LARGE, OFFSET_NEGATIVE_LARGE, OFFSET_NEGATIVE_MEDIUM, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, ZERO } from "@/constants/magic-numbers";
 import type {
   PerformanceConfig,
   PerformanceMetrics,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 import {
   isDevelopmentEnvironment,
   isTestEnvironment,
-} from './performance-monitoring-types';
+} from '@/lib/performance-monitoring-types';
 
 /**
  * Web Vitals 集成钩子返回类型

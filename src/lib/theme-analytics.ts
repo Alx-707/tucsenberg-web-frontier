@@ -21,7 +21,7 @@ export type {
   ThemePerformanceSummary,
   ThemeAnalyticsEvent,
   ThemeAnalyticsData,
-} from './theme-analytics-types';
+} from '@/lib/theme-analytics-types';
 
 export const themeAnalytics = new ThemeAnalytics();
 

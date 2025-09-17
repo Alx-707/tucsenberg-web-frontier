@@ -1,5 +1,6 @@
 import { MAGIC_16 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_36, MAGIC_9, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, THREE_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
+import { ANIMATION_DURATION_VERY_SLOW, COUNT_PAIR, MAGIC_36, MAGIC_9, ONE, PERCENTAGE_FULL, PERCENTAGE_HALF, THREE_SECONDS_MS, ZERO } from '@/constants';
+
 import React from 'react';
 import type {
   MonitoringControls,
@@ -10,7 +11,7 @@ import type {
   PerformanceMonitorReturnParams,
   PerformanceMonitorState,
   UsePerformanceMonitorOptions,
-} from './performance-monitor-types';
+} from '@/hooks/performance-monitor-types';
 
 /**
  * 性能监控常量

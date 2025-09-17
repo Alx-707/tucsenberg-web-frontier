@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import { getAllPages, getAllPosts, getContentStats } from '@/lib/content';
 import { logger } from '@/lib/logger';
 

@@ -7,12 +7,13 @@
 
 'use client';
 
-import { COUNT_TEN, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { logger } from '@/lib/logger';
+import { COUNT_TEN, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import type {
   StorageEvent,
   StorageEventListener,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 // ==================== 事件管理器 ====================
 

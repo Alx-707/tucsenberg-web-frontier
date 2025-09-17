@@ -1,0 +1,2404 @@
+{
+  "timestamp": "2025-09-17T06:37:45.315Z",
+  "dryRun": false,
+  "totalFiles": 479,
+  "filesWithFixes": 0,
+  "totalFixes": 0,
+  "results": [
+    {
+      "filePath": "src/app/global-error.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/layout.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/error-boundary.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/language-toggle.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/loading-spinner.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/responsive-layout.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme-provider.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme-toggle.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/app.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/security.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/app-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/count.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/decimal.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/hex.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/i18n-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/magic-numbers.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/performance-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/performance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/react-scan.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/security-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/seo-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/test-base-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/test-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/test-ui-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/test-web-vitals-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/time.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/constants/units.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/performance-monitor-measurements.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/performance-monitor-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/performance-monitor-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/theme-transition-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/theme-transition-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/theme-transition-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-breakpoint.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-enhanced-theme.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-enhanced-translations.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-intersection-observer.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-keyboard-navigation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-performance-monitor.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-reduced-motion.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-theme-toggle.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-toast.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/use-web-vitals-diagnostics.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-analyzer.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-calculator.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-export.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-persistence.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/hooks/web-vitals-diagnostics-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/i18n/enhanced-request.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/i18n/request.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/i18n/routing.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/i18n/test-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility-hooks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility-tester.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/accessibility.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/airtable.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-parser.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-query.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/enhanced-web-vitals.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/footer-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-analytics.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-types-advanced.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-types-base.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-types-interfaces.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-types-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-cache.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-event-collector.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-lru-cache.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-metrics-collector.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-monitor-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-monitoring-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-monitoring.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-performance-monitor.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-performance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detection-hooks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detection-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detection.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detector-base.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detector-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detector-smart.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-detector.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-analytics-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-analytics-events.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-analytics-performance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-analytics-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-analytics.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-cookie.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-events.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-maintenance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-query.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-stats.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-hooks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-local.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-maintenance-cleanup.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-maintenance-import-export.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-maintenance-operations.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-maintenance-validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-maintenance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-cache.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-override.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-base.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-data.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/logger.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/metadata.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/navigation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-core-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-core-conflicts.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-core-metrics.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-core-reports.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-integrations-bundle.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-integrations-react-scan.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-integrations-vitals.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-integrations-web-eval.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-integrations.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/performance-monitoring-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/resend-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/resend-templates.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/resend-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/resend.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-crypto.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-file-upload.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-headers.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-object-access.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-rate-limit.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-tokens.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security-validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/security.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/seo-metadata.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/site-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/structured-data-generators.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/structured-data-helpers.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/structured-data-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/structured-data.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/tech-stack-data.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/theme-analytics-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/theme-analytics-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/theme-analytics-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/theme-analytics.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-benchmarks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-manager-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-manager-quality.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-manager-security.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-quality-checker.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-quality-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-quality.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/translation-validators.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/units.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/validations.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals-monitor.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp-media.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp-messages.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp-service.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/whatsapp.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/scripts/test-web-vitals.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/services/url-generator.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/shared/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/content.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/global.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/i18n-enhanced.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/i18n.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/test-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/translation-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-errors.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-responses.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-base-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-message-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-service-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-service-errors.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-service-interface.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-service-monitoring.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-service-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-template-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-base.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-events.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-messages.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/layout-fonts.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/layout-metadata.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/layout-structured-data.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/layout-test.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/layout.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/error-test/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/contact/contact-form.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/dev-tools/react-scan-analyzer-simple.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/dev-tools/react-scan-analyzer.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/dev-tools/react-scan-demo.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase-sections.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/contact-form-container.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/contact-form-fields.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/contact-form.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/call-to-action.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/component-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/hero-section.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/project-overview.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/tech-stack-section.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/enhanced-locale-switcher.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/format-helpers.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/locale-detection-demo.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/performance-dashboard.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/translation-fallback.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/translation-preloader.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/footer.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/header.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/language-switcher.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/logo.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/main-navigation.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/layout/mobile-navigation.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/monitoring/enterprise-analytics.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/performance/web-vitals-indicator.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/performance/web-vitals-monitor.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/security/turnstile.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animated-icon.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animation-examples.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports-base.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports-core.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/progress-indicator.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v2-components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v2.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v3.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/horizontal-theme-toggle-simple.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/horizontal-theme-toggle.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/theme-menu-item.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/theme-performance-monitor.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/theme-toggle-button.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/vercel-theme-toggle-simple.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/vercel-theme-toggle.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/animated-counter-helpers.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/animated-counter.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/badge.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/button.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/card.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/carousel.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/checkbox.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/dropdown-menu.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/input.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/label.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/navigation-menu.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/progress.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/prose.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/separator.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/sheet.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/skeleton.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/social-icons.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/tabs.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/textarea.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/ui/toaster.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths/locales-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths/paths-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths/site-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/config/paths/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/features/auth/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/features/dashboard/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/airtable/instance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/airtable/service.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/airtable/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors/color-system.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors/dark-theme.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors/light-theme.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/colors/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-query/filters.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-query/queries.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-query/sorting.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/content-query/stats.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/advanced-strategies.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/basic-strategies.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/configs.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/factory.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-strategies/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils/factory-functions.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils/global-instances.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils/preloader-factory.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils/preloader-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/i18n-preloader-utils/preloader-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-maintenance/backup.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-maintenance/cleanup.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-maintenance/import-export.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-history-maintenance/maintenance.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/event-creators.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/event-listeners.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/event-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/history-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/stats-analyzer.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-preference-events/system-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/defaults.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/factory.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/interfaces.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/migrations.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/presets.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-config/validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/async-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/format-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/json-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/object-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/storage-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/type-guards.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/locale-storage-types-utils/validators.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-helpers.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-notifications.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-system-checker.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-system-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-system-sender.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/alert-system.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/baseline-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/collector.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/monitoring-manager-core.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/monitoring-manager.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/monitoring-report-generator.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/monitoring-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/observers.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/regression-detector.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/web-vitals-collector-analyzer.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/lib/web-vitals/web-vitals-collector-base.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/constants.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/defaults.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/errors.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/interfaces.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-config/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/account-app-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/api-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/batch-business-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/media-analytics-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/message-actions-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/message-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/phone-webhook-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/request-builders.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/template-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-api-requests/user-quality-requests.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-utils/functions.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-utils/interfaces.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/types/whatsapp-webhook-utils/webhook-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/about/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/blog/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/contact/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/demo-construction/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/dev-tools/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/diagnostics-constants.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/diagnostics-control-panel.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/diagnostics-current-metrics.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/diagnostics-historical-data.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/diagnostics-threshold-reference.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/page-components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/page-hooks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/page-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/products/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/react-scan-demo/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/react-scan-demo/react-scan-components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/react-scan-demo/react-scan-demo-client.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/react-scan-demo/react-scan-stats.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/react-scan-demo/react-scan-types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/test-footer/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/ui-showcase/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/contact/contact-api-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/contact/contact-api-validation.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/contact/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/csp-report/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/subscribe/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/test-content/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/verify-turnstile/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/implementation-summary.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/theme-toggle-demo.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/fields/additional-fields.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/fields/checkbox-fields.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/fields/contact-fields.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/forms/fields/name-fields.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/cta/action-cards.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/cta/community-section.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/cta/data.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/cta/stats-display.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/badge-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/button-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/form-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/index.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/interactive-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/responsive-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/home/showcase/theme-showcase.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/locale-switcher/config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/locale-switcher/language-item.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/i18n/locale-switcher/use-language-switch.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animations/card-button.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animations/form-status.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animations/icon-title.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animations/showcase-config.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/animations/social-interactive.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports/exports.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports/high-priority.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/dynamic-imports/ui-components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v3/page-header.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v3/social-links.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/shared/under-construction-v3/subscription-form.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/horizontal-theme-toggle/animation-utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/horizontal-theme-toggle/keyboard-handler.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/theme/horizontal-theme-toggle/theme-config.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/components/automated-test-section.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/components/keyboard-shortcuts-guide.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/components/manual-test-guide.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/components/screen-reader-guide.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/accessibility-test/components/test-target-section.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/dev-tools/layout-test/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/demo/components.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/demo/hooks.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/demo/main-content.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/demo/page.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/[locale]/diagnostics/demo/utils.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/analytics/i18n/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/analytics/web-vitals/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/types.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/whatsapp/send/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/whatsapp/webhook/route.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/theme-toggle-demo/animation-variants.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/theme-toggle-demo/feature-variants.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/theme-toggle-demo/size-variants.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/components/examples/ui-showcase/theme-toggle-demo/technical-comparison.tsx",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/handlers/delete-handler.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/handlers/get-handler.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/handlers/post-handler.ts",
+      "fixedImports": 0,
+      "errors": []
+    },
+    {
+      "filePath": "src/app/api/monitoring/dashboard/handlers/put-handler.ts",
+      "fixedImports": 0,
+      "errors": []
+    }
+  ]
+}

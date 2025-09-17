@@ -1,6 +1,6 @@
 'use client';
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 export interface KeyboardNavigationOptions {

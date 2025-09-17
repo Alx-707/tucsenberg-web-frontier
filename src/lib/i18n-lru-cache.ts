@@ -5,7 +5,8 @@
  */
 
 import { COUNT_4, MAGIC_32, MAGIC_8 } from "@/constants/count";
-import { COUNT_PAIR, ONE, PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
+import { COUNT_PAIR, ONE, PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import { logger } from '@/lib/logger';
 import type {
   CacheConfig,
@@ -13,7 +14,7 @@ import type {
   CacheStats,
   CacheStorage,
   MetricsCollector
-} from './i18n-cache-types';
+} from '@/lib/i18n-cache-types';
 
 // LRU 缓存实现
 export class LRUCache<T> implements CacheStorage<T> {

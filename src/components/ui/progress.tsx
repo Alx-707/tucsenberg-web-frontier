@@ -1,7 +1,8 @@
 'use client';
 
-import { PERCENTAGE_FULL, ZERO } from "@/constants/magic-numbers";
 import { cn } from '@/lib/utils';
+import { PERCENTAGE_FULL, ZERO } from '@/constants';
+
 import * as ProgressPrimitive from '@radix-ui/react-progress';
 import * as React from 'react';
 

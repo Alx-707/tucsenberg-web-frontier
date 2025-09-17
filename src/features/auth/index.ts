@@ -1,4 +1,4 @@
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from "@/constants";
 
 // Auth feature module
 export const authConfig = {

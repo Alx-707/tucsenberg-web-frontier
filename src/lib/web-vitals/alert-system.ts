@@ -19,4 +19,4 @@ export type {
   DetailedWebVitals,
   PerformanceAlertConfig,
   RegressionDetectionResult,
-} from './types';
+} from '@/lib/web-vitals/types';

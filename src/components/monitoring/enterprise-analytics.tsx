@@ -1,10 +1,10 @@
 'use client';
 
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO } from '@/constants/magic-numbers';
 import { logger } from '@/lib/logger';
 import { Analytics } from '@vercel/analytics/react';
 import { useLocale } from 'next-intl';
-import React, { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 
 /**
  * 使用全局 logger（开发环境输出，生产环境静默）
@@ -22,11 +22,45 @@ const defaultConfig: AnalyticsConfig = {
   enablePerformanceMonitoring: true,
 };
 
+type VercelAnalyticsTracker = (
+  action: 'track',
+  eventName: string,
+  properties: Record<string, unknown>,
+) => void;
+
+type GoogleAnalyticsTracker = (...args: unknown[]) => void;
+
+const hasVercelAnalytics = (
+  candidate: Window & { va?: unknown },
+): candidate is Window & { va: VercelAnalyticsTracker } =>
+  typeof candidate.va === 'function';
+
+const hasGoogleAnalytics = (
+  candidate: Window & { gtag?: unknown },
+): candidate is Window & { gtag: GoogleAnalyticsTracker } =>
+  typeof candidate.gtag === 'function';
+
+const trackWithVercelAnalytics = (eventName: string, properties: Record<string, unknown>) => {
+  if (typeof window === 'undefined') return;
+  const analyticsWindow = window as Window & { va?: unknown };
+  if (hasVercelAnalytics(analyticsWindow)) {
+    analyticsWindow.va('track', eventName, properties);
+  }
+};
+
+const trackWithGoogleAnalytics = (eventName: string, properties: Record<string, unknown>) => {
+  if (typeof window === 'undefined') return;
+  const analyticsWindow = window as Window & { gtag?: unknown };
+  if (hasGoogleAnalytics(analyticsWindow)) {
+    analyticsWindow.gtag('event', eventName, properties);
+  }
+};
+
 export function EnterpriseAnalytics({
   children,
   config = defaultConfig,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   config?: AnalyticsConfig;
 }) {
   const locale = useLocale();
@@ -74,17 +108,15 @@ function initWebVitals(locale: string): void {
         );
 
         // 发送到Vercel Analytics
-        if ('va' in window) {
-          try {
-            (window as any).va('track', 'Web Vital', {
-              metric_name: metric.name,
-              metric_value: metric.value,
-              metric_rating: metric.rating,
-              locale,
-            });
-          } catch (error) {
-            logger.error('Failed to send to Vercel Analytics:', error);
-          }
+        try {
+          trackWithVercelAnalytics('Web Vital', {
+            metric_name: metric.name,
+            metric_value: metric.value,
+            metric_rating: metric.rating,
+            locale,
+          });
+        } catch (error) {
+          logger.error('Failed to send to Vercel Analytics:', error);
         }
       };
 
@@ -104,12 +136,12 @@ function initI18nTracking(locale: string): void {
   const originalPushState = history.pushState;
   const originalReplaceState = history.replaceState;
 
-  history.pushState = function (...args) {
+  history.pushState = function pushStateWithTracking(...args) {
     trackNavigation(locale);
     return originalPushState.apply(this, args);
   };
 
-  history.replaceState = function (...args) {
+  history.replaceState = function replaceStateWithTracking(...args) {
     trackNavigation(locale);
     return originalReplaceState.apply(this, args);
   };
@@ -125,53 +157,62 @@ function trackNavigation(locale: string): void {
   );
 
   // 发送导航事件
-  if ('va' in window) {
-    try {
-      (window as any).va('track', 'Navigation', {
-        locale,
-        url: window.location.href,
-      });
-    } catch (error) {
-      logger.error('Failed to send navigation event:', error);
-    }
+  try {
+    trackWithVercelAnalytics('Navigation', {
+      locale,
+      url: window.location.href,
+    });
+  } catch (error) {
+    logger.error('Failed to send navigation event:', error);
   }
 }
 
 function initPerformanceMonitoring(locale: string): void {
   // 监控页面加载性能
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const navigation = performance.getEntriesByType(
-        'navigation',
-      )[ZERO] as PerformanceNavigationTiming;
+  const collectPerformanceMetrics = () => {
+    const navigationEntries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+    const navigation = navigationEntries.find(() => true);
 
-      if (navigation) {
-        const metrics = {
-          dns: navigation.domainLookupEnd - navigation.domainLookupStart,
-          tcp: navigation.connectEnd - navigation.connectStart,
-          request: navigation.responseStart - navigation.requestStart,
-          response: navigation.responseEnd - navigation.responseStart,
-          dom: navigation.domContentLoadedEventEnd - navigation.responseEnd,
-          load: navigation.loadEventEnd - navigation.loadEventStart,
-          total: navigation.loadEventEnd - navigation.fetchStart,
-        };
+    if (!navigation) {
+      return;
+    }
 
-        logger.warn(`[Performance] Locale: ${locale}`, metrics);
+    const metrics = {
+      dns: navigation.domainLookupEnd - navigation.domainLookupStart,
+      tcp: navigation.connectEnd - navigation.connectStart,
+      request: navigation.responseStart - navigation.requestStart,
+      response: navigation.responseEnd - navigation.responseStart,
+      dom: navigation.domContentLoadedEventEnd - navigation.responseEnd,
+      load: navigation.loadEventEnd - navigation.loadEventStart,
+      total: navigation.loadEventEnd - navigation.fetchStart,
+    };
 
-        // 发送性能指标
-        if ('va' in window) {
-          try {
-            (window as any).va('track', 'Performance', {
-              ...metrics,
-              locale,
-            });
-          } catch (error) {
-            logger.error('Failed to send performance metrics:', error);
-          }
-        }
-      }
-    }, ZERO);
-  });
+    logger.warn(`[Performance] Locale: ${locale}`, metrics);
+
+    const performancePayload = {
+      dns: metrics.dns,
+      tcp: metrics.tcp,
+      request: metrics.request,
+      response: metrics.response,
+      dom: metrics.dom,
+      load: metrics.load,
+      total: metrics.total,
+      locale,
+    };
+
+    // 发送性能指标
+    try {
+      trackWithVercelAnalytics('Performance', performancePayload);
+    } catch (error) {
+      logger.error('Failed to send performance metrics:', error);
+    }
+  };
+
+  function handleLoadEvent() {
+    setTimeout(collectPerformanceMetrics, ZERO);
+  }
+
+  window.addEventListener('load', handleLoadEvent);
 
   // 监控资源加载
   const observer = new PerformanceObserver((list) => {
@@ -205,20 +246,16 @@ export const enterpriseAnalytics = {
 
     logger.warn(`[Analytics Event] ${eventName}:`, properties);
 
-    if ('va' in window) {
-      try {
-        (window as any).va('track', eventName, properties);
-      } catch (error) {
-        logger.error('Failed to send to Vercel Analytics:', error);
-      }
+    try {
+      trackWithVercelAnalytics(eventName, properties);
+    } catch (error) {
+      logger.error('Failed to send to Vercel Analytics:', error);
     }
 
-    if ('gtag' in window) {
-      try {
-        (window as any).gtag('event', eventName, properties);
-      } catch (error) {
-        logger.error('Failed to send to Google Analytics:', error);
-      }
+    try {
+      trackWithGoogleAnalytics(eventName, properties);
+    } catch (error) {
+      logger.error('Failed to send to Google Analytics:', error);
     }
   },
 

@@ -1,8 +1,9 @@
 'use client';
 
 import { COUNT_800, MAGIC_1800, MAGIC_2500, MAGIC_4000 } from "@/constants/count";
+import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_SLOW, HTTP_OK, ONE, PERCENTAGE_FULL, THREE_SECONDS_MS, ZERO } from '@/constants';
+
 import { MAGIC_0_1, MAGIC_0_25 } from "@/constants/decimal";
-import { ANIMATION_DURATION_NORMAL, ANIMATION_DURATION_SLOW, HTTP_OK, ONE, PERCENTAGE_FULL, THREE_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
 import { logger } from '@/lib/logger';
 
 /**

@@ -7,7 +7,7 @@
 
 'use client';
 
-import { ONE, ZERO } from "@/constants/magic-numbers";
+import { ONE, ZERO } from "@/constants";
 import { MINUTE_MS } from "@/constants/time";
 import { CookieManager } from '@/lib/locale-storage-cookie';
 import { LocalStorageManager } from '@/lib/locale-storage-local';
@@ -18,7 +18,7 @@ import type {
   StorageOperationResult,
   UserLocalePreference,
   ValidationResult,
-} from './locale-storage-types';
+} from '@/lib/locale-storage-types';
 
 /**
  * 存储验证数据结构

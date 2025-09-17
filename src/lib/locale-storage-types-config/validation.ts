@@ -1,5 +1,6 @@
 import { MAGIC_16, MAGIC_64 } from "@/constants/count";
-import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_TEN, DAYS_PER_YEAR, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from "@/constants/magic-numbers";
+import { DAYS_PER_YEAR } from '@/constants/time';
+import { ANIMATION_DURATION_VERY_SLOW, BYTES_PER_KB, COUNT_TEN, HOURS_PER_DAY, ONE, PERCENTAGE_FULL, SECONDS_PER_MINUTE, TEN_SECONDS_MS, ZERO } from '@/constants';
 
 /**
  * 语言存储系统配置验证规则

@@ -1,8 +1,6 @@
-import { env } from '../../env.mjs';
-import { COUNT_PAIR, ZERO } from "../constants/magic-numbers";
-import { ALERT_SYSTEM_CONSTANTS } from "../constants/performance-constants";
-const RANDOM_ID_BASE = ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE;
-import { MAGIC_15 } from "../constants/count";
+import { ALERT_SYSTEM_CONSTANTS } from '@/constants/performance-constants';
+import { COUNT_PAIR, ZERO } from '@/constants';
+import { MAGIC_15 } from '@/constants/count';
 
 /**
  * Security configuration for the application
@@ -91,11 +89,12 @@ export function generateCSP(nonce?: string): string {
  * Security headers configuration
  */
 export function getSecurityHeaders(nonce?: string, testMode = false) {
-  // Use process.env directly in tests to avoid env validation issues
+  // Use process.env here to keep this module safe for Next config evaluation.
+  // Runtime env validation lives in env.mjs, but importing it here would break next.config load.
   const isSecurityEnabled =
-    testMode || process.env.NODE_ENV === 'test'
+    (testMode || process.env.NODE_ENV === 'test')
       ? process.env.SECURITY_HEADERS_ENABLED !== 'false'
-      : env.SECURITY_HEADERS_ENABLED;
+      : process.env.SECURITY_HEADERS_ENABLED !== 'false';
 
   if (!isSecurityEnabled) {
     return [];
@@ -227,7 +226,7 @@ export function getSecurityConfig(testMode = false) {
   const mode =
     (testMode || process.env.NODE_ENV === 'test'
       ? process.env.NEXT_PUBLIC_SECURITY_MODE
-      : env.NEXT_PUBLIC_SECURITY_MODE) || 'strict';
+      : process.env.NEXT_PUBLIC_SECURITY_MODE) || 'strict';
   return SECURITY_MODES[mode as keyof typeof SECURITY_MODES];
 }
 

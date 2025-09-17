@@ -14,7 +14,8 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { COUNT_4 } from "@/constants/count";
-import { ZERO } from "@/constants/magic-numbers";
+import { ZERO  } from '@/constants';
+
 import { Link } from '@/i18n/routing';
 import {
   isActivePath,
