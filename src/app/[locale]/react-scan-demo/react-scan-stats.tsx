@@ -1,20 +1,20 @@
 'use client';
 
-import type {
-    ReactScanStats,
-    ReactScanWindow,
-} from '@/app/[locale]/react-scan-demo/react-scan-types';
+import { useCallback, useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
+import type {
+  ReactScanStats,
+  ReactScanWindow,
+} from '@/app/[locale]/react-scan-demo/react-scan-types';
 import { REACT_SCAN_CONFIG } from '@/constants/react-scan';
-import { useCallback, useEffect, useState } from 'react';
 
 /**
  * React Scan 性能数据显示组件

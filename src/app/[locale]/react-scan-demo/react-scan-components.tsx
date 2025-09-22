@@ -1,15 +1,15 @@
 'use client';
 
+import { useCallback, useMemo, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
-import { useCallback, useMemo, useState } from 'react';
 
 /**
  * 故意设计的低效组件 - 用于演示 React Scan 检测不必要渲染

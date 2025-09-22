@@ -1,16 +1,16 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useCallback, useEffect, useState } from 'react';
 
 // 保留类型导入以备将来使用
 // import type { ReactScanGlobal } from '@/app/[locale]/react-scan-demo/react-scan-types';

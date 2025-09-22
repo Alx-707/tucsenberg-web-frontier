@@ -1,23 +1,23 @@
 'use client';
 
-import {
-    DemoComponentsContainer,
-    PerformanceTestComponent,
-} from '@/app/[locale]/react-scan-demo/react-scan-components';
-import {
-    ReactScanControlPanel,
-    ReactScanInstructions,
-} from '@/app/[locale]/react-scan-demo/react-scan-stats';
+import { useCallback, useState } from 'react';
 import { ReactScanAnalyzer } from '@/components/dev-tools/react-scan-analyzer';
 import { Button } from '@/components/ui/button';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
-import { useCallback, useState } from 'react';
+import {
+  DemoComponentsContainer,
+  PerformanceTestComponent,
+} from '@/app/[locale]/react-scan-demo/react-scan-components';
+import {
+  ReactScanControlPanel,
+  ReactScanInstructions,
+} from '@/app/[locale]/react-scan-demo/react-scan-stats';
 
 /**
  * React Scan 演示客户端组件
