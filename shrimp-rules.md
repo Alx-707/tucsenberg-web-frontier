@@ -127,12 +127,14 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 
 ### TypeScript规则
 
-- **严格模式**: 必须通过`pnpm type-check:strict`
-- **禁止any**: 使用具体类型、unknown或泛型，100%类型覆盖
-- **必须定义**: 所有Props接口和返回类型
-- **React组件类型**: 必须显式定义组件Props接口
-- **空值处理**: 必须检查null和undefined，使用可选链和空值合并
-- **导入顺序**: React → Next.js → 第三方 → 内部类型 → 内部库 → 组件 → 相对导入
+- **严格模式**: 必须通过`pnpm type-check`
+- **禁止any**: 使用具体类型、unknown或泛型，避免`as`/`!`断言
+- **接口优先**: 使用interfaces而非types，@/路径别名，禁止通配符导入
+- **启用严格选项**: JSDoc用于公共API
+- **确保使用**: 所有变量/导入必须被使用，正确的返回类型
+- **严格检查**: `noUnusedLocals: true`, `noUnusedParameters: true`已启用
+- **零错误政策**: 所有TypeScript错误必须解决，无例外
+- **未使用变量处理**: 删除或使用下划线前缀（如`_unusedParam`）
 - **示例**:
 
   ```typescript
@@ -320,8 +322,7 @@ Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 - **无扫描开发**: `pnpm dev:no-scan` - 禁用React Scan的开发模式
 - **构建生产版本**: `pnpm build` - 构建静态站点
 - **内容完整性检查**: `node scripts/content-integrity-check.js` - 多语言同步验证
-- **类型检查**: `pnpm type-check` - 验证TypeScript类型
-- **严格类型检查**: `pnpm type-check:strict` - 严格模式类型检查
+- **类型检查**: `pnpm type-check` - 验证TypeScript类型（已启用严格检查）
 
 ### 质量检查命令
 

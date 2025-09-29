@@ -162,7 +162,7 @@ async function processFormSubmission(
  * ```
  */
 export const genericFormAction = withErrorHandling(
-  async (prevState, formData: FormData): Promise<ServerActionResult> => {
+  async (_prevState, formData: FormData): Promise<ServerActionResult> => {
     logger.info('Generic form action started');
 
     try {

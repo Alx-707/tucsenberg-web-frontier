@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// 注释：此文件的导入已被注释，ESLint禁用指令不再需要
 /**
  * WhatsApp API 配置类型定义文件
  *
@@ -8,26 +8,27 @@
  * ESLint禁用原因：API类型定义的完整性比当前使用状态更重要
  * 审查周期：每季度审查一次，评估是否有类型可以移除或需要新增
  */
-import {
-  MAGIC_131,
-  MAGIC_132,
-  MAGIC_133,
-  MAGIC_136,
-  MAGIC_190,
-  MAGIC_368,
-  MAGIC_131000,
-  MAGIC_131005,
-  MAGIC_131008,
-  MAGIC_131009,
-  MAGIC_131014,
-  MAGIC_131016,
-  MAGIC_131021,
-  MAGIC_131026,
-  MAGIC_131047,
-  MAGIC_131051,
-  MAGIC_131052,
-  MAGIC_131053,
-} from '@/constants';
+// 注释：这些常量导入暂时未使用，但保留用于未来的WhatsApp API配置
+// import {
+//   MAGIC_131,
+//   MAGIC_132,
+//   MAGIC_133,
+//   MAGIC_136,
+//   MAGIC_190,
+//   MAGIC_368,
+//   MAGIC_131000,
+//   MAGIC_131005,
+//   MAGIC_131008,
+//   MAGIC_131009,
+//   MAGIC_131014,
+//   MAGIC_131016,
+//   MAGIC_131021,
+//   MAGIC_131026,
+//   MAGIC_131047,
+//   MAGIC_131051,
+//   MAGIC_131052,
+//   MAGIC_131053,
+// } from '@/constants';
 
 /**
  * WhatsApp API 类型定义

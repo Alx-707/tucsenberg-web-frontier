@@ -269,7 +269,7 @@ export function React19FormTemplate({
   // useOptimistic Hook - 乐观更新（可选）
   const [optimisticState, setOptimisticState] = useOptimistic(
     state,
-    (currentState, optimisticValue: FormState) => optimisticValue,
+    (_currentState, optimisticValue: FormState) => optimisticValue,
   );
 
   const handleSubmit = (formData: FormData) => {

@@ -16,6 +16,9 @@ description: "Core TypeScript/React development standards and patterns"
 - Interfaces over types, @/ path aliases, no wildcard imports
 - Enable strict mode options, JSDoc for public APIs
 - Ensure all variables/imports used, proper return types
+- **Strict Checking**: `noUnusedLocals: true`, `noUnusedParameters: true` enabled
+- **Zero Errors Policy**: All TypeScript errors must be resolved, no exceptions
+- **Unused Variable Handling**: Delete or prefix with underscore (e.g., `_unusedParam`)
 
 ## React Patterns
 - Next.js App Router, 'use client' directive for client components
