@@ -14,7 +14,7 @@ const mockUsePathname = vi.fn();
 
 vi.mock('next-intl', () => ({
   useLocale: () => mockUseLocale(),
-  useTranslations: () => mockUseTranslations,
+  useTranslations: (namespace: string) => mockUseTranslations(namespace),
 }));
 
 // Mock i18n routing
@@ -181,12 +181,29 @@ describe('EnhancedLocaleSwitcher', () => {
 
     mockUseLocale.mockReturnValue(defaultMocks.locale);
     mockUsePathname.mockReturnValue(defaultMocks.pathname);
-    mockUseTranslations.mockImplementation(
-      (key: string) =>
-        defaultMocks.translations[
-          key as keyof typeof defaultMocks.translations
-        ] || key,
-    );
+    mockUseTranslations.mockImplementation((namespace: string) => {
+      // 返回翻译函数
+      return (key: string) => {
+        // Handle language.detector namespace
+        if (namespace === 'language.detector') {
+          const detectorTranslations: Record<string, string> = {
+            'title': 'Detection Info',
+            'source': 'Source',
+            'sources.browser': 'browser',
+            'sources.user': 'user',
+            'sources.unknown-source': 'unknown-source',
+            'userSaved': '✓ User preference saved',
+          };
+          return detectorTranslations[key] || key;
+        }
+        // Handle language namespace (default)
+        const translations: Record<string, string> = {
+          toggle: 'Toggle language',
+          selectLanguage: 'Select Language',
+        };
+        return translations[key] || key;
+      };
+    });
     mockUseLocaleStorage.mockReturnValue(defaultMocks.localeStorage);
     mockUseClientLocaleDetection.mockReturnValue(defaultMocks.clientDetection);
   });
@@ -509,7 +526,8 @@ describe('EnhancedLocaleSwitcher', () => {
 
   describe('Edge Cases', () => {
     it('handles missing translations gracefully', () => {
-      mockUseTranslations.mockImplementation((key: string) => key);
+      // Mock返回一个函数，该函数直接返回key（模拟缺失翻译）
+      mockUseTranslations.mockImplementation(() => (key: string) => key);
 
       render(<EnhancedLocaleSwitcher />);
 

@@ -55,6 +55,15 @@ vi.mock('@/i18n/routing', () => ({
       {children}
     </a>
   ),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => '/'),
   routing: {
     locales: ['en', 'zh'],
     defaultLocale: 'en',
@@ -89,7 +98,6 @@ describe('Mobile Navigation - Basic Core Tests', () => {
           'navigation.services': 'Services',
           'navigation.products': 'Products',
           'navigation.blog': 'Blog',
-          'navigation.diagnostics': 'Diagnostics',
           'navigation.contact': 'Contact',
           'seo.siteName': 'Site Name',
           'seo.description': 'Site Description',
@@ -249,7 +257,6 @@ describe('Mobile Navigation - Basic Core Tests', () => {
       expect(screen.getByText('About')).toBeInTheDocument();
       expect(screen.getByText('Products')).toBeInTheDocument();
       expect(screen.getByText('Blog')).toBeInTheDocument();
-      expect(screen.getByText('Diagnostics')).toBeInTheDocument();
     });
 
     it('hides navigation items when menu is closed', async () => {

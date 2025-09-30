@@ -1,4 +1,5 @@
-import { COUNT_PAIR, MAGIC_15, ZERO } from '../constants';
+import { COUNT_PAIR, MAGIC_15 } from '../constants/count';
+import { ZERO } from '../constants/magic-numbers';
 import { ALERT_SYSTEM_CONSTANTS } from '../constants/performance-constants';
 
 export type SecurityHeader = {

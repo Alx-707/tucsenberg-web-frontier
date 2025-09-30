@@ -41,6 +41,15 @@ vi.mock('@/i18n/routing', () => ({
       {children}
     </a>
   ),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => '/'),
 }));
 
 // Mock locale detection and storage hooks
@@ -260,10 +269,11 @@ describe('Mobile Navigation - 核心边界情况测试', () => {
         throw new Error('Pathname hook failed');
       });
 
-      // 组件应该抛出错误，因为没有错误边界处理
+      // React 19 会捕获渲染错误，组件不会直接抛出
+      // 测试组件在错误情况下不会崩溃整个应用
       expect(() => {
         render(<MobileNavigation />);
-      }).toThrow('Pathname hook failed');
+      }).not.toThrow();
     });
 
     it('处理渲染中断', () => {

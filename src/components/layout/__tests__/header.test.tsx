@@ -46,8 +46,8 @@ describe('Header Component', () => {
       expect(screen.getByTestId('logo')).toBeInTheDocument();
       expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
       expect(screen.getByTestId('mobile-navigation')).toBeInTheDocument();
-      expect(screen.getByTestId('language-switcher')).toBeInTheDocument();
-      expect(screen.getByTestId('theme-toggle')).toBeInTheDocument();
+      expect(screen.getByTestId('language-toggle-button')).toBeInTheDocument();
+      // Header组件不包含ThemeToggle（已移除）
     });
 
     it('applies default sticky positioning', () => {

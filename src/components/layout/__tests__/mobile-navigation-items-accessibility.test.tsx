@@ -27,6 +27,9 @@ vi.mock('next/navigation', () => ({
   permanentRedirect: vi.fn(),
 }));
 
+// Create a mutable pathname mock
+const mockPathname = { current: '/' };
+
 // Mock @/i18n/routing
 vi.mock('@/i18n/routing', () => ({
   Link: ({ children, href, className, onClick, ...props }: any) => (
@@ -39,6 +42,15 @@ vi.mock('@/i18n/routing', () => ({
       {children}
     </a>
   ),
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => mockPathname.current),
 }));
 
 // Mock Lucide React icons
@@ -63,7 +75,6 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
           'navigation.about': 'About',
           'navigation.products': 'Products',
           'navigation.blog': 'Blog',
-          'navigation.diagnostics': 'Diagnostics',
           'navigation.menu': 'Toggle mobile menu',
           'navigation.close': 'Close',
           'accessibility.openMenu': 'Open menu',
@@ -185,13 +196,7 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
       const links = screen.getAllByRole('link');
       const linkTexts = links.map((link) => link.textContent);
 
-      expect(linkTexts).toEqual([
-        'Home',
-        'About',
-        'Products',
-        'Blog',
-        'Diagnostics',
-      ]);
+      expect(linkTexts).toEqual(['Home', 'About', 'Products', 'Blog']);
     });
 
     it('applies consistent styling to navigation items', async () => {
@@ -372,7 +377,8 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
     });
 
     it('handles aria-current for navigation items', async () => {
-      (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/products');
+      // Set pathname to /products to test aria-current
+      mockPathname.current = '/products';
 
       render(<MobileNavigation />);
 
@@ -407,7 +413,6 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
             'navigation.about': '关于我们',
             'navigation.products': '产品',
             'navigation.blog': '博客',
-            'navigation.diagnostics': '诊断',
             'accessibility.openMenu': '打开菜单',
             'accessibility.closeMenu': '关闭菜单',
             'seo.siteName': '网站名称',

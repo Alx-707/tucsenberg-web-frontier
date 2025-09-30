@@ -21,6 +21,9 @@ vi.mock('next/navigation', () => ({
   permanentRedirect: vi.fn(),
 }));
 
+// Create a mutable pathname mock
+const mockPathname = { current: '/' };
+
 // Mock @/i18n/routing
 vi.mock('@/i18n/routing', () => ({
   Link: ({ children, href, className, onClick, ...props }: any) => {
@@ -39,6 +42,15 @@ vi.mock('@/i18n/routing', () => ({
       </a>
     );
   },
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => mockPathname.current),
 }));
 
 // Mock Lucide React icons
@@ -65,7 +77,6 @@ describe('Mobile Navigation - Core Tests', () => {
           'navigation.contact': 'Contact',
           'navigation.products': 'Products',
           'navigation.blog': 'Blog',
-          'navigation.diagnostics': 'Diagnostics',
           'navigation.menu': 'Menu',
           'navigation.close': 'Close',
           'accessibility.openMenu': 'Open menu',
@@ -154,13 +165,11 @@ describe('Mobile Navigation - Core Tests', () => {
         screen.getByRole('link', { name: /products/i }),
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /blog/i })).toBeInTheDocument();
-      expect(
-        screen.getByRole('link', { name: /diagnostics/i }),
-      ).toBeInTheDocument();
     });
 
     it('should highlight active navigation item', async () => {
-      (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/about');
+      // Set pathname to /about to test aria-current
+      mockPathname.current = '/about';
 
       render(<MobileNavigation />);
 
@@ -276,9 +285,6 @@ describe('Mobile Navigation - Core Tests', () => {
         screen.getByRole('link', { name: 'Products' }),
       ).toBeInTheDocument();
       expect(screen.getByRole('link', { name: 'Blog' })).toBeInTheDocument();
-      expect(
-        screen.getByRole('link', { name: 'Diagnostics' }),
-      ).toBeInTheDocument();
     });
 
     it('should handle missing translations gracefully', async () => {
@@ -311,7 +317,7 @@ describe('Mobile Navigation - Core Tests', () => {
 
       // Should still render navigation items
       expect(screen.getByRole('navigation')).toBeInTheDocument();
-      expect(screen.getAllByRole('link')).toHaveLength(5);
+      expect(screen.getAllByRole('link')).toHaveLength(4);
     });
 
     it('should handle translation function errors', async () => {

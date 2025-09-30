@@ -51,6 +51,15 @@ vi.mock('@/i18n/routing', () => ({
       </a>
     );
   },
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => '/'),
 }));
 
 // Mock Lucide React icons
@@ -77,7 +86,6 @@ describe('Mobile Navigation - Main Tests', () => {
           'navigation.contact': 'Contact',
           'navigation.products': 'Products',
           'navigation.blog': 'Blog',
-          'navigation.diagnostics': 'Diagnostics',
           'navigation.menu': 'Menu',
           'navigation.close': 'Close',
           'accessibility.openMenu': 'Open menu',
@@ -239,7 +247,6 @@ describe('Mobile Navigation - Main Tests', () => {
       expect(screen.getByText('About')).toBeInTheDocument();
       expect(screen.getByText('Products')).toBeInTheDocument();
       expect(screen.getByText('Blog')).toBeInTheDocument();
-      expect(screen.getByText('Diagnostics')).toBeInTheDocument();
     });
 
     it('hides navigation items when menu is closed', async () => {

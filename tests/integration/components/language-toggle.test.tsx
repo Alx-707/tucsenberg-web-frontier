@@ -25,38 +25,35 @@ vi.mock('next-intl', () => ({
   useLocale: () => mockUseLocale(),
 }));
 
-// Mock next-intl navigation
-vi.mock('next-intl/navigation', () => ({
-  usePathname: () => mockUsePathname(),
-  createNavigation: () => ({
-    Link: ({
-      children,
-      href,
-      locale,
-      onClick,
-      className,
-      ...props
-    }: React.ComponentProps<'a'> & { href: string; locale: string }) => (
-      <a
-        data-testid={`language-link-${locale}`}
-        href={href}
-        data-locale={locale}
-        className={className}
-        onClick={(e) => {
-          mockLinkClick({ href, locale });
-          onClick?.(e);
-        }}
-        {...props}
-      >
-        {children}
-      </a>
-    ),
-    usePathname: () => mockUsePathname(),
-  }),
-}));
-
 // Mock Link click tracking
 const mockLinkClick = vi.fn();
+
+// Mock @/i18n/routing (实际组件使用的导入)
+vi.mock('@/i18n/routing', () => ({
+  Link: ({
+    children,
+    href,
+    locale,
+    onClick,
+    className,
+    ...props
+  }: React.ComponentProps<'a'> & { href: string; locale: string }) => (
+    <a
+      data-testid={`language-link-${locale}`}
+      href={href}
+      data-locale={locale}
+      className={className}
+      onClick={(e) => {
+        mockLinkClick({ href, locale });
+        onClick?.(e);
+      }}
+      {...props}
+    >
+      {children}
+    </a>
+  ),
+  usePathname: () => mockUsePathname(),
+}));
 
 // Mock React hooks
 const mockStartTransition = vi.fn();
@@ -126,6 +123,14 @@ vi.mock('@/components/ui/button', () => ({
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
   Languages: () => <span data-testid='languages-icon'>🌐</span>,
+  Globe: ({ className }: React.ComponentProps<'div'>) => (
+    <span
+      data-testid='globe-icon'
+      className={className}
+    >
+      🌐
+    </span>
+  ),
   Loader2: ({ className }: React.ComponentProps<'div'>) => (
     <span
       data-testid='loader-icon'

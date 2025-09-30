@@ -31,6 +31,9 @@ vi.mock('next/navigation', () => ({
   permanentRedirect: vi.fn(),
 }));
 
+// Create a mutable pathname mock
+const mockPathname = { current: '/' };
+
 // Mock @/i18n/routing
 vi.mock('@/i18n/routing', () => ({
   Link: ({ children, href, className, onClick, ...props }: any) => {
@@ -49,6 +52,15 @@ vi.mock('@/i18n/routing', () => ({
       </a>
     );
   },
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn(),
+  })),
+  usePathname: vi.fn(() => mockPathname.current),
 }));
 
 // Mock Lucide React icons
@@ -65,6 +77,9 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
     user = userEvent.setup();
     vi.clearAllMocks();
 
+    // Reset pathname to root
+    mockPathname.current = '/';
+
     // Setup default mocks
     (useTranslations as ReturnType<typeof vi.fn>).mockReturnValue(
       (key: string) => {
@@ -75,7 +90,6 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
           'navigation.contact': 'Contact',
           'navigation.products': 'Products',
           'navigation.blog': 'Blog',
-          'navigation.diagnostics': 'Diagnostics',
           'navigation.menu': 'Menu',
           'navigation.close': 'Close',
           'accessibility.openMenu': 'Open menu',
@@ -213,7 +227,7 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
       // Simulate route change
-      (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/about');
+      mockPathname.current = '/about';
       rerender(<MobileNavigation />);
 
       // Menu should be closed after route change
@@ -228,7 +242,7 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
       await user.click(trigger);
 
       // Simulate route change to about page
-      (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/about');
+      mockPathname.current = '/about';
       rerender(<MobileNavigation />);
 
       trigger = screen.getByRole('button');
@@ -247,7 +261,7 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
 
       // Route change while menu is open
-      (usePathname as ReturnType<typeof vi.fn>).mockReturnValue('/contact');
+      mockPathname.current = '/contact';
       rerender(<MobileNavigation />);
 
       const newTrigger = screen.getByRole('button');
@@ -261,7 +275,7 @@ describe('Mobile Navigation Responsive - Basic Tests', () => {
       const routes = ['/', '/about', '/services', '/contact'];
 
       for (const route of routes) {
-        (usePathname as ReturnType<typeof vi.fn>).mockReturnValue(route);
+        mockPathname.current = route;
         rerender(<MobileNavigation />);
 
         const trigger = screen.getByRole('button');
