@@ -113,8 +113,8 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
       return React.cloneElement(children, {
         'data-slot': 'dropdown-menu-trigger',
         ...props,
-        ...(children.props || {}),
-      });
+        ...(children.props as Record<string, unknown>),
+      } as React.Attributes);
     }
     return (
       <div
@@ -177,8 +177,8 @@ vi.mock('@/components/ui/button', () => ({
         'data-size': size,
         'className': className,
         ...props,
-        ...(children.props || {}),
-      });
+        ...(children.props as Record<string, unknown>),
+      } as React.Attributes);
     }
     return (
       <button

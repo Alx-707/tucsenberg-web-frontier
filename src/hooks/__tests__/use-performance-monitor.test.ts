@@ -21,10 +21,14 @@ const mockPerformanceMemory = {
 };
 
 // Mock navigation timing entry
-const mockNavigationTiming = {
+const mockNavigationTiming: PerformanceNavigationTiming = {
   startTime: 0,
   loadEventEnd: 1000,
+  loadEventStart: 950,
   domContentLoadedEventEnd: 500,
+  domContentLoadedEventStart: 450,
+  domComplete: 900,
+  domInteractive: 400,
   responseEnd: 300,
   requestStart: 100,
   connectEnd: 50,
@@ -45,13 +49,13 @@ const mockNavigationTiming = {
   nextHopProtocol: 'http/1.1',
   workerStart: 0,
   redirectCount: 0,
-  type: 'navigate',
+  type: 'navigate' as NavigationTimingType,
   transferSize: 1024,
   encodedBodySize: 512,
   decodedBodySize: 512,
   serverTiming: [],
   toJSON: () => ({}),
-} as PerformanceNavigationTiming;
+};
 
 // Mock performance API
 Object.defineProperty(global, 'performance', {

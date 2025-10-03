@@ -381,7 +381,7 @@ describe('Enhanced Locale Switcher - 核心语言切换功能', () => {
       await user.click(button);
 
       const englishOptions = screen.getAllByText('English');
-      await user.click(englishOptions[1]); // 点击菜单项中的English
+      await user.click(englishOptions[1]!); // 点击菜单项中的English
 
       // 在Mock环境中，会调用router.push，但应该是当前语言的路径
       expect(mockPush).toHaveBeenCalledWith('/en');

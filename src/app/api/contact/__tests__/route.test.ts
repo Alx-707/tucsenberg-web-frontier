@@ -115,6 +115,7 @@ describe('Contact API Route', () => {
       email: 'john.doe@example.com',
       company: 'Test Company',
       message: 'Test message',
+      acceptPrivacy: true,
       phone: '+1234567890',
       subject: 'Test Subject',
       marketingConsent: false,

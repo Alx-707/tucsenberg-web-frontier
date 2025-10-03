@@ -472,7 +472,7 @@ describe('Enhanced Locale Switcher - 高级语言切换功能', () => {
       await user.click(button);
 
       // 使用更具体的选择器找到英文选项
-      const englishOption = screen.getAllByText('English')[1]; // 第二个是在菜单项中的
+      const englishOption = screen.getAllByText('English')[1]!; // 第二个是在菜单项中的
       expect(englishOption.closest('[role="menuitem"]')).toBeInTheDocument();
     });
   });

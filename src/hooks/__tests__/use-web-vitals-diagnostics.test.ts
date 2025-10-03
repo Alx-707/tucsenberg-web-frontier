@@ -576,12 +576,39 @@ describe('useWebVitalsDiagnostics', () => {
       // 设置Mock返回零值，确保新生成的报告也是零值
       const collector = await getCollectorMock();
       collector.getDetailedMetrics.mockReturnValue({
-        ...TEST_WEB_VITALS_DIAGNOSTICS,
         cls: 0,
         fid: 0,
         lcp: 0,
         fcp: 0,
         ttfb: 0,
+        inp: 0,
+        domContentLoaded: 0,
+        loadComplete: 0,
+        firstPaint: 0,
+        resourceTiming: {
+          totalResources: 0,
+          slowResources: [],
+          totalSize: 0,
+          totalDuration: 0,
+        },
+        connection: {
+          effectiveType: '4g',
+          downlink: 0,
+          rtt: 0,
+          saveData: false,
+        },
+        device: {
+          memory: 0,
+          cores: 0,
+          userAgent: 'test-agent',
+          viewport: { width: 0, height: 0 },
+        },
+        page: {
+          url: 'http://localhost:3000/test',
+          referrer: '',
+          title: 'Test Page',
+          timestamp: Date.now(),
+        },
       });
 
       const historicalData = Array.from({ length: 25 }, (_, i) => ({

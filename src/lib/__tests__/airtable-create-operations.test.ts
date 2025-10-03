@@ -58,7 +58,10 @@ const mockBase = vi.fn(() => createMockBase(tableFactory));
 const mockConfigure = vi.fn();
 
 const setServiceReady = (service: unknown) =>
-  configureServiceForTesting(service, createMockBase(tableFactory));
+  configureServiceForTesting(
+    service as AirtableServicePrivate,
+    createMockBase(tableFactory),
+  );
 
 vi.mock('airtable', () => ({
   default: {
