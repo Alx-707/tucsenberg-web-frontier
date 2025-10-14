@@ -85,6 +85,15 @@ vi.mock('next-intl', () => ({
 }));
 
 // 填写有效表单的辅助函数
+const renderContactForm = async () => {
+  let utils: ReturnType<typeof render> | undefined;
+  await act(async () => {
+    utils = render(<ContactFormContainer />);
+  });
+  await screen.findByTestId('turnstile-mock');
+  return utils!;
+};
+
 const _fillValidForm = async () => {
   await act(async () => {
     fireEvent.change(screen.getByLabelText(/first name/i), {
@@ -114,14 +123,55 @@ const _fillValidForm = async () => {
     fireEvent.click(privacyCheckbox);
 
     // 启用 Turnstile
-    fireEvent.click(screen.getByTestId('turnstile-success'));
+    const successButton = await screen.findByTestId('turnstile-success');
+    fireEvent.click(successButton);
   });
 };
 
 describe('ContactFormContainer - 提交和错误处理', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
+
+    (
+      window as typeof window & {
+        requestIdleCallback?: typeof globalThis.requestIdleCallback;
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
+      callback({
+        didTimeout: false,
+        timeRemaining: () => 1,
+      });
+      return 1 as unknown as number;
+    });
+
+    (
+      window as typeof window & {
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).cancelIdleCallback = vi.fn();
+
+    (
+      globalThis as typeof globalThis & {
+        IntersectionObserver?: typeof IntersectionObserver;
+      }
+    ).IntersectionObserver = vi.fn((callback: IntersectionObserverCallback) => {
+      return {
+        observe: vi.fn(() => {
+          callback(
+            [
+              {
+                isIntersecting: true,
+              } as IntersectionObserverEntry,
+            ],
+            {} as IntersectionObserver,
+          );
+        }),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+        takeRecords: vi.fn(() => []),
+      } satisfies IntersectionObserver;
+    });
 
     // Default useActionState mock - idle state
     mockUseActionState.mockReturnValue([
@@ -132,7 +182,22 @@ describe('ContactFormContainer - 提交和错误处理', () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    delete (
+      window as typeof window & {
+        requestIdleCallback?: typeof globalThis.requestIdleCallback;
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).requestIdleCallback;
+    delete (
+      window as typeof window & {
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).cancelIdleCallback;
+    delete (
+      globalThis as typeof globalThis & {
+        IntersectionObserver?: typeof IntersectionObserver;
+      }
+    ).IntersectionObserver;
   });
 
   describe('网络错误处理', () => {
@@ -144,7 +209,7 @@ describe('ContactFormContainer - 提交和错误处理', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 检查错误消息 - 应该显示通用错误消息而不是具体的网络错误
       expect(screen.getByText(/failed to submit form/i)).toBeInTheDocument();
@@ -158,14 +223,14 @@ describe('ContactFormContainer - 提交和错误处理', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 检查速率限制消息 - 应该显示通用错误消息而不是具体的速率限制错误
       expect(screen.getByText(/failed to submit form/i)).toBeInTheDocument();
     });
 
     it('没有 Turnstile token 时不应该提交', async () => {
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 填写表单但不启用 Turnstile
       await act(async () => {
@@ -209,7 +274,7 @@ describe('ContactFormContainer - 提交和错误处理', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 检查成功消息
       expect(
@@ -225,11 +290,12 @@ describe('ContactFormContainer - 提交和错误处理', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 启用 Turnstile 以使按钮可用
+      const successButton = await screen.findByTestId('turnstile-success');
       await act(async () => {
-        fireEvent.click(screen.getByTestId('turnstile-success'));
+        fireEvent.click(successButton);
       });
 
       const submitButton = screen.getByRole('button', { name: /submit/i });
@@ -248,7 +314,7 @@ describe('ContactFormContainer - 提交和错误处理', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 验证表单渲染正确，数据格式化由Server Actions处理
       expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();

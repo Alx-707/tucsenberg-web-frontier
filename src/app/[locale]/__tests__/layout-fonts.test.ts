@@ -3,10 +3,11 @@ import {
   geistMono,
   geistSans,
   getFontClassNames,
+  notoSansSC,
 } from '@/app/[locale]/layout-fonts';
 
 // Mock Next.js字体函数 - 使用vi.hoisted确保正确初始化
-const { mockGeistSans, mockGeistMono } = vi.hoisted(() => ({
+const { mockGeistSans, mockGeistMono, mockNotoSansSC } = vi.hoisted(() => ({
   mockGeistSans: {
     variable: '--font-geist-sans',
     className: 'geist-sans-class',
@@ -17,11 +18,17 @@ const { mockGeistSans, mockGeistMono } = vi.hoisted(() => ({
     className: 'geist-mono-class',
     style: { fontFamily: 'Geist Mono' },
   },
+  mockNotoSansSC: {
+    variable: '--font-noto-sans-sc',
+    className: 'noto-sans-sc-class',
+    style: { fontFamily: 'Noto Sans SC' },
+  },
 }));
 
 vi.mock('next/font/google', () => ({
   Geist: vi.fn(() => mockGeistSans),
   Geist_Mono: vi.fn(() => mockGeistMono),
+  Noto_Sans_SC: vi.fn(() => mockNotoSansSC),
 }));
 
 describe('Layout Fonts Configuration', () => {
@@ -61,6 +68,19 @@ describe('Layout Fonts Configuration', () => {
     });
   });
 
+  describe('notoSansSC字体配置', () => {
+    it('应该正确配置Noto Sans SC字体', () => {
+      expect(notoSansSC).toBeDefined();
+      expect(notoSansSC.variable).toBe('--font-noto-sans-sc');
+    });
+
+    it('应该包含正确的字体配置选项', () => {
+      expect(notoSansSC).toHaveProperty('variable');
+      expect(notoSansSC).toHaveProperty('className');
+      expect(notoSansSC).toHaveProperty('style');
+    });
+  });
+
   describe('getFontClassNames函数', () => {
     it('应该返回组合的字体类名字符串', () => {
       const classNames = getFontClassNames();
@@ -77,6 +97,19 @@ describe('Layout Fonts Configuration', () => {
       expect(parts).toHaveLength(2);
       expect(parts[0]).toContain('--font-geist-sans');
       expect(parts[1]).toContain('--font-geist-mono');
+    });
+
+    it('当启用中文字体时应该包含Noto Sans SC变量', () => {
+      const originalEnv = process.env.NEXT_PUBLIC_ENABLE_CN_FONT_SUBSET;
+      process.env.NEXT_PUBLIC_ENABLE_CN_FONT_SUBSET = 'true';
+
+      const classNames = getFontClassNames();
+      const parts = classNames.split(' ');
+
+      expect(parts).toHaveLength(3);
+      expect(parts[2]).toContain('--font-noto-sans-sc');
+
+      process.env.NEXT_PUBLIC_ENABLE_CN_FONT_SUBSET = originalEnv;
     });
 
     it('应该返回一致的结果', () => {
@@ -109,6 +142,9 @@ describe('Layout Fonts Configuration', () => {
 
       expect(classNames).toContain(geistSans.variable);
       expect(classNames).toContain(geistMono.variable);
+      if (process.env.NEXT_PUBLIC_ENABLE_CN_FONT_SUBSET === 'true') {
+        expect(classNames).toContain(notoSansSC.variable);
+      }
     });
   });
 

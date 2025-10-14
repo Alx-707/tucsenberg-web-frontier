@@ -120,8 +120,8 @@ vi.mock('@/components/ui/button', () => ({
   ),
 }));
 
-// Mock Lucide icons
-vi.mock('lucide-react', () => ({
+const lucideMock = vi.hoisted(() => ({
+  __esModule: true,
   Languages: () => <span data-testid='languages-icon'>🌐</span>,
   Globe: ({ className }: React.ComponentProps<'div'>) => (
     <span
@@ -148,6 +148,8 @@ vi.mock('lucide-react', () => ({
     </span>
   ),
 }));
+
+vi.mock('lucide-react', () => lucideMock);
 
 describe('LanguageToggle Integration Tests', () => {
   const user = userEvent.setup();
@@ -303,15 +305,14 @@ describe('LanguageToggle Integration Tests', () => {
     it('should use correct translations for interface elements', async () => {
       render(<LanguageToggle />);
 
-      // Verify translations are called correctly
-      expect(mockUseTranslations).toHaveBeenCalledWith('toggle');
-      expect(mockUseTranslations).toHaveBeenCalledWith('english');
-      expect(mockUseTranslations).toHaveBeenCalledWith('chinese');
-
-      // Verify screen reader text
       const toggleButton = screen.getByTestId('language-toggle-button');
-      const srText = toggleButton.querySelector('.sr-only');
-      expect(srText).toHaveTextContent('Toggle language');
+      expect(toggleButton).toHaveTextContent('English');
+
+      await user.click(toggleButton);
+
+      const menu = await screen.findByTestId('language-dropdown-content');
+      expect(menu).toHaveTextContent('English');
+      expect(menu).toHaveTextContent('简体中文');
     });
 
     it('should handle missing translations gracefully', async () => {
@@ -368,9 +369,13 @@ describe('LanguageToggle Integration Tests', () => {
       render(<LanguageToggle />);
 
       const toggleButton = screen.getByTestId('language-toggle-button');
-      const srText = toggleButton.querySelector('.sr-only');
-      expect(srText).toBeInTheDocument();
-      expect(srText).toHaveTextContent('Toggle language');
+      expect(toggleButton).toHaveAccessibleName(/English/);
+
+      await user.click(toggleButton);
+
+      await screen.findByTestId('language-dropdown-content');
+      const menuItems = screen.getAllByRole('menuitem');
+      expect(menuItems).toHaveLength(2);
     });
 
     it('should support keyboard navigation', async () => {

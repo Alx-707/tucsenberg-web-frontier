@@ -33,36 +33,78 @@ vi.mock('@/components/home/tech-stack-section', () => ({
   ),
 }));
 
+vi.mock('next/dynamic', async () => {
+  const React = await import('react');
+  return {
+    __esModule: true,
+    default: (
+      importer: () => Promise<
+        { default?: React.ComponentType<any> } | React.ComponentType<any>
+      >,
+    ) =>
+      function DynamicComponent(props: Record<string, unknown>) {
+        const [Loaded, setLoaded] =
+          React.useState<React.ComponentType<any> | null>(null);
+
+        React.useEffect(() => {
+          let mounted = true;
+          importer().then((mod) => {
+            if (!mounted) return;
+            const Component =
+              typeof mod === 'function'
+                ? (mod as React.ComponentType<any>)
+                : mod.default;
+            setLoaded(() => Component ?? (() => null));
+          });
+          return () => {
+            mounted = false;
+          };
+        }, []);
+
+        if (!Loaded) return null;
+        return React.createElement(Loaded, props);
+      },
+  };
+});
+
 describe('Home Page Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('Page Structure', () => {
-    it('should render all main sections in correct order', () => {
+    it('should render all main sections in correct order', async () => {
       render(<Home />);
 
       // Verify all sections are present
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('tech-stack-section')).toBeInTheDocument();
-      expect(screen.getByTestId('component-showcase')).toBeInTheDocument();
-      expect(screen.getByTestId('project-overview')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      const hero = await screen.findByTestId('hero-section');
+      const techStack = await screen.findByTestId('tech-stack-section');
+      const showcase = await screen.findByTestId('component-showcase');
+      const overview = await screen.findByTestId('project-overview');
+      const cta = await screen.findByTestId('call-to-action');
+
+      expect(hero).toBeInTheDocument();
+      expect(techStack).toBeInTheDocument();
+      expect(showcase).toBeInTheDocument();
+      expect(overview).toBeInTheDocument();
+      expect(cta).toBeInTheDocument();
     });
 
-    it('should have correct page layout structure', () => {
+    it('should have correct page layout structure', async () => {
       render(<Home />);
 
-      const mainContainer = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const mainContainer = hero.parentElement;
       expect(mainContainer).toHaveClass('bg-background');
       expect(mainContainer).toHaveClass('text-foreground');
       expect(mainContainer).toHaveClass('min-h-screen');
     });
 
-    it('should maintain proper section hierarchy', () => {
+    it('should maintain proper section hierarchy', async () => {
       render(<Home />);
 
-      const container = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const container = hero.parentElement;
       const sections = container?.children;
 
       expect(sections).toHaveLength(5);
@@ -100,43 +142,42 @@ describe('Home Page Integration Tests', () => {
     it('should handle component loading states', async () => {
       render(<Home />);
 
-      // All components should be immediately available (no async loading)
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('tech-stack-section')).toBeInTheDocument();
-      expect(screen.getByTestId('component-showcase')).toBeInTheDocument();
-      expect(screen.getByTestId('project-overview')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
+      await screen.findByTestId('tech-stack-section');
+      await screen.findByTestId('component-showcase');
+      await screen.findByTestId('project-overview');
+      await screen.findByTestId('call-to-action');
     });
   });
 
   describe('Responsive Design', () => {
-    it('should maintain layout on different screen sizes', () => {
+    it('should maintain layout on different screen sizes', async () => {
       render(<Home />);
 
-      const container = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const container = hero.parentElement;
 
       // Container should have responsive classes
       expect(container).toHaveClass('min-h-screen');
 
       // All sections should be present regardless of screen size
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('tech-stack-section')).toBeInTheDocument();
-      expect(screen.getByTestId('component-showcase')).toBeInTheDocument();
-      expect(screen.getByTestId('project-overview')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
+      await screen.findByTestId('tech-stack-section');
+      await screen.findByTestId('component-showcase');
+      await screen.findByTestId('project-overview');
+      await screen.findByTestId('call-to-action');
     });
   });
 
   describe('Accessibility', () => {
-    it('should have proper semantic structure', () => {
+    it('should have proper semantic structure', async () => {
       render(<Home />);
 
-      // All sections should be present as section elements
-      const heroSection = screen.getByTestId('hero-section');
-      const techStackSection = screen.getByTestId('tech-stack-section');
-      const componentShowcase = screen.getByTestId('component-showcase');
-      const projectOverview = screen.getByTestId('project-overview');
-      const callToAction = screen.getByTestId('call-to-action');
+      const heroSection = await screen.findByTestId('hero-section');
+      const techStackSection = await screen.findByTestId('tech-stack-section');
+      const componentShowcase = await screen.findByTestId('component-showcase');
+      const projectOverview = await screen.findByTestId('project-overview');
+      const callToAction = await screen.findByTestId('call-to-action');
 
       expect(heroSection.tagName).toBe('SECTION');
       expect(techStackSection.tagName).toBe('SECTION');
@@ -145,20 +186,20 @@ describe('Home Page Integration Tests', () => {
       expect(callToAction.tagName).toBe('SECTION');
 
       // Main container should be accessible
-      const container = screen.getByTestId('hero-section').parentElement;
+      const container = heroSection.parentElement;
       expect(container).toBeInTheDocument();
     });
 
-    it('should support keyboard navigation', () => {
+    it('should support keyboard navigation', async () => {
       render(<Home />);
 
-      // Page should be navigable (components handle their own keyboard events)
-      const container = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const container = hero.parentElement;
       expect(container).toBeInTheDocument();
 
       // All interactive sections should be present
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
+      await screen.findByTestId('call-to-action');
     });
   });
 
@@ -172,20 +213,20 @@ describe('Home Page Integration Tests', () => {
       expect(endTime - startTime).toBeLessThan(100);
     });
 
-    it('should handle multiple renders without issues', () => {
+    it('should handle multiple renders without issues', async () => {
       const { rerender } = render(<Home />);
 
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
 
       rerender(<Home />);
 
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
+      await screen.findByTestId('call-to-action');
     });
   });
 
   describe('Error Handling', () => {
-    it('should handle component errors gracefully', () => {
+    it('should handle component errors gracefully', async () => {
       // Mock console.error to avoid noise in test output
       const consoleSpy = vi
         .spyOn(console, 'error')
@@ -193,18 +234,18 @@ describe('Home Page Integration Tests', () => {
 
       render(<Home />);
 
-      // Page should still render even if individual components have issues
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
+      await screen.findByTestId('hero-section');
 
       consoleSpy.mockRestore();
     });
   });
 
   describe('Content Flow', () => {
-    it('should present content in logical order for user journey', () => {
+    it('should present content in logical order for user journey', async () => {
       render(<Home />);
 
-      const container = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const container = hero.parentElement;
       const sections = Array.from(container?.children || []);
 
       // Verify logical flow:
@@ -221,21 +262,22 @@ describe('Home Page Integration Tests', () => {
       expect(sections[4]).toHaveAttribute('data-testid', 'call-to-action');
     });
 
-    it('should maintain visual hierarchy', () => {
+    it('should maintain visual hierarchy', async () => {
       render(<Home />);
 
-      const container = screen.getByTestId('hero-section').parentElement;
+      const hero = await screen.findByTestId('hero-section');
+      const container = hero.parentElement;
 
       // Container should establish proper visual context
       expect(container).toHaveClass('bg-background');
       expect(container).toHaveClass('text-foreground');
 
       // All sections should inherit this context
-      expect(screen.getByTestId('hero-section')).toBeInTheDocument();
-      expect(screen.getByTestId('tech-stack-section')).toBeInTheDocument();
-      expect(screen.getByTestId('component-showcase')).toBeInTheDocument();
-      expect(screen.getByTestId('project-overview')).toBeInTheDocument();
-      expect(screen.getByTestId('call-to-action')).toBeInTheDocument();
+      expect(hero).toBeInTheDocument();
+      await screen.findByTestId('tech-stack-section');
+      await screen.findByTestId('component-showcase');
+      await screen.findByTestId('project-overview');
+      await screen.findByTestId('call-to-action');
     });
   });
 });

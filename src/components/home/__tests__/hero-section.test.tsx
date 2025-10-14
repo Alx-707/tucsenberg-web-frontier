@@ -10,11 +10,15 @@ const {
   mockUseIntersectionObserver,
   mockUseRouter,
   mockUseTheme,
+  mockUseDeferredBackground,
+  mockUseDeferredContent,
 } = vi.hoisted(() => ({
   mockUseTranslations: vi.fn(),
   mockUseIntersectionObserver: vi.fn(),
   mockUseRouter: vi.fn(),
   mockUseTheme: vi.fn(),
+  mockUseDeferredBackground: vi.fn(),
+  mockUseDeferredContent: vi.fn(),
 }));
 
 // Mock next-intl
@@ -35,6 +39,12 @@ vi.mock('next/navigation', () => ({
 // Mock next-themes
 vi.mock('next-themes', () => ({
   useTheme: mockUseTheme,
+}));
+
+// Mock deferred render hooks
+vi.mock('@/hooks/use-deferred-render', () => ({
+  useDeferredBackground: mockUseDeferredBackground,
+  useDeferredContent: mockUseDeferredContent,
 }));
 
 // Mock Lucide React icons
@@ -61,18 +71,32 @@ vi.mock('@/components/ui/button', () => ({
   Button: ({
     children,
     className,
+    asChild,
     onClick,
     ...props
-  }: React.ComponentProps<'button'>) => (
-    <button
-      data-testid='button'
-      className={className}
-      onClick={onClick}
-      {...props}
-    >
-      {children}
-    </button>
-  ),
+  }: React.ComponentProps<'button'> & { asChild?: boolean }) => {
+    if (asChild && React.isValidElement(children)) {
+      const existingClass =
+        (children.props as { className?: string })?.className ?? '';
+      return React.cloneElement(children, {
+        ...props,
+        onClick,
+        'className': [existingClass, className].filter(Boolean).join(' '),
+        'data-testid': 'button-link',
+      });
+    }
+
+    return (
+      <button
+        data-testid='button'
+        className={className}
+        onClick={onClick}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  },
 }));
 
 describe('HeroSection', () => {
@@ -119,6 +143,9 @@ describe('HeroSection', () => {
       setTheme: vi.fn(),
       resolvedTheme: 'light',
     });
+
+    mockUseDeferredBackground.mockReturnValue(true);
+    mockUseDeferredContent.mockReturnValue(true);
   });
 
   describe('Basic Rendering', () => {
@@ -168,11 +195,11 @@ describe('HeroSection', () => {
     it('should render demo and github buttons', () => {
       render(<HeroSection />);
 
-      const buttons = screen.getAllByTestId('button');
-      expect(buttons).toHaveLength(2);
+      const demoLink = screen.getByRole('link', { name: /view demo/i });
+      const githubLink = screen.getByRole('link', { name: /view on github/i });
 
-      expect(screen.getByText('View Demo')).toBeInTheDocument();
-      expect(screen.getByText('View on GitHub')).toBeInTheDocument();
+      expect(demoLink).toBeInTheDocument();
+      expect(githubLink).toBeInTheDocument();
     });
 
     it('should render button icons', () => {
@@ -290,20 +317,22 @@ describe('HeroSection', () => {
       const heading = screen.getByRole('heading', { level: 1 });
       expect(heading).toBeInTheDocument();
 
-      // Check for proper paragraph structure
-      const paragraph = screen.getByRole('paragraph');
-      expect(paragraph).toBeInTheDocument();
+      // Check for descriptive text
+      expect(
+        screen.getByText(
+          'Build powerful business applications with our modern tech stack',
+        ),
+      ).toBeInTheDocument();
     });
 
     it('should have accessible button elements', () => {
       render(<HeroSection />);
 
-      const buttons = screen.getAllByRole('button');
-      expect(buttons).toHaveLength(2);
+      const demoLink = screen.getByRole('link', { name: /view demo/i });
+      const githubLink = screen.getByRole('link', { name: /view on github/i });
 
-      buttons.forEach((button) => {
-        expect(button).toBeInTheDocument();
-      });
+      expect(demoLink).toBeInTheDocument();
+      expect(githubLink).toBeInTheDocument();
     });
   });
 

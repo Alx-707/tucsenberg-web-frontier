@@ -1,3 +1,4 @@
+import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DEFAULT_LOCALE } from '@/lib/locale-constants';
 import { useClientLocaleDetection } from '@/lib/locale-detection-hooks';
@@ -79,8 +80,8 @@ describe('useClientLocaleDetection - User Override and Browser Detection', () =>
     });
 
     // 获取hook函数
-    const hook = useClientLocaleDetection();
-    detectClientLocale = hook.detectClientLocale;
+    const { result } = renderHook(() => useClientLocaleDetection());
+    detectClientLocale = result.current.detectClientLocale;
   });
 
   describe('用户覆盖检测', () => {
@@ -205,7 +206,8 @@ describe('useClientLocaleDetection - Navigator API and Security', () => {
 
   beforeEach(() => {
     setupClientLocaleDetectionTest();
-    detectClientLocale = useClientLocaleDetection().detectClientLocale;
+    const { result } = renderHook(() => useClientLocaleDetection());
+    detectClientLocale = result.current.detectClientLocale;
   });
 
   describe('navigator API不可用的情况', () => {
@@ -285,7 +287,8 @@ describe('useClientLocaleDetection - Confidence and Details', () => {
 
   beforeEach(() => {
     setupClientLocaleDetectionTest();
-    detectClientLocale = useClientLocaleDetection().detectClientLocale;
+    const { result } = renderHook(() => useClientLocaleDetection());
+    detectClientLocale = result.current.detectClientLocale;
   });
 
   describe('置信度计算', () => {

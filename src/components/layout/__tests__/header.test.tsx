@@ -7,30 +7,24 @@ import {
   HeaderTransparent,
 } from '@/components/layout/header';
 
-// Mock the navigation components
-vi.mock('../main-navigation', () => ({
-  MainNavigation: () => (
-    <nav data-testid='main-navigation'>Main Navigation</nav>
-  ),
+// Mock the navigation components used by Header
+vi.mock('@/components/layout/nav-switcher', () => ({
+  NavSwitcher: () => <nav data-testid='nav-switcher'>Main Navigation</nav>,
 }));
 
-vi.mock('../mobile-navigation', () => ({
+vi.mock('@/components/layout/mobile-navigation', () => ({
   MobileNavigation: () => (
     <nav data-testid='mobile-navigation'>Mobile Navigation</nav>
   ),
 }));
 
-vi.mock('../language-switcher', () => ({
-  LanguageSwitcher: () => (
-    <div data-testid='language-switcher'>Language Switcher</div>
+vi.mock('@/components/language-toggle', () => ({
+  LanguageToggle: () => (
+    <button data-testid='language-toggle-button'>Language Toggle</button>
   ),
 }));
 
-vi.mock('../../theme-toggle', () => ({
-  ThemeToggle: () => <button data-testid='theme-toggle'>Theme Toggle</button>,
-}));
-
-vi.mock('../logo', () => ({
+vi.mock('@/components/layout/logo', () => ({
   Logo: () => <div data-testid='logo'>Logo</div>,
 }));
 
@@ -40,13 +34,15 @@ describe('Header Component', () => {
   });
 
   describe('Default Header', () => {
-    it('renders all navigation components', () => {
+    it('renders all navigation components', async () => {
       renderWithProviders(<Header />);
 
       expect(screen.getByTestId('logo')).toBeInTheDocument();
-      expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
+      expect(await screen.findByTestId('nav-switcher')).toBeInTheDocument();
       expect(screen.getByTestId('mobile-navigation')).toBeInTheDocument();
-      expect(screen.getByTestId('language-toggle-button')).toBeInTheDocument();
+      expect(
+        await screen.findByTestId('language-toggle-button'),
+      ).toBeInTheDocument();
       // Header组件不包含ThemeToggle（已移除）
     });
 
@@ -145,11 +141,11 @@ describe('Header Component', () => {
   });
 
   describe('Responsive Behavior', () => {
-    it('contains both desktop and mobile navigation', () => {
+    it('contains both desktop and mobile navigation', async () => {
       renderWithProviders(<Header />);
 
       // Both should be present, visibility controlled by CSS
-      expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
+      expect(await screen.findByTestId('nav-switcher')).toBeInTheDocument();
       expect(screen.getByTestId('mobile-navigation')).toBeInTheDocument();
     });
   });

@@ -61,11 +61,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.products.title',
         links: [
           {
+            key: 'solutions',
             translationKey: 'footer.sections.products.links.solutions',
             href: '/solutions',
             external: false,
           },
           {
+            key: 'services',
             translationKey: 'footer.sections.products.links.services',
             href: '/services',
             external: false,
@@ -77,11 +79,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.company.title',
         links: [
           {
+            key: 'about',
             translationKey: 'footer.sections.company.links.about',
             href: '/about',
             external: false,
           },
           {
+            key: 'contact',
             translationKey: 'footer.sections.company.links.contact',
             href: '/contact',
             external: false,
@@ -93,11 +97,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.legal.title',
         links: [
           {
+            key: 'privacy',
             translationKey: 'footer.sections.legal.links.privacy',
             href: '/privacy',
             external: false,
           },
           {
+            key: 'terms',
             translationKey: 'footer.sections.legal.links.terms',
             href: '/terms',
             external: false,
@@ -147,25 +153,30 @@ vi.mock('@/components/ui/social-icons', () => ({
     icon,
     _label,
     ariaLabel,
+    iconSize: _iconSize,
     ...props
-  }: React.ComponentProps<'a'> & {
+  }: Omit<React.ComponentProps<'a'>, 'href'> & {
     href: string;
     icon: string;
     label: string;
     ariaLabel: string;
     _label?: string;
-  }) => (
-    <a
-      data-testid={`social-link-${icon}`}
-      href={href}
-      aria-label={ariaLabel}
-      target='_blank'
-      rel='noopener noreferrer'
-      {...props}
-    >
-      {icon === 'linkedin' ? '💼' : '🐦'}
-    </a>
-  ),
+  }) => {
+    const { className, ...rest } = props;
+    return (
+      <a
+        data-testid={`social-link-${icon}`}
+        href={href}
+        aria-label={ariaLabel}
+        target='_blank'
+        rel='noopener noreferrer'
+        className={className}
+        {...rest}
+      >
+        {icon === 'linkedin' ? '💼' : '🐦'}
+      </a>
+    );
+  },
 }));
 
 describe('Footer Structure and Navigation Integration Tests', () => {
@@ -186,7 +197,6 @@ describe('Footer Structure and Navigation Integration Tests', () => {
         ['footer.sections.legal.title', 'Legal'],
         ['footer.sections.legal.links.privacy', 'Privacy Policy'],
         ['footer.sections.legal.links.terms', 'Terms of Service'],
-        ['footer.sections.social.title', 'Follow Us'],
       ]);
 
       return translations.get(key) || key;
@@ -217,8 +227,11 @@ describe('Footer Structure and Navigation Integration Tests', () => {
       expect(screen.getByText('Company')).toBeInTheDocument();
       expect(screen.getByText('Legal')).toBeInTheDocument();
 
-      // Verify social section
-      expect(screen.getByText('Follow Us')).toBeInTheDocument();
+      // Verify social section container and links
+      const socialSection = screen.getByLabelText('Social links');
+      expect(socialSection).toBeInTheDocument();
+      expect(screen.getByTestId('social-link-linkedin')).toBeInTheDocument();
+      expect(screen.getByTestId('social-link-twitter')).toBeInTheDocument();
     });
 
     it('should render all navigation links correctly', async () => {

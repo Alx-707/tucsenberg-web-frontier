@@ -92,6 +92,47 @@ vi.mock('@marsidev/react-turnstile', () => ({
   ),
 }));
 
+vi.mock('next/dynamic', async () => {
+  const React = await import('react');
+  return {
+    default: (
+      importer: () => Promise<{ default?: React.ComponentType<any> }>,
+    ) => {
+      return function DynamicComponent(props: Record<string, unknown>) {
+        const [Loaded, setLoaded] =
+          React.useState<React.ComponentType<any> | null>(null);
+
+        React.useEffect(() => {
+          let mounted = true;
+          importer().then((mod) => {
+            if (!mounted) return;
+            const Component =
+              mod?.default ?? (mod as unknown as React.ComponentType<any>);
+            setLoaded(() => Component);
+          });
+          return () => {
+            mounted = false;
+          };
+        }, []);
+
+        if (!Loaded) {
+          return null;
+        }
+
+        return React.createElement(Loaded, props);
+      };
+    },
+  };
+});
+
+const renderContactForm = async () => {
+  let result: ReturnType<typeof render>;
+  await act(async () => {
+    result = render(<ContactFormContainer />);
+  });
+  return result!;
+};
+
 // 填写有效表单的辅助函数
 const _fillValidForm = async (excludeFields: string[] = []) => {
   await act(async () => {
@@ -144,14 +185,55 @@ const _fillValidForm = async (excludeFields: string[] = []) => {
     }
 
     // 启用 Turnstile
-    fireEvent.click(screen.getByTestId('turnstile-success'));
+    const successButton = await screen.findByTestId('turnstile-success');
+    fireEvent.click(successButton);
   });
 };
 
 describe('ContactFormContainer - 核心功能', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
+
+    (
+      window as typeof window & {
+        requestIdleCallback?: typeof globalThis.requestIdleCallback;
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).requestIdleCallback = vi.fn((callback: IdleRequestCallback) => {
+      callback({
+        didTimeout: false,
+        timeRemaining: () => 1,
+      });
+      return 1 as unknown as number;
+    });
+
+    (
+      window as typeof window & {
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).cancelIdleCallback = vi.fn();
+
+    (
+      globalThis as typeof globalThis & {
+        IntersectionObserver?: typeof IntersectionObserver;
+      }
+    ).IntersectionObserver = vi.fn((callback: IntersectionObserverCallback) => {
+      return {
+        observe: vi.fn(() => {
+          callback(
+            [
+              {
+                isIntersecting: true,
+              } as IntersectionObserverEntry,
+            ],
+            {} as IntersectionObserver,
+          );
+        }),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+        takeRecords: vi.fn(() => []),
+      } satisfies IntersectionObserver;
+    });
 
     // Default useActionState mock - idle state
     mockUseActionState.mockReturnValue([
@@ -162,18 +244,33 @@ describe('ContactFormContainer - 核心功能', () => {
   });
 
   afterEach(() => {
-    vi.useRealTimers();
+    delete (
+      window as typeof window & {
+        requestIdleCallback?: typeof globalThis.requestIdleCallback;
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).requestIdleCallback;
+    delete (
+      window as typeof window & {
+        cancelIdleCallback?: typeof globalThis.cancelIdleCallback;
+      }
+    ).cancelIdleCallback;
+    delete (
+      globalThis as typeof globalThis & {
+        IntersectionObserver?: typeof IntersectionObserver;
+      }
+    ).IntersectionObserver;
   });
 
   describe('基础渲染', () => {
-    it('应该正确渲染联系表单', () => {
-      render(<ContactFormContainer />);
+    it('应该正确渲染联系表单', async () => {
+      await renderContactForm();
 
       // 检查表单元素存在
       expect(
         screen.getByRole('button', { name: /submit/i }),
       ).toBeInTheDocument();
-      expect(screen.getByTestId('turnstile-mock')).toBeInTheDocument();
+      expect(await screen.findByTestId('turnstile-mock')).toBeInTheDocument();
 
       // 检查所有表单字段都存在
       expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
@@ -182,8 +279,8 @@ describe('ContactFormContainer - 核心功能', () => {
       expect(screen.getByLabelText(/company/i)).toBeInTheDocument();
     });
 
-    it('应该渲染所有必需的表单字段', () => {
-      render(<ContactFormContainer />);
+    it('应该渲染所有必需的表单字段', async () => {
+      await renderContactForm();
 
       // 检查所有字段是否存在
       expect(screen.getByLabelText(/first name/i)).toBeInTheDocument();
@@ -195,8 +292,8 @@ describe('ContactFormContainer - 核心功能', () => {
       expect(screen.getByLabelText(/message/i)).toBeInTheDocument();
     });
 
-    it('提交按钮初始状态应该被禁用', () => {
-      render(<ContactFormContainer />);
+    it('提交按钮初始状态应该被禁用', async () => {
+      await renderContactForm();
 
       const submitButton = screen.getByRole('button', { name: /submit/i });
       expect(submitButton).toBeDisabled();
@@ -212,7 +309,7 @@ describe('ContactFormContainer - 核心功能', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 验证错误状态消息已显示
       expect(
@@ -228,7 +325,7 @@ describe('ContactFormContainer - 核心功能', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 验证错误状态消息已显示
       expect(
@@ -238,33 +335,38 @@ describe('ContactFormContainer - 核心功能', () => {
   });
 
   describe('Turnstile 集成', () => {
-    it('Turnstile 成功后应该启用提交按钮', () => {
-      render(<ContactFormContainer />);
+    it('Turnstile 成功后应该启用提交按钮', async () => {
+      await renderContactForm();
 
       const submitButton = screen.getByRole('button', { name: /submit/i });
       expect(submitButton).toBeDisabled();
 
-      fireEvent.click(screen.getByTestId('turnstile-success'));
+      const successButton = await screen.findByTestId('turnstile-success');
+      fireEvent.click(successButton);
       // 注意：实际启用还需要表单验证通过
     });
 
-    it('Turnstile 错误后应该禁用提交按钮', () => {
-      render(<ContactFormContainer />);
+    it('Turnstile 错误后应该禁用提交按钮', async () => {
+      await renderContactForm();
 
       // 先成功，再错误
-      fireEvent.click(screen.getByTestId('turnstile-success'));
-      fireEvent.click(screen.getByTestId('turnstile-error'));
+      const successButton = await screen.findByTestId('turnstile-success');
+      fireEvent.click(successButton);
+      const errorButton = await screen.findByTestId('turnstile-error');
+      fireEvent.click(errorButton);
 
       const submitButton = screen.getByRole('button', { name: /submit/i });
       expect(submitButton).toBeDisabled();
     });
 
-    it('Turnstile 过期后应该禁用提交按钮', () => {
-      render(<ContactFormContainer />);
+    it('Turnstile 过期后应该禁用提交按钮', async () => {
+      await renderContactForm();
 
       // 先成功，再过期
-      fireEvent.click(screen.getByTestId('turnstile-success'));
-      fireEvent.click(screen.getByTestId('turnstile-expire'));
+      const successButton = await screen.findByTestId('turnstile-success');
+      fireEvent.click(successButton);
+      const expireButton = await screen.findByTestId('turnstile-expire');
+      fireEvent.click(expireButton);
 
       const submitButton = screen.getByRole('button', { name: /submit/i });
       expect(submitButton).toBeDisabled();
@@ -280,7 +382,7 @@ describe('ContactFormContainer - 核心功能', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 检查成功消息 - 使用翻译文本
       expect(screen.getByText('Message sent successfully')).toBeInTheDocument();
@@ -294,7 +396,7 @@ describe('ContactFormContainer - 核心功能', () => {
         false, // isPending
       ]);
 
-      render(<ContactFormContainer />);
+      await renderContactForm();
 
       // 检查错误消息 - 使用翻译文本
       expect(

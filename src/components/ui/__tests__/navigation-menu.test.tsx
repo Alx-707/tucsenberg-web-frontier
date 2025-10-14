@@ -255,7 +255,9 @@ describe('Navigation Menu Components', () => {
       );
 
       const trigger = screen.getByTestId('nav-trigger');
-      expect(trigger).toHaveClass('group', 'bg-background', 'inline-flex');
+      expect(trigger).toHaveClass('group');
+      expect(trigger).toHaveClass('inline-flex');
+      expect(trigger).toHaveClass('bg-transparent');
     });
 
     it('applies custom className', () => {
@@ -570,8 +572,8 @@ describe('Navigation Menu Components', () => {
     it('returns trigger style classes', () => {
       const styles = navigationMenuTriggerStyle();
       expect(styles).toContain('group');
-      expect(styles).toContain('bg-background');
-      expect(styles).toContain('hover:bg-accent');
+      expect(styles).toContain('bg-transparent');
+      expect(styles).toContain('focus-visible:ring-ring/50');
       expect(styles).toContain('inline-flex');
     });
 

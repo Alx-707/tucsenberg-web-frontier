@@ -1,5 +1,5 @@
-import * as Sentry from '@sentry/nextjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import * as Sentry from '@/lib/sentry-client';
 import {
   recordThemePreference,
   recordThemeSwitch,
@@ -27,7 +27,7 @@ const mockSentry = vi.hoisted(() => ({
   captureMessage: vi.fn(),
 }));
 
-vi.mock('@sentry/nextjs', () => mockSentry);
+vi.mock('@/lib/sentry-client', () => mockSentry);
 
 // Mock environment variables - Set to production to enable global instance
 vi.stubEnv('NODE_ENV', 'production');

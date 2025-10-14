@@ -57,11 +57,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.products.title',
         links: [
           {
+            key: 'solutions',
             translationKey: 'footer.sections.products.links.solutions',
             href: '/solutions',
             external: false,
           },
           {
+            key: 'services',
             translationKey: 'footer.sections.products.links.services',
             href: '/services',
             external: false,
@@ -73,11 +75,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.company.title',
         links: [
           {
+            key: 'about',
             translationKey: 'footer.sections.company.links.about',
             href: '/about',
             external: false,
           },
           {
+            key: 'contact',
             translationKey: 'footer.sections.company.links.contact',
             href: '/contact',
             external: false,
@@ -89,11 +93,13 @@ vi.mock('@/lib/footer-config', () => {
         titleKey: 'footer.sections.legal.title',
         links: [
           {
+            key: 'privacy',
             translationKey: 'footer.sections.legal.links.privacy',
             href: '/privacy',
             external: false,
           },
           {
+            key: 'terms',
             translationKey: 'footer.sections.legal.links.terms',
             href: '/terms',
             external: false,
@@ -130,7 +136,7 @@ vi.mock('@/lib/footer-config', () => {
 
 // Mock social icons component
 vi.mock('@/components/ui/social-icons', () => ({
-  ExternalLinkIcon: ({ size }: { size?: string }) => (
+  ExternalLinkIcon: ({ size }: { size?: number | string }) => (
     <span
       data-testid='external-link-icon'
       data-size={size}
@@ -143,8 +149,9 @@ vi.mock('@/components/ui/social-icons', () => ({
     icon,
     label: _label,
     ariaLabel,
+    iconSize: _iconSize,
     ...props
-  }: React.ComponentProps<'a'> & {
+  }: Omit<React.ComponentProps<'a'>, 'href'> & {
     href: string;
     icon: string;
     label: string;
@@ -181,7 +188,6 @@ describe('Footer Integration Tests', () => {
         'footer.sections.legal.title': 'Legal',
         'footer.sections.legal.links.privacy': 'Privacy Policy',
         'footer.sections.legal.links.terms': 'Terms of Service',
-        'footer.sections.social.title': 'Follow Us',
       };
 
       return (
@@ -214,8 +220,10 @@ describe('Footer Integration Tests', () => {
       expect(screen.getByText('Company')).toBeInTheDocument();
       expect(screen.getByText('Legal')).toBeInTheDocument();
 
-      // Verify social section
-      expect(screen.getByText('Follow Us')).toBeInTheDocument();
+      const socialSection = screen.getByLabelText('Social links');
+      expect(socialSection).toBeInTheDocument();
+      expect(screen.getByTestId('social-link-linkedin')).toBeInTheDocument();
+      expect(screen.getByTestId('social-link-twitter')).toBeInTheDocument();
     });
 
     it('should render all navigation links correctly', async () => {

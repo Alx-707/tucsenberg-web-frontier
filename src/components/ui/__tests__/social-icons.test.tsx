@@ -298,12 +298,18 @@ describe('Social Icons Components', () => {
         'inline-flex',
         'items-center',
         'gap-2',
-        'text-gray-600',
+        'text-foreground',
+        'hover:text-foreground/50',
+        'focus-visible:ring-ring/50',
+        'rounded-lg',
+        'px-2.5',
+        'py-1.5',
+        'text-[15px]',
+        'font-medium',
         'transition-colors',
-        'duration-200',
-        'hover:text-gray-900',
-        'dark:text-gray-400',
-        'dark:hover:text-gray-100',
+        'duration-150',
+        'outline-none',
+        'focus-visible:ring-[3px]',
       );
     });
 
@@ -374,7 +380,7 @@ describe('Social Icons Components', () => {
       render(<SocialIconLink {...defaultProps} />);
 
       const label = screen.getByText('Twitter');
-      expect(label).toHaveClass('text-sm');
+      expect(label).toHaveClass('sr-only');
     });
   });
 

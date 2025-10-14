@@ -162,14 +162,17 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
       const trigger = screen.getByRole('button');
       await user.click(trigger);
 
-      const homeLink = screen.getByRole('link', { name: 'Home' });
-      const aboutLink = screen.getByRole('link', { name: 'About' });
+      const links = screen.getAllByRole('link');
+      const [homeLink, productsLink, blogLink] = links;
 
       homeLink.focus();
       expect(homeLink).toHaveFocus();
 
       await user.tab();
-      expect(aboutLink).toHaveFocus();
+      expect(productsLink).toHaveFocus();
+
+      await user.tab();
+      expect(blogLink).toHaveFocus();
     });
 
     it('handles missing translations gracefully', async () => {
@@ -194,9 +197,9 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
       fireEvent.click(trigger);
 
       const links = screen.getAllByRole('link');
-      const linkTexts = links.map((link) => link.textContent);
+      const linkTexts = links.map((link) => link.textContent?.trim());
 
-      expect(linkTexts).toEqual(['Home', 'About', 'Products', 'Blog']);
+      expect(linkTexts).toEqual(['Home', 'Products', 'Blog', 'About']);
     });
 
     it('applies consistent styling to navigation items', async () => {

@@ -227,12 +227,12 @@ test.describe('Firefox Behavior Diagnosis', () => {
       const originalPushState = window.history.pushState;
       const originalReplaceState = window.history.replaceState;
 
-      window.history.pushState = function (...args) {
+      window.history.pushState = function pushStateOverride(...args) {
         logs.push(`pushState: ${args[2]}`);
         return originalPushState.apply(this, args);
       };
 
-      window.history.replaceState = function (...args) {
+      window.history.replaceState = function replaceStateOverride(...args) {
         logs.push(`replaceState: ${args[2]}`);
         return originalReplaceState.apply(this, args);
       };

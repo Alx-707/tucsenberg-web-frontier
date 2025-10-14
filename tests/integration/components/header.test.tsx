@@ -2,6 +2,40 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Header } from '@/components/layout/header';
 
+vi.mock('next/dynamic', async () => {
+  const React = await import('react');
+  return {
+    __esModule: true,
+    default: (
+      importer: () => Promise<
+        { default?: React.ComponentType<any> } | React.ComponentType<any>
+      >,
+    ) =>
+      function DynamicComponent(props: Record<string, unknown>) {
+        const [Loaded, setLoaded] =
+          React.useState<React.ComponentType<any> | null>(null);
+
+        React.useEffect(() => {
+          let mounted = true;
+          importer().then((mod) => {
+            if (!mounted) return;
+            const Component =
+              typeof mod === 'function'
+                ? (mod as React.ComponentType<any>)
+                : mod.default;
+            setLoaded(() => Component ?? (() => null));
+          });
+          return () => {
+            mounted = false;
+          };
+        }, []);
+
+        if (!Loaded) return null;
+        return React.createElement(Loaded, props);
+      },
+  };
+});
+
 // Mock child components
 vi.mock('@/components/language-toggle', () => ({
   LanguageToggle: () => (
@@ -13,10 +47,10 @@ vi.mock('@/components/layout/logo', () => ({
   Logo: () => <div data-testid='logo'>Logo</div>,
 }));
 
-vi.mock('@/components/layout/main-navigation', () => ({
-  MainNavigation: () => (
-    <div data-testid='main-navigation'>Main Navigation</div>
-  ),
+vi.mock('@/components/layout/nav-switcher', () => ({
+  __esModule: true,
+  default: () => <div data-testid='nav-switcher'>Nav Switcher</div>,
+  NavSwitcher: () => <div data-testid='nav-switcher'>Nav Switcher</div>,
 }));
 
 vi.mock('@/components/layout/mobile-navigation', () => ({
@@ -31,12 +65,12 @@ describe('Header Integration Tests', () => {
   });
 
   describe('Component Integration', () => {
-    it('should render all child components correctly', () => {
+    it('should render all child components correctly', async () => {
       render(<Header />);
 
       // Verify all child components are rendered
       expect(screen.getByTestId('logo')).toBeInTheDocument();
-      expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
+      expect(await screen.findByTestId('nav-switcher')).toBeInTheDocument();
       expect(screen.getByTestId('mobile-navigation')).toBeInTheDocument();
       expect(screen.getByTestId('language-toggle')).toBeInTheDocument();
     });
@@ -45,14 +79,14 @@ describe('Header Integration Tests', () => {
       render(<Header />);
 
       const header = screen.getByRole('banner');
-      expect(header).toHaveClass('bg-background/95');
-      expect(header).toHaveClass('supports-[backdrop-filter]:bg-background/60');
+      expect(header).toHaveClass('bg-background');
       expect(header).toHaveClass('w-full');
       expect(header).toHaveClass('border-b');
-      expect(header).toHaveClass('backdrop-blur');
       expect(header).toHaveClass('sticky');
       expect(header).toHaveClass('top-0');
       expect(header).toHaveClass('z-50');
+      expect(header).toHaveClass('transition-all');
+      expect(header).toHaveClass('duration-200');
     });
 
     it('should apply custom className', () => {
@@ -70,8 +104,8 @@ describe('Header Integration Tests', () => {
 
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('sticky');
-      expect(header).not.toHaveClass('border-transparent');
-      expect(header).not.toHaveClass('bg-transparent');
+      expect(header).toHaveClass('border-b');
+      expect(header).toHaveClass('bg-background');
     });
 
     it('should apply minimal variant styles', () => {
@@ -79,8 +113,8 @@ describe('Header Integration Tests', () => {
 
       const header = screen.getByRole('banner');
       expect(header).toHaveClass('sticky');
-      expect(header).not.toHaveClass('border-transparent');
-      expect(header).not.toHaveClass('bg-transparent');
+      expect(header).toHaveClass('border-b');
+      expect(header).toHaveClass('bg-background');
     });
 
     it('should apply transparent variant styles', () => {
@@ -120,18 +154,19 @@ describe('Header Integration Tests', () => {
     it('should contain responsive container', () => {
       render(<Header />);
 
-      const container = screen.getByRole('banner').querySelector('.container');
+      const container = screen
+        .getByRole('banner')
+        .querySelector('.mx-auto.max-w-7xl');
       expect(container).toBeInTheDocument();
-      expect(container).toHaveClass('mx-auto');
       expect(container).toHaveClass('px-4');
     });
 
-    it('should render both desktop and mobile navigation', () => {
+    it('should render both desktop and mobile navigation', async () => {
       render(<Header />);
 
       // Both navigation components should be present
       // (visibility is controlled by CSS classes)
-      expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
+      expect(await screen.findByTestId('nav-switcher')).toBeInTheDocument();
       expect(screen.getByTestId('mobile-navigation')).toBeInTheDocument();
     });
   });
@@ -145,7 +180,7 @@ describe('Header Integration Tests', () => {
       expect(header.tagName).toBe('HEADER');
     });
 
-    it('should be keyboard navigable', () => {
+    it('should be keyboard navigable', async () => {
       render(<Header />);
 
       const header = screen.getByRole('banner');
@@ -154,29 +189,29 @@ describe('Header Integration Tests', () => {
       expect(header).toBeInTheDocument();
 
       // Child components should handle their own keyboard navigation
-      expect(screen.getByTestId('main-navigation')).toBeInTheDocument();
+      expect(await screen.findByTestId('nav-switcher')).toBeInTheDocument();
       expect(screen.getByTestId('language-toggle')).toBeInTheDocument();
     });
   });
 
   describe('Component Interaction', () => {
-    it('should maintain component hierarchy', () => {
+    it('should maintain component hierarchy', async () => {
       render(<Header />);
 
       const header = screen.getByRole('banner');
-      const container = header.querySelector('.container');
+      const container = header.querySelector('.mx-auto.max-w-7xl');
 
       expect(container).toBeInTheDocument();
       expect(header).toContainElement(container as HTMLElement);
 
       // All components should be within the container
       const logo = screen.getByTestId('logo');
-      const mainNav = screen.getByTestId('main-navigation');
+      const navSwitcher = await screen.findByTestId('nav-switcher');
       const mobileNav = screen.getByTestId('mobile-navigation');
       const langToggle = screen.getByTestId('language-toggle');
 
       expect(container).toContainElement(logo);
-      expect(container).toContainElement(mainNav);
+      expect(container).toContainElement(navSwitcher);
       expect(container).toContainElement(mobileNav);
       expect(container).toContainElement(langToggle);
     });

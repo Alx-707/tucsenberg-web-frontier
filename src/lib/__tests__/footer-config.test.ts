@@ -163,7 +163,7 @@ describe('footer-config', () => {
       expect(SOCIAL_LINKS.length).toBeGreaterThan(0);
 
       const socialKeys = SOCIAL_LINKS.map((link) => link.key);
-      expect(socialKeys).toContain('twitter');
+      expect(socialKeys).toContain('x');
       expect(socialKeys).toContain('linkedin');
     });
 
