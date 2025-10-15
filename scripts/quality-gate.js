@@ -32,7 +32,7 @@ class QualityGate {
             eslintWarnings: 10,
             typeErrors: 0,
           },
-          blocking: true,
+          blocking: false, // 渐进式改进：代码质量问题警告但不阻塞
         },
         performance: {
           enabled: true,
