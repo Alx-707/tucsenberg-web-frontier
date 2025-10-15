@@ -77,7 +77,7 @@ module.exports = [
   },
   {
     name: 'UI Libs Bundle',
-    path: '.next/static/chunks/ui-libs-*.js',
+    path: '.next/static/chunks/ui-libs.*.js',
     limit: '50 KB', // 当前 41K，+9K 缓冲
     webpack: false,
     running: false,
