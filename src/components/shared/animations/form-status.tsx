@@ -5,7 +5,6 @@
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Progress } from '@/components/ui/progress';
 
 // 5. 进度条动画
 export const AnimatedProgress = ({
@@ -16,10 +15,12 @@ export const AnimatedProgress = ({
   className?: string;
 }) => (
   <div className={cn('space-y-3', className)}>
-    <Progress
-      value={value}
-      className='transition-all duration-1000 ease-out [&>div]:transition-all [&>div]:duration-1000 [&>div]:ease-out'
-    />
+    <div className='bg-secondary relative h-4 w-full overflow-hidden rounded-full transition-all duration-1000 ease-out'>
+      <div
+        className='bg-primary h-full transition-all duration-1000 ease-out'
+        style={{ width: `${value}%` }}
+      />
+    </div>
     <div className='text-muted-foreground flex justify-between text-xs'>
       <span className='animate-in fade-in duration-500'>开始</span>
       <span className='animate-in fade-in text-primary font-medium duration-700'>

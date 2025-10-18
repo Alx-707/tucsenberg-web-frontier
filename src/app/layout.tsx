@@ -1,7 +1,6 @@
 import '@/app/globals.css';
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
-import { headers } from 'next/headers';
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -20,15 +19,10 @@ export const metadata: Metadata = {
 
 // Root layout - only contains html and body tags
 // All application logic is in [locale]/layout.tsx
-export default async function RootLayout({ children }: RootLayoutProps) {
-  const headerList = await headers();
-  const detectedLocale = headerList.get('x-detected-locale') || 'en';
-
+// Note: lang attribute is set in [locale]/layout.tsx, not here
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html
-      lang={detectedLocale}
-      suppressHydrationWarning
-    >
+    <html suppressHydrationWarning>
       <body suppressHydrationWarning>{children}</body>
     </html>
   );

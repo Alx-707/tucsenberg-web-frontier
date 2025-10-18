@@ -87,7 +87,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
     });
 
     test('应该正确处理英文原始路径', async ({ page }) => {
-      const response = await page.goto(`${BASE_URL}/contact`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      const response = await page.goto(`${BASE_URL}/en/contact`);
 
       expect(response?.status()).toBeLessThan(400);
       expect(page.url()).toMatch(/\/en\/contact\/?$/);
@@ -102,7 +103,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
         'Accept-Language': 'zh-CN,zh;q=0.9',
       });
 
-      const response = await page.goto(`${BASE_URL}/products`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      const response = await page.goto(`${BASE_URL}/zh/products`);
       const endTime = Date.now();
 
       expect(response?.status()).toBeLessThan(400);
@@ -188,7 +190,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
         'Accept-Language': '',
       });
 
-      const response = await page.goto(`${BASE_URL}/blog`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      const response = await page.goto(`${BASE_URL}/en/blog`);
 
       expect(response?.status()).toBeLessThan(400);
 
@@ -202,7 +205,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
 
   test.describe('SEO 和元数据验证', () => {
     test('应该为不同语言设置正确的 hreflang 标签', async ({ page }) => {
-      await page.goto(`${BASE_URL}/about`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      await page.goto(`${BASE_URL}/en/about`);
 
       // 检查 hreflang 标签
       const hreflangLinks = await page.locator('link[hreflang]').all();
@@ -236,8 +240,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
 
   test.describe('用户体验验证', () => {
     test('语言切换应该保持在相同的页面类型', async ({ page }) => {
-      // 访问英文关于页面
-      await page.goto(`${BASE_URL}/about`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      await page.goto(`${BASE_URL}/en/about`);
 
       // 查找语言切换器（如果存在）
       const languageToggle = page
@@ -267,7 +271,8 @@ test.describe('Next.js 15.4.7 国际化重定向验证', () => {
         }
       });
 
-      await page.goto(`${BASE_URL}/products`);
+      // localePrefix: 'always' 要求所有路径必须包含语言前缀
+      await page.goto(`${BASE_URL}/en/products`);
 
       // 验证重定向次数合理（不超过 2 次）
       expect(redirectCount).toBeLessThanOrEqual(2);

@@ -13,7 +13,6 @@ import {
   createSuccessResultWithLogging,
   getFormDataBoolean,
   getFormDataString,
-  validateFormData,
   withErrorHandling,
   type ServerAction,
 } from '@/lib/server-action-utils';
@@ -215,55 +214,4 @@ export const contactFormAction: ServerAction<FormData, ContactFormResult> =
         logger,
       );
     }
-  });
-
-/**
- * 示例 Server Action - 可以作为模板使用
- *
- * @example
- * ```typescript
- * // 在组件中使用
- * const [state, formAction, isPending] = useActionState(exampleAction, null);
- *
- * return (
- *   <form action={formAction}>
- *     <input name="message" required />
- *     <button disabled={isPending} type="submit">
- *       {isPending ? 'Processing...' : 'Submit'}
- *     </button>
- *   </form>
- * );
- * ```
- */
-export const exampleAction: ServerAction<FormData, { message: string }> =
-  withErrorHandling(async (_previousState, formData) => {
-    // 验证表单数据
-    const validation = validateFormData(formData, {
-      message: {
-        required: true,
-        type: 'string',
-        minLength: 1,
-        maxLength: 1000,
-      },
-    });
-
-    if (!validation.success) {
-      return createErrorResultWithLogging(
-        'Validation failed',
-        Object.values(validation.errors || {}).flat(),
-        logger,
-      );
-    }
-
-    // 模拟处理逻辑
-    const { message } = validation.data!;
-
-    // 模拟异步操作（例如：数据库保存、API调用等）
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    return createSuccessResultWithLogging(
-      { message: `Processed: ${message}` },
-      'Message processed successfully',
-      logger,
-    );
   });

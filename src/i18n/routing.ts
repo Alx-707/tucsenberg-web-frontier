@@ -30,6 +30,13 @@ export const routing = defineRouting({
 
   // 启用智能语言检测
   localeDetection: true,
+
+  // 配置locale cookie - 持久化用户语言偏好
+  localeCookie: {
+    name: 'NEXT_LOCALE',
+    // 1年过期时间 (符合GDPR要求)
+    maxAge: 60 * 60 * 24 * 365,
+  },
 });
 
 // Lightweight wrappers around Next.js' navigation APIs

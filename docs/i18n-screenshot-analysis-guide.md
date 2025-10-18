@@ -213,7 +213,7 @@ pnpm i18n:validate:code
 pnpm i18n:validate:visual
 
 # 翻译同步检查
-pnpm i18n:sync:check
+pnpm validate:translations
 ```
 
 ---

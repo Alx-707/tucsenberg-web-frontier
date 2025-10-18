@@ -58,70 +58,76 @@ export default async function LocaleLayout({
   );
 
   return (
-    <div
+    <html
       lang={locale}
-      className={`${getFontClassNames()} flex min-h-screen flex-col antialiased`}
+      className={getFontClassNames()}
+      suppressHydrationWarning
     >
-      {/* JSON-LD 结构化数据 */}
-      <script
-        nonce={nonce}
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: generateJSONLD(organizationData),
-        }}
-      />
-      <script
-        nonce={nonce}
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: generateJSONLD(websiteData),
-        }}
-      />
-      <NextIntlClientProvider
-        locale={locale as 'en' | 'zh'}
-        messages={messages}
+      <body
+        className='flex min-h-screen flex-col antialiased'
+        suppressHydrationWarning
       >
-        <EnterpriseAnalytics>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-          >
-            {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyTopLoader nonce={nonce} />
+        {/* JSON-LD 结构化数据 */}
+        <script
+          nonce={nonce}
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: generateJSONLD(organizationData),
+          }}
+        />
+        <script
+          nonce={nonce}
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: generateJSONLD(websiteData),
+          }}
+        />
+        <NextIntlClientProvider
+          locale={locale as 'en' | 'zh'}
+          messages={messages}
+        >
+          <EnterpriseAnalytics>
+            <ThemeProvider
+              attribute='class'
+              defaultTheme='system'
+              enableSystem
+            >
+              {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
+              <LazyTopLoader nonce={nonce} />
 
-            {isDevelopment && (
-              <Suspense fallback={null}>
-                <ErrorBoundary
-                  fallback={
-                    <div className='bg-destructive/80 fixed right-4 bottom-4 z-[1100] rounded-md px-3 py-2 text-xs text-white shadow-lg'>
-                      监控组件加载失败
-                    </div>
-                  }
-                >
-                  <TranslationPreloader strategy='idle' />
-                  <ThemePerformanceMonitor />
-                  <WebVitalsIndicator />
-                </ErrorBoundary>
-              </Suspense>
-            )}
+              {isDevelopment && (
+                <Suspense fallback={null}>
+                  <ErrorBoundary
+                    fallback={
+                      <div className='bg-destructive/80 fixed right-4 bottom-4 z-[1100] rounded-md px-3 py-2 text-xs text-white shadow-lg'>
+                        监控组件加载失败
+                      </div>
+                    }
+                  >
+                    <TranslationPreloader strategy='idle' />
+                    <ThemePerformanceMonitor />
+                    <WebVitalsIndicator />
+                  </ErrorBoundary>
+                </Suspense>
+              )}
 
-            {/* 导航栏 */}
-            <Header />
+              {/* 导航栏 */}
+              <Header />
 
-            {/* 主要内容 */}
-            <main className='flex-1'>{children}</main>
+              {/* 主要内容 */}
+              <main className='flex-1'>{children}</main>
 
-            {/* 页脚 */}
-            <Footer />
+              {/* 页脚 */}
+              <Footer />
 
-            {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyToaster />
+              {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
+              <LazyToaster />
 
-            {/* 企业级监控组件已集成到AnalyticsProvider中 */}
-          </ThemeProvider>
-        </EnterpriseAnalytics>
-      </NextIntlClientProvider>
-    </div>
+              {/* 企业级监控组件已集成到AnalyticsProvider中 */}
+            </ThemeProvider>
+          </EnterpriseAnalytics>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

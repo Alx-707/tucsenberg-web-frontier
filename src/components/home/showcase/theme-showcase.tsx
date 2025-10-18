@@ -1,5 +1,4 @@
 import { LanguageToggle } from '@/components/language-toggle';
-import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Card,
   CardContent,
@@ -8,6 +7,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { TabsContent } from '@/components/ui/tabs';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 
 interface ThemeShowcaseProps {
   t: (_key: string) => string;
@@ -27,7 +27,7 @@ export function ThemeShowcase({ t }: ThemeShowcaseProps) {
         <CardContent className='space-y-6'>
           <div className='flex items-center justify-between'>
             <span>{t('themes.toggle')}</span>
-            <ThemeToggle />
+            <ThemeSwitcher />
           </div>
           <div className='flex items-center justify-between'>
             <span>{t('themes.language')}</span>

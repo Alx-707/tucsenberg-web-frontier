@@ -2,7 +2,8 @@ import { expect, test } from '@playwright/test';
 
 test.describe('Basic Navigation', () => {
   test('should load homepage successfully', async ({ page }) => {
-    await page.goto('/');
+    // localePrefix: 'always' 要求所有路径必须包含语言前缀
+    await page.goto('/en');
 
     // Wait for the page to load
     await page.waitForLoadState('networkidle');
@@ -16,7 +17,8 @@ test.describe('Basic Navigation', () => {
   });
 
   test('should navigate between pages', async ({ page }) => {
-    await page.goto('/');
+    // localePrefix: 'always' 要求所有路径必须包含语言前缀
+    await page.goto('/en');
 
     // Test navigation to different pages
     const aboutLink = page.locator('a[href*="/about"]').first();
@@ -28,7 +30,8 @@ test.describe('Basic Navigation', () => {
   });
 
   test('should handle language switching', async ({ page }) => {
-    await page.goto('/');
+    // localePrefix: 'always' 要求所有路径必须包含语言前缀
+    await page.goto('/en');
 
     // Look for language switcher
     const languageSwitcher = page

@@ -1,4 +1,3 @@
-import { headers } from 'next/headers';
 import { getRequestConfig } from 'next-intl/server';
 import {
   getCachedMessages,
@@ -111,22 +110,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const startTime = performance.now();
   let locale = await requestLocale;
 
-  // 获取智能检测信息
-  const headersList = await headers();
-  const detectedLocale = headersList.get('x-detected-locale');
-  const detectionSource = headersList.get('x-detection-source');
-  const detectionConfidence = headersList.get('x-detection-confidence');
-
-  // 如果没有明确的语言偏好，使用智能检测结果
+  // 如果没有明确的语言偏好，使用默认语言
+  // next-intl middleware会自动处理语言检测和cookie
   if (!locale || !routing.locales.includes(locale as 'en' | 'zh')) {
-    if (
-      detectedLocale &&
-      routing.locales.includes(detectedLocale as 'en' | 'zh')
-    ) {
-      locale = detectedLocale;
-    } else {
-      locale = routing.defaultLocale;
-    }
+    locale = routing.defaultLocale;
   }
 
   try {
@@ -134,30 +121,12 @@ export default getRequestConfig(async ({ requestLocale }) => {
     const loadTime = performance.now() - startTime;
     const cacheUsed = handleCacheMetrics(locale, loadTime);
 
-    // 创建增强的响应，包含检测信息
-    const response = createSuccessResponse({
+    return createSuccessResponse({
       locale,
       messages,
       loadTime,
       cacheUsed,
     });
-
-    // 添加智能检测元数据
-    if (detectedLocale && detectionSource && detectionConfidence) {
-      (
-        response as typeof response & { metadata: Record<string, unknown> }
-      ).metadata = {
-        ...response.metadata,
-        smartDetection: {
-          detectedLocale,
-          source: detectionSource,
-          confidence: parseFloat(detectionConfidence),
-          applied: locale === detectedLocale,
-        },
-      };
-    }
-
-    return response;
   } catch {
     I18nPerformanceMonitor.recordError();
     return createFallbackResponse(locale, startTime);
