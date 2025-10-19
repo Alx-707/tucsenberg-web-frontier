@@ -11,8 +11,8 @@ test.describe('Basic Navigation', () => {
     // Check if the page title is correct
     await expect(page).toHaveTitle(/Tucsenberg/);
 
-    // Check if main navigation is present
-    const navigation = page.locator('nav');
+    // Check if main navigation is present - use first() to avoid strict mode violation
+    const navigation = page.locator('nav').first();
     await expect(navigation).toBeVisible();
   });
 
@@ -46,9 +46,9 @@ test.describe('Basic Navigation', () => {
       await languageSwitcher.first().click();
       await page.waitForLoadState('networkidle');
 
-      // Verify language change
+      // Verify language change - match with or without trailing slash
       const currentUrl = page.url();
-      expect(currentUrl).toMatch(/\/(en|zh)\//);
+      expect(currentUrl).toMatch(/\/(en|zh)(\/|$)/);
     }
   });
 
