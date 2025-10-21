@@ -153,5 +153,11 @@
     "typescript": "5.9.2",
     "typescript-eslint": "8.39.0",
     "vitest": "3.2.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "playwright@<1.55.1": ">=1.56.1",
+      "vite@>=7.1.0 <7.1.11": ">=7.1.11"
+    }
   }
 }
