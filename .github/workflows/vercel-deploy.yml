@@ -1,0 +1,149 @@
+name: Vercel 部署增强
+
+# 此 workflow 作为 Vercel GitHub 集成的补充
+# 主要用于部署前的额外质量检查和部署后的验证
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 部署前质量检查
+  pre-deployment-checks:
+    name: 部署前质量检查
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 类型检查
+        run: pnpm type-check
+
+      - name: 代码质量检查
+        run: pnpm lint:check
+
+      - name: 构建验证
+        run: pnpm build:check
+
+      - name: 翻译验证
+        run: pnpm validate:translations
+
+      - name: 质量门禁
+        run: pnpm quality:gate
+
+  # 等待 Vercel 部署完成
+  wait-for-vercel:
+    name: 等待 Vercel 部署
+    runs-on: ubuntu-latest
+    needs: pre-deployment-checks
+    timeout-minutes: 10
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+
+    steps:
+      - name: 等待 Vercel 部署
+        uses: patrickedqvist/wait-for-vercel-preview@v1.3.1
+        id: wait-for-vercel
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          max_timeout: 600
+          check_interval: 10
+
+      - name: 输出部署 URL
+        run: |
+          echo "部署 URL: ${{ steps.wait-for-vercel.outputs.url }}"
+          echo "VERCEL_DEPLOYMENT_URL=${{ steps.wait-for-vercel.outputs.url }}" >> $GITHUB_ENV
+
+  # 部署后验证 (仅在有部署 URL 时运行)
+  post-deployment-verification:
+    name: 部署后验证
+    runs-on: ubuntu-latest
+    needs: wait-for-vercel
+    timeout-minutes: 10
+    if: success()
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 验证部署健康状态
+        run: |
+          DEPLOYMENT_URL="${{ needs.wait-for-vercel.outputs.url }}"
+          
+          # 检查根路径
+          echo "检查根路径..."
+          curl -f -s -o /dev/null -w "%{http_code}" "$DEPLOYMENT_URL" || exit 1
+          
+          # 检查英文路由
+          echo "检查英文路由..."
+          curl -f -s -o /dev/null -w "%{http_code}" "$DEPLOYMENT_URL/en" || exit 1
+          
+          # 检查中文路由
+          echo "检查中文路由..."
+          curl -f -s -o /dev/null -w "%{http_code}" "$DEPLOYMENT_URL/zh" || exit 1
+          
+          echo "✅ 所有路由验证通过"
+
+      - name: 验证 API 端点
+        run: |
+          DEPLOYMENT_URL="${{ needs.wait-for-vercel.outputs.url }}"
+          
+          # 检查 robots.txt
+          echo "检查 robots.txt..."
+          curl -f -s "$DEPLOYMENT_URL/robots.txt" | grep -q "User-agent" || exit 1
+          
+          # 检查 sitemap.xml
+          echo "检查 sitemap.xml..."
+          curl -f -s "$DEPLOYMENT_URL/sitemap.xml" | grep -q "urlset" || exit 1
+          
+          echo "✅ API 端点验证通过"
+
+  # 部署总结
+  deployment-summary:
+    name: 部署总结
+    runs-on: ubuntu-latest
+    needs: [pre-deployment-checks, wait-for-vercel, post-deployment-verification]
+    if: always()
+    timeout-minutes: 5
+
+    steps:
+      - name: 生成部署总结
+        run: |
+          echo "## 🚀 Vercel 部署总结" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **分支**: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **提交**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **触发者**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **部署 URL**: ${{ needs.wait-for-vercel.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.pre-deployment-checks.result }}" == "success" ] && \
+             [ "${{ needs.wait-for-vercel.result }}" == "success" ] && \
+             [ "${{ needs.post-deployment-verification.result }}" == "success" ]; then
+            echo "✅ **状态**: 部署成功并通过所有验证" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **状态**: 部署失败或验证未通过" >> $GITHUB_STEP_SUMMARY
+          fi
+
