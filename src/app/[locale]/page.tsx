@@ -1,5 +1,9 @@
+import { Suspense } from 'react';
 import nextDynamic from 'next/dynamic';
-import { HeroSection } from '@/components/home/hero-section';
+import enMessages from '@messages/en.json';
+import zhMessages from '@messages/zh.json';
+import { HeroSectionStatic } from '@/components/home/hero-section';
+import TranslationsBoundary from '@/components/i18n/translations-boundary';
 import { routing } from '@/i18n/routing';
 
 export const revalidate = 3600;
@@ -27,14 +31,48 @@ const CallToAction = nextDynamic(() =>
   import('@/components/home/call-to-action').then((m) => m.CallToAction),
 );
 
-export default function Home() {
+interface HomePageProps {
+  params: Promise<{ locale: 'en' | 'zh' }>;
+}
+
+// Type for nested translation messages (non-recursive to satisfy TS checks)
+type TranslationValue = string | Record<string, unknown>;
+type TranslationMessages = Record<string, TranslationValue>;
+
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params;
+  const messagesFile = (locale === 'zh' ? zhMessages : enMessages) as Record<
+    string,
+    unknown
+  >;
+  const homeNs = (messagesFile as { home?: unknown }).home;
+  const heroNs =
+    homeNs &&
+    typeof homeNs === 'object' &&
+    'hero' in (homeNs as Record<string, unknown>)
+      ? ((homeNs as Record<string, unknown>).hero as TranslationMessages)
+      : ({} as TranslationMessages);
+
+  // 实验开关：中文首帧系统字体 + 600 权重（A/B）
+  const zhFast = process.env.NEXT_PUBLIC_FAST_LCP_ZH === '1' && locale === 'zh';
+
   return (
-    <div className='bg-background text-foreground min-h-screen'>
-      <HeroSection />
-      <TechStackSection />
-      <ComponentShowcase />
-      <ProjectOverview />
-      <CallToAction />
+    <div
+      className='bg-background text-foreground min-h-screen'
+      data-fast-lcp-zh={zhFast ? '1' : undefined}
+    >
+      {/* LCP-critical: render statically from compile-time messages */}
+      <HeroSectionStatic messages={heroNs} />
+
+      {/* Below-the-fold: wrap with intl provider inside Suspense to avoid blocking LCP */}
+      <Suspense fallback={null}>
+        <TranslationsBoundary locale={locale}>
+          <TechStackSection />
+          <ComponentShowcase />
+          <ProjectOverview />
+          <CallToAction />
+        </TranslationsBoundary>
+      </Suspense>
     </div>
   );
 }

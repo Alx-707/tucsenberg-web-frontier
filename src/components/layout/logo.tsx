@@ -74,7 +74,7 @@ export function Logo({ className, showText = true, size = 'md' }: LogoProps) {
       {/* Logo Image - Using Next.js logo as placeholder */}
       <Image
         src='/next.svg'
-        alt=''
+        alt='Tucsenberg Logo'
         width={COUNT_120}
         height={HOURS_PER_DAY}
         className={cn(

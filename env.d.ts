@@ -142,3 +142,9 @@ declare module '*/env.mjs' {
   export const env: EnvVariables;
   export default env;
 }
+
+// JSON module declarations for translation files
+declare module '*.json' {
+  const value: Record<string, unknown>;
+  export default value;
+}

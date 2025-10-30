@@ -193,7 +193,7 @@ pnpm lighthouse:ci
 
 ---
 
-### 5. Sentry Performance（付费，生产级监控）
+### 5. Sentry Performance（付费，生产级监控，默认客户端禁用）
 
 **优势**:
 - ✅ **生产级监控**: 实时监控生产环境性能
@@ -206,17 +206,31 @@ pnpm lighthouse:ci
 - **团队版**: $26/月起
 - **企业版**: 定制价格
 
-**使用方式**:
-```typescript
-// 项目已配置 Sentry
-// 配置文件: sentry.server.config.ts, sentry.edge.config.ts
+**默认策略**:
+- 模板默认不启用“客户端 Sentry”，以避免影响首屏与 CWV。
+- 推荐“服务端/边缘优先”接入（API、Server Actions、Edge）并按需开启客户端最小化上报。
 
+**启用/禁用门控**（二选一）：
+```bash
+# 禁用（默认建议）：不打包、不启用客户端
+DISABLE_SENTRY_BUNDLE=1
+NEXT_PUBLIC_DISABLE_SENTRY=1
+
+# 启用（生产且有告警流程时）：
+unset DISABLE_SENTRY_BUNDLE
+unset NEXT_PUBLIC_DISABLE_SENTRY
+```
+
+**服务端/边缘示例**（按需启用）：
+```ts
+// sentry.server.config.ts / sentry.edge.config.ts（存在时）
 import * as Sentry from '@sentry/nextjs';
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  tracesSampleRate: 1.0,
-  profilesSampleRate: 1.0,
+  tracesSampleRate: 0,         // 关闭 tracing，控制成本与体积
+  integrations: [],            // 仅启用必要集成
+  debug: false,
 });
 ```
 
@@ -272,7 +286,7 @@ Sentry.init({
 - **效率**: 高
 
 ### 场景 4: 生产环境监控
-**推荐工具**: Sentry Performance（项目已配置）
+**推荐工具**: Sentry Performance（可选，默认客户端禁用，服务端/边缘优先）
 - **理由**: 实时监控 + 错误追踪 + 告警系统
 - **成本**: $26/月起
 - **效率**: 高
@@ -304,10 +318,9 @@ pnpm lighthouse:ci
 
 ### 3. 生产环境
 ```bash
-# 使用 Sentry Performance 实时监控
-# 设置性能告警阈值
-# 定期查看性能报告
-```
+# 默认：禁用客户端 Sentry，依赖 Vercel Analytics + Speed Insights + 服务器日志
+# 可选：启用服务端/边缘 Sentry（有告警流程时）
+``` 
 
 ---
 
@@ -322,4 +335,3 @@ pnpm lighthouse:ci
 
 **文档完成时间**: 2025-09-30  
 **维护者**: AI Assistant
-

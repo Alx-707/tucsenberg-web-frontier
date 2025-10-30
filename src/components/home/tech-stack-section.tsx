@@ -21,7 +21,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MAGIC_0_3 } from '@/constants/decimal';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
-function TechStackStats({ t }: { t: (_key: string) => string }) {
+type TFunc = (
+  key: string,
+  values?: Record<string, string | number | Date>,
+) => string;
+
+function TechStackStats({ t }: { t: TFunc }) {
   const { ref, isVisible } = useIntersectionObserver<HTMLDivElement>({
     threshold: MAGIC_0_3,
     triggerOnce: true,
@@ -111,7 +116,7 @@ function TechStackTabs({
   tabsRef: (_node: HTMLDivElement | null) => void;
   tabsVisible: boolean;
   categorizedTech: Record<TechStackCategory, typeof techStackData>;
-  t: (_key: string) => string;
+  t: TFunc;
 }) {
   return (
     <Tabs
@@ -177,6 +182,9 @@ function TechStackTabs({
                           target='_blank'
                           rel='noopener noreferrer'
                           className='flex items-center gap-1'
+                          aria-label={t('learnMoreLabel', {
+                            target: tech.name,
+                          })}
                         >
                           {t('learnMore')}
                           <ExternalLink className='h-3 w-3' />
@@ -239,7 +247,7 @@ export function TechStackSection() {
   return (
     <section
       id='tech-stack'
-      className='py-20'
+      className='cv-800 py-20'
     >
       <div className='container mx-auto px-4'>
         <div className='mx-auto max-w-6xl'>

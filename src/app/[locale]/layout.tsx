@@ -5,8 +5,10 @@ import '@/app/globals.css';
 import { Suspense, type ReactNode } from 'react';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import enMessages from '@messages/en.json';
+import zhMessages from '@messages/zh.json';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { generateJSONLD } from '@/lib/structured-data';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { TranslationPreloader } from '@/components/i18n/translation-preloader';
@@ -14,11 +16,16 @@ import { Footer } from '@/components/layout/footer';
 import { Header } from '@/components/layout/header';
 import { LazyToaster } from '@/components/lazy/lazy-toaster';
 import { LazyTopLoader } from '@/components/lazy/lazy-top-loader';
-import { EnterpriseAnalytics } from '@/components/monitoring/enterprise-analytics';
+import { EnterpriseAnalyticsIsland } from '@/components/monitoring/enterprise-analytics-island';
 import { WebVitalsIndicator } from '@/components/performance/web-vitals-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemePerformanceMonitor } from '@/components/theme/theme-performance-monitor';
 import { routing } from '@/i18n/routing';
+
+// Client analytics are rendered as an island to avoid impacting LCP
+
+export const dynamic = 'force-static';
+export const revalidate = 3600;
 
 // 重新导出元数据生成函数
 export const generateMetadata = generateLocaleMetadata;
@@ -48,9 +55,14 @@ export default async function LocaleLayout({
   const headerList = await headers();
   const nonce = headerList.get('x-csp-nonce') ?? undefined;
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
+  // Use static imports for messages to avoid runtime translation IO on the
+  // critical path. The homepage will independently render LCP-critical content
+  // from compile-time messages and wrap below-the-fold content in a nested
+  // provider; keeping this here preserves compatibility for other pages.
+  const messages = (locale === 'zh' ? zhMessages : enMessages) as Record<
+    string,
+    unknown
+  >;
 
   // 生成结构化数据
   const { organizationData, websiteData } = await generatePageStructuredData(
@@ -86,46 +98,47 @@ export default async function LocaleLayout({
           locale={locale as 'en' | 'zh'}
           messages={messages}
         >
-          <EnterpriseAnalytics>
-            <ThemeProvider
-              attribute='class'
-              defaultTheme='system'
-              enableSystem
-            >
-              {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
-              <LazyTopLoader nonce={nonce} />
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+          >
+            {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
+            <LazyTopLoader nonce={nonce} />
 
-              {isDevelopment && (
-                <Suspense fallback={null}>
-                  <ErrorBoundary
-                    fallback={
-                      <div className='bg-destructive/80 fixed right-4 bottom-4 z-[1100] rounded-md px-3 py-2 text-xs text-white shadow-lg'>
-                        监控组件加载失败
-                      </div>
-                    }
-                  >
-                    <TranslationPreloader strategy='idle' />
-                    <ThemePerformanceMonitor />
-                    <WebVitalsIndicator />
-                  </ErrorBoundary>
-                </Suspense>
-              )}
+            {isDevelopment && (
+              <Suspense fallback={null}>
+                <ErrorBoundary
+                  fallback={
+                    <div className='bg-destructive/80 fixed right-4 bottom-4 z-[1100] rounded-md px-3 py-2 text-xs text-white shadow-lg'>
+                      监控组件加载失败
+                    </div>
+                  }
+                >
+                  <TranslationPreloader strategy='idle' />
+                  <ThemePerformanceMonitor />
+                  <WebVitalsIndicator />
+                </ErrorBoundary>
+              </Suspense>
+            )}
 
-              {/* 导航栏 */}
-              <Header />
+            {/* 导航栏 */}
+            <Header />
 
-              {/* 主要内容 */}
-              <main className='flex-1'>{children}</main>
+            {/* 主要内容 */}
+            <main className='flex-1'>{children}</main>
 
-              {/* 页脚 */}
-              <Footer />
+            {/* 页脚 */}
+            <Footer />
 
-              {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
-              <LazyToaster />
+            {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
+            <LazyToaster />
 
-              {/* 企业级监控组件已集成到AnalyticsProvider中 */}
-            </ThemeProvider>
-          </EnterpriseAnalytics>
+            {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
+            {process.env.NODE_ENV === 'production' && (
+              <EnterpriseAnalyticsIsland />
+            )}
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

@@ -161,6 +161,7 @@
       "title": "Technology Stack",
       "subtitle": "Built with cutting-edge technologies for enterprise-grade performance and scalability.",
       "learnMore": "Learn More",
+      "learnMoreLabel": "Learn more about {target}",
       "categories": {
         "core": "Core Frameworks",
         "ui": "UI System",

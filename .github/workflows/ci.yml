@@ -234,6 +234,42 @@ jobs:
       - name: 验证翻译
         run: pnpm validate:translations
 
+  # 架构检查作业
+  architecture:
+    name: 架构检查
+    runs-on: ubuntu-latest
+    needs: basic-checks
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.13.1
+
+      - name: 验证pnpm版本
+        run: pnpm --version
+
+      - name: 设置Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 安装依赖
+        run: pnpm install --frozen-lockfile
+
+      - name: 质量门禁
+        run: pnpm quality:gate
+
+      - name: 依赖关系检查
+        run: pnpm arch:check
+
+      - name: 循环依赖检查
+        run: pnpm circular:check
+
   # 汇总作业
   ci-summary:
     name: CI汇总
@@ -246,6 +282,7 @@ jobs:
         performance,
         security,
         translation-quality,
+        architecture,
       ]
     if: always()
     timeout-minutes: 5
@@ -259,13 +296,15 @@ jobs:
           echo "性能检查: ${{ needs.performance.conclusion }}"
           echo "安全检查: ${{ needs.security.conclusion }}"
           echo "翻译质量: ${{ needs.translation-quality.conclusion }}"
+          echo "架构检查: ${{ needs.architecture.conclusion }}"
 
           if [[ "${{ needs.basic-checks.conclusion }}" != "success" ||
                 "${{ needs.tests.conclusion }}" != "success" ||
                 "${{ needs.e2e-tests.conclusion }}" != "success" ||
                 "${{ needs.performance.conclusion }}" != "success" ||
                 "${{ needs.security.conclusion }}" != "success" ||
-                "${{ needs.translation-quality.conclusion }}" != "success" ]]; then
+                "${{ needs.translation-quality.conclusion }}" != "success" ||
+                "${{ needs.architecture.conclusion }}" != "success" ]]; then
             echo "❌ CI流水线失败"
             exit 1
           else

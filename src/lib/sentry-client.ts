@@ -7,10 +7,15 @@
 
 type SentryModule = typeof import('@sentry/nextjs');
 
+const DISABLE_SENTRY =
+  process.env['NEXT_PUBLIC_DISABLE_SENTRY'] === '1' ||
+  process.env['DISABLE_SENTRY_BUNDLE'] === '1';
+
 let sentryPromise: Promise<SentryModule> | null = null;
 
 function loadSentry(): Promise<SentryModule> | null {
   // Only load on the client or modern runtimes; keep production-only to reduce noise
+  if (DISABLE_SENTRY) return null;
   if (process.env.NODE_ENV !== 'production') return null;
   if (!sentryPromise) {
     // Dynamic import is mockable by Vitest (vi.mock('@sentry/nextjs'))

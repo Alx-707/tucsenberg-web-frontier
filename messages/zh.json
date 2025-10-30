@@ -161,6 +161,7 @@
       "title": "技术栈",
       "subtitle": "采用前沿技术构建，确保企业级性能和可扩展性。",
       "learnMore": "了解更多",
+      "learnMoreLabel": "了解 {target} 详情",
       "categories": {
         "core": "核心框架",
         "ui": "UI 系统",

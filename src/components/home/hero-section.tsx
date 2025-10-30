@@ -1,34 +1,12 @@
-'use client';
-
-import { useRef, type Ref } from 'react';
 import { ArrowRight, ExternalLink, Github } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MAGIC_0_3 } from '@/constants/decimal';
-import {
-  useDeferredBackground,
-  useDeferredContent,
-} from '@/hooks/use-deferred-render';
-import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 
 // Hero Badge Component
-function HeroBadge({
-  badgeRef,
-  badgeVisible,
-  version,
-}: {
-  badgeRef: (_node: HTMLDivElement | null) => void;
-  badgeVisible: boolean;
-  version: string;
-}) {
+function HeroBadge({ version }: { version: string }) {
   return (
-    <div
-      ref={badgeRef}
-      className={`mb-8 flex justify-center transition-all duration-700 ease-out ${
-        badgeVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-      }`}
-    >
+    <div className='mb-8 flex justify-center'>
       <Badge
         variant='secondary'
         className='px-4 py-2 text-sm font-medium'
@@ -41,24 +19,9 @@ function HeroBadge({
 }
 
 // Hero Title Component
-function HeroTitle({
-  titleRef,
-  titleVisible,
-  line1,
-  line2,
-}: {
-  titleRef: (_node: HTMLHeadingElement | null) => void;
-  titleVisible: boolean;
-  line1: string;
-  line2: string;
-}) {
+function HeroTitle({ line1, line2 }: { line1: string; line2: string }) {
   return (
-    <h1
-      ref={titleRef}
-      className={`text-foreground mb-6 text-4xl font-bold tracking-tight transition-all delay-200 duration-700 ease-out sm:text-6xl lg:text-7xl ${
-        titleVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-      }`}
-    >
+    <h1 className='text-foreground mb-6 text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl'>
       <span className='block'>{line1}</span>
       <span className='text-foreground block'>{line2}</span>
     </h1>
@@ -92,22 +55,9 @@ function TechStackBadges() {
 }
 
 // Hero Action Buttons Component
-function HeroActionButtons({
-  buttonsRef,
-  buttonsVisible,
-  t,
-}: {
-  buttonsRef: (_node: HTMLDivElement | null) => void;
-  buttonsVisible: boolean;
-  t: (_key: string) => string;
-}) {
+function HeroActionButtons({ t }: { t: (_key: string) => string }) {
   return (
-    <div
-      ref={buttonsRef}
-      className={`flex flex-col items-center gap-4 transition-all delay-400 duration-700 ease-out sm:flex-row sm:justify-center ${
-        buttonsVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-      }`}
-    >
+    <div className='flex flex-col items-center gap-4 sm:flex-row sm:justify-center'>
       <Button
         size='lg'
         className='group px-8 py-3 text-lg'
@@ -172,27 +122,8 @@ function HeroStats({ t }: { t: (_key: string) => string }) {
 function HeroSectionBody(props: {
   t: (key: string) => string;
   showBg: boolean;
-  badgeRef: (_node: HTMLDivElement | null) => void;
-  badgeVisible: boolean;
-  titleRef: (_node: HTMLHeadingElement | null) => void;
-  titleVisible: boolean;
-  deferredRef: Ref<HTMLDivElement>;
-  showDeferred: boolean;
-  buttonsRef: (_node: HTMLDivElement | null) => void;
-  buttonsVisible: boolean;
 }) {
-  const {
-    t,
-    showBg,
-    badgeRef,
-    badgeVisible,
-    titleRef,
-    titleVisible,
-    deferredRef,
-    showDeferred,
-    buttonsRef,
-    buttonsVisible,
-  } = props;
+  const { t, showBg } = props;
 
   return (
     <section
@@ -212,15 +143,9 @@ function HeroSectionBody(props: {
 
       <div className='container mx-auto px-4'>
         <div className='mx-auto max-w-4xl text-center'>
-          <HeroBadge
-            badgeRef={badgeRef}
-            badgeVisible={badgeVisible}
-            version={t('version')}
-          />
+          <HeroBadge version={t('version')} />
 
           <HeroTitle
-            titleRef={titleRef}
-            titleVisible={titleVisible}
             line1={t('title.line1')}
             line2={t('title.line2')}
           />
@@ -229,110 +154,65 @@ function HeroSectionBody(props: {
             {t('subtitle')}
           </p>
 
-          <div ref={deferredRef}>
-            {showDeferred ? (
-              <TechStackBadges />
-            ) : (
-              <div className='mb-10 flex flex-wrap justify-center gap-3'>
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className='bg-muted h-7 w-28 animate-pulse rounded'
-                    aria-hidden='true'
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          <TechStackBadges />
 
-          {showDeferred ? (
-            <HeroActionButtons
-              buttonsRef={buttonsRef}
-              buttonsVisible={buttonsVisible}
-              t={t}
-            />
-          ) : (
-            <div
-              ref={buttonsRef}
-              className={`flex flex-col items-center gap-4 transition-all delay-400 duration-700 ease-out sm:flex-row sm:justify-center ${
-                buttonsVisible
-                  ? 'translate-y-0 opacity-100'
-                  : 'translate-y-8 opacity-0'
-              }`}
-            >
-              <div
-                className='bg-muted h-12 w-40 animate-pulse rounded'
-                aria-hidden='true'
-              />
-              <div
-                className='bg-muted h-12 w-40 animate-pulse rounded'
-                aria-hidden='true'
-              />
-            </div>
-          )}
+          <HeroActionButtons t={t} />
 
-          {showDeferred ? (
-            <HeroStats t={t} />
-          ) : (
-            <div
-              className='mt-16 grid grid-cols-2 gap-8 sm:grid-cols-4'
-              aria-hidden='true'
-            >
-              {Array.from({ length: 4 }).map((_, i) => (
-                <div
-                  key={i}
-                  className='text-center'
-                >
-                  <div className='bg-muted mx-auto h-8 w-16 animate-pulse rounded' />
-                  <div className='bg-muted mx-auto mt-2 h-4 w-20 animate-pulse rounded' />
-                </div>
-              ))}
-            </div>
-          )}
+          <HeroStats t={t} />
         </div>
       </div>
     </section>
   );
 }
 
-export function HeroSection() {
-  const t = useTranslations('home.hero');
-  const deferredRef = useRef<HTMLDivElement | null>(null);
+export async function HeroSection() {
+  const tNs = await getTranslations('home.hero');
+  const t = (key: string) => tNs(key);
 
-  const { ref: badgeRef, isVisible: badgeVisible } =
-    useIntersectionObserver<HTMLDivElement>({
-      threshold: MAGIC_0_3,
-      triggerOnce: true,
-    });
-  const { ref: titleRef, isVisible: titleVisible } =
-    useIntersectionObserver<HTMLHeadingElement>({
-      threshold: MAGIC_0_3,
-      triggerOnce: true,
-    });
-  const { ref: buttonsRef, isVisible: buttonsVisible } =
-    useIntersectionObserver<HTMLDivElement>({
-      threshold: MAGIC_0_3,
-      triggerOnce: true,
-    });
+  // Server-rendered, minimal-JS variant without client hooks/animations
+  return (
+    <HeroSectionBody
+      t={t}
+      showBg={true}
+    />
+  );
+}
 
-  const showBg = useDeferredBackground({ timeout: 1200 });
-  const showDeferred = useDeferredContent(deferredRef, {
-    rootMargin: '200px',
-    timeout: 1200,
-  });
+// Type for nested translation messages (unknown depth; narrowed at runtime)
+type TranslationMessages = Record<string, unknown>;
 
+// Static variant that avoids runtime getTranslations by accepting a minimal
+// messages object for the hero namespace. Intended for first paint (LCP) path.
+function getByPath(source: TranslationMessages, path: string): string {
+  const parts = path.split('.');
+  let cur: unknown = source;
+  for (const p of parts) {
+    if (
+      typeof cur === 'object' &&
+      cur !== null &&
+      p in (cur as Record<string, unknown>)
+    ) {
+      // eslint-disable-next-line security/detect-object-injection
+      cur = (cur as Record<string, unknown>)[p];
+    } else {
+      return '';
+    }
+  }
+  return typeof cur === 'string' ? cur : '';
+}
+
+export function HeroSectionStatic({
+  messages,
+  showBg = true,
+}: {
+  messages: TranslationMessages;
+  showBg?: boolean;
+}) {
+  const t = (key: string) => getByPath(messages, key);
   return (
     <HeroSectionBody
       t={t}
       showBg={showBg}
-      badgeRef={badgeRef}
-      badgeVisible={badgeVisible}
-      titleRef={titleRef}
-      titleVisible={titleVisible}
-      deferredRef={deferredRef}
-      showDeferred={showDeferred}
-      buttonsRef={buttonsRef}
-      buttonsVisible={buttonsVisible}
     />
   );
 }

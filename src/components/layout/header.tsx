@@ -1,48 +1,16 @@
 /**
- * Header Component
+ * Header Component (Server)
  *
- * Main navigation header with responsive design, logo, navigation menus,
- * and utility controls (language switcher, theme toggle).
+ * 服务端渲染的头部，交互部件以客户端小岛方式注入，减少首屏 JS 体积。
  */
-'use client';
-
-import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
+import {
+  LanguageToggleIsland,
+  MobileNavigationIsland,
+  NavSwitcherIsland,
+} from '@/components/layout/header-client';
 import { Logo } from '@/components/layout/logo';
-import { useScrollShadow } from '@/hooks/use-scroll-shadow';
-
-const MobileNavigation = dynamic(
-  () =>
-    import('@/components/layout/mobile-navigation').then(
-      (m) => m.MobileNavigation,
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className='h-9 w-9 rounded-md md:hidden'
-        aria-hidden='true'
-      />
-    ),
-  },
-);
-
-const NavSwitcher = dynamic(() =>
-  import('@/components/layout/nav-switcher').then((m) => m.NavSwitcher),
-);
-
-const LanguageToggle = dynamic(
-  () => import('@/components/language-toggle').then((m) => m.LanguageToggle),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className='h-9 w-20 rounded-md'
-        aria-hidden='true'
-      />
-    ),
-  },
-);
+import { Idle } from '@/components/lazy/idle';
 
 /**
  * Header Component
@@ -63,29 +31,27 @@ export function Header({
   variant = 'default',
   sticky = true,
 }: HeaderProps) {
-  // Simplified logic: transparent headers are never sticky
+  // 透明头部不吸顶
   const isSticky = variant === 'transparent' ? false : sticky;
   const isMinimal = variant === 'minimal';
   const isTransparent = variant === 'transparent';
 
-  // Vercel-style scroll shadow effect
-  const scrolled = useScrollShadow();
-
   // Check if using Vercel navigation variant
   const isVercelNav = process.env.NEXT_PUBLIC_NAV_VARIANT !== 'legacy';
+
+  // A/B 支持：可通过 NEXT_PUBLIC_IDLE_ROOTMARGIN='200px 0px 200px 0px' 等调整
+  const VISIBLE_MARGIN =
+    process.env.NEXT_PUBLIC_IDLE_ROOTMARGIN ?? '400px 0px 400px 0px';
 
   return (
     <header
       className={cn(
-        // Vercel-style: solid background, no blur effect
         'bg-background w-full',
         isSticky && 'sticky top-0 z-50',
         isTransparent && 'border-transparent bg-transparent',
-        // Vercel-style scroll border: 隐藏 → 滚动时显示灰色细线
+        // 简化：默认透明边框，滚动阴影效果移至客户端小岛或后续优化
         isVercelNav
-          ? scrolled
-            ? 'border-b border-gray-200 transition-all duration-200 dark:border-gray-800'
-            : 'border-b border-transparent transition-all duration-200'
+          ? 'border-b border-transparent transition-all duration-200'
           : !isTransparent && 'border-border border-b',
         className,
       )}
@@ -94,20 +60,38 @@ export function Header({
         <div className='relative flex h-16 items-center justify-between'>
           {/* Left section: Logo + Mobile Menu */}
           <div className='flex items-center gap-4'>
-            <MobileNavigation />
+            {/* 客户端：移动端导航按钮（可见性触发加载） */}
+            <Idle
+              strategy='visible'
+              rootMargin={VISIBLE_MARGIN}
+            >
+              <MobileNavigationIsland />
+            </Idle>
             <Logo />
           </div>
 
           {/* Center section: Main Navigation (Desktop) - Absolutely centered */}
           {!isMinimal && (
             <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-              <NavSwitcher />
+              {/* 客户端：导航切换器（更晚加载，避免首屏竞争） */}
+              <Idle
+                strategy='visible'
+                rootMargin={VISIBLE_MARGIN}
+              >
+                <NavSwitcherIsland />
+              </Idle>
             </div>
           )}
 
           {/* Right section: Utility Controls */}
           <div className='flex items-center gap-2'>
-            <LanguageToggle />
+            {/* 客户端：语言切换（可见性触发加载） */}
+            <Idle
+              strategy='visible'
+              rootMargin={VISIBLE_MARGIN}
+            >
+              <LanguageToggleIsland />
+            </Idle>
           </div>
         </div>
       </div>

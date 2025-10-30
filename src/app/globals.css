@@ -369,6 +369,38 @@
   pointer-events: auto;
 }
 
+/* ==================== 渲染范围优化（content-visibility） ==================== */
+/* 对首屏以下的大块容器启用渲染范围控制，减少初始布局/绘制开销。
+   使用 auto 记忆尺寸（支持的浏览器）并提供长度后备值。*/
+.cv-auto {
+  content-visibility: auto;
+  /* 后备：未记忆过尺寸时的占位高度，按需微调 */
+  contain-intrinsic-size: 1px 800px;
+  /* 支持时使用 auto 记忆尺寸并指定后备高度 */
+  contain-intrinsic-size: auto 800px;
+}
+
+/* 更精细的占位高度（仅用于首屏以下大容器），按区块估算选择 */
+.cv-600 {
+  content-visibility: auto;
+  /* 后备占位高度 */
+  contain-intrinsic-size: 1px 600px;
+  /* 记忆尺寸 + 后备 */
+  contain-intrinsic-size: auto 600px;
+}
+
+.cv-800 {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 800px;
+  contain-intrinsic-size: auto 800px;
+}
+
+.cv-1000 {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+  contain-intrinsic-size: auto 1000px;
+}
+
 /* ==================== 字体优化配置 ==================== */
 
 /* 优化的中文字体回退策略 */
@@ -382,6 +414,41 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 中文首帧标题优化：系统CJK栈 + 600 权重（A/B 控制） */
+.zh-firstframe-title {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'PingFang SC',
+    'Hiragino Sans GB',
+    'Source Han Sans SC',
+    'Noto Sans CJK SC',
+    'Microsoft YaHei',
+    Arial,
+    sans-serif;
+  font-weight: 600;
+}
+
+/* 属性选择器版本：当 html[lang="zh"] 且页面容器设置 data-fast-lcp-zh="1" 时，
+   自动对标记为 data-lcp-title="1" 的 H1 应用同样的系统字体与权重 */
+:root[lang='zh'] [data-fast-lcp-zh='1'] h1[data-lcp-title='1'] {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'PingFang SC',
+    'Hiragino Sans GB',
+    'Source Han Sans SC',
+    'Noto Sans CJK SC',
+    'Microsoft YaHei',
+    Arial,
+    sans-serif;
+  font-weight: 600;
 }
 
 /* 字体加载优化 */

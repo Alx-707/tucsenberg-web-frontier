@@ -20,6 +20,11 @@ const withMDX = createMDX({
   },
 });
 
+// 默认禁用 Sentry 客户端打包，除非显式启用（进一步瘦身首包 JS）
+const SENTRY_DISABLED =
+  process.env['ENABLE_SENTRY_BUNDLE'] !== '1' ||
+  process.env['DISABLE_SENTRY_BUNDLE'] === '1';
+
 const nextConfig: NextConfig = {
   /* config options here */
 
@@ -66,6 +71,8 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
     // 仅在 CI/测试环境启用 testProxy，生产环境禁用以避免运行时缺少 turbopack runtime 导致的 500
     testProxy: process.env.CI === 'true',
+    // 内联关键CSS，消除渲染阻塞的<link rel="stylesheet">请求，提升首屏渲染（LCP）
+    inlineCss: true,
     // PPR 需要 Next.js canary 版本，暂时禁用
     // ppr: 'incremental',
   },
@@ -80,6 +87,15 @@ const nextConfig: NextConfig = {
     config.resolve.alias = {
       ...config.resolve.alias,
       '@': path.resolve(__dirname, 'src'),
+      '@messages': path.resolve(__dirname, 'messages'),
+      ...(SENTRY_DISABLED
+        ? {
+            '@/lib/sentry-client': path.resolve(
+              __dirname,
+              'src/lib/sentry-client.disabled.ts',
+            ),
+          }
+        : {}),
     };
 
     // 服务端将部分重型依赖标记为 external，避免捆绑到通用 chunk 触发初始化顺序问题
@@ -93,8 +109,21 @@ const nextConfig: NextConfig = {
       });
     }
 
+    // 当禁用 Sentry 时，提供完全的空模块映射，防止生成相关 chunk
+    if (SENTRY_DISABLED) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@sentry/nextjs': path.resolve(
+          __dirname,
+          'src/lib/__sentry_empty__.ts',
+        ),
+      };
+    }
+
     // 生产环境包大小优化 - 细粒度代码分割
     if (!dev && !isServer) {
+      // 显式启用 tree-shaking 标记（默认即为开启，这里加固配置）
+      config.optimization.usedExports = true;
       config.optimization.splitChunks.cacheGroups = {
         ...config.optimization.splitChunks.cacheGroups,
         // React 核心库单独分离
@@ -109,7 +138,7 @@ const nextConfig: NextConfig = {
         radixui: {
           test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
           name: 'radix-ui',
-          chunks: 'all',
+          chunks: 'async',
           priority: 15,
           enforce: true,
         },
@@ -126,7 +155,7 @@ const nextConfig: NextConfig = {
         lucide: {
           test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
           name: 'lucide',
-          chunks: 'all',
+          chunks: 'async',
           priority: 15,
           enforce: true,
         },
@@ -142,7 +171,7 @@ const nextConfig: NextConfig = {
         nextjs: {
           test: /[\\/]node_modules[\\/](next-intl|@next[\\/]|next-themes|nextjs-toploader)[\\/]/,
           name: 'nextjs-libs',
-          chunks: 'all',
+          chunks: 'async',
           priority: 10,
           enforce: true,
         },
@@ -150,7 +179,7 @@ const nextConfig: NextConfig = {
         mdx: {
           test: /[\\/]node_modules[\\/](@mdx-js|gray-matter|remark|rehype)[\\/]/,
           name: 'mdx-libs',
-          chunks: 'all',
+          chunks: 'async',
           priority: 12,
           enforce: true,
         },
@@ -158,23 +187,31 @@ const nextConfig: NextConfig = {
         validation: {
           test: /[\\/]node_modules[\\/](zod)[\\/]/,
           name: 'validation-libs',
-          chunks: 'all',
+          chunks: 'async',
           priority: 12,
           enforce: true,
         },
         // 工具库分离
         utils: {
-          test: /[\\/]node_modules[\\/](clsx|class-variance-authority|tailwind-merge|embla-carousel)[\\/]/,
+          test: /[\\/]node_modules[\\/](clsx|class-variance-authority|tailwind-merge)[\\/]/,
           name: 'utils',
           chunks: 'all',
           priority: 8,
+          enforce: true,
+        },
+        // 轮播库分离（仅异步，避免打入首屏）
+        carousel: {
+          test: /[\\/]node_modules[\\/]embla-carousel[\\/]/,
+          name: 'carousel',
+          chunks: 'async',
+          priority: 12,
           enforce: true,
         },
         // 分析和监控库分离
         analytics: {
           test: /[\\/]node_modules[\\/](@vercel\/analytics|web-vitals)[\\/]/,
           name: 'analytics-libs',
-          chunks: 'all',
+          chunks: 'async',
           priority: 14,
           enforce: true,
         },
@@ -182,7 +219,7 @@ const nextConfig: NextConfig = {
         ui: {
           test: /[\\/]node_modules[\\/](sonner|@marsidev\/react-turnstile)[\\/]/,
           name: 'ui-libs',
-          chunks: 'all',
+          chunks: 'async',
           priority: 11,
           enforce: true,
         },
@@ -210,17 +247,33 @@ const nextConfig: NextConfig = {
       (h) => h.key !== 'Content-Security-Policy',
     );
 
-    // Next.js 15.4.7+ requires non-empty headers array
-    if (headersNoCSP.length === 0) {
-      return [];
-    }
-
-    return [
+    // CDN 缓存策略（H-001 LCP 优化）
+    // 为静态资源设置长期缓存，提升性能和 LCP
+    const cdnCacheHeaders = [
       {
-        source: '/:path*',
-        headers: headersNoCSP,
+        key: 'Cache-Control',
+        value: 'public, max-age=31536000, immutable',
       },
     ];
+
+    const headerConfigs = [
+      // 安全头部应用到所有路径
+      ...(headersNoCSP.length > 0
+        ? [
+            {
+              source: '/:path*',
+              headers: headersNoCSP,
+            },
+          ]
+        : []),
+      // CDN 缓存策略应用到静态资源
+      {
+        source: '/:all*(svg|jpg|jpeg|png|webp|woff|woff2|ttf|otf)',
+        headers: cdnCacheHeaders,
+      },
+    ];
+
+    return headerConfigs;
   },
 };
 
@@ -251,17 +304,19 @@ const sentryWebpackPluginOptions = {
   enabled: process.env['NODE_ENV'] === 'production',
 };
 
-export default withSentryConfig(
-  withBundleAnalyzer(withNextIntl(withMDX(nextConfig))),
-  {
-    // Build options for withSentryConfig (not just webpack plugin)
-    autoInstrumentAppDirectory: false, // avoid injecting client instrumentation into app router
-    disableManifestInjection: true, // save client bytes by skipping route manifest injection
-    bundleSizeOptimizations: {
-      excludeTracing: true, // 不使用性能追踪时可移除 tracing 相关代码
-      excludeDebugStatements: true,
-    },
-    // Pass through webpack plugin options
-    ...sentryWebpackPluginOptions,
-  },
-);
+// Allow disabling Sentry integration entirely for analysis runs
+const base = withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));
+
+export default SENTRY_DISABLED
+  ? base
+  : withSentryConfig(base, {
+      // Build options for withSentryConfig (not just webpack plugin)
+      autoInstrumentAppDirectory: false, // avoid injecting client instrumentation into app router
+      disableManifestInjection: true, // save client bytes by skipping route manifest injection
+      bundleSizeOptimizations: {
+        excludeTracing: true, // 不使用性能追踪时可移除 tracing 相关代码
+        excludeDebugStatements: true,
+      },
+      // Pass through webpack plugin options
+      ...sentryWebpackPluginOptions,
+    });

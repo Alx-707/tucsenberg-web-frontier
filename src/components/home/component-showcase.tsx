@@ -37,7 +37,7 @@ export function ComponentShowcase() {
   return (
     <section
       id='demo'
-      className='bg-muted/30 py-20'
+      className='cv-1000 bg-muted/30 py-20'
     >
       <div className='container mx-auto px-4'>
         <div

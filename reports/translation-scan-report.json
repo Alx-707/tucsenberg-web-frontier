@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-10-03T00:55:39.477Z",
+  "timestamp": "2025-10-30T01:39:32.914Z",
   "summary": {
-    "totalFiles": 716,
-    "scannedFiles": 716,
+    "totalFiles": 704,
+    "scannedFiles": 704,
     "errorCount": 0,
     "warningCount": 0,
-    "totalKeys": 488,
-    "uniqueKeys": 189,
+    "totalKeys": 489,
+    "uniqueKeys": 180,
     "missingKeys": [
       "description",
       "siteName",
@@ -15,16 +15,8 @@
       "missing.key",
       "fallback.key",
       "test.key",
-      "selectTheme",
-      "light",
-      "switchToLight",
-      "dark",
-      "switchToDark",
-      "system",
-      "switchToSystem",
       "loading",
       "error",
-      "theme.title",
       "comingSoon",
       "expectedCompletion",
       "backToHome",
@@ -36,14 +28,15 @@
       "ariaLabel",
       "nearCompletion",
       "status",
-      "toggle",
-      "selectLanguage",
       "source",
       "userSaved",
+      "toggle",
+      "selectLanguage",
       "stats.totalTech",
       "stats.categories",
       "stats.modern",
       "stats.quality",
+      "learnMoreLabel",
       "learnMore",
       "subtitle",
       "features.performance.title",
@@ -242,9 +235,11 @@
       "navigation.guidesDescription",
       "navigation.blogDescription",
       "theme.toggle",
+      "theme.toggleLabel",
       "theme.light",
       "theme.dark",
       "theme.system",
+      "theme.selectTheme",
       "theme.selectDisplayTheme",
       "theme.switchToLight",
       "theme.switchToDark",
@@ -307,6 +302,7 @@
       "home.techStack.title",
       "home.techStack.subtitle",
       "home.techStack.learnMore",
+      "home.techStack.learnMoreLabel",
       "home.techStack.categories.core",
       "home.techStack.categories.ui",
       "home.techStack.categories.i18n",
@@ -715,7 +711,6 @@
     "cta.title",
     "cta.viewSource",
     "current",
-    "dark",
     "description",
     "email",
     "emailPlaceholder",
@@ -755,7 +750,7 @@
     "lastName",
     "lastNamePlaceholder",
     "learnMore",
-    "light",
+    "learnMoreLabel",
     "loading",
     "marketingConsent",
     "message",
@@ -783,7 +778,6 @@
     "responsive.tablet.title",
     "responsive.title",
     "selectLanguage",
-    "selectTheme",
     "seo.description",
     "seo.siteName",
     "siteName",
@@ -805,17 +799,10 @@
     "submitSuccess",
     "submitting",
     "subtitle",
-    "switchToDark",
-    "switchToLight",
-    "switchToSystem",
-    "system",
     "tabs.components",
     "tabs.responsive",
     "tabs.themes",
     "test.key",
-    "theme.selectTheme",
-    "theme.title",
-    "theme.toggleLabel",
     "themes.colors.title",
     "themes.description",
     "themes.language",
@@ -993,7 +980,7 @@
       },
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 249,
+        "line": 257,
         "column": 19
       },
       {
@@ -1131,55 +1118,6 @@
         "column": 6
       }
     ],
-    "selectTheme": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 49,
-        "column": 20
-      }
-    ],
-    "light": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 54,
-        "column": 17
-      }
-    ],
-    "switchToLight": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 55,
-        "column": 21
-      }
-    ],
-    "dark": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 65,
-        "column": 17
-      }
-    ],
-    "switchToDark": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 66,
-        "column": 21
-      }
-    ],
-    "system": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 76,
-        "column": 17
-      }
-    ],
-    "switchToSystem": [
-      {
-        "file": "src/components/theme-toggle.tsx",
-        "line": 77,
-        "column": 21
-      }
-    ],
     "loading": [
       {
         "file": "src/components/loading-spinner.tsx",
@@ -1192,32 +1130,6 @@
         "file": "src/components/error-boundary.tsx",
         "line": 103,
         "column": 13
-      }
-    ],
-    "theme.title": [
-      {
-        "file": "src/components/theme/vercel-theme-toggle-simple.tsx",
-        "line": 90,
-        "column": 11
-      }
-    ],
-    "theme.selectTheme": [
-      {
-        "file": "src/components/theme/vercel-theme-toggle-simple.tsx",
-        "line": 97,
-        "column": 20
-      },
-      {
-        "file": "src/components/theme/floating-theme-toggle.tsx",
-        "line": 104,
-        "column": 20
-      }
-    ],
-    "theme.toggleLabel": [
-      {
-        "file": "src/components/theme/horizontal-theme-toggle-simple.tsx",
-        "line": 118,
-        "column": 18
       }
     ],
     "comingSoon": [
@@ -1342,35 +1254,6 @@
         "column": 15
       }
     ],
-    "toggle": [
-      {
-        "file": "src/components/layout/language-switcher.tsx",
-        "line": 181,
-        "column": 58
-      },
-      {
-        "file": "src/components/layout/language-switcher.tsx",
-        "line": 183,
-        "column": 39
-      },
-      {
-        "file": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
-        "line": 150,
-        "column": 35
-      }
-    ],
-    "selectLanguage": [
-      {
-        "file": "src/components/layout/language-switcher.tsx",
-        "line": 190,
-        "column": 22
-      },
-      {
-        "file": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
-        "line": 209,
-        "column": 17
-      }
-    ],
     "source": [
       {
         "file": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
@@ -1385,45 +1268,66 @@
         "column": 50
       }
     ],
+    "toggle": [
+      {
+        "file": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
+        "line": 150,
+        "column": 35
+      }
+    ],
+    "selectLanguage": [
+      {
+        "file": "src/components/i18n/locale-switcher/enhanced-locale-switcher-component.tsx",
+        "line": 209,
+        "column": 17
+      }
+    ],
     "stats.totalTech": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 43,
+        "line": 48,
         "column": 13
       }
     ],
     "stats.categories": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 51,
+        "line": 56,
         "column": 13
       }
     ],
     "stats.modern": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 57,
+        "line": 62,
         "column": 13
       }
     ],
     "stats.quality": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 63,
+        "line": 68,
         "column": 13
+      }
+    ],
+    "learnMoreLabel": [
+      {
+        "file": "src/components/home/tech-stack-section.tsx",
+        "line": 185,
+        "column": 38
       }
     ],
     "learnMore": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 181,
+        "line": 189,
         "column": 27
       }
     ],
     "subtitle": [
       {
         "file": "src/components/home/tech-stack-section.tsx",
-        "line": 250,
+        "line": 258,
         "column": 22
       },
       {
@@ -1433,7 +1337,7 @@
       },
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 237,
+        "line": 154,
         "column": 13
       },
       {
@@ -1674,35 +1578,35 @@
     "cta.demo": [
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 120,
+        "line": 70,
         "column": 11
       }
     ],
     "cta.github": [
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 138,
+        "line": 88,
         "column": 11
       }
     ],
     "version": [
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 225,
-        "column": 21
+        "line": 146,
+        "column": 30
       }
     ],
     "title.line1": [
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 231,
+        "line": 149,
         "column": 19
       }
     ],
     "title.line2": [
       {
         "file": "src/components/home/hero-section.tsx",
-        "line": 232,
+        "line": 150,
         "column": 19
       }
     ],
@@ -1893,26 +1797,36 @@
         "file": "src/components/home/showcase/interactive-showcase.tsx",
         "line": 34,
         "column": 17
+      },
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 41,
+        "column": 26
+      },
+      {
+        "file": "src/components/home/showcase/interactive-showcase.tsx",
+        "line": 45,
+        "column": 17
       }
     ],
     "components.interactive.star": [
       {
         "file": "src/components/home/showcase/interactive-showcase.tsx",
-        "line": 53,
+        "line": 57,
         "column": 13
       }
     ],
     "components.interactive.download": [
       {
         "file": "src/components/home/showcase/interactive-showcase.tsx",
-        "line": 60,
+        "line": 64,
         "column": 13
       }
     ],
     "components.interactive.share": [
       {
         "file": "src/components/home/showcase/interactive-showcase.tsx",
-        "line": 67,
+        "line": 71,
         "column": 13
       }
     ],
@@ -2435,16 +2349,8 @@
       "missing.key",
       "fallback.key",
       "test.key",
-      "selectTheme",
-      "light",
-      "switchToLight",
-      "dark",
-      "switchToDark",
-      "system",
-      "switchToSystem",
       "loading",
       "error",
-      "theme.title",
       "comingSoon",
       "expectedCompletion",
       "backToHome",
@@ -2456,14 +2362,15 @@
       "ariaLabel",
       "nearCompletion",
       "status",
-      "toggle",
-      "selectLanguage",
       "source",
       "userSaved",
+      "toggle",
+      "selectLanguage",
       "stats.totalTech",
       "stats.categories",
       "stats.modern",
       "stats.quality",
+      "learnMoreLabel",
       "learnMore",
       "subtitle",
       "features.performance.title",
@@ -2662,9 +2569,11 @@
       "navigation.guidesDescription",
       "navigation.blogDescription",
       "theme.toggle",
+      "theme.toggleLabel",
       "theme.light",
       "theme.dark",
       "theme.system",
+      "theme.selectTheme",
       "theme.selectDisplayTheme",
       "theme.switchToLight",
       "theme.switchToDark",
@@ -2727,6 +2636,7 @@
       "home.techStack.title",
       "home.techStack.subtitle",
       "home.techStack.learnMore",
+      "home.techStack.learnMoreLabel",
       "home.techStack.categories.core",
       "home.techStack.categories.ui",
       "home.techStack.categories.i18n",

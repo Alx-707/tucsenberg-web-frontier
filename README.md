@@ -10,7 +10,7 @@
 - 📝 **内容管理**: MDX + Git-based 工作流
 - 🌍 **国际化支持**: 英中双语切换 + next-intl
 - 🎭 **主题系统**: 明亮/暗黑/系统主题
-- 📊 **错误监控**: Sentry集成，完整可观察性
+- 📊 **错误监控（可选）**: 默认不启用客户端 Sentry；支持“服务端/边缘优先”的可选接入，兼顾性能与可观测性
 - 🔒 **企业级安全**: ESLint 9生态 + 安全扫描
 - ⚡ **性能优化**: 包大小控制 + 性能预算
 - 🏗️ **架构检查**: 循环依赖检测 + 架构一致性
@@ -185,7 +185,7 @@ pnpm test:ui          # 可视化测试界面
 - **dependency-cruiser** - 架构一致性检查
 - **eslint-plugin-security** - 安全扫描
 - **size-limit** - 包大小控制
-- **Sentry** - 错误监控和可观察性
+- **Sentry（可选）** - 默认禁用客户端；服务端/边缘可按需启用
 
 ## 🛡️ 四层质量保障体系
 
@@ -237,7 +237,7 @@ pnpm test:ui          # 可视化测试界面
 - ✅ **架构一致性**: 0循环依赖，架构规则验证
 - ✅ **安全扫描**: 28个安全规则，0安全问题
 - ✅ **性能预算**: 包大小控制，性能监控
-- ✅ **错误监控**: Sentry集成，完整可观察性
+- ✅ **错误监控**: 默认不启用客户端 Sentry；支持按需启用服务端/边缘错误上报
 
 ## 🏗️ 架构重构
 
@@ -276,6 +276,31 @@ npx vercel
 查看
 [Next.js部署文档](https://nextjs.org/docs/app/building-your-application/deploying)
 了解更多部署选项。
+
+## 🧭 错误监控策略（Sentry）
+
+本模板以“内容/营销站点”为默认定位，强调性能与首屏体验：
+
+- 默认不启用客户端 Sentry，避免增加 vendors 包与 CWV 风险。
+- 支持“服务端/边缘优先”的可选接入，用于 API/Server Actions/Edge 的异常上报与发布健康。
+- 通过环境变量门控可快速开启/关闭：
+
+```bash
+# 关闭 Sentry 打包与客户端使用（默认建议）
+DISABLE_SENTRY_BUNDLE=1
+NEXT_PUBLIC_DISABLE_SENTRY=1
+
+# 如需启用（建议仅在生产且有清晰告警流程时）
+unset DISABLE_SENTRY_BUNDLE
+unset NEXT_PUBLIC_DISABLE_SENTRY
+
+# 并配置必要的凭据
+SENTRY_DSN=...
+SENTRY_ORG=...
+SENTRY_PROJECT=...
+```
+
+启用时建议采用“最小化”策略：仅服务端/边缘，客户端按需动态加载、低采样、禁用 Replay/Feedback/Tracing 等重功能，并受同意（Consent）管理控制。
 
 ## 📄 许可证
 

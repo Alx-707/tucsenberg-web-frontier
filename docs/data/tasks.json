@@ -1,195 +1,232 @@
 {
   "tasks": [
     {
-      "id": "566957e1-e20f-4ac2-977b-585a8ebc696e",
-      "name": "升级 eslint-plugin-react-you-might-not-need-an-effect 到 0.6.1",
-      "description": "使用 pnpm 包管理器升级插件版本从 0.5.0 到 0.6.1",
-      "notes": "遵循 shrimp-rules.md 第499行：必须使用包管理器命令而非手动编辑 package.json",
-      "status": "completed",
+      "id": "f253daeb-db2e-4708-ab6c-6d03518c4766",
+      "name": "Refactor accessibility-test to Server shell + ClientPage",
+      "description": "将 app/[locale]/accessibility-test/page.tsx 拆分为 Server 外壳与 Client 子组件，确保 notFound() 仅在 Server 上下文触发（生产 404，开发可用）。",
+      "status": "pending",
       "dependencies": [],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:46:01.588Z",
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
       "relatedFiles": [
         {
-          "path": "package.json",
+          "path": "src/app/[locale]/accessibility-test/page.tsx",
           "type": "TO_MODIFY",
-          "description": "第132行版本号将从 0.5.0 更新为 0.6.1",
-          "lineStart": 132,
-          "lineEnd": 132
+          "description": "Server shell hosting notFound and rendering ClientPage"
         },
         {
-          "path": "pnpm-lock.yaml",
-          "type": "TO_MODIFY",
-          "description": "依赖锁文件将自动更新"
+          "path": "src/app/[locale]/accessibility-test/ClientPage.tsx",
+          "type": "CREATE",
+          "description": "Client UI moved from old page.tsx"
         }
       ],
-      "implementationGuide": "执行命令：\npnpm add -D eslint-plugin-react-you-might-not-need-an-effect@0.6.1\n\n验证步骤：\n1. 检查 package.json 第132行版本号是否更新为 0.6.1\n2. 检查 pnpm-lock.yaml 是否包含新版本的依赖信息\n3. 运行 pnpm install 确保依赖安装完成",
-      "verificationCriteria": "1. package.json 第132行显示版本 0.6.1\n2. pnpm-lock.yaml 包含新版本依赖\n3. node_modules 中安装了正确版本",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "eslint-plugin-react-you-might-not-need-an-effect 成功从 0.5.0 升级到 0.6.1。pnpm 命令执行成功，package.json 第132行版本号已更新，pnpm-lock.yaml 已自动更新，依赖安装完成。升级耗时 8.5 秒，无错误。",
-      "completedAt": "2025-10-25T06:46:01.587Z"
+      "implementationGuide": "pseudocode:\n- Create app/[locale]/accessibility-test/ClientPage.tsx ('use client') and move current UI there.\n- Update page.tsx (Server, no 'use client'):\n  import { notFound } from 'next/navigation'\n  if (process.env.NODE_ENV==='production') notFound()\n  return <ClientPage/>\n- Keep existing imports for test sections; adjust relative paths.",
+      "verificationCriteria": "开发环境可正常运行测试；生产构建后访问该路径返回 404；无控制台/构建错误。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
     },
     {
-      "id": "00d37e89-23f4-4840-9f72-807ca63609d1",
-      "name": "添加 SSR hooks 豁免配置到 eslint.config.mjs",
-      "description": "在 eslint.config.mjs 中添加针对 SSR 兼容性 hooks 的豁免配置，遵循现有 theme-switcher-ssr-exception 模式",
-      "notes": "参考现有配置：eslint.config.mjs 第62-70行的 theme-switcher-ssr-exception 模式。豁免配置仅针对特定文件生效，不影响其他文件的 ESLint 检查。",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "566957e1-e20f-4ac2-977b-585a8ebc696e"
-        }
-      ],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:47:19.486Z",
+      "id": "1d808fcc-fe69-447d-9301-7b59c249bb66",
+      "name": "Server Actions: add server-side Sentry capture",
+      "description": "在 src/app/actions.ts 的 catch 分支增加 Sentry.captureException(error)（仅服务器侧），保留结构化 logger。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
       "relatedFiles": [
         {
-          "path": "eslint.config.mjs",
+          "path": "src/app/actions.ts",
           "type": "TO_MODIFY",
-          "description": "在第70行后添加 SSR hooks 豁免配置块",
-          "lineStart": 70,
-          "lineEnd": 70
+          "description": "Add captureException in catch branch"
         },
         {
-          "path": "eslint.config.mjs",
+          "path": "sentry.server.config.ts",
           "type": "REFERENCE",
-          "description": "参考第62-70行的 theme-switcher-ssr-exception 配置模式",
-          "lineStart": 62,
-          "lineEnd": 70
-        },
-        {
-          "path": "src/hooks/use-breakpoint.ts",
-          "type": "REFERENCE",
-          "description": "豁免目标文件1：SSR 兼容的 breakpoint hook"
-        },
-        {
-          "path": "src/hooks/use-reduced-motion.ts",
-          "type": "REFERENCE",
-          "description": "豁免目标文件2：SSR 兼容的 reduced motion hook"
-        },
-        {
-          "path": "src/hooks/use-web-vitals-diagnostics.ts",
-          "type": "REFERENCE",
-          "description": "豁免目标文件3：Web Vitals 诊断 hook"
+          "description": "Server Sentry setup reference"
         }
       ],
-      "implementationGuide": "在 eslint.config.mjs 第70行（theme-switcher-ssr-exception 配置块之后）添加新的配置块：\n\n```javascript\n// SSR-compatible hooks and components exception\n{\n  name: 'ssr-hooks-exception',\n  files: [\n    '**/use-breakpoint.ts',\n    '**/use-reduced-motion.ts',\n    '**/use-web-vitals-diagnostics.ts',\n  ],\n  rules: {\n    // SSR 兼容性模式：使用 lazy initializer 或 useEffect 安全访问浏览器 API\n    'react-you-might-not-need-an-effect/no-initialize-state': 'off',\n    // Web Vitals 诊断需要在 useEffect 中初始化历史数据\n    'react-you-might-not-need-an-effect/no-pass-data-to-parent': 'off',\n  },\n},\n```\n\n注意事项：\n1. 使用 str-replace-editor 工具进行精确编辑\n2. 保持缩进一致（2个空格）\n3. 确保逗号和括号匹配\n4. 注释使用中文（与项目风格一致）",
-      "verificationCriteria": "1. eslint.config.mjs 包含新的 ssr-hooks-exception 配置块\n2. 配置块位于 theme-switcher-ssr-exception 之后\n3. files 数组包含3个文件路径\n4. rules 对象包含2条豁免规则\n5. 注释清晰说明豁免原因",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "成功在 eslint.config.mjs 第72-86行添加 ssr-hooks-exception 配置块。配置遵循现有 theme-switcher-ssr-exception 模式，包含3个文件路径（use-breakpoint.ts、use-reduced-motion.ts、use-web-vitals-diagnostics.ts）和2条豁免规则（no-initialize-state、no-pass-data-to-parent）。注释使用中文，缩进一致（2个空格），格式正确。",
-      "completedAt": "2025-10-25T06:47:19.486Z"
+      "implementationGuide": "pseudocode:\n- import * as Sentry from '@sentry/nextjs' (server-only bundle).\n- In catch(error): Sentry.captureException(error) then logger.error(...).\n- Ensure sentry.server.config.ts already initializes in production (no DSN -> no-op).",
+      "verificationCriteria": "本地/预览以 mock 或条件断点验证 captureException 被调用；生产具备 DSN 时错误可在 Sentry 可见；单测/类型/构建通过。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
     },
     {
-      "id": "08e8708c-3764-45eb-b618-03474073a894",
-      "name": "运行 ESLint 检查验证违规清零",
-      "description": "运行 pnpm lint:check 验证所有 react-you-might-not-need-an-effect 错误已清零",
-      "notes": "此步骤是关键验证点，确保豁免配置生效且无遗漏。如发现新违规，需要逐一分析并决定处理方式（豁免或重构）。",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "00d37e89-23f4-4840-9f72-807ca63609d1"
-        }
-      ],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:48:09.138Z",
+      "id": "304ac9e5-f769-414f-81de-9615975fcfa4",
+      "name": "Add route-level error boundaries for contact/products",
+      "description": "在 app/[locale]/contact 与 app/[locale]/products 路由段新增 error.tsx（'use client'），提供 Retry/返回首页。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
       "relatedFiles": [
         {
-          "path": "lint_output.txt",
-          "type": "REFERENCE",
-          "description": "升级前的 lint 输出，用于对比验证"
-        }
-      ],
-      "implementationGuide": "执行命令：\npnpm lint:check\n\n预期结果：\n1. 无 react-you-might-not-need-an-effect 相关错误\n2. use-breakpoint.ts、use-reduced-motion.ts、use-web-vitals-diagnostics.ts 不再报错\n3. use-intersection-observer.ts 和 responsive-layout.tsx 的 eslint-disable 注释仍然有效\n\n如果仍有错误：\n1. 检查豁免配置的文件路径是否正确\n2. 检查规则名称是否正确\n3. 检查是否有新的违规情况（0.6.0 改进的检测能力可能发现新问题）",
-      "verificationCriteria": "1. pnpm lint:check 命令执行成功\n2. 输出中无 react-you-might-not-need-an-effect 错误\n3. 无新增的 ESLint 错误或警告\n4. 所有 SSR hooks 文件通过检查",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "pnpm lint:check 执行成功，所有 react-you-might-not-need-an-effect 错误已清零。use-breakpoint.ts、use-reduced-motion.ts、use-web-vitals-diagnostics.ts 三个文件的违规已通过豁免配置解决。use-intersection-observer.ts 和 responsive-layout.tsx 的 eslint-disable 注释继续有效。无新增 ESLint 错误或警告，豁免配置生效且无遗漏。",
-      "completedAt": "2025-10-25T06:48:09.137Z"
-    },
-    {
-      "id": "481ae575-2558-46cf-9d92-a5471534b4c3",
-      "name": "更新 docs/code-quality-tools-configuration.md 文档",
-      "description": "同步更新文档，添加 SSR hooks 豁免配置说明，确保文档与代码一致",
-      "notes": "文档更新应与代码修改在同一次提交中完成，确保文档与代码同步。遵循 shrimp-rules.md 第947-951行的文档更新规则。",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "08e8708c-3764-45eb-b618-03474073a894"
-        }
-      ],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:49:28.910Z",
-      "relatedFiles": [
-        {
-          "path": "docs/code-quality-tools-configuration.md",
-          "type": "TO_MODIFY",
-          "description": "添加 SSR hooks 豁免配置说明"
+          "path": "src/app/[locale]/contact/error.tsx",
+          "type": "CREATE",
+          "description": "Route-level error boundary for contact"
         },
         {
-          "path": "eslint.config.mjs",
-          "type": "REFERENCE",
-          "description": "参考实际配置内容编写文档",
-          "lineStart": 62,
-          "lineEnd": 85
+          "path": "src/app/[locale]/products/error.tsx",
+          "type": "CREATE",
+          "description": "Route-level error boundary for products"
         }
       ],
-      "implementationGuide": "在 docs/code-quality-tools-configuration.md 中找到 react-you-might-not-need-an-effect 相关章节，添加以下内容：\n\n1. 在豁免配置章节添加 SSR hooks 说明：\n```markdown\n### SSR 兼容性 Hooks 豁免\n\n以下 hooks 使用 SSR 兼容性模式，需要豁免特定规则：\n\n- **use-breakpoint.ts**: 使用 lazy initializer 安全访问 window.innerWidth\n- **use-reduced-motion.ts**: 使用 lazy initializer 安全访问 matchMedia API\n- **use-web-vitals-diagnostics.ts**: 在 useEffect 中初始化历史数据\n\n豁免规则：\n- `no-initialize-state`: SSR 环境下必须延迟初始化浏览器 API\n- `no-pass-data-to-parent`: Web Vitals 数据收集模式需要\n```\n\n2. 更新版本信息（如有）：\n- 插件版本：0.6.1\n- 更新日期：当前日期\n\n3. 检查是否有使用旧规则名称的示例，如有则更新",
-      "verificationCriteria": "1. 文档包含 SSR hooks 豁免配置说明\n2. 版本信息已更新\n3. 无旧规则名称残留\n4. 文档格式正确（Markdown 语法）",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "成功更新 docs/code-quality-tools-configuration.md 文档。在第140-171行添加了 SSR 兼容性 Hooks 豁免配置章节，包含配置代码示例、豁免文件说明和豁免规则说明。更新了第129行和第176行的旧规则名称（no-reset-all-state-when-a-prop-changes → no-reset-all-state-on-prop-change）。文档格式正确，Markdown 语法无误，与代码配置保持一致。",
-      "completedAt": "2025-10-25T06:49:28.909Z"
+      "implementationGuide": "pseudocode:\n- Create app/[locale]/contact/error.tsx and products/error.tsx:\n  'use client'\n  export default function Error({error,reset}) { return <div> <p>Something went wrong.</p><button onClick={reset}>Retry</button></div> }\n- Style with existing Button if desired.",
+      "verificationCriteria": "在对应段手动抛错仅出现局部错误 UI；点击 Retry 恢复；不触发全局 global-error.tsx。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
     },
     {
-      "id": "a723024a-81a2-442c-8f0c-257c3b29a9ba",
-      "name": "运行完整质量检查验证",
-      "description": "运行所有质量检查命令，确保升级未引入任何问题",
-      "notes": "这是最终验收步骤，必须全部通过才能认为升级成功。遵循 shrimp-rules.md 第443-480行的修复验证流程。",
-      "status": "completed",
+      "id": "ec1e5b9b-8734-4564-b454-2e8ec603b500",
+      "name": "Contact page rendering strategy review (PPR/static)",
+      "description": "评估并调整 contact 页渲染策略：若文案稳定且仅表单为动态，移除 dynamic='force-dynamic' 或改用 PPR；确保表单/Turnstile 流程不受影响。",
+      "status": "pending",
       "dependencies": [
         {
-          "taskId": "481ae575-2558-46cf-9d92-a5471534b4c3"
+          "taskId": "f253daeb-db2e-4708-ab6c-6d03518c4766"
         }
       ],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:52:15.000Z",
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
       "relatedFiles": [
         {
-          "path": "package.json",
-          "type": "REFERENCE",
-          "description": "质量检查脚本定义",
-          "lineStart": 10,
-          "lineEnd": 30
-        },
-        {
-          "path": "eslint.config.mjs",
+          "path": "src/app/[locale]/contact/page.tsx",
           "type": "TO_MODIFY",
-          "description": "格式化修复后的配置文件"
+          "description": "Adjust dynamic strategy (remove force-dynamic or PPR)"
         }
       ],
-      "implementationGuide": "依次执行以下命令：\n\n1. pnpm format:check\n   - 验证代码格式符合 Prettier 规范\n   - 预期：所有文件通过格式检查\n\n2. pnpm lint:check\n   - 验证 ESLint 规则（包括 react-you-might-not-need-an-effect）\n   - 预期：无错误，无警告\n\n3. pnpm type-check\n   - 验证 TypeScript 类型安全\n   - 预期：无类型错误\n\n4. pnpm build:check\n   - 验证 Next.js 构建成功\n   - 预期：构建成功，无错误\n\n如果任何检查失败：\n1. 查看错误信息，定位问题\n2. 根据错误类型决定处理方式（修复或回滚）\n3. 重新运行检查直到全部通过",
-      "verificationCriteria": "1. pnpm format:check 通过（100%）\n2. pnpm lint:check 通过（0错误0警告）\n3. pnpm type-check 通过（0错误）\n4. pnpm build:check 通过（构建成功）\n5. 所有命令输出无异常",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "所有质量检查全部通过。pnpm format:check 初次失败（eslint.config.mjs 格式问题），运行 pnpm format:write 修复后重新检查通过。pnpm lint:check 通过（0错误0警告），pnpm type-check 通过（0类型错误），pnpm build:check 通过（构建成功，5.0秒编译，16个路由生成）。升级未引入任何问题，所有验收标准满足。",
-      "completedAt": "2025-10-25T06:52:15.000Z"
+      "implementationGuide": "pseudocode:\n- Audit contact/page.tsx usage of getTranslations and dynamic behaviors.\n- Option A: remove export const dynamic='force-dynamic'.\n- Option B: adopt PPR segment config if needed.\n- Verify Turnstile + Server Actions still function. Provide rollback if issues.",
+      "verificationCriteria": "构建与类型检查通过；FCP/TTFB 无显著回退；表单提交与 Turnstile 验证保持可用。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
     },
     {
-      "id": "c33d4470-3ef1-4d4f-bc6b-3e929cf80071",
-      "name": "记录升级关键点到 remember",
-      "description": "使用 remember 工具记录升级过程中的关键决策和发现，便于后续维护",
-      "notes": "遵循 shrimp-rules.md 第9行的 Memory 规则：每个任务必须使用 remember 记录关键点，每阶段 ≥3 条。",
-      "status": "completed",
-      "dependencies": [
+      "id": "cf0dbc90-a86d-464d-9f7c-8d6eb3232643",
+      "name": "Create server util: getTranslationsCached()",
+      "description": "新增基于 React cache() 的翻译获取工具，统一封装 next-intl/server 的 getTranslations，减少重复样板。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
+      "relatedFiles": [
         {
-          "taskId": "a723024a-81a2-442c-8f0c-257c3b29a9ba"
+          "path": "src/lib/i18n/server/getTranslationsCached.ts",
+          "type": "CREATE",
+          "description": "React cache wrapper for getTranslations"
+        },
+        {
+          "path": "src/app/[locale]/about/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "Replace direct getTranslations with cached util"
+        },
+        {
+          "path": "src/app/[locale]/contact/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "Replace direct getTranslations with cached util"
+        },
+        {
+          "path": "src/app/[locale]/products/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "Replace direct getTranslations with cached util"
         }
       ],
-      "createdAt": "2025-10-25T06:45:25.536Z",
-      "updatedAt": "2025-10-25T06:53:00.000Z",
-      "relatedFiles": [],
-      "implementationGuide": "调用 remember 工具记录以下关键点：\n\n1. 版本升级信息：\n   - eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\n   - 主要收益：修复堆栈溢出 bug、减少假阴性\n\n2. 豁免配置决策：\n   - 添加 ssr-hooks-exception 配置块\n   - 豁免3个文件：use-breakpoint.ts、use-reduced-motion.ts、use-web-vitals-diagnostics.ts\n   - 豁免2条规则：no-initialize-state、no-pass-data-to-parent\n\n3. 违规处理结果：\n   - 6处违规均为合理的 SSR/浏览器兼容性模式\n   - 使用配置级豁免而非大量 eslint-disable 注释\n   - 保留 use-intersection-observer.ts 和 responsive-layout.tsx 的行级注释（特殊场景）",
-      "verificationCriteria": "1. 记录了版本升级信息\n2. 记录了豁免配置决策\n3. 记录了违规处理结果\n4. 每条记录包含 label、fact、impact、next 信息",
-      "analysisResult": "eslint-plugin-react-you-might-not-need-an-effect 从 0.5.0 升级到 0.6.1\\n\\n**升级目标**：\\n- 升级插件版本到 0.6.1（修复堆栈溢出 bug + 减少假阴性）\\n- 处理 6 处违规情况（均为合理的 SSR/浏览器兼容性模式）\\n- 添加精确的豁免配置（遵循现有 theme-switcher-ssr-exception 模式）\\n- 确保所有质量检查通过\\n- 同步更新文档\\n\\n**技术约束**：\\n- 遵循 shrimp-rules.md 规范\\n- 使用 ESLint flat config 架构\\n- 优先使用配置级豁免而非 eslint-disable 注释\\n- 保持与现有架构的一致性\\n\\n**验收标准**：\\n- pnpm format:check 通过\\n- pnpm lint:check 通过（无 react-you-might-not-need-an-effect 错误）\\n- pnpm type-check 通过\\n- pnpm build:check 通过",
-      "summary": "成功记录 3 条关键点到 remember 工具：1) 版本升级信息（0.5.0→0.6.1，修复堆栈溢出 bug + 减少假阴性）；2) 豁免配置决策（ssr-hooks-exception 配置块，豁免 3 个文件的 2 条规则）；3) 质量检查结果（所有检查通过，格式问题已修复）。满足每阶段 ≥3 条的要求。",
-      "completedAt": "2025-10-25T06:53:00.000Z"
+      "implementationGuide": "pseudocode:\n- Add src/lib/i18n/server/getTranslationsCached.ts:\n  import { cache } from 'react'\n  import { getTranslations as getT } from 'next-intl/server'\n  export const getTranslationsCached = cache((args)=>getT(args))\n- Replace page-level getTranslations usages where duplication exists (about/contact/products).",
+      "verificationCriteria": "页面功能等价；减少重复代码；不改变 next-intl 中间件行为；构建/测试通过。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
+    },
+    {
+      "id": "19ee8b48-2ec7-4d04-bbff-186b4bdea8c0",
+      "name": "Tag heavy dynamic islands with { ssr:false }",
+      "description": "为非首屏关键且较重的动态组件，使用 createStandardDynamicComponent 传入 { ssr:false }，降低首屏竞争。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/shared/dynamic-imports-base.tsx",
+          "type": "REFERENCE",
+          "description": "Dynamic factory reference"
+        },
+        {
+          "path": "src/components/shared/dynamic-imports-core.tsx",
+          "type": "TO_MODIFY",
+          "description": "Update component dynamic options to include ssr:false where needed"
+        },
+        {
+          "path": "src/components/shared/dynamic-imports.tsx",
+          "type": "TO_MODIFY",
+          "description": "Ensure exports align with updated options"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- Identify candidates in dynamic-imports-* (e.g., Carousel/Dropdown-heavy).\n- Update their dynamic factory options: { ssr:false, loading: MinimalLoadingFallback }.\n- Verify SEO impact is acceptable (keep content primary server-rendered).",
+      "verificationCriteria": "首屏可交互时间有改善或持平；重型组件在客户端正常加载；无 SSR 相关回退。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
+    },
+    {
+      "id": "d0f7f0b2-5f6e-4245-8e7b-bec803571ac4",
+      "name": "Remove or internalize AllDynamicComponents aggregation",
+      "description": "确认仓库未引用 AllDynamicComponents 后删除该聚合导出；若需保留则标注 internal-only 并通过 lint 限制外部引用。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "19ee8b48-2ec7-4d04-bbff-186b4bdea8c0"
+        }
+      ],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/shared/dynamic-imports.tsx",
+          "type": "TO_MODIFY",
+          "description": "Remove AllDynamicComponents or mark as internal-only"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- rg 查全仓库引用；若为 0：删除聚合对象导出与相关代码。\n- 若需保留：在文件顶部注释 'INTERNAL-ONLY' 并在 eslint 配置增加 import 限制。",
+      "verificationCriteria": "构建无找不到符号错误；bundle 不含不必要聚合；lint 通过（若保留 internal-only 方案）。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
+    },
+    {
+      "id": "9d5ec98c-055d-4fce-a667-75f3fb44468b",
+      "name": "Contact form: centralize rate-limit constants & i18n error mapping",
+      "description": "集中化表单频控常量（复用现有 COUNT/SECONDS 常量体系），将 Zod 校验 issue 映射到 i18n 错误键（errors.*）；可选加入 useThrottle 包装提交。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "1d808fcc-fe69-447d-9301-7b59c249bb66"
+        }
+      ],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/forms/contact-form-container.tsx",
+          "type": "TO_MODIFY",
+          "description": "Centralize rate-limit constants and optional throttle"
+        },
+        {
+          "path": "src/app/actions.ts",
+          "type": "TO_MODIFY",
+          "description": "Map zod issues to i18n error keys"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- In contact-form-container.tsx, replace inline formula params with constants from src/constants/index.ts.\n- In src/app/actions.ts validation, map zod issues to i18n keys (e.g., 'errors.firstName.required').\n- Optional: implement useThrottle for enhancedFormAction wrapper.",
+      "verificationCriteria": "功能等价或更好；错误提示可国际化；重复提交受控；测试/构建通过。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
+    },
+    {
+      "id": "47b76c5e-8505-439b-be93-203bb93ab31e",
+      "name": "Author domain-service/Server Actions boundary documentation",
+      "description": "在 docs/ 补充领域服务（纯函数）→ Server Actions 薄适配 → UI 的分层文档，明确未来迁移的抽象边界。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-10-30T00:51:57.088Z",
+      "updatedAt": "2025-10-30T00:51:57.088Z",
+      "relatedFiles": [
+        {
+          "path": "docs/development/server-actions-architecture.md",
+          "type": "CREATE",
+          "description": "Architecture boundary documentation"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- Create docs/development/server-actions-architecture.md with diagram and examples.\n- Document how processFormSubmission serves as domain service and how actions.ts adapts it.",
+      "verificationCriteria": "文档结构清晰、示例可运行（伪代码即可）、团队可据此规划迁移。",
+      "analysisResult": "Next.js 15 + React 19 内容/表单型站点最小变更优化：先修复可观测性与错误边界，再做按需性能与代码组织优化，保证可回滚与可验证。"
     }
   ]
 }

@@ -8,9 +8,52 @@ interface SubsetSource {
   weight: number;
 }
 
-const FONT_PRECONNECTS = [
-  { href: 'https://fonts.googleapis.com' },
-  { href: 'https://fonts.gstatic.com', crossOrigin: 'anonymous' as const },
+// 注意：项目使用本地字体（Geist Sans/Mono + PingFang SC子集），不需要Google Fonts
+// Analytics 连接优化策略：
+// - 仅在生产环境且显式开启开关时使用 preconnect（更激进，可能占用早期连接）
+// - 默认使用 dns-prefetch（更保守，低成本）
+const ANALYTICS_ORIGIN = 'https://vitals.vercel-insights.com' as const;
+const isProduction = process.env.NODE_ENV === 'production';
+const enableAnalyticsPreconnect =
+  isProduction &&
+  process.env.NEXT_PUBLIC_ENABLE_ANALYTICS_PRECONNECT === 'true';
+
+const ANALYTICS_PRECONNECTS: Array<{
+  href: string;
+  crossOrigin?: 'anonymous';
+}> = enableAnalyticsPreconnect
+  ? [
+      {
+        href: ANALYTICS_ORIGIN,
+        crossOrigin: 'anonymous' as const,
+      },
+    ]
+  : [];
+
+// 可选：添加CDN dns-prefetch（除 Analytics 外的其他域名）
+const DNS_PREFETCH_DOMAINS: string[] = [
+  // 'https://vercel.com', // 示例：Vercel 相关域名
+];
+
+// 当未启用 preconnect 时，对 Analytics 域名使用 dns-prefetch（低成本优化）
+const ANALYTICS_DNS_PREFETCHES: string[] = enableAnalyticsPreconnect
+  ? []
+  : [ANALYTICS_ORIGIN];
+
+// Geist 字体预加载配置（用于 LCP 优化）
+// 根据 Next.js 官方最佳实践，预加载关键字体以减少 LCP
+const GEIST_FONT_PRELOADS: Array<{
+  href: string;
+  type: string;
+}> = [
+  {
+    href: '/_next/static/media/geist-sans-variable.woff2',
+    type: 'font/woff2',
+  },
+  {
+    href: '/_next/static/media/geist-mono-variable.woff2',
+    type: 'font/woff2',
+  },
 ];
 
 const SUBSET_SOURCES: SubsetSource[] = [
@@ -82,7 +125,8 @@ export default function LocaleHead(): ReactElement {
 
   return (
     <>
-      {FONT_PRECONNECTS.map(({ href, crossOrigin }) => (
+      {/* Vercel Analytics 预连接 - 仅生产且开关启用时渲染 */}
+      {ANALYTICS_PRECONNECTS.map(({ href, crossOrigin }) => (
         <link
           key={href}
           rel='preconnect'
@@ -90,6 +134,26 @@ export default function LocaleHead(): ReactElement {
           crossOrigin={crossOrigin}
         />
       ))}
+      {/* DNS 预解析 - 默认包含 Analytics（若未启用 preconnect）及其他可选域名 */}
+      {[...ANALYTICS_DNS_PREFETCHES, ...DNS_PREFETCH_DOMAINS].map((href) => (
+        <link
+          key={href}
+          rel='dns-prefetch'
+          href={href}
+        />
+      ))}
+      {/* Geist 字体预加载 - 优化 LCP（H-001）*/}
+      {GEIST_FONT_PRELOADS.map(({ href, type }) => (
+        <link
+          key={href}
+          rel='preload'
+          href={href}
+          as='font'
+          type={type}
+          crossOrigin='anonymous'
+        />
+      ))}
+      {/* 字体预加载 - 本地字体子集 */}
       {availableSubsetSources.map(({ href, format }) => (
         <link
           key={href}

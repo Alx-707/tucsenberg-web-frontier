@@ -6,9 +6,9 @@ import { useLocale } from 'next-intl';
 import { logger } from '@/lib/logger';
 import { ZERO } from '@/constants/magic-numbers';
 
-// 动态导入 Vercel Analytics（延迟加载，减少首屏Bundle）
+// 动态导入 Vercel Analytics（App Router 使用 /next 版本，遵循官方最佳实践）
 const Analytics = dynamic(
-  () => import('@vercel/analytics/react').then((mod) => mod.Analytics),
+  () => import('@vercel/analytics/next').then((mod) => mod.Analytics),
   { ssr: false },
 );
 
@@ -82,6 +82,7 @@ export function EnterpriseAnalytics({
   config?: AnalyticsConfig;
 }) {
   const locale = useLocale();
+  const isProd = process.env.NODE_ENV === 'production';
 
   useEffect(() => {
     // 初始化企业级监控
@@ -106,10 +107,9 @@ export function EnterpriseAnalytics({
   return (
     <>
       {children}
-      {/* Vercel Analytics - 实时用户行为和性能监控 */}
-      <Analytics />
-      {/* Vercel Speed Insights - 实时性能指标监控 */}
-      <SpeedInsights />
+      {/* 在生产环境启用以避免本地/预览环境产生 404 或 MIME 错误 */}
+      {isProd && <Analytics />}
+      {isProd && <SpeedInsights />}
     </>
   );
 }

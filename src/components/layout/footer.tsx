@@ -3,13 +3,14 @@
  *
  * Modern, responsive footer component based on the reference design.
  * Features clean layout with company logo, navigation sections, and social links.
+ *
+ * Converted to a Server Component to reduce client-side JavaScript.
+ * Only the interactive ThemeSwitcher remains a Client Component.
  */
-
-'use client';
 
 import type { FC } from 'react';
 import Link from 'next/link';
-import { useLocale, useTranslations } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
 import {
   FOOTER_CONFIG,
   getCopyrightText,
@@ -25,13 +26,14 @@ import { COUNT_14 } from '@/constants/count';
 interface FooterLinkComponentProps {
   link: FooterLink;
   className?: string;
+  t: (key: string) => string;
 }
 
 const FooterLinkComponent: FC<FooterLinkComponentProps> = ({
   link,
   className = '',
+  t,
 }) => {
-  const t = useTranslations();
   const linkText = t(link.translationKey);
 
   if (link.external) {
@@ -63,10 +65,9 @@ interface FooterSectionComponentProps {
   section: FooterSection;
 }
 
-const FooterSectionComponent: FC<FooterSectionComponentProps> = ({
-  section,
-}) => {
-  const t = useTranslations();
+const FooterSectionComponent: FC<
+  FooterSectionComponentProps & { t: (k: string) => string }
+> = ({ section, t }) => {
   const sectionTitle = t(section.titleKey);
 
   return (
@@ -77,7 +78,10 @@ const FooterSectionComponent: FC<FooterSectionComponentProps> = ({
       <ul className='space-y-3'>
         {section.links.map((link) => (
           <li key={link.key}>
-            <FooterLinkComponent link={link} />
+            <FooterLinkComponent
+              link={link}
+              t={t}
+            />
           </li>
         ))}
       </ul>
@@ -132,9 +136,10 @@ const CompanyLogo: FC = () => {
 };
 
 // Main Footer Component
-export const Footer: FC = () => {
+export async function Footer() {
   const { sections } = FOOTER_CONFIG;
-  const locale = useLocale() as 'en' | 'zh';
+  const t = await getTranslations();
+  const locale = (await getLocale()) as 'en' | 'zh';
 
   return (
     <footer className='border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900'>
@@ -151,7 +156,10 @@ export const Footer: FC = () => {
               key={section.key}
               className='md:col-span-1'
             >
-              <FooterSectionComponent section={section} />
+              <FooterSectionComponent
+                section={section}
+                t={t}
+              />
             </div>
           ))}
 
@@ -174,6 +182,6 @@ export const Footer: FC = () => {
       </div>
     </footer>
   );
-};
+}
 
 export default Footer;

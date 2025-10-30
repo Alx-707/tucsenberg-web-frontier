@@ -38,7 +38,10 @@ export async function onRequestError(
   },
 ) {
   // Only capture errors in production to avoid noise in development
-  if (process.env.NODE_ENV === 'production') {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    process.env['DISABLE_SENTRY_BUNDLE'] !== '1'
+  ) {
     // Dynamic import to avoid bundling Sentry in client bundle
     const Sentry = await import('@sentry/nextjs');
     Sentry.captureRequestError(error, request, context);
