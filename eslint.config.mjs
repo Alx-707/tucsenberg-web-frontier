@@ -722,6 +722,26 @@ export default [
     },
   },
 
+  // Next.js App Router page.tsx 导出守护 - 禁止非标准命名导出
+  {
+    name: 'nextjs-page-export-guards',
+    files: ['src/app/**/page.tsx', 'src/app/**/page.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          // 匹配所有不在白名单内的命名导出：
+          // 允许函数：generateMetadata | generateStaticParams | generateViewport | generateImageMetadata
+          // 允许配置常量：revalidate | dynamic | dynamicParams | fetchCache | runtime | preferredRegion | maxDuration
+          selector:
+            'ExportNamedDeclaration:not(:has(FunctionDeclaration[id.name=/^(generateMetadata|generateStaticParams|generateViewport|generateImageMetadata)$/])):not(:has(VariableDeclaration > VariableDeclarator[id.name=/^(revalidate|dynamic|dynamicParams|fetchCache|runtime|preferredRegion|maxDuration)$/])):not(:has(ExportSpecifier[exported.name=/^(revalidate|dynamic|dynamicParams|fetchCache|runtime|preferredRegion|maxDuration)$/]))',
+          message:
+            '🚫 app/**/page.tsx 仅允许导出 generateMetadata/generateStaticParams/generateViewport/generateImageMetadata 以及配置常量（revalidate、dynamic、dynamicParams、fetchCache、runtime、preferredRegion、maxDuration）。请将组件或其他导出移到单独文件。',
+        },
+      ],
+    },
+  },
+
   // 测试文件最终覆盖配置 - 确保测试文件规则优先级最高
   {
     name: 'test-files-final-override',

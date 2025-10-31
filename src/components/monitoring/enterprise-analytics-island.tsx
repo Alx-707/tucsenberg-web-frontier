@@ -1,10 +1,10 @@
 'use client';
 
-import { logger } from '@/lib/logger';
+import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { track } from '@vercel/analytics';
 import { useLocale } from 'next-intl';
-import dynamic from 'next/dynamic';
-import { useEffect } from 'react';
+import { logger } from '@/lib/logger';
 
 const Analytics = dynamic(
   () => import('@vercel/analytics/next').then((mod) => mod.Analytics),
@@ -34,10 +34,9 @@ export function EnterpriseAnalyticsIsland() {
     import('web-vitals')
       .then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
         const baseDims = () => {
-          const nav =
-            (performance.getEntriesByType('navigation')[0] as
-              | PerformanceNavigationTiming
-              | undefined);
+          const nav = performance.getEntriesByType('navigation')[0] as
+            | PerformanceNavigationTiming
+            | undefined;
           const navType = nav?.type ?? 'navigate';
           type NetworkInformation = { effectiveType?: string };
           type NavigatorWithConnection = Navigator & {

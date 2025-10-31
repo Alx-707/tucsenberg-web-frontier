@@ -1,6 +1,11 @@
+import enMessages from '@messages/en.json';
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import Home from '@/app/[locale]/page';
+import { HomeStatic } from '@/components/home/home-static-page';
+
+const testMessages = {
+  home: enMessages.home,
+};
 
 // Mock home page components
 vi.mock('@/components/home/call-to-action', () => ({
@@ -19,6 +24,9 @@ vi.mock('@/components/home/component-showcase', () => ({
 
 vi.mock('@/components/home/hero-section', () => ({
   HeroSection: () => <section data-testid='hero-section'>Hero Section</section>,
+  HeroSectionStatic: () => (
+    <section data-testid='hero-section'>Hero Section</section>
+  ),
 }));
 
 vi.mock('@/components/home/project-overview', () => ({
@@ -31,6 +39,12 @@ vi.mock('@/components/home/tech-stack-section', () => ({
   TechStackSection: () => (
     <section data-testid='tech-stack-section'>Tech Stack Section</section>
   ),
+}));
+
+// Mock translations boundary to a simple pass-through
+vi.mock('@/components/i18n/translations-boundary', () => ({
+  __esModule: true,
+  default: ({ children }: any) => <>{children}</>,
 }));
 
 vi.mock('next/dynamic', async () => {
@@ -74,7 +88,12 @@ describe('Home Page Integration Tests', () => {
 
   describe('Page Structure', () => {
     it('should render all main sections in correct order', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       // Verify all sections are present
       const hero = await screen.findByTestId('hero-section');
@@ -91,7 +110,12 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should have correct page layout structure', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const hero = await screen.findByTestId('hero-section');
       const mainContainer = hero.parentElement;
@@ -101,7 +125,12 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should maintain proper section hierarchy', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const hero = await screen.findByTestId('hero-section');
       const container = hero.parentElement;
@@ -126,7 +155,12 @@ describe('Home Page Integration Tests', () => {
 
   describe('Component Integration', () => {
     it('should render all components without errors', async () => {
-      const { container } = render(<Home />);
+      const { container } = render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       await waitFor(() => {
         expect(container.firstChild).toBeInTheDocument();
@@ -140,7 +174,12 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should handle component loading states', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       await screen.findByTestId('hero-section');
       await screen.findByTestId('tech-stack-section');
@@ -152,7 +191,12 @@ describe('Home Page Integration Tests', () => {
 
   describe('Responsive Design', () => {
     it('should maintain layout on different screen sizes', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const hero = await screen.findByTestId('hero-section');
       const container = hero.parentElement;
@@ -171,7 +215,12 @@ describe('Home Page Integration Tests', () => {
 
   describe('Accessibility', () => {
     it('should have proper semantic structure', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const heroSection = await screen.findByTestId('hero-section');
       const techStackSection = await screen.findByTestId('tech-stack-section');
@@ -191,7 +240,12 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should support keyboard navigation', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const hero = await screen.findByTestId('hero-section');
       const container = hero.parentElement;
@@ -206,7 +260,12 @@ describe('Home Page Integration Tests', () => {
   describe('Performance', () => {
     it('should render efficiently', () => {
       const startTime = performance.now();
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
       const endTime = performance.now();
 
       // Rendering should be fast (under 100ms for mocked components)
@@ -214,11 +273,21 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should handle multiple renders without issues', async () => {
-      const { rerender } = render(<Home />);
+      const { rerender } = render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       await screen.findByTestId('hero-section');
 
-      rerender(<Home />);
+      rerender(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       await screen.findByTestId('hero-section');
       await screen.findByTestId('call-to-action');
@@ -232,7 +301,12 @@ describe('Home Page Integration Tests', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       await screen.findByTestId('hero-section');
 
@@ -242,7 +316,12 @@ describe('Home Page Integration Tests', () => {
 
   describe('Content Flow', () => {
     it('should present content in logical order for user journey', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       // Wait for all sections to load (including dynamic imports)
       const hero = await screen.findByTestId('hero-section');
@@ -269,7 +348,12 @@ describe('Home Page Integration Tests', () => {
     });
 
     it('should maintain visual hierarchy', async () => {
-      render(<Home />);
+      render(
+        <HomeStatic
+          messages={testMessages}
+          locale='en'
+        />,
+      );
 
       const hero = await screen.findByTestId('hero-section');
       const container = hero.parentElement;
@@ -285,5 +369,50 @@ describe('Home Page Integration Tests', () => {
       await screen.findByTestId('project-overview');
       await screen.findByTestId('call-to-action');
     });
+  });
+});
+
+// zh-locale Fast LCP behavior
+describe('Chinese Locale Fast LCP', () => {
+  it('sets data-fast-lcp-zh when NEXT_PUBLIC_FAST_LCP_ZH=1 and locale=zh', () => {
+    vi.stubEnv('NEXT_PUBLIC_FAST_LCP_ZH', '1');
+    render(
+      <HomeStatic
+        messages={testMessages}
+        locale='zh'
+      />,
+    );
+    const hero = screen.getByTestId('hero-section');
+    const container = hero.parentElement as HTMLElement | null;
+    expect(container).toHaveAttribute('data-fast-lcp-zh', '1');
+    vi.unstubAllEnvs();
+  });
+
+  it('does not set data-fast-lcp-zh when locale=en even if flag=1', () => {
+    vi.stubEnv('NEXT_PUBLIC_FAST_LCP_ZH', '1');
+    render(
+      <HomeStatic
+        messages={testMessages}
+        locale='en'
+      />,
+    );
+    const hero = screen.getByTestId('hero-section');
+    const container = hero.parentElement as HTMLElement | null;
+    expect(container).not.toHaveAttribute('data-fast-lcp-zh');
+    vi.unstubAllEnvs();
+  });
+
+  it('does not set data-fast-lcp-zh when flag is disabled', () => {
+    vi.stubEnv('NEXT_PUBLIC_FAST_LCP_ZH', '0');
+    render(
+      <HomeStatic
+        messages={testMessages}
+        locale='zh'
+      />,
+    );
+    const hero = screen.getByTestId('hero-section');
+    const container = hero.parentElement as HTMLElement | null;
+    expect(container).not.toHaveAttribute('data-fast-lcp-zh');
+    vi.unstubAllEnvs();
   });
 });

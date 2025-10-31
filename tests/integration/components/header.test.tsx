@@ -59,6 +59,19 @@ vi.mock('@/components/layout/mobile-navigation', () => ({
   ),
 }));
 
+vi.mock('@/components/layout/header-client', () => ({
+  MobileNavigationIsland: () => (
+    <nav data-testid='mobile-navigation'>Mobile Navigation</nav>
+  ),
+  NavSwitcherIsland: () => <nav data-testid='nav-switcher'>Nav Switcher</nav>,
+  LanguageToggleIsland: () => (
+    <div data-testid='language-toggle'>Language Toggle</div>
+  ),
+}));
+vi.mock('@/components/lazy/idle', () => ({
+  Idle: ({ children }: { children: any }) => <>{children}</>,
+}));
+
 describe('Header Integration Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();

@@ -28,6 +28,23 @@ vi.mock('@/components/layout/logo', () => ({
   Logo: () => <div data-testid='logo'>Logo</div>,
 }));
 
+// Mock header islands and Idle wrapper to render immediately in tests
+vi.mock('@/components/layout/header-client', () => ({
+  MobileNavigationIsland: () => (
+    <nav data-testid='mobile-navigation'>Mobile Navigation</nav>
+  ),
+  NavSwitcherIsland: () => (
+    <nav data-testid='nav-switcher'>Main Navigation</nav>
+  ),
+  LanguageToggleIsland: () => (
+    <button data-testid='language-toggle-button'>Language Toggle</button>
+  ),
+}));
+
+vi.mock('@/components/lazy/idle', () => ({
+  Idle: ({ children }: { children: any }) => <>{children}</>,
+}));
+
 describe('Header Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
