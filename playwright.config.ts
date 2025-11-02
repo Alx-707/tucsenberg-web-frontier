@@ -10,6 +10,41 @@ config({ path: '.env.test' });
 const isCI = Boolean(process.env.CI);
 const isDaily = process.env.CI_DAILY === 'true';
 
+const supportedLocales = (process.env.NEXT_PUBLIC_SUPPORTED_LOCALES || 'en')
+  .split(',')
+  .map((locale) => locale.trim())
+  .filter(Boolean);
+const defaultLocale =
+  process.env.NEXT_PUBLIC_DEFAULT_LOCALE?.trim() || supportedLocales[0] || 'en';
+
+const ensureLocaleInUrl = (input: string): string => {
+  try {
+    const url = new URL(input);
+    const segments = url.pathname.split('/').filter(Boolean);
+    const hasLocale =
+      segments.length > 0 &&
+      (supportedLocales.includes(segments[0]) ||
+        supportedLocales.includes(segments[segments.length - 1]));
+
+    if (!hasLocale) {
+      url.pathname = `${url.pathname.replace(/\/$/, '')}/${defaultLocale}`;
+    }
+
+    const normalizedPath = url.pathname.replace(/\/$/, '');
+    return `${url.origin}${normalizedPath}${url.search}${url.hash}`;
+  } catch {
+    const trimmed = input.replace(/\/$/, '');
+    const hasLocale = supportedLocales.some((locale) =>
+      trimmed.endsWith(`/${locale}`),
+    );
+    return hasLocale ? trimmed : `${trimmed}/${defaultLocale}`;
+  }
+};
+
+const resolvedBaseUrl = ensureLocaleInUrl(
+  process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+);
+
 // 基于是否为每日全量任务，动态裁剪浏览器矩阵，加速常规CI
 const baseProjects = [
   {
@@ -60,7 +95,7 @@ export default defineConfig({
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     /* 修复：包含默认locale以确保动态路由[locale]能正确匹配 */
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000/en',
+    baseURL: resolvedBaseUrl,
 
     // 控制动作/导航等待上限，避免无界等待导致整体卡时
     actionTimeout: 5_000,
@@ -80,27 +115,32 @@ export default defineConfig({
   projects: isDaily ? [...baseProjects, ...extendedProjects] : baseProjects,
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    // 统一使用生产模式运行 E2E 测试,消除开发模式的 Hydration mismatch 警告
-    command: 'pnpm build && pnpm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 180 * 1000, // 增加到 3 分钟
-    // 将关键测试环境变量直接注入到 Next.js 进程，避免依赖外部 CLI 加载 .env.test
-    env: {
-      NODE_ENV: 'test',
-      PLAYWRIGHT_TEST: 'true',
-      NEXT_PUBLIC_TEST_MODE: 'true',
-      NEXT_PUBLIC_DISABLE_REACT_SCAN: 'true',
-      NEXT_PUBLIC_DISABLE_DEV_TOOLS: 'true',
-      NEXT_PUBLIC_ENABLE_ANALYTICS: 'false',
-      NEXT_PUBLIC_ENABLE_ERROR_REPORTING: 'false',
-      NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING: 'false',
-      NEXT_PUBLIC_SECURITY_MODE: 'relaxed',
-      SECURITY_HEADERS_ENABLED: 'false',
-      SKIP_ENV_VALIDATION: 'true',
-    },
-  },
+  // 如果设置了 STAGING_URL，跳过本地服务器
+  ...(process.env.STAGING_URL
+    ? {}
+    : {
+        webServer: {
+          // 统一使用生产模式运行 E2E 测试,消除开发模式的 Hydration mismatch 警告
+          command: 'pnpm build && pnpm start',
+          url: 'http://localhost:3000',
+          reuseExistingServer: !process.env.CI,
+          timeout: 180 * 1000, // 增加到 3 分钟
+          // 将关键测试环境变量直接注入到 Next.js 进程，避免依赖外部 CLI 加载 .env.test
+          env: {
+            NODE_ENV: 'test',
+            PLAYWRIGHT_TEST: 'true',
+            NEXT_PUBLIC_TEST_MODE: 'true',
+            NEXT_PUBLIC_DISABLE_REACT_SCAN: 'true',
+            NEXT_PUBLIC_DISABLE_DEV_TOOLS: 'true',
+            NEXT_PUBLIC_ENABLE_ANALYTICS: 'false',
+            NEXT_PUBLIC_ENABLE_ERROR_REPORTING: 'false',
+            NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING: 'false',
+            NEXT_PUBLIC_SECURITY_MODE: 'relaxed',
+            SECURITY_HEADERS_ENABLED: 'false',
+            SKIP_ENV_VALIDATION: 'true',
+          },
+        },
+      }),
 
   /* Global setup and teardown */
   globalSetup: require.resolve('./tests/e2e/global-setup.ts'),
