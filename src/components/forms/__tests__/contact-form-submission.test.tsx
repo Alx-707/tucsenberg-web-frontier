@@ -5,7 +5,13 @@
  * 注意：基础测试请参考 contact-form-container-core.test.tsx
  */
 
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ContactFormContainer } from '@/components/forms/contact-form-container';
 
@@ -310,10 +316,12 @@ describe('ContactFormContainer - 提交和错误处理', () => {
 
       // Turnstile 成功后按钮应由于速率限制被禁用
       const submitButton = screen.getByRole('button', { name: /submit/i });
-      expect(submitButton).toBeDisabled();
-      expect(
-        screen.getByText(/wait before submitting again/i),
-      ).toBeInTheDocument();
+      await waitFor(() => expect(submitButton).toBeDisabled());
+      await waitFor(() =>
+        expect(
+          screen.getByText(/wait before submitting again/i),
+        ).toBeInTheDocument(),
+      );
     });
 
     it('should re-enable submission after cooldown duration elapses', async () => {
