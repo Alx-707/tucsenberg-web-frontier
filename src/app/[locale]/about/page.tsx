@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslationsCached } from '@/lib/i18n/server/getTranslationsCached';
 import { UnderConstruction } from '@/components/shared/under-construction';
+import { generateLocaleStaticParams } from '@/app/[locale]/generate-static-params';
 import { COUNT_PAIR } from '@/constants';
 
 export const revalidate = 86400;
+
+export function generateStaticParams() {
+  return generateLocaleStaticParams();
+}
 
 interface AboutPageProps {
   params: Promise<{
@@ -15,7 +20,7 @@ export async function generateMetadata({
   params,
 }: AboutPageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({
+  const t = await getTranslationsCached({
     locale,
     namespace: 'underConstruction.pages.about',
   });

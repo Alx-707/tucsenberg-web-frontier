@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { UnderConstruction } from '@/components/shared/under-construction';
+import { generateLocaleStaticParams } from '@/app/[locale]/generate-static-params';
 import { ZERO } from '@/constants';
 
 export const revalidate = 86400;
+
+export function generateStaticParams() {
+  return generateLocaleStaticParams();
+}
 
 interface BlogPageProps {
   params: Promise<{

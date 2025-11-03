@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslationsCached } from '@/lib/i18n/server/getTranslationsCached';
 import { ContactForm } from '@/components/contact/contact-form';
 import { Card } from '@/components/ui/card';
+import { generateLocaleStaticParams } from '@/app/[locale]/generate-static-params';
 import { COUNT_PAIR } from '@/constants';
-
-export const dynamic = 'force-dynamic';
 
 interface ContactPageProps {
   params: Promise<{
@@ -12,11 +11,15 @@ interface ContactPageProps {
   }>;
 }
 
+export function generateStaticParams() {
+  return generateLocaleStaticParams();
+}
+
 export async function generateMetadata({
   params,
 }: ContactPageProps): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({
+  const t = await getTranslationsCached({
     locale,
     namespace: 'underConstruction.pages.contact',
   });
@@ -51,7 +54,7 @@ function ContactPageHeader({
 
 export default async function ContactPage({ params }: ContactPageProps) {
   const { locale } = await params;
-  const t = await getTranslations({
+  const t = await getTranslationsCached({
     locale,
     namespace: 'underConstruction.pages.contact',
   });
