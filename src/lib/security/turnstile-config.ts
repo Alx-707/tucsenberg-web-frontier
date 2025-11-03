@@ -5,10 +5,12 @@ import { logger } from '@/lib/logger';
  * Parse the configured Turnstile allowed hostnames.
  */
 function parseConfiguredHosts(): string[] {
-  if (!env.TURNSTILE_ALLOWED_HOSTS) return [];
+  const hosts = env.TURNSTILE_ALLOWED_HOSTS as string | undefined;
+  if (!hosts) return [];
 
-  return env.TURNSTILE_ALLOWED_HOSTS.split(',')
-    .map((value) => value.trim().toLowerCase())
+  return hosts
+    .split(',')
+    .map((value: string) => value.trim().toLowerCase())
     .filter(Boolean);
 }
 
@@ -65,7 +67,7 @@ export function isAllowedTurnstileHostname(hostname?: string | null): boolean {
 }
 
 const expectedActionMemo = (
-  env.TURNSTILE_EXPECTED_ACTION || 'contact_form'
+  (env.TURNSTILE_EXPECTED_ACTION as string | undefined) || 'contact_form'
 ).trim();
 
 /**
