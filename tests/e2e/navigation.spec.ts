@@ -396,8 +396,34 @@ test.describe('Navigation System', () => {
     test('should pass navigation accessibility checks', async ({ page }) => {
       await injectAxe(page);
 
-      // Check desktop navigation accessibility
-      await checkA11y(page, 'nav[aria-label="Main navigation"]', {
+      const viewport = page.viewportSize();
+      const isMobile = viewport ? viewport.width < 768 : false;
+
+      if (isMobile) {
+        const mobileMenuButton = page.getByRole('button', {
+          name: 'Toggle mobile menu',
+        });
+        await expect(mobileMenuButton).toBeVisible();
+        await mobileMenuButton.click();
+
+        const mobileNavSheet = page.getByRole('dialog');
+        await expect(mobileNavSheet).toBeVisible();
+
+        const sheetHandle = await mobileNavSheet.elementHandle();
+        await checkA11y(page, sheetHandle ?? undefined, {
+          detailedReport: true,
+          detailedReportOptions: { html: true },
+          axeOptions: { rules: { 'color-contrast': { enabled: false } } },
+          includedImpacts: ['critical', 'serious'],
+        });
+        return;
+      }
+
+      const nav = page.locator('nav[aria-label="Main navigation"]');
+      await expect(nav).toHaveCount(1);
+      const navHandle = await nav.elementHandle();
+
+      await checkA11y(page, navHandle ?? undefined, {
         detailedReport: true,
         detailedReportOptions: { html: true },
         axeOptions: { rules: { 'color-contrast': { enabled: false } } },

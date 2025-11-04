@@ -29,6 +29,7 @@ module.exports = {
           // Next.js页面文件（文件系统路由）
           '^src/app/.*/page\\.tsx$',
           '^src/app/page\\.tsx$',
+          '^src/app/.*/route\\.(ts|tsx)$',
           // Next.js布局和字体配置
           '^src/app/.*/layout-fonts\\.(ts|tsx)$',
           // 配置文件

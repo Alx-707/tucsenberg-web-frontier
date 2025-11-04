@@ -250,7 +250,7 @@ describe('Contact Page Rendering - Core Basic Tests', () => {
 
       render(ContactPageComponent);
 
-      const hoursSection = screen.getByText('营业时间').closest('div');
+      const hoursSection = screen.getByText('Business Hours').closest('div');
       expect(hoursSection).toBeInTheDocument();
     });
 

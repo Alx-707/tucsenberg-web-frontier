@@ -42,9 +42,17 @@ vi.mock('@/components/ui/card', () => ({
 describe('ContactPage', () => {
   // 默认Mock返回值
   const defaultTranslations = {
-    title: 'Contact Us',
-    description: 'Get in touch with our team',
-  };
+    'title': 'Contact Us',
+    'description': 'Get in touch with our team',
+    'panel.contactTitle': 'Contact Methods',
+    'panel.email': 'Email',
+    'panel.phone': 'Phone',
+    'panel.hoursTitle': 'Business Hours',
+    'panel.weekdays': 'Mon - Fri',
+    'panel.saturday': 'Saturday',
+    'panel.sunday': 'Sunday',
+    'panel.closed': 'Closed',
+  } as const;
 
   const mockParams = {
     locale: 'en',
@@ -95,10 +103,10 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证联系信息
-      expect(screen.getByText('联系方式')).toBeInTheDocument();
-      expect(screen.getByText('邮箱')).toBeInTheDocument();
+      expect(screen.getByText('Contact Methods')).toBeInTheDocument();
+      expect(screen.getByText('Email')).toBeInTheDocument();
       expect(screen.getByText('contact@tucsenberg.com')).toBeInTheDocument();
-      expect(screen.getByText('电话')).toBeInTheDocument();
+      expect(screen.getByText('Phone')).toBeInTheDocument();
       expect(screen.getByText('+1-555-0123')).toBeInTheDocument();
     });
 
@@ -110,13 +118,13 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证营业时间
-      expect(screen.getByText('营业时间')).toBeInTheDocument();
-      expect(screen.getByText('周一 - 周五')).toBeInTheDocument();
+      expect(screen.getByText('Business Hours')).toBeInTheDocument();
+      expect(screen.getByText('Mon - Fri')).toBeInTheDocument();
       expect(screen.getByText('9:00 - 18:00')).toBeInTheDocument();
-      expect(screen.getByText('周六')).toBeInTheDocument();
+      expect(screen.getByText('Saturday')).toBeInTheDocument();
       expect(screen.getByText('10:00 - 16:00')).toBeInTheDocument();
-      expect(screen.getByText('周日')).toBeInTheDocument();
-      expect(screen.getByText('休息')).toBeInTheDocument();
+      expect(screen.getByText('Sunday')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
     });
   });
 
@@ -343,7 +351,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证邮箱图标容器 - 查找邮箱文本的父级容器中的图标容器
-      const emailText = screen.getByText('邮箱');
+      const emailText = screen.getByText('Email');
       const emailContainer = emailText.closest('.flex.items-center.space-x-3');
       const emailIcon = emailContainer?.querySelector('.bg-primary\\/10');
       expect(emailIcon).toHaveClass(
@@ -365,7 +373,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证电话图标容器 - 查找电话文本的父级容器中的图标容器
-      const phoneText = screen.getByText('电话');
+      const phoneText = screen.getByText('Phone');
       const phoneContainer = phoneText.closest('.flex.items-center.space-x-3');
       const phoneIcon = phoneContainer?.querySelector('.bg-primary\\/10');
       expect(phoneIcon).toHaveClass(
@@ -387,7 +395,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证联系信息容器 - 查找联系方式标题下的容器
-      const contactTitle = screen.getByText('联系方式');
+      const contactTitle = screen.getByText('Contact Methods');
       const contactContainer =
         contactTitle.parentElement?.querySelector('.space-y-4');
       expect(contactContainer).toHaveClass('space-y-4');
@@ -403,7 +411,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证营业时间容器
-      const hoursContainer = screen.getByText('营业时间').parentElement;
+      const hoursContainer = screen.getByText('Business Hours').parentElement;
       expect(hoursContainer?.querySelector('.space-y-2')).toBeInTheDocument();
     });
 
@@ -415,12 +423,12 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证所有时间段
-      expect(screen.getByText('周一 - 周五')).toBeInTheDocument();
+      expect(screen.getByText('Mon - Fri')).toBeInTheDocument();
       expect(screen.getByText('9:00 - 18:00')).toBeInTheDocument();
-      expect(screen.getByText('周六')).toBeInTheDocument();
+      expect(screen.getByText('Saturday')).toBeInTheDocument();
       expect(screen.getByText('10:00 - 16:00')).toBeInTheDocument();
-      expect(screen.getByText('周日')).toBeInTheDocument();
-      expect(screen.getByText('休息')).toBeInTheDocument();
+      expect(screen.getByText('Sunday')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
     });
 
     it('应该有正确的时间显示样式', async () => {
@@ -498,7 +506,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证邮箱SVG路径 - 查找邮箱文本的父级容器中的SVG
-      const emailText = screen.getByText('邮箱');
+      const emailText = screen.getByText('Email');
       const emailContainer = emailText.closest('.flex.items-center.space-x-3');
       const emailSvg = emailContainer?.querySelector('svg');
       expect(emailSvg).toHaveAttribute('viewBox', '0 0 24 24');
@@ -513,7 +521,7 @@ describe('ContactPage', () => {
       render(ContactPageComponent);
 
       // 验证电话SVG路径 - 查找电话文本的父级容器中的SVG
-      const phoneText = screen.getByText('电话');
+      const phoneText = screen.getByText('Phone');
       const phoneContainer = phoneText.closest('.flex.items-center.space-x-3');
       const phoneSvg = phoneContainer?.querySelector('svg');
       expect(phoneSvg).toHaveAttribute('viewBox', '0 0 24 24');

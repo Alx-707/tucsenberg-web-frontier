@@ -76,9 +76,17 @@ vi.mock('@/components/ui/card', () => ({
 describe('Contact Page - Main Rendering Tests', () => {
   // 默认Mock返回值
   const defaultTranslations = {
-    title: 'Contact Us',
-    description: 'Get in touch with our team',
-  };
+    'title': 'Contact Us',
+    'description': 'Get in touch with our team',
+    'panel.contactTitle': 'Contact Methods',
+    'panel.email': 'Email',
+    'panel.phone': 'Phone',
+    'panel.hoursTitle': 'Business Hours',
+    'panel.weekdays': 'Mon - Fri',
+    'panel.saturday': 'Saturday',
+    'panel.sunday': 'Sunday',
+    'panel.closed': 'Closed',
+  } as const;
 
   const mockParams = { locale: 'en' };
 
@@ -124,9 +132,9 @@ describe('Contact Page - Main Rendering Tests', () => {
       render(ContactPageComponent);
 
       // 验证联系信息
-      expect(screen.getByText('邮箱')).toBeInTheDocument();
+      expect(screen.getByText('Email')).toBeInTheDocument();
       expect(screen.getByText('contact@tucsenberg.com')).toBeInTheDocument();
-      expect(screen.getByText('电话')).toBeInTheDocument();
+      expect(screen.getByText('Phone')).toBeInTheDocument();
       expect(screen.getByText('+1-555-0123')).toBeInTheDocument();
     });
 
@@ -138,13 +146,13 @@ describe('Contact Page - Main Rendering Tests', () => {
       render(ContactPageComponent);
 
       // 验证营业时间
-      expect(screen.getByText('营业时间')).toBeInTheDocument();
-      expect(screen.getByText('周一 - 周五')).toBeInTheDocument();
+      expect(screen.getByText('Business Hours')).toBeInTheDocument();
+      expect(screen.getByText('Mon - Fri')).toBeInTheDocument();
       expect(screen.getByText('9:00 - 18:00')).toBeInTheDocument();
-      expect(screen.getByText('周六')).toBeInTheDocument();
+      expect(screen.getByText('Saturday')).toBeInTheDocument();
       expect(screen.getByText('10:00 - 16:00')).toBeInTheDocument();
-      expect(screen.getByText('周日')).toBeInTheDocument();
-      expect(screen.getByText('休息')).toBeInTheDocument();
+      expect(screen.getByText('Sunday')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
     });
 
     it('应该有正确的页面标题', async () => {
@@ -234,7 +242,7 @@ describe('Contact Page - Main Rendering Tests', () => {
       render(ContactPageComponent);
 
       // 验证联系信息布局 - 找到包含联系信息的容器
-      const contactTitle = screen.getByText('联系方式');
+      const contactTitle = screen.getByText('Contact Methods');
       const contactContainer =
         contactTitle.parentElement?.querySelector('.space-y-4');
       expect(contactContainer).toBeInTheDocument();
@@ -249,7 +257,7 @@ describe('Contact Page - Main Rendering Tests', () => {
       render(ContactPageComponent);
 
       // 验证营业时间容器
-      const hoursContainer = screen.getByText('营业时间').parentElement;
+      const hoursContainer = screen.getByText('Business Hours').parentElement;
       expect(hoursContainer?.querySelector('.space-y-2')).toBeInTheDocument();
     });
 
