@@ -30,7 +30,18 @@ test.describe('Navigation System', () => {
         resp.headers()['location'] || resp.headers()['Location'] || '';
       expect(location).toMatch(/\/en(\/|$)/);
       await page.goto('http://localhost:3000/en');
-      await page.waitForLoadState('networkidle');
+
+      // Wait for page to stabilize with fallback for external resources
+      try {
+        await page.waitForLoadState('load', { timeout: 5_000 });
+      } catch (error) {
+        console.warn(
+          '⚠️ waitForLoadState("load") timed out, falling back to short delay',
+          error instanceof Error ? error.message : error,
+        );
+        await page.waitForTimeout(1_000);
+      }
+
       await waitForStablePage(page);
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
       return;
@@ -39,7 +50,18 @@ test.describe('Navigation System', () => {
     // For other browsers: navigate to root and assert client-side end state
     await page.goto('http://localhost:3000/');
     await page.waitForURL('**/en');
-    await page.waitForLoadState('networkidle');
+
+    // Wait for page to stabilize with fallback for external resources
+    try {
+      await page.waitForLoadState('load', { timeout: 5_000 });
+    } catch (error) {
+      console.warn(
+        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
+        error instanceof Error ? error.message : error,
+      );
+      await page.waitForTimeout(1_000);
+    }
+
     await waitForStablePage(page);
     await expect(page).toHaveURL(/\/en\/?$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');

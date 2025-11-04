@@ -3,15 +3,20 @@ import { checkA11y, injectAxe } from 'axe-playwright';
 import { getNav } from './helpers/navigation';
 import {
   removeInterferingElements,
+  waitForLoadWithFallback,
   waitForStablePage,
 } from './test-environment-setup';
 
 test.describe('Homepage Core Functionality', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to homepage and wait for stable state
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
     await page.waitForURL('**/en');
-    await page.waitForLoadState('networkidle');
+    await waitForLoadWithFallback(page, {
+      context: 'homepage beforeEach',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
     await removeInterferingElements(page);
     await waitForStablePage(page);
   });
@@ -137,7 +142,12 @@ test.describe('Homepage Core Functionality', () => {
       page,
     }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
-      await page.reload();
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await waitForLoadWithFallback(page, {
+        context: 'desktop viewport reload',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       await waitForStablePage(page);
 
       const heroSection = page.getByTestId('hero-section');
@@ -167,7 +177,12 @@ test.describe('Homepage Core Functionality', () => {
 
     test('should display correctly on tablet (768x1024)', async ({ page }) => {
       await page.setViewportSize({ width: 768, height: 1024 });
-      await page.reload();
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await waitForLoadWithFallback(page, {
+        context: 'tablet viewport reload',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       await waitForStablePage(page);
 
       const heroSection = page.getByTestId('hero-section');
@@ -184,7 +199,12 @@ test.describe('Homepage Core Functionality', () => {
 
     test('should display correctly on mobile (375x667)', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
-      await page.reload();
+      await page.reload({ waitUntil: 'domcontentloaded' });
+      await waitForLoadWithFallback(page, {
+        context: 'mobile viewport reload',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       await waitForStablePage(page);
 
       const heroSection = page.getByTestId('hero-section');
@@ -216,7 +236,17 @@ test.describe('Homepage Core Functionality', () => {
 
       await page.goto('/');
       await page.waitForURL('**/en');
-      await page.waitForLoadState('networkidle');
+
+      // Wait for page to stabilize with fallback for external resources
+      try {
+        await page.waitForLoadState('load', { timeout: 5_000 });
+      } catch (error) {
+        console.warn(
+          '⚠️ waitForLoadState("load") timed out, falling back to short delay',
+          error instanceof Error ? error.message : error,
+        );
+        await page.waitForTimeout(1_000);
+      }
 
       const loadTime = Date.now() - startTime;
 

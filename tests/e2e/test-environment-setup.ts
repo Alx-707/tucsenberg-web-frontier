@@ -146,6 +146,34 @@ export async function waitForStablePage(page: Page, timeout = 5000) {
   return false;
 }
 
+interface WaitForLoadOptions {
+  loadTimeout?: number;
+  fallbackDelay?: number;
+  context?: string;
+}
+
+/**
+ * 等待页面 load 状态，若超时则降级为短暂延时，避免 networkidle 阻塞
+ */
+export async function waitForLoadWithFallback(
+  page: Page,
+  options: WaitForLoadOptions = {},
+) {
+  const { loadTimeout = 5_000, fallbackDelay = 1_000, context } = options;
+
+  try {
+    await page.waitForLoadState('load', { timeout: loadTimeout });
+  } catch (error) {
+    console.warn(
+      `⚠️ waitForLoadState(\"load\") timed out${
+        context ? ` (${context})` : ''
+      }, falling back to ${fallbackDelay}ms delay`,
+      error instanceof Error ? error.message : error,
+    );
+    await page.waitForTimeout(fallbackDelay);
+  }
+}
+
 /**
  * 安全点击元素（避免干扰）
  */

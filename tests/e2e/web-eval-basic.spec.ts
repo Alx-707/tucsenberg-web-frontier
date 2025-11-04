@@ -62,15 +62,35 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+
+    // Wait for page to stabilize with fallback for external resources
+    try {
+      await page.waitForLoadState('load', { timeout: 5_000 });
+    } catch (error) {
+      console.warn(
+        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
+        error instanceof Error ? error.message : error,
+      );
+      await page.waitForTimeout(1_000);
+    }
 
     let title = await page.title();
     expect(title).toContain('Tucsenberg');
 
     // Test tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+
+    // Wait for page to stabilize with fallback for external resources
+    try {
+      await page.waitForLoadState('load', { timeout: 5_000 });
+    } catch (error) {
+      console.warn(
+        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
+        error instanceof Error ? error.message : error,
+      );
+      await page.waitForTimeout(1_000);
+    }
 
     title = await page.title();
     expect(title).toContain('Tucsenberg');
