@@ -165,7 +165,7 @@ export async function waitForLoadWithFallback(
     await page.waitForLoadState('load', { timeout: loadTimeout });
   } catch (error) {
     console.warn(
-      `⚠️ waitForLoadState(\"load\") timed out${
+      `⚠️ waitForLoadState("load") timed out${
         context ? ` (${context})` : ''
       }, falling back to ${fallbackDelay}ms delay`,
       error instanceof Error ? error.message : error,
