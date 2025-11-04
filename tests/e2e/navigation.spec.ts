@@ -3,6 +3,7 @@ import { checkA11y, injectAxe } from 'axe-playwright';
 import { getNav } from './helpers/navigation';
 import {
   removeInterferingElements,
+  waitForLoadWithFallback,
   waitForStablePage,
 } from './test-environment-setup';
 
@@ -10,7 +11,11 @@ test.describe('Navigation System', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForURL('**/en');
-    await page.waitForLoadState('networkidle');
+    await waitForLoadWithFallback(page, {
+      context: 'navigation beforeEach',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
     await removeInterferingElements(page);
     await waitForStablePage(page);
   });
@@ -31,17 +36,11 @@ test.describe('Navigation System', () => {
       expect(location).toMatch(/\/en(\/|$)/);
       await page.goto('http://localhost:3000/en');
 
-      // Wait for page to stabilize with fallback for external resources
-      try {
-        await page.waitForLoadState('load', { timeout: 5_000 });
-      } catch (error) {
-        console.warn(
-          '⚠️ waitForLoadState("load") timed out, falling back to short delay',
-          error instanceof Error ? error.message : error,
-        );
-        await page.waitForTimeout(1_000);
-      }
-
+      await waitForLoadWithFallback(page, {
+        context: 'navigation firefox redirect',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       await waitForStablePage(page);
       await expect(page.locator('html')).toHaveAttribute('lang', 'en');
       return;
@@ -51,17 +50,11 @@ test.describe('Navigation System', () => {
     await page.goto('http://localhost:3000/');
     await page.waitForURL('**/en');
 
-    // Wait for page to stabilize with fallback for external resources
-    try {
-      await page.waitForLoadState('load', { timeout: 5_000 });
-    } catch (error) {
-      console.warn(
-        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
-        error instanceof Error ? error.message : error,
-      );
-      await page.waitForTimeout(1_000);
-    }
-
+    await waitForLoadWithFallback(page, {
+      context: 'navigation client redirect',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
     await waitForStablePage(page);
     await expect(page).toHaveURL(/\/en\/?$/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
@@ -159,7 +152,11 @@ test.describe('Navigation System', () => {
 
       // Press Enter to activate
       await page.keyboard.press('Enter');
-      await page.waitForLoadState('networkidle');
+      await waitForLoadWithFallback(page, {
+        context: 'navigation keyboard activation',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
 
       // Should stay on home page or navigate properly
       expect(page.url()).toContain('/en');
@@ -514,7 +511,11 @@ test.describe('Navigation System', () => {
 
       const aboutLink = nav.getByRole('link', { name: 'About' });
       await aboutLink.click();
-      await page.waitForLoadState('networkidle');
+      await waitForLoadWithFallback(page, {
+        context: 'navigation perf budget about',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       // Ensure navigation elements are fully loaded before proceeding
       await page.waitForSelector('nav a[href*="/about"]', { state: 'visible' });
 

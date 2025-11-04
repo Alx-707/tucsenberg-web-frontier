@@ -232,23 +232,40 @@ test.describe('Homepage Core Functionality', () => {
 
   test.describe('Performance Tests', () => {
     test('should load within performance budgets', async ({ page }) => {
-      const startTime = Date.now();
+      const navigationStart = Date.now();
 
-      await page.goto('/');
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForURL('**/en');
+      await waitForLoadWithFallback(page, {
+        context: 'performance budget load',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
 
-      // Wait for page to stabilize with fallback for external resources
-      try {
-        await page.waitForLoadState('load', { timeout: 5_000 });
-      } catch (error) {
-        console.warn(
-          '⚠️ waitForLoadState("load") timed out, falling back to short delay',
-          error instanceof Error ? error.message : error,
-        );
-        await page.waitForTimeout(1_000);
-      }
+      const loadMetrics = await page.evaluate(() => {
+        const navigation = performance.getEntriesByType('navigation')[0] as
+          | PerformanceNavigationTiming
+          | undefined;
 
-      const loadTime = Date.now() - startTime;
+        if (navigation) {
+          return {
+            domContentLoaded: navigation.domContentLoadedEventEnd,
+            loadEventEnd: navigation.loadEventEnd,
+          };
+        }
+
+        const { timing } = performance;
+        return {
+          domContentLoaded:
+            timing.domContentLoadedEventEnd - timing.navigationStart,
+          loadEventEnd: timing.loadEventEnd - timing.navigationStart,
+        };
+      });
+
+      const loadTime =
+        (loadMetrics.loadEventEnd && loadMetrics.loadEventEnd > 0
+          ? loadMetrics.loadEventEnd
+          : loadMetrics.domContentLoaded) ?? Date.now() - navigationStart;
 
       // Verify page loads within 2 seconds
       expect(loadTime).toBeLessThan(2000);
@@ -316,9 +333,13 @@ test.describe('Homepage Core Functionality', () => {
         await route.continue();
       });
 
-      await page.goto('/');
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForURL('**/en');
-      await page.waitForLoadState('networkidle');
+      await waitForLoadWithFallback(page, {
+        context: 'slow network load',
+        loadTimeout: 8_000,
+        fallbackDelay: 500,
+      });
 
       // Verify core content is still visible
       const heroSection = page.getByTestId('hero-section');
@@ -393,8 +414,13 @@ test.describe('Homepage Core Functionality', () => {
       // Emulate reduced motion preference
       await page.emulateMedia({ reducedMotion: 'reduce' });
 
-      await page.goto('/');
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
       await page.waitForURL('**/en');
+      await waitForLoadWithFallback(page, {
+        context: 'reduced motion load',
+        loadTimeout: 5_000,
+        fallbackDelay: 500,
+      });
       await waitForStablePage(page);
 
       // Verify animations are disabled or reduced

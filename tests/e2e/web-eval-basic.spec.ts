@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { waitForLoadWithFallback } from './test-environment-setup';
 
 test.describe('Web Eval Agent - Basic Functionality', () => {
   test('should load homepage and capture basic metrics', async ({ page }) => {
@@ -6,8 +7,12 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
     const startTime = Date.now();
 
     // Navigate to homepage
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval basic metrics',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     const loadTime = Date.now() - startTime;
 
@@ -25,8 +30,12 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
       requests.push(request.url());
     });
 
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval network capture',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     expect(requests.length).toBeGreaterThan(0);
     console.log(`✅ Captured ${requests.length} network requests`);
@@ -42,8 +51,12 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
       });
     });
 
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval console capture',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     // Trigger a test console message
     await page.evaluate(() => {
@@ -61,18 +74,12 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
   test('should work with different viewport sizes', async ({ page }) => {
     // Test desktop viewport
     await page.setViewportSize({ width: 1920, height: 1080 });
-    await page.goto('/');
-
-    // Wait for page to stabilize with fallback for external resources
-    try {
-      await page.waitForLoadState('load', { timeout: 5_000 });
-    } catch (error) {
-      console.warn(
-        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
-        error instanceof Error ? error.message : error,
-      );
-      await page.waitForTimeout(1_000);
-    }
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval responsive desktop',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     let title = await page.title();
     expect(title).toContain('Tucsenberg');
@@ -80,25 +87,23 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
     // Test tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
     await page.reload({ waitUntil: 'domcontentloaded' });
-
-    // Wait for page to stabilize with fallback for external resources
-    try {
-      await page.waitForLoadState('load', { timeout: 5_000 });
-    } catch (error) {
-      console.warn(
-        '⚠️ waitForLoadState("load") timed out, falling back to short delay',
-        error instanceof Error ? error.message : error,
-      );
-      await page.waitForTimeout(1_000);
-    }
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval responsive tablet',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     title = await page.title();
     expect(title).toContain('Tucsenberg');
 
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval responsive mobile',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     title = await page.title();
     expect(title).toContain('Tucsenberg');
@@ -107,7 +112,12 @@ test.describe('Web Eval Agent - Basic Functionality', () => {
   });
 
   test('should measure basic performance metrics', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    await waitForLoadWithFallback(page, {
+      context: 'web-eval performance metrics',
+      loadTimeout: 5_000,
+      fallbackDelay: 500,
+    });
 
     const performanceMetrics = await page.evaluate(() => {
       const navigation = performance.getEntriesByType(
