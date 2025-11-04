@@ -697,7 +697,17 @@
       "contact": {
         "title": "联系我们",
         "description": "联系我们的团队进行咨询、支持或合作机会。",
-        "features": "多种联系方式，获得您需要的支持"
+        "features": "多种联系方式，获得您需要的支持",
+        "panel": {
+          "contactTitle": "联系方式",
+          "email": "邮箱",
+          "phone": "电话",
+          "hoursTitle": "营业时间",
+          "weekdays": "周一 - 周五",
+          "saturday": "周六",
+          "sunday": "周日",
+          "closed": "休息"
+        }
       }
     },
     "animation": {

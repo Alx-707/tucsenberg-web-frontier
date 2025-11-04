@@ -697,7 +697,17 @@
       "contact": {
         "title": "Contact Us",
         "description": "Get in touch with our team for inquiries, support, or partnership opportunities.",
-        "features": "Multiple ways to reach us and get the support you need"
+        "features": "Multiple ways to reach us and get the support you need",
+        "panel": {
+          "contactTitle": "Contact Methods",
+          "email": "Email",
+          "phone": "Phone",
+          "hoursTitle": "Business Hours",
+          "weekdays": "Mon - Fri",
+          "saturday": "Saturday",
+          "sunday": "Sunday",
+          "closed": "Closed"
+        }
       }
     },
     "animation": {

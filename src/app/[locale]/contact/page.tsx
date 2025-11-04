@@ -73,7 +73,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
           {/* 联系信息 */}
           <div className='space-y-6'>
             <Card className='p-6'>
-              <h3 className='mb-4 text-xl font-semibold'>联系方式</h3>
+              <h3 className='mb-4 text-xl font-semibold'>
+                {t('panel.contactTitle')}
+              </h3>
               <div className='space-y-4'>
                 <div className='flex items-center space-x-3'>
                   <div className='bg-primary/10 flex h-10 w-10 items-center justify-center rounded-lg'>
@@ -92,7 +94,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className='font-medium'>邮箱</p>
+                    <p className='font-medium'>{t('panel.email')}</p>
                     <p className='text-muted-foreground'>
                       contact@tucsenberg.com
                     </p>
@@ -116,7 +118,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className='font-medium'>电话</p>
+                    <p className='font-medium'>{t('panel.phone')}</p>
                     <p className='text-muted-foreground'>+1-555-0123</p>
                   </div>
                 </div>
@@ -124,19 +126,23 @@ export default async function ContactPage({ params }: ContactPageProps) {
             </Card>
 
             <Card className='p-6'>
-              <h3 className='mb-4 text-xl font-semibold'>营业时间</h3>
+              <h3 className='mb-4 text-xl font-semibold'>
+                {t('panel.hoursTitle')}
+              </h3>
               <div className='space-y-2 text-sm'>
                 <div className='flex justify-between'>
-                  <span>周一 - 周五</span>
+                  <span>{t('panel.weekdays')}</span>
                   <span className='text-muted-foreground'>9:00 - 18:00</span>
                 </div>
                 <div className='flex justify-between'>
-                  <span>周六</span>
+                  <span>{t('panel.saturday')}</span>
                   <span className='text-muted-foreground'>10:00 - 16:00</span>
                 </div>
                 <div className='flex justify-between'>
-                  <span>周日</span>
-                  <span className='text-muted-foreground'>休息</span>
+                  <span>{t('panel.sunday')}</span>
+                  <span className='text-muted-foreground'>
+                    {t('panel.closed')}
+                  </span>
                 </div>
               </div>
             </Card>

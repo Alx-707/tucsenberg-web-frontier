@@ -862,6 +862,7 @@ export default [
       'out/**',
       'build/**',
       'dist/**',
+      '.conductor/**',
       '*.config.js',
       '*.config.mjs',
       'public/**',

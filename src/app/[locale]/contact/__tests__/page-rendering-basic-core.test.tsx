@@ -97,6 +97,15 @@ describe('Contact Page Rendering - Core Basic Tests', () => {
         'hours': 'Business Hours',
         'hours.weekdays': 'Monday - Friday: 9:00 AM - 6:00 PM',
         'hours.weekend': 'Saturday - Sunday: Closed',
+        // New panel translations used by the page
+        'panel.contactTitle': 'Contact Methods',
+        'panel.email': 'Email',
+        'panel.phone': 'Phone',
+        'panel.hoursTitle': 'Business Hours',
+        'panel.weekdays': 'Mon - Fri',
+        'panel.saturday': 'Saturday',
+        'panel.sunday': 'Sunday',
+        'panel.closed': 'Closed',
       };
       return translations[key] || key; // key 来自测试数据，安全
     });
@@ -131,8 +140,8 @@ describe('Contact Page Rendering - Core Basic Tests', () => {
 
       render(ContactPageComponent);
 
-      expect(screen.getByText('邮箱')).toBeInTheDocument();
-      expect(screen.getByText('电话')).toBeInTheDocument();
+      expect(screen.getByText('Email')).toBeInTheDocument();
+      expect(screen.getByText('Phone')).toBeInTheDocument();
       expect(screen.getByText('contact@tucsenberg.com')).toBeInTheDocument();
       expect(screen.getByText('+1-555-0123')).toBeInTheDocument();
     });
@@ -144,13 +153,13 @@ describe('Contact Page Rendering - Core Basic Tests', () => {
 
       render(ContactPageComponent);
 
-      expect(screen.getByText('营业时间')).toBeInTheDocument();
-      expect(screen.getByText('周一 - 周五')).toBeInTheDocument();
+      expect(screen.getByText('Business Hours')).toBeInTheDocument();
+      expect(screen.getByText('Mon - Fri')).toBeInTheDocument();
       expect(screen.getByText('9:00 - 18:00')).toBeInTheDocument();
-      expect(screen.getByText('周六')).toBeInTheDocument();
+      expect(screen.getByText('Saturday')).toBeInTheDocument();
       expect(screen.getByText('10:00 - 16:00')).toBeInTheDocument();
-      expect(screen.getByText('周日')).toBeInTheDocument();
-      expect(screen.getByText('休息')).toBeInTheDocument();
+      expect(screen.getByText('Sunday')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
     });
 
     it('应该有正确的页面标题', async () => {
@@ -228,7 +237,7 @@ describe('Contact Page Rendering - Core Basic Tests', () => {
       render(ContactPageComponent);
 
       // 找到包含邮箱文本的父级div（有flex类的那个）
-      const emailText = screen.getByText('邮箱');
+      const emailText = screen.getByText('Email');
       const contactInfo = emailText.closest('.flex.items-center.space-x-3');
       expect(contactInfo).toBeInTheDocument();
       expect(contactInfo).toHaveClass('flex', 'items-center', 'space-x-3');

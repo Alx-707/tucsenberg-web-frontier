@@ -88,9 +88,17 @@ describe('Contact Page Rendering - Advanced Tests', () => {
 
   // 默认Mock返回值
   const defaultTranslations = {
-    title: 'Contact Us',
-    description: 'Get in touch with our team',
-  };
+    'title': 'Contact Us',
+    'description': 'Get in touch with our team',
+    'panel.contactTitle': 'Contact Methods',
+    'panel.email': 'Email',
+    'panel.phone': 'Phone',
+    'panel.hoursTitle': 'Business Hours',
+    'panel.weekdays': 'Mon - Fri',
+    'panel.saturday': 'Saturday',
+    'panel.sunday': 'Sunday',
+    'panel.closed': 'Closed',
+  } as const;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -109,13 +117,13 @@ describe('Contact Page Rendering - Advanced Tests', () => {
       render(ContactPageComponent);
 
       // 验证营业时间
-      expect(screen.getByText('营业时间')).toBeInTheDocument();
-      expect(screen.getByText('周一 - 周五')).toBeInTheDocument();
+      expect(screen.getByText('Business Hours')).toBeInTheDocument();
+      expect(screen.getByText('Mon - Fri')).toBeInTheDocument();
       expect(screen.getByText('9:00 - 18:00')).toBeInTheDocument();
-      expect(screen.getByText('周六')).toBeInTheDocument();
+      expect(screen.getByText('Saturday')).toBeInTheDocument();
       expect(screen.getByText('10:00 - 16:00')).toBeInTheDocument();
-      expect(screen.getByText('周日')).toBeInTheDocument();
-      expect(screen.getByText('休息')).toBeInTheDocument();
+      expect(screen.getByText('Sunday')).toBeInTheDocument();
+      expect(screen.getByText('Closed')).toBeInTheDocument();
     });
 
     it('应该有正确的页面标题', async () => {
@@ -140,7 +148,7 @@ describe('Contact Page Rendering - Advanced Tests', () => {
       render(ContactPageComponent);
 
       // 找到图标容器（包含SVG的div）
-      const emailText = screen.getByText('邮箱');
+      const emailText = screen.getByText('Email');
       const emailRow = emailText.closest('.flex.items-center.space-x-3');
       const iconContainer = emailRow?.querySelector('.bg-primary\\/10');
       expect(iconContainer).toBeInTheDocument();

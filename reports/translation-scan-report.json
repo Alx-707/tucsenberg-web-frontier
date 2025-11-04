@@ -1,12 +1,12 @@
 {
-  "timestamp": "2025-11-03T01:21:22.010Z",
+  "timestamp": "2025-11-04T05:56:13.309Z",
   "summary": {
-    "totalFiles": 713,
-    "scannedFiles": 713,
+    "totalFiles": 714,
+    "scannedFiles": 714,
     "errorCount": 0,
     "warningCount": 0,
-    "totalKeys": 542,
-    "uniqueKeys": 207,
+    "totalKeys": 550,
+    "uniqueKeys": 215,
     "missingKeys": [],
     "unusedKeys": [
       "common.success",
@@ -611,6 +611,14 @@
     "underConstruction.pages.blog.description",
     "underConstruction.pages.blog.title",
     "underConstruction.pages.contact.description",
+    "underConstruction.pages.contact.panel.closed",
+    "underConstruction.pages.contact.panel.contactTitle",
+    "underConstruction.pages.contact.panel.email",
+    "underConstruction.pages.contact.panel.hoursTitle",
+    "underConstruction.pages.contact.panel.phone",
+    "underConstruction.pages.contact.panel.saturday",
+    "underConstruction.pages.contact.panel.sunday",
+    "underConstruction.pages.contact.panel.weekdays",
     "underConstruction.pages.contact.title",
     "underConstruction.pages.products.description",
     "underConstruction.pages.products.title",
@@ -2144,6 +2152,62 @@
         "file": "src/app/[locale]/contact/page.tsx",
         "line": 67,
         "column": 23
+      }
+    ],
+    "underConstruction.pages.contact.panel.contactTitle": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 77,
+        "column": 17
+      }
+    ],
+    "underConstruction.pages.contact.panel.email": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 97,
+        "column": 48
+      }
+    ],
+    "underConstruction.pages.contact.panel.phone": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 121,
+        "column": 48
+      }
+    ],
+    "underConstruction.pages.contact.panel.hoursTitle": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 130,
+        "column": 17
+      }
+    ],
+    "underConstruction.pages.contact.panel.weekdays": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 134,
+        "column": 25
+      }
+    ],
+    "underConstruction.pages.contact.panel.saturday": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 138,
+        "column": 25
+      }
+    ],
+    "underConstruction.pages.contact.panel.sunday": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 142,
+        "column": 25
+      }
+    ],
+    "underConstruction.pages.contact.panel.closed": [
+      {
+        "file": "src/app/[locale]/contact/page.tsx",
+        "line": 144,
+        "column": 21
       }
     ],
     "underConstruction.pages.blog.title": [

@@ -32,6 +32,7 @@
     "scan:translations": "node scripts/translation-scanner.js",
     "sync:translations:enhanced": "node scripts/translation-sync.js",
     "validate:translations": "node scripts/translation-validator.js",
+    "i18n:sync:check": "node scripts/translation-validator.js",
     "i18n:full": "pnpm scan:translations && pnpm sync:translations:enhanced && pnpm validate:translations",
     "quality:monitor": "node scripts/quality-monitor.js",
     "quality:report:local": "node scripts/quality-monitor.js && open reports/quality/latest-quality-summary.json",

@@ -75,10 +75,9 @@ Object.defineProperty(window, 'location', {
 });
 
 // Anchor click: dispatch click event without performing navigation
-// eslint-disable-next-line @typescript-eslint/unbound-method
-const anchorClick = HTMLAnchorElement.prototype.click;
+const _anchorClick = HTMLAnchorElement.prototype.click;
 vi.spyOn(HTMLAnchorElement.prototype as any, 'click').mockImplementation(
-  function (this: HTMLAnchorElement) {
+  function anchorClickMock(this: HTMLAnchorElement) {
     // Fire a cancellable click event so user handlers still run
     const evt = new MouseEvent('click', { bubbles: true, cancelable: true });
     this.dispatchEvent(evt);

@@ -58,16 +58,7 @@
       "permanent": false
     }
   ],
-  "rewrites": [
-    {
-      "source": "/robots.txt",
-      "destination": "/api/robots"
-    },
-    {
-      "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
-    }
-  ],
+  "rewrites": [],
   "crons": [
     {
       "path": "/api/health",
