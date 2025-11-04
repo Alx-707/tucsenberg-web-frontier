@@ -59,6 +59,33 @@ vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
+// Suppress jsdom navigation errors during unit tests
+// - Clicking <a href> in jsdom can trigger "Not implemented: navigation" errors
+// - Unit tests generally assert handlers/state rather than real navigation
+//   so we neutralize navigation side-effects in the test environment.
+// Window navigation stubs
+Object.defineProperty(window, 'open', { value: vi.fn(), configurable: true });
+Object.defineProperty(window, 'location', {
+  value: {
+    ...window.location,
+    assign: vi.fn(),
+    replace: vi.fn(),
+  },
+  configurable: true,
+});
+
+// Anchor click: dispatch click event without performing navigation
+// eslint-disable-next-line @typescript-eslint/unbound-method
+const anchorClick = HTMLAnchorElement.prototype.click;
+vi.spyOn(HTMLAnchorElement.prototype as any, 'click').mockImplementation(
+  function (this: HTMLAnchorElement) {
+    // Fire a cancellable click event so user handlers still run
+    const evt = new MouseEvent('click', { bubbles: true, cancelable: true });
+    this.dispatchEvent(evt);
+    // Do not call the original click to avoid jsdom navigation
+  },
+);
+
 // Mock lucide-react icons - 返回真正的React元素而不是字符串
 const MockIcon = vi.fn(({ className, ...props }: any) =>
   React.createElement('svg', {
