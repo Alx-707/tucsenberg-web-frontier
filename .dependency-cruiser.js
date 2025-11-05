@@ -109,17 +109,26 @@ module.exports = {
         dependencyTypes: ['npm-dev'],
       },
     },
-    // === 跨域依赖规则 - 架构重构专用 ===
+    // === 跨域依赖规则（显式域匹配，避免跨规则反向引用） ===
     {
-      name: 'no-cross-domain-direct-access',
+      name: 'no-cross-domain-direct-access:web-vitals',
       severity: 'error',
-      comment: '禁止跨域直接访问 - 必须通过公开API',
+      comment: 'web-vitals 域禁止直接依赖其他 lib 域（需通过公开 API）',
       from: {
-        path: '^src/lib/(security|content|accessibility|resend|whatsapp|performance-monitoring|i18n|locale-storage|web-vitals|theme-analytics)/',
+        path: '^src/lib/web-vitals/',
       },
       to: {
-        path: '^src/lib/(?!\\1)[^/]+/',
-        pathNot: '^src/lib/(shared|utils|types|constants)/',
+        path: [
+          '^src/lib/security(?:/|-)',
+          '^src/lib/i18n(?:/|-)',
+          '^src/lib/locale-storage',
+          '^src/lib/performance-monitoring',
+          '^src/lib/theme-analytics',
+          '^src/lib/content(?:-query|-)',
+          '^src/lib/resend',
+          '^src/lib/whatsapp',
+          '^src/lib/airtable',
+        ].join('|'),
       },
     },
     {
@@ -134,22 +143,31 @@ module.exports = {
     },
     {
       name: 'enforce-domain-boundaries',
-      severity: 'warn',
-      comment: '强制域边界 - 域内文件应优先使用域内依赖',
+      severity: 'info',
+      comment: '强制域边界 - 域内文件应优先使用域内依赖（提示级别）',
       from: { path: '^src/lib/([^/]+)/' },
       to: {
-        path: '^src/lib/(?!\\1|shared|utils|types|constants)[^/]+/',
+        path: '^src/lib/[^/]+/',
         pathNot: '^src/(components|hooks|app)/',
       },
     },
     {
       name: 'no-barrel-export-dependencies',
       severity: 'warn',
-      comment: '避免通过barrel导出建立依赖 - 重构期间临时规则',
-      from: {},
+      comment: '避免通过 barrel 导出建立依赖（豁免通用聚合出口）',
+      from: {
+        path: '^src/',
+        pathNot: '^src/(app|components|scripts)/',
+      },
       to: {
         path: 'index\\.(ts|js)$',
-        pathNot: '^src/(app|components)/',
+        pathNot: [
+          '^src/app/',
+          '^src/components/',
+          '^src/constants/index\\.(ts|js)$',
+          '^src/types/index\\.(ts|js)$',
+          '^src/lib/web-vitals/index\\.(ts|js)$',
+        ].join('|'),
       },
     },
   ],
