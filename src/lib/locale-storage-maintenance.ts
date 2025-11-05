@@ -17,7 +17,10 @@ import {
 } from '@/lib/locale-storage-maintenance-import-export';
 import { LocaleMaintenanceOperationsManager } from '@/lib/locale-storage-maintenance-operations';
 import { LocaleValidationManager } from '@/lib/locale-storage-maintenance-validation';
-import type { MaintenanceOptions, StorageOperationResult } from '@/lib/locale-storage-types';
+import type {
+  MaintenanceOptions,
+  StorageOperationResult,
+} from '@/lib/locale-storage-types';
 
 export { LocaleCleanupManager } from '@/lib/locale-storage-maintenance-cleanup';
 export { LocaleValidationManager } from '@/lib/locale-storage-maintenance-validation';

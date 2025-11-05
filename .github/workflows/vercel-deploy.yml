@@ -117,25 +117,48 @@ jobs:
     name: 部署后验证
     runs-on: ubuntu-latest
     needs: deploy-to-vercel
-    timeout-minutes: 10
+    timeout-minutes: 15
     if: needs.deploy-to-vercel.outputs.preview_url != ''
 
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 等待部署就绪
+      - name: 等待部署就绪（增强版）
         run: |
+          set -euo pipefail
           url="${{ needs.deploy-to-vercel.outputs.preview_url }}"
           echo "等待部署就绪: $url"
-          for i in {1..30}; do
-            status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+
+          max_tries=60       # 最长 60 次探测
+          delay=5            # 初始等待 5 秒
+
+          for i in $(seq 1 $max_tries); do
+            # 先 HEAD（更轻量），失败再 GET
+            status=$(curl -s -o /dev/null -w "%{http_code}" -I "$url" || echo "000")
+            if [ "$status" = "000" ]; then
+              status=$(curl -s -o /dev/null -w "%{http_code}" "$url" || echo "000")
+            fi
+
             echo "第 $i 次探测: $status"
             if [ "$status" -ge 200 ] && [ "$status" -lt 400 ]; then
               echo "部署已就绪"
               exit 0
             fi
-            sleep 5
+
+            # 对常见冷启动/传播中的状态做退避
+            case "$status" in
+              000|404|425|429|500|502|503|504)
+                ;;
+              *)
+                ;;
+            esac
+
+            # 每 10 次加大等待 5 秒，上限 20 秒
+            if [ $((i % 10)) -eq 0 ] && [ "$delay" -lt 20 ]; then
+              delay=$((delay + 5))
+            fi
+            sleep "$delay"
           done
           echo "等待超时，部署未就绪" >&2
           exit 1

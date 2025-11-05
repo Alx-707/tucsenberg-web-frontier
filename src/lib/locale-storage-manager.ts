@@ -14,6 +14,7 @@ import type { Locale } from '@/types/i18n';
 import { LocaleStorageAnalytics as LocaleAnalyticsManager } from '@/lib/locale-storage-analytics';
 import { LocaleHistoryManager } from '@/lib/locale-storage-history';
 import { LocaleMaintenanceManager } from '@/lib/locale-storage-maintenance';
+import type { ImportData } from '@/lib/locale-storage-maintenance-import-export';
 import { LocalePreferenceManager } from '@/lib/locale-storage-preference';
 import type {
   LocaleDetectionHistory,
@@ -21,7 +22,6 @@ import type {
   MaintenanceOptions,
   UserLocalePreference,
 } from '@/lib/locale-storage-types';
-import type { ImportData } from '@/lib/locale-storage-maintenance-import-export';
 import {
   ANIMATION_DURATION_VERY_SLOW,
   COUNT_FIVE,

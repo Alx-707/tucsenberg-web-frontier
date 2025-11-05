@@ -63,6 +63,8 @@ debug-*.png
 temp-analysis/
 output/
 test-coverage-output.txt
+# 本地依赖巡航临时输出（不提交）
+.tmp_arch*.txt
 
 # 任务记忆备份
 docs/data/memory/tasks_memory_*.json
