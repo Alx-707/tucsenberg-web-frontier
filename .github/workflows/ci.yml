@@ -87,10 +87,20 @@ jobs:
         run: pnpm test:coverage
 
       - name: 上传覆盖率报告
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/
+
+      - name: 上传 Vitest 测试报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitest-reports
+          path: |
+            reports/
+          if-no-files-found: ignore
 
   # E2E测试作业
   e2e-tests:
