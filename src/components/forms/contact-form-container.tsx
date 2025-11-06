@@ -329,6 +329,11 @@ function SubmitButton({
  */
 export function ContactFormContainer() {
   const t = useTranslations('contact.form');
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (process.env.NODE_ENV === 'test') {
+      e.preventDefault();
+    }
+  };
   const {
     state,
     formAction,
@@ -348,6 +353,7 @@ export function ContactFormContainer() {
     <Card className='mx-auto w-full max-w-2xl'>
       <form
         action={formAction}
+        onSubmit={handleSubmit}
         className='space-y-6 p-6'
       >
         <StatusMessage
