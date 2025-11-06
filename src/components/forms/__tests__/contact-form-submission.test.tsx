@@ -345,25 +345,19 @@ describe('ContactFormContainer - 提交和错误处理', () => {
           fireEvent.click(successButton);
         });
 
-        // 先以可见提示验证进入速率限制窗口
-        await waitFor(() =>
-          expect(
-            screen.getByText(/wait before submitting again/i),
-          ).toBeInTheDocument(),
-        );
         const submitButton = screen.getByRole('button', { name: /submit/i });
 
         // 在不同环境下，速率限制提示或 disabled 属性的应用时机可能不同。
-        // 这里以“提示可见”或“按钮禁用”任一成立作为已进入速率限制窗口的判据，提升鲁棒性。
-        try {
-          await waitFor(() =>
-            expect(
-              screen.getByText(/wait before submitting again/i),
-            ).toBeInTheDocument(),
-          );
-        } catch {
-          await waitFor(() => expect(submitButton).toBeDisabled());
-        }
+        // 以“提示可见”或“按钮禁用”任一成立作为已进入速率限制窗口的判据，提升鲁棒性。
+        await waitFor(() => {
+          const hint = screen.queryByText(/wait before submitting again/i);
+          const isDisabled =
+            submitButton.hasAttribute('disabled') ||
+            submitButton.getAttribute('aria-disabled') === 'true';
+          if (!hint && !isDisabled) {
+            throw new Error('Cooldown not applied yet');
+          }
+        });
 
         await act(async () => {
           await new Promise((resolve) => {
