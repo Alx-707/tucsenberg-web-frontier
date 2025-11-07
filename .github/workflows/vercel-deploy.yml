@@ -219,19 +219,50 @@ jobs:
           echo "检查 robots.txt..."
           curl -f -s -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" "$DEPLOYMENT_URL/robots.txt" | grep -q "User-agent" || exit 1
 
-          # 检查 sitemap.xml - 先输出内容以诊断
+          # 检查 sitemap.xml - 支持 sitemapindex 和 urlset 两种格式
           echo "检查 sitemap.xml..."
-          echo "获取 sitemap.xml 内容:"
           SITEMAP_CONTENT=$(curl -f -s -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" "$DEPLOYMENT_URL/sitemap.xml")
-          echo "$SITEMAP_CONTENT"
-          echo "---"
 
-          # 尝试 grep 验证
-          echo "$SITEMAP_CONTENT" | grep -q "urlset" || {
-            echo "❌ sitemap.xml 不包含 'urlset' 字符串"
-            echo "内容长度: $(echo "$SITEMAP_CONTENT" | wc -c)"
+          # 检测 sitemap 格式
+          if echo "$SITEMAP_CONTENT" | grep -q '<sitemapindex'; then
+            echo "✓ Sitemap index format detected"
+            echo "Checking sitemap-0.xml..."
+
+            # 验证 sitemap-0.xml 存在且包含 urlset
+            SITEMAP_0_CONTENT=$(curl -f -s -H "x-vercel-protection-bypass: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}" "$DEPLOYMENT_URL/sitemap-0.xml")
+
+            if echo "$SITEMAP_0_CONTENT" | grep -q '<urlset'; then
+              # 统计 URL 数量
+              URL_COUNT=$(echo "$SITEMAP_0_CONTENT" | grep -o '<loc>' | wc -l)
+              echo "✓ Found $URL_COUNT URLs in sitemap-0.xml"
+
+              # 验证 URL 数量（期望至少 20 个）
+              if [ "$URL_COUNT" -lt 20 ]; then
+                echo "❌ URL count is too low: $URL_COUNT (expected >= 20)"
+                exit 1
+              fi
+            else
+              echo "❌ sitemap-0.xml does not contain urlset"
+              exit 1
+            fi
+          elif echo "$SITEMAP_CONTENT" | grep -q '<urlset'; then
+            echo "✓ Sitemap urlset format detected"
+
+            # 统计 URL 数量
+            URL_COUNT=$(echo "$SITEMAP_CONTENT" | grep -o '<loc>' | wc -l)
+            echo "✓ Found $URL_COUNT URLs in sitemap.xml"
+
+            # 验证 URL 数量
+            if [ "$URL_COUNT" -lt 20 ]; then
+              echo "❌ URL count is too low: $URL_COUNT (expected >= 20)"
+              exit 1
+            fi
+          else
+            echo "❌ Invalid sitemap format"
+            echo "Content preview:"
+            echo "$SITEMAP_CONTENT" | head -n 20
             exit 1
-          }
+          fi
 
           echo "✅ API 端点验证通过"
 
@@ -239,8 +270,7 @@ jobs:
   deployment-summary:
     name: 部署总结
     runs-on: ubuntu-latest
-    needs:
-      [pre-deployment-checks, deploy-to-vercel]
+    needs: [pre-deployment-checks, deploy-to-vercel]
     if: always()
     timeout-minutes: 5
 
