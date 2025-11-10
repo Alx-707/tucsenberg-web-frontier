@@ -34,6 +34,7 @@
     "security:audit": "pnpm audit --audit-level moderate",
     "i18n:validate:code": "tsx scripts/validate-i18n-content.ts",
     "i18n:validate:visual": "tsx scripts/validate-i18n-visual.ts",
+    "i18n:shape:check": "node scripts/i18n-shape-check.js",
     "unused:check": "knip",
     "unused:fix": "knip --fix",
     "unused:production": "knip --production",

@@ -1,9 +1,9 @@
 import { getRequestConfig } from 'next-intl/server';
 import {
-  getCachedMessages,
   I18nPerformanceMonitor,
   TranslationCache,
 } from '@/lib/i18n-performance';
+import { loadCriticalMessages } from '@/lib/load-messages';
 import { COUNT_FIVE, ONE } from '@/constants';
 import { routing } from '@/i18n/routing';
 
@@ -117,7 +117,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   try {
-    const messages = await getCachedMessages(locale);
+    const messages = await loadCriticalMessages(locale as 'en' | 'zh');
     const loadTime = performance.now() - startTime;
     const cacheUsed = handleCacheMetrics(locale, loadTime);
 

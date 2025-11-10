@@ -313,6 +313,9 @@ jobs:
       - name: 验证翻译
         run: pnpm validate:translations
 
+      - name: i18n 形状等价检查
+        run: pnpm i18n:shape:check
+
   # 架构检查作业
   architecture:
     name: 架构检查

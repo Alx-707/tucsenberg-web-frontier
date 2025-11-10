@@ -45,6 +45,9 @@ jobs:
       - name: ESLint代码检查
         run: pnpm run lint:check
 
+      - name: i18n 形状等价检查
+        run: pnpm i18n:shape:check
+
       - name: 企业级质量门禁
         run: pnpm run quality:gate
 
