@@ -121,16 +121,10 @@ async function main() {
 
       const srcCritical = await readJson(srcCriticalPath);
       const srcDeferred = await readJson(srcDeferredPath);
-      const pubCritical = await readJson(pubCriticalPath);
-      const pubDeferred = await readJson(pubDeferredPath);
 
       const srcSet = asSet([
         ...collectLeafPaths(srcCritical),
         ...collectLeafPaths(srcDeferred),
-      ]);
-      const pubSet = asSet([
-        ...collectLeafPaths(pubCritical),
-        ...collectLeafPaths(pubDeferred),
       ]);
       const fullSet = asSet(collectLeafPaths(full[locale]));
 
@@ -150,20 +144,35 @@ async function main() {
         });
       }
 
-      // public vs src split
-      const pubMinusSrc = diffSets(pubSet, srcSet);
-      const srcMinusPub = diffSets(srcSet, pubSet);
-      if (pubMinusSrc.length || srcMinusPub.length) {
-        result.ok = false;
-        result.issues.push({
-          type: 'public-vs-src-split-mismatch',
-          locale,
-          message: `public/messages/${locale}/{critical,deferred}.json union != messages/${locale}/{critical,deferred}.json union`,
-          extraInPublic: pubMinusSrc.slice(0, 50),
-          missingInPublic: srcMinusPub.slice(0, 50),
-          extraInPublicCount: pubMinusSrc.length,
-          missingInPublicCount: srcMinusPub.length,
-        });
+      // public vs src split (optional if public not generated yet)
+      const hasPubCritical = fs.existsSync(pubCriticalPath);
+      const hasPubDeferred = fs.existsSync(pubDeferredPath);
+      if (hasPubCritical && hasPubDeferred) {
+        const pubCritical = await readJson(pubCriticalPath);
+        const pubDeferred = await readJson(pubDeferredPath);
+        const pubSet = asSet([
+          ...collectLeafPaths(pubCritical),
+          ...collectLeafPaths(pubDeferred),
+        ]);
+
+        const pubMinusSrc = diffSets(pubSet, srcSet);
+        const srcMinusPub = diffSets(srcSet, pubSet);
+        if (pubMinusSrc.length || srcMinusPub.length) {
+          result.ok = false;
+          result.issues.push({
+            type: 'public-vs-src-split-mismatch',
+            locale,
+            message: `public/messages/${locale}/{critical,deferred}.json union != messages/${locale}/{critical,deferred}.json union`,
+            extraInPublic: pubMinusSrc.slice(0, 50),
+            missingInPublic: srcMinusPub.slice(0, 50),
+            extraInPublicCount: pubMinusSrc.length,
+            missingInPublicCount: srcMinusPub.length,
+          });
+        }
+      } else {
+        console.warn(
+          `[i18n-shape-check] public/messages/${locale} not found; skip public parity sub-check`,
+        );
       }
     }
 
