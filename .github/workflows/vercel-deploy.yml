@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: false
+          persist-credentials: false
 
       - name: 设置 pnpm
         uses: pnpm/action-setup@v4
@@ -71,6 +72,8 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
+          persist-credentials: false
+
           submodules: false
 
       # 确保先安装 pnpm，再启用 setup-node 的 pnpm 缓存，避免缓存阶段找不到 pnpm
@@ -181,6 +184,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: false
+          persist-credentials: false
 
       - name: 等待部署就绪（增强版）
         run: |
