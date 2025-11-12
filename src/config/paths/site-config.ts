@@ -30,6 +30,7 @@ export const SITE_CONFIG = {
   contact: {
     phone: '+1-555-0123',
     email: 'contact@tucsenberg.com',
+    whatsappNumber: process.env['NEXT_PUBLIC_WHATSAPP_NUMBER'] ?? '+1-555-0123',
   },
 } as const;
 

@@ -66,6 +66,12 @@ export const env = createEnv({
       .transform((val) => val === 'true')
       .default('true'),
     CSP_REPORT_URI: z.string().url().optional(),
+
+    // Feature Flags
+    ENABLE_WHATSAPP_CHAT: z
+      .string()
+      .transform((val) => val === 'true')
+      .default('true'),
   },
 
   /**
@@ -99,6 +105,7 @@ export const env = createEnv({
       .string()
       .transform((val) => val === 'true')
       .default('true'),
+    NEXT_PUBLIC_WHATSAPP_NUMBER: z.string().optional(),
 
     // Development Tools
     NEXT_PUBLIC_DISABLE_REACT_SCAN: z
@@ -159,6 +166,7 @@ export const env = createEnv({
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
     SECURITY_HEADERS_ENABLED: process.env.SECURITY_HEADERS_ENABLED,
     CSP_REPORT_URI: process.env.CSP_REPORT_URI,
+    ENABLE_WHATSAPP_CHAT: process.env.ENABLE_WHATSAPP_CHAT,
 
     // Client
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -173,6 +181,7 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_ENABLE_ERROR_REPORTING,
     NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING:
       process.env.NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING,
+    NEXT_PUBLIC_WHATSAPP_NUMBER: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER,
     NEXT_PUBLIC_DISABLE_REACT_SCAN: process.env.NEXT_PUBLIC_DISABLE_REACT_SCAN,
     NEXT_PUBLIC_DISABLE_DEV_TOOLS: process.env.NEXT_PUBLIC_DISABLE_DEV_TOOLS,
     NEXT_PUBLIC_TEST_MODE: process.env.NEXT_PUBLIC_TEST_MODE,

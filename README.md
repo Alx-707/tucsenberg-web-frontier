@@ -81,6 +81,12 @@ TURNSTILE_SECRET_KEY=你的服务端私钥
 
 针对额外安全策略（如限制域名、Action 值）可使用：`TURNSTILE_ALLOWED_HOSTS`、`TURNSTILE_EXPECTED_ACTION`、`NEXT_PUBLIC_TURNSTILE_ACTION`。
 
+## ⚙️ 配置驱动特性
+
+- **联系表单配置**：`src/config/contact-form-config.ts` 提供字段顺序、启用状态以及校验配置，并通过 `buildFormFieldsFromConfig` 与 `createContactFormSchemaFromConfig` 同步前后端字段定义。
+- **WhatsApp 支持**：`FEATURE_FLAGS.ENABLE_WHATSAPP_CHAT`（可通过 `ENABLE_WHATSAPP_CHAT` 环境变量关闭）配合 `SITE_CONFIG.contact.whatsappNumber`（可通过 `NEXT_PUBLIC_WHATSAPP_NUMBER` 覆盖）自动在右下角注入 `WhatsAppFloatingButton`。
+- **主题与变量**：`src/config/theme-customization.ts` 定义品牌色、布局与组件默认样式，`getThemeCssVariables()` 注入 CSS 变量，并将 `THEME_CUSTOMIZATION.components.button` 应用于所有 `Button` 默认变体。
+
 ## 🚀 快速开始
 
 ### 1. 克隆项目

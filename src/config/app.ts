@@ -193,6 +193,8 @@ export const FEATURE_FLAGS = {
   ENABLE_ERROR_TRACKING: env.ENABLE_ERROR_TRACKING ?? true,
   /** 启用A/B测试 */
   ENABLE_AB_TESTING: env.ENABLE_AB_TESTING ?? false,
+  /** 启用 WhatsApp 客户支持入口 */
+  ENABLE_WHATSAPP_CHAT: env.ENABLE_WHATSAPP_CHAT ?? true,
   /** 启用调试模式 */
   ENABLE_DEBUG_MODE: env.NODE_ENV === 'development',
 } as const;

@@ -150,6 +150,10 @@ export const env = createEnv({
       .string()
       .transform((val) => val === 'true')
       .optional(),
+    ENABLE_WHATSAPP_CHAT: z
+      .string()
+      .transform((val) => val === 'true')
+      .optional(),
   },
 
   /**
@@ -314,6 +318,7 @@ export const env = createEnv({
     ENABLE_PERFORMANCE_MONITORING: process.env.ENABLE_PERFORMANCE_MONITORING,
     ENABLE_ERROR_TRACKING: process.env.ENABLE_ERROR_TRACKING,
     ENABLE_AB_TESTING: process.env.ENABLE_AB_TESTING,
+    ENABLE_WHATSAPP_CHAT: process.env.ENABLE_WHATSAPP_CHAT,
 
     // Client
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

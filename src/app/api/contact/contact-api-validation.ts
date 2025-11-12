@@ -5,10 +5,17 @@
 
 import { z } from 'zod';
 import { airtableService } from '@/lib/airtable';
+import { contactFieldValidators } from '@/lib/form-schema/contact-field-validators';
+import { type ContactFormData } from '@/lib/form-schema/contact-form-schema';
 import { logger } from '@/lib/logger';
 import { resendService } from '@/lib/resend';
-import { contactFormSchema, type ContactFormData } from '@/lib/validations';
 import { verifyTurnstile } from '@/app/api/contact/contact-api-utils';
+import { mapZodIssueToErrorKey } from '@/app/api/contact/contact-form-error-utils';
+import {
+  CONTACT_FORM_CONFIG,
+  createContactFormSchemaFromConfig,
+  type ContactFormFieldValues,
+} from '@/config/contact-form-config';
 import {
   ANIMATION_DURATION_VERY_SLOW,
   COUNT_TEN,
@@ -16,6 +23,11 @@ import {
   SECONDS_PER_MINUTE,
   ZERO,
 } from '@/constants';
+
+const contactFormSchema = createContactFormSchemaFromConfig(
+  CONTACT_FORM_CONFIG,
+  contactFieldValidators,
+);
 
 /**
  * 扩展的联系表单模式，包含Turnstile token
@@ -26,7 +38,10 @@ export const contactFormWithTokenSchema = contactFormSchema.extend({
   submittedAt: z.string(),
 });
 
-export type ContactFormWithToken = z.infer<typeof contactFormWithTokenSchema>;
+export type ContactFormWithToken = ContactFormFieldValues & {
+  turnstileToken: string;
+  submittedAt: string;
+};
 
 /**
  * 验证表单数据
@@ -42,10 +57,7 @@ export async function validateFormData(body: unknown, clientIP: string) {
     });
 
     const errorMessages = validationResult.error.issues.map(
-      (error: z.ZodIssue) => {
-        const field = error.path.join('.');
-        return `${field}: ${error.message}`;
-      },
+      mapZodIssueToErrorKey,
     );
 
     return {
@@ -56,7 +68,7 @@ export async function validateFormData(body: unknown, clientIP: string) {
     };
   }
 
-  const formData = validationResult.data;
+  const formData = validationResult.data as unknown as ContactFormWithToken;
 
   // 验证提交时间（防止重放攻击）
   const submittedAt = new Date(formData.submittedAt);
@@ -124,18 +136,21 @@ export async function processFormSubmission(
   // 并行处理邮件发送和数据存储
   const [emailResult, airtableResult] = await Promise.allSettled([
     resendService.sendContactFormEmail(emailData),
-    airtableService.createContact({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      company: formData.company,
-      phone: formData.phone,
-      subject: formData.subject,
-      message: formData.message,
-      acceptPrivacy: true, // 已通过验证，默认为true
-      marketingConsent: formData.marketingConsent || false,
-      website: formData.website,
-    }),
+    (() => {
+      const payload = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        company: formData.company,
+        phone: formData.phone ?? '',
+        subject: formData.subject ?? '',
+        message: formData.message,
+        acceptPrivacy: true,
+        marketingConsent: formData.marketingConsent ?? false,
+        website: formData.website ?? '',
+      } satisfies ContactFormFieldValues;
+      return airtableService.createContact(payload);
+    })(),
   ]);
 
   // 检查结果

@@ -122,6 +122,7 @@ interface EnvVariables {
   ENABLE_PERFORMANCE_MONITORING?: string;
   ENABLE_ERROR_TRACKING?: string;
   ENABLE_AB_TESTING?: string;
+  ENABLE_WHATSAPP_CHAT?: string;
 
   // Public environment variables (prefixed with NEXT_PUBLIC_)
   NEXT_PUBLIC_APP_URL?: string;
@@ -135,6 +136,7 @@ interface EnvVariables {
   NEXT_PUBLIC_ENABLE_DEBUG_MODE?: string;
   NEXT_PUBLIC_TEST_MODE?: string;
   NEXT_PUBLIC_SECURITY_MODE?: string;
+  NEXT_PUBLIC_WHATSAPP_NUMBER?: string;
 }
 
 // Global module declarations for all possible import paths

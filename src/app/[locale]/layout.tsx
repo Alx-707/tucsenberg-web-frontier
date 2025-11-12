@@ -3,6 +3,7 @@ import { generateLocaleMetadata } from '@/app/[locale]/layout-metadata';
 import { generatePageStructuredData } from '@/app/[locale]/layout-structured-data';
 import '@/app/globals.css';
 import { Suspense, type ReactNode } from 'react';
+import nextDynamic from 'next/dynamic';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
@@ -18,6 +19,12 @@ import { EnterpriseAnalyticsIsland } from '@/components/monitoring/enterprise-an
 import { WebVitalsIndicator } from '@/components/performance/web-vitals-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemePerformanceMonitor } from '@/components/theme/theme-performance-monitor';
+import { getAppConfig } from '@/config/app';
+import { SITE_CONFIG } from '@/config/paths/site-config';
+import {
+  getThemeCssVariables,
+  THEME_CUSTOMIZATION,
+} from '@/config/theme-customization';
 import { MAGIC_0_1 } from '@/constants/decimal';
 import { routing } from '@/i18n/routing';
 
@@ -28,6 +35,19 @@ export const revalidate = 3600;
 
 // 重新导出元数据生成函数
 export const generateMetadata = generateLocaleMetadata;
+
+const LazyWhatsAppFloatingButton = nextDynamic(
+  () =>
+    import('@/components/whatsapp/whatsapp-floating-button').then(
+      (mod) => mod.WhatsAppFloatingButton,
+    ),
+  {
+    loading: () => null,
+    ssr: false,
+  },
+);
+
+const THEME_CSS_VARIABLES = getThemeCssVariables();
 
 interface LocaleLayoutProps {
   children: ReactNode;
@@ -51,6 +71,11 @@ export default async function LocaleLayout({
 
   const isDevelopment = process.env.NODE_ENV === 'development';
 
+  const appConfig = getAppConfig();
+  const showWhatsAppButton =
+    appConfig.features.ENABLE_WHATSAPP_CHAT &&
+    Boolean(SITE_CONFIG.contact.whatsappNumber);
+
   const headerList = await headers();
   const nonce = headerList.get('x-csp-nonce') ?? undefined;
 
@@ -72,6 +97,8 @@ export default async function LocaleLayout({
     >
       <body
         className='flex min-h-screen flex-col antialiased'
+        data-header-style={THEME_CUSTOMIZATION.layout.headerStyle}
+        style={THEME_CSS_VARIABLES}
         suppressHydrationWarning
       >
         {/* JSON-LD 结构化数据 */}
@@ -135,6 +162,14 @@ export default async function LocaleLayout({
 
             {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
             <LazyToaster />
+
+            {showWhatsAppButton && (
+              <Suspense fallback={null}>
+                <LazyWhatsAppFloatingButton
+                  number={SITE_CONFIG.contact.whatsappNumber}
+                />
+              </Suspense>
+            )}
 
             {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
             {process.env.NODE_ENV === 'production' ? (

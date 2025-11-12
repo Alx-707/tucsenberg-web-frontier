@@ -1,6 +1,7 @@
 import { act } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ContactFormContainer } from '@/components/forms/contact-form-container';
+import * as contactFormConfig from '@/config/contact-form-config';
 import { fireEvent, render, screen } from '@/test/utils';
 
 // 确保使用真实的Zod库和validations模块
@@ -55,8 +56,9 @@ const mockT = vi.fn((key: string) => {
     marketingConsent: 'I agree to receive marketing communications',
   };
 
-  return Object.prototype.hasOwnProperty.call(translations, key)
-    ? translations[key]
+  const normalizedKey = key.split('.').pop() ?? key;
+  return Object.prototype.hasOwnProperty.call(translations, normalizedKey)
+    ? translations[normalizedKey]
     : key; // key 来自测试数据，安全
 });
 
@@ -231,5 +233,57 @@ describe('ContactFormContainer - 剩余高级测试', () => {
       const alertElement = screen.getByRole('alert');
       expect(alertElement).toHaveClass('text-red-800');
     });
+  });
+});
+
+describe('ContactFormContainer - 配置驱动', () => {
+  const baseField = (
+    overrides: Partial<contactFormConfig.ContactFormFieldDescriptor> = {},
+  ): contactFormConfig.ContactFormFieldDescriptor => ({
+    key: 'email',
+    enabled: true,
+    required: true,
+    type: 'email',
+    order: 1,
+    i18nKey: 'email',
+    labelKey: 'contact.form.email',
+    placeholderKey: 'contact.form.emailPlaceholder',
+    isCheckbox: false,
+    isHoneypot: false,
+    ...overrides,
+  });
+
+  let builderSpy: ReturnType<typeof vi.spyOn> | null = null;
+
+  afterEach(() => {
+    builderSpy?.mockRestore();
+    builderSpy = null;
+  });
+
+  beforeEach(() => {
+    mockUseActionState.mockReturnValue([null, vi.fn(), false]);
+  });
+
+  it('根据配置控制 required 与星号', () => {
+    builderSpy = vi
+      .spyOn(contactFormConfig, 'buildFormFieldsFromConfig')
+      .mockReturnValue([baseField({ required: false })]);
+
+    render(<ContactFormContainer />);
+
+    const emailLabel = screen.getByText('Email');
+    expect(emailLabel.className).not.toContain("after:content-['*']");
+    const emailInput = screen.getByLabelText(/email/i);
+    expect(emailInput).not.toHaveAttribute('required');
+  });
+
+  it('字段禁用时不渲染', () => {
+    builderSpy = vi
+      .spyOn(contactFormConfig, 'buildFormFieldsFromConfig')
+      .mockReturnValue([baseField()]);
+
+    render(<ContactFormContainer />);
+
+    expect(screen.queryByLabelText(/accept.*privacy/i)).toBeNull();
   });
 });

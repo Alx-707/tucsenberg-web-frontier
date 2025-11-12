@@ -1,292 +1,265 @@
 {
   "tasks": [
     {
-      "id": "4a1d21ab-7688-41d5-b48a-49b9565612ae",
-      "name": "Vitest 全局 fetch polyfill 与 mock",
-      "description": "在 Vitest 全局 setup 中为 Node 环境提供 fetch Headers Response 并对外部化消息请求进行稳定 mock 避免未启动 server 时 ECONNREFUSED",
-      "notes": "如个别用例需真实网络可在用例内恢复原 fetch",
-      "status": "completed",
+      "id": "b4f3c710-3a72-4c3b-8571-4c487ec48215",
+      "name": "建立 Contact Form 配置模块（类型/默认值/Zod/Builder）",
+      "description": "新增 src/config/contact-form-config.ts，定义字段集合、特性与校验配置；提供 CONTACT_FORM_CONFIG 默认值、contactFormConfigSchema、createContactFormSchemaFromConfig（动态 Zod 组合）、buildFormFieldsFromConfig（将配置映射为 UI 字段描述）。默认配置严格对齐现有必填与顺序。",
+      "notes": "保持默认行为与现状一致；配置支持未来 schemaVersion 迁移。",
+      "status": "COMPLETE",
       "dependencies": [],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T09:18:26.789Z",
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:21:21.832699Z",
       "relatedFiles": [
         {
-          "path": "src/test/setup.ts",
-          "type": "TO_MODIFY",
-          "description": "加入 fetch 与 Response polyfill 及全局 mock"
+          "path": "src/config/contact-form-config.ts",
+          "type": "CREATE",
+          "description": "新建配置模块"
         },
         {
-          "path": "vitest.config.mts",
+          "path": "src/lib/validations.ts",
           "type": "REFERENCE",
-          "description": "确保已包含 setupFiles 配置"
+          "description": "复用既有常量与 helpers"
         },
         {
-          "path": "src/lib/i18n-performance.ts",
+          "path": "src/app/actions.ts",
           "type": "REFERENCE",
-          "description": "该文件使用 fetch 读取 public messages"
-        },
-        {
-          "path": "src/lib/__tests__/i18n-performance.test.ts",
-          "type": "REFERENCE",
-          "description": "相关单测位置"
+          "description": "后续接入动态 Schema"
         }
       ],
-      "implementationGuide": "pseudocode:\n- 在 src/test/setup.ts 如无全局 fetch 则从 undici 引入 fetch Headers Response Request 并以 vi.stubGlobal 注册\n- 再以 vi.stubGlobal('fetch', async ()=> new Response(JSON.stringify({}), {status:200, headers:{'content-type':'application/json'}})) 返回空对象\n- 确认 vitest.config.mts 已加载 setupFiles",
-      "verificationCriteria": "执行 pnpm test 指向 I18n Performance 相关用例 不再出现 ECONNREFUSED 或 fetch failed 且测试通过",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
+      "implementationGuide": "pseudocode:\n- 定义 FieldKey 集合: firstName, lastName, email, company, message, phone, subject, acceptPrivacy, marketingConsent, website\n- 定义 FieldConfig: enabled, required, order, type(text/email/tel/textarea), i18nKey\n- 定义 Features: enableTurnstile, showPrivacyCheckbox, showMarketingConsent\n- 定义 Validation: emailDomainWhitelist, messageMinLength, messageMaxLength\n- 导出 CONTACT_FORM_CONFIG 与 contactFormConfigSchema\n- 导出 createContactFormSchemaFromConfig(cfg) 与 buildFormFieldsFromConfig(cfg)",
+      "verificationCriteria": "存在 CONTACT_FORM_CONFIG 与 Zod schema；默认配置与现状等价；builder 函数可按配置生成字段描述与 Schema。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
     },
     {
-      "id": "9db1df4c-c5f6-4002-96e9-02d85f77f9b1",
-      "name": "i18n-performance.ts 增加 fetch 容错回退",
-      "description": "为客户端共享层外部化消息加载加入 try catch 失败或非 2xx 返回空对象并记录监控 避免测试与运行态无服务或瞬时失败时崩溃",
-      "notes": "该模块被客户端组件使用 禁止引入 fs 回退返回空对象即可避免 500",
-      "status": "completed",
+      "id": "43de8078-02fe-470b-9f7c-7466157c3ff4",
+      "name": "抽取字段校验器与动态 Schema 生成器",
+      "description": "在 src/lib/form-schema/ 下新增 contact-field-validators.ts 与 contact-form-schema.ts，将 validations 细化为字段级 validator，并暴露 createContactFormSchemaFromConfig 供服务端与 UI 共享。",
+      "notes": "不大改 validations.ts，新增 builder 层保持兼容。",
+      "status": "COMPLETE",
       "dependencies": [
         {
-          "taskId": "4a1d21ab-7688-41d5-b48a-49b9565612ae"
+          "taskId": "b4f3c710-3a72-4c3b-8571-4c487ec48215"
         }
       ],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T09:18:26.789Z",
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:25:04.668047Z",
       "relatedFiles": [
         {
-          "path": "src/lib/i18n-performance.ts",
-          "type": "TO_MODIFY",
-          "description": "为 124 至 131 行附近的 fetch 添加容错",
-          "lineStart": 122,
-          "lineEnd": 131
+          "path": "src/lib/form-schema/contact-field-validators.ts",
+          "type": "CREATE",
+          "description": "字段级 Zod 规则"
         },
         {
-          "path": "src/components/i18n/translation-preloader.tsx",
-          "type": "REFERENCE",
-          "description": "客户端预加载使用位置"
+          "path": "src/lib/form-schema/contact-form-schema.ts",
+          "type": "CREATE",
+          "description": "动态 Schema 生成器"
         },
         {
-          "path": "src/i18n/request.ts",
+          "path": "src/lib/validations.ts",
           "type": "REFERENCE",
-          "description": "请求配置与回退路径"
+          "description": "常量与辅助函数复用"
         }
       ],
-      "implementationGuide": "pseudocode:\ntry { const res = await fetch(url, { next: { revalidate: 3600 }}); if (!res.ok) throw new Error('bad status'); return await res.json(); } catch (e) { I18nPerformanceMonitor.recordError(); return {}; }",
-      "verificationCriteria": "单测执行不再抛出 fetch 异常 页面在该模块失败时保持 200",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
+      "implementationGuide": "pseudocode:\n- contact-field-validators.ts: 导出 firstName(), lastName(), email(), company(), message(), phone(opt), subject(opt), acceptPrivacy(), marketingConsent(opt), website(honeypot)\n- 可注入 email 域白名单 refine\n- contact-form-schema.ts: 依据配置组装 z.object 动态结构",
+      "verificationCriteria": "可独立从配置生成 Zod schema；email 域白名单可注入；默认生成行为与现状一致；含单元测试。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
     },
     {
-      "id": "782cd7d0-4ba7-4ce9-9fc8-46bf63a28a43",
-      "name": "load-messages.ts 服务端加载最终回退",
-      "description": "在 fetch 与文件读取均失败时返回空对象或回退到默认 locale 而不是抛错 补充运行时 locale 白名单校验 非 en 或 zh 回退默认",
-      "notes": "维持 unstable_cache 策略不变 仅改变最终失败分支行为",
-      "status": "completed",
+      "id": "9e8c94a7-6ed7-43e3-abf3-5a9a6dab4d60",
+      "name": "UI：ContactFormContainer 接入配置（enabled/required/order）",
+      "description": "在不破坏既有结构的前提下，依据配置控制字段渲染、required 属性与星号显示；保持 Turnstile 与速率限制逻辑不变。必要时在 FormFields 按配置重排。",
+      "notes": "第一阶段不切换至 React19FormTemplate，降低风险。",
+      "status": "COMPLETE",
       "dependencies": [
         {
-          "taskId": "9db1df4c-c5f6-4002-96e9-02d85f77f9b1"
+          "taskId": "b4f3c710-3a72-4c3b-8571-4c487ec48215"
         }
       ],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T09:18:26.789Z",
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:29:53.261239Z",
       "relatedFiles": [
         {
-          "path": "src/lib/load-messages.ts",
+          "path": "src/components/forms/contact-form-container.tsx",
           "type": "TO_MODIFY",
-          "description": "增强 96 至 131 行失败分支回退并校验 locale",
-          "lineStart": 90,
-          "lineEnd": 134
+          "description": "注入配置驱动渲染"
         },
         {
-          "path": "src/app/[locale]/page.tsx",
+          "path": "src/components/forms/fields/contact-fields.tsx",
           "type": "REFERENCE",
-          "description": "使用位置 home 页"
+          "description": "字段组件保留"
+        },
+        {
+          "path": "src/components/forms/fields/name-fields.tsx",
+          "type": "REFERENCE",
+          "description": "字段组件保留"
+        },
+        {
+          "path": "src/components/forms/fields/message-field.tsx",
+          "type": "REFERENCE",
+          "description": "字段组件保留"
+        },
+        {
+          "path": "src/components/forms/fields/checkbox-fields.tsx",
+          "type": "REFERENCE",
+          "description": "字段组件保留"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- import CONTACT_FORM_CONFIG\n- const uiFields = buildFormFieldsFromConfig(CONTACT_FORM_CONFIG)\n- 过滤 disabled 字段；按 order 排序；为 required 字段设置 required 与星号\n- showPrivacyCheckbox=false 则不渲染隐私复选框",
+      "verificationCriteria": "关闭某字段 enabled 后 UI 不渲染；required 切换影响 required 属性与星号；默认配置下渲染结果与现状一致。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
+    },
+    {
+      "id": "4c0218e5-4843-4e0a-8977-f4155dabe1d6",
+      "name": "服务端：Actions 与 API 使用动态 Schema",
+      "description": "在 actions.ts 与 contact-api-validation.ts 将静态 contactFormSchema 替换为动态 Schema，并增加邮箱域白名单错误键映射（errors.email.domainNotAllowed）。",
+      "notes": "确保默认配置下行为完全一致。",
+      "status": "COMPLETE",
+      "dependencies": [
+        {
+          "taskId": "43de8078-02fe-470b-9f7c-7466157c3ff4"
+        }
+      ],
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:33:57.071033Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/actions.ts",
+          "type": "TO_MODIFY",
+          "description": "替换 Schema 来源并补充错误键映射"
+        },
+        {
+          "path": "src/app/api/contact/contact-api-validation.ts",
+          "type": "TO_MODIFY",
+          "description": "替换 Schema 来源并补充错误键映射"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- import CONTACT_FORM_CONFIG 与 createContactFormSchemaFromConfig\n- const schema = createContactFormSchemaFromConfig(CONTACT_FORM_CONFIG)\n- 使用 schema.safeParse(data)\n- 对域白名单失败映射到 errors.email.domainNotAllowed\n- 保持 Turnstile/重放保护/Resend/Airtable/日志不变",
+      "verificationCriteria": "默认配置下现有用例全部通过；修改配置后 Server Action 与 API 校验一致；域白名单错误返回 errors.email.domainNotAllowed。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
+    },
+    {
+      "id": "7130a40c-e626-4314-a965-c760d6cde23e",
+      "name": "扩展 FeatureFlags 与站点配置（WhatsApp）",
+      "description": "扩展 src/config/app.ts FEATURE_FLAGS 增加 ENABLE_WHATSAPP_CHAT；在 site-config.ts 增加 contact.whatsappNumber（或 social.whatsapp）。",
+      "notes": "为 UI 按钮与后续集成提供统一来源。",
+      "status": "COMPLETE",
+      "dependencies": [],
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:38:36.149873Z",
+      "relatedFiles": [
+        {
+          "path": "src/config/app.ts",
+          "type": "TO_MODIFY",
+          "description": "增加 ENABLE_WHATSAPP_CHAT"
+        },
+        {
+          "path": "src/config/paths/site-config.ts",
+          "type": "TO_MODIFY",
+          "description": "增加 whatsappNumber"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- FEATURE_FLAGS: ENABLE_WHATSAPP_CHAT: env.ENABLE_WHATSAPP_CHAT ?? true\n- SITE_CONFIG.contact.whatsappNumber?: string\n- 导出类型更新，并为空值提供容错",
+      "verificationCriteria": "环境变量可开启或关闭聊天入口；SITE_CONFIG 存在 WhatsApp 号码并类型正确。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
+    },
+    {
+      "id": "c968f2a7-79db-496d-8dbf-22b046d13c3f",
+      "name": "实现 WhatsApp 悬浮按钮并在 Layout 受控注入",
+      "description": "新建组件 WhatsAppFloatingButton（支持 href=wa.me/号码），按 FEATURE_FLAGS.ENABLE_WHATSAPP_CHAT 与 SITE_CONFIG.contact.whatsappNumber 渲染；在 layout.tsx 条件注入，支持懒加载。",
+      "notes": "不依赖服务端 API，仅前端入口。",
+      "status": "COMPLETE",
+      "dependencies": [
+        {
+          "taskId": "7130a40c-e626-4314-a965-c760d6cde23e"
+        }
+      ],
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:41:04.563259Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/integrations/whatsapp-button.tsx",
+          "type": "CREATE",
+          "description": "悬浮按钮组件"
         },
         {
           "path": "src/app/[locale]/layout.tsx",
-          "type": "REFERENCE",
-          "description": "使用位置布局"
+          "type": "TO_MODIFY",
+          "description": "条件渲染按钮"
         }
       ],
-      "implementationGuide": "pseudocode:\nfunction sanitizeLocale(l){ return (l==='en'||l==='zh')?l:routing.defaultLocale; } const safe = sanitizeLocale(locale); try { const r = await fetch(url); if(!r.ok) throw new Error('bad'); return await r.json(); } catch { try { readFile(public/messages/...); return json; } catch { logger.error('final fallback failed'); return {}; } }",
-      "verificationCriteria": "E2E 中 i18n 重定向验证用例通过 服务端日志无 Cannot load critical messages 导致的 500 Lighthouse 不再报 ERRORED_DOCUMENT_REQUEST",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
+      "implementationGuide": "pseudocode:\n- 新建组件读取 flag 与 number，有效则渲染 fixed 位置按钮，aria-label 完整\n- 在 layout.tsx 懒加载并条件渲染，靠近 Footer 放置\n- 链接示例: https://wa.me/<number>",
+      "verificationCriteria": "开关打开且号码存在时显示按钮并可跳转；关闭时不渲染；懒加载不影响首屏。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
     },
     {
-      "id": "b610b222-aa51-4b1e-8cf7-5b5813e6efc8",
-      "name": "Playwright webServer 注入 NEXT_PUBLIC_BASE_URL",
-      "description": "为 Playwright 的 webServer 注入 NEXT_PUBLIC_BASE_URL=http://localhost:3000 确保运行态与加载器的 baseUrl 计算一致",
-      "notes": "LHCI 已通过 startServerCommand 启动应用 该任务为一致性增强",
-      "status": "completed",
+      "id": "ba2f3385-5e38-45dc-a5eb-c220ff97c4c8",
+      "name": "主题定制最小注入（单站点）",
+      "description": "新增 src/config/theme-customization.ts 定义 brand/layout 及组件默认变体；在 layout 注入 CSS 变量；组件默认值在未显式指定时生效。",
+      "notes": "轻量化，避免大改样式系统。",
+      "status": "COMPLETE",
+      "dependencies": [],
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:43:05.455799Z",
+      "relatedFiles": [
+        {
+          "path": "src/config/theme-customization.ts",
+          "type": "CREATE",
+          "description": "主题配置"
+        },
+        {
+          "path": "src/app/[locale]/layout.tsx",
+          "type": "TO_MODIFY",
+          "description": "注入 CSS 变量"
+        }
+      ],
+      "implementationGuide": "pseudocode:\n- THEME_CUSTOMIZATION = brand(primary,secondary,accent), layout(maxContentWidth, headerStyle), components(button defaultVariant/defaultSize)\n- layout.tsx 注入 :root CSS 变量或全局样式\n- 仅提供默认 fallback，不改变组件 API",
+      "verificationCriteria": "变更配置后主色等变量生效；未配置时维持现状；无明显性能回退。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
+    },
+    {
+      "id": "cecb847b-735c-4269-9303-f8715e85b36d",
+      "name": "测试与文档：动态 Schema/配置驱动 UI/WhatsApp 开关",
+      "description": "新增单元测试与文档：1) 动态 Schema 组合与邮箱白名单；2) ContactFormContainer 的 required/星号与启用/禁用；3) WhatsApp 按钮的 FeatureFlag 门控；4) 默认配置回归；更新 README/docs。",
+      "notes": "不扩大测试范围；重点覆盖配置分支与回归。",
+      "status": "COMPLETE",
       "dependencies": [
         {
-          "taskId": "782cd7d0-4ba7-4ce9-9fc8-46bf63a28a43"
+          "taskId": "4c0218e5-4843-4e0a-8977-f4155dabe1d6"
+        },
+        {
+          "taskId": "9e8c94a7-6ed7-43e3-abf3-5a9a6dab4d60"
+        },
+        {
+          "taskId": "c968f2a7-79db-496d-8dbf-22b046d13c3f"
         }
       ],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T09:18:26.789Z",
+      "createdAt": "2025-11-12T09:12:01.205Z",
+      "updatedAt": "2025-11-12T14:55:05.641083Z",
       "relatedFiles": [
         {
-          "path": "playwright.config.ts",
-          "type": "TO_MODIFY",
-          "description": "在 124 至 145 行的 env 中加入 NEXT_PUBLIC_BASE_URL",
-          "lineStart": 124,
-          "lineEnd": 145
-        },
-        {
-          "path": "lighthouserc.js",
-          "type": "REFERENCE",
-          "description": "Lighthouse 启动配置"
-        },
-        {
-          "path": ".github/workflows/ci.yml",
-          "type": "REFERENCE",
-          "description": "CI 任务定义"
-        }
-      ],
-      "implementationGuide": "pseudocode:\n在 playwright.config.ts 的 webServer.env 增加 NEXT_PUBLIC_BASE_URL: 'http://localhost:3000'",
-      "verificationCriteria": "E2E 启动日志显示以 NEXT_PUBLIC_BASE_URL=http://localhost:3000 运行 相关页面加载稳定",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
-    },
-    {
-      "id": "ea2c53c3-9e7a-4e01-8545-2a860991f92c",
-      "name": "CSP 生产收紧 去除 unsafe-inline 并保留 nonce",
-      "description": "调整 src/config/security.ts 生产环境 style-src 不再加入 unsafe-inline 保留 nonce 支持 与测试保持一致",
-      "notes": "如存在依赖内联样式的路径 后续逐步改造为外链或使用 nonce hash",
-      "status": "completed",
-      "dependencies": [],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T09:18:26.789Z",
-      "relatedFiles": [
-        {
-          "path": "src/config/security.ts",
-          "type": "TO_MODIFY",
-          "description": "修改生产环境 style-src 移除 unsafe-inline",
-          "lineStart": 40,
-          "lineEnd": 49
-        },
-        {
-          "path": "src/config/__tests__/security.test.ts",
-          "type": "REFERENCE",
-          "description": "CSP 相关单测"
-        },
-        {
-          "path": "src/lib/security-headers.ts",
-          "type": "REFERENCE",
-          "description": "头部转换与暴露位置"
-        }
-      ],
-      "implementationGuide": "pseudocode:\nif (isProduction) { styleSrc = ['self', ...(nonce?['nonce-'+nonce]:[]), 'https://fonts.googleapis.com']; } else { // dev 可保留 unsafe-inline }",
-      "verificationCriteria": "执行 pnpm test 指向 Security Configuration 相关用例通过 Code Quality 断言通过",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
-    },
-    {
-      "id": "89ae7528-4637-4e87-b8ad-cb2d766cc491",
-      "name": "新增回归测试 覆盖网络失败回退路径",
-      "description": "补充 i18n-performance 与 load-messages 的失败分支测试 模拟 fetch 失败或返回 500 验证回退返回空对象或默认消息且不抛错",
-      "notes": "确保未来变更不会再次引入 500 与 ECONNREFUSED",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "9db1df4c-c5f6-4002-96e9-02d85f77f9b1"
-        },
-        {
-          "taskId": "782cd7d0-4ba7-4ce9-9fc8-46bf63a28a43"
-        }
-      ],
-      "createdAt": "2025-11-09T09:18:26.789Z",
-      "updatedAt": "2025-11-09T14:57:30.000Z",
-      "relatedFiles": [
-        {
-          "path": "src/lib/__tests__/i18n-performance.network-failure.test.ts",
+          "path": "tests/contact-form/builder.test.ts",
           "type": "CREATE",
-          "description": "新增网络失败分支用例（fetch reject / 500）"
+          "description": "动态 Schema 组合测试"
         },
         {
-          "path": "src/lib/__tests__/load-messages.fallback.test.ts",
+          "path": "src/components/forms/__tests__/contact-form-container.test.tsx",
+          "type": "TO_MODIFY",
+          "description": "增加配置驱动用例"
+        },
+        {
+          "path": "src/components/integrations/__tests__/whatsapp-button.test.tsx",
           "type": "CREATE",
-          "description": "新增回退用例文件（fetch+readFile均失败）"
+          "description": "开关门控"
+        },
+        {
+          "path": "README.md",
+          "type": "TO_MODIFY",
+          "description": "新增配置与使用说明"
         }
       ],
-      "implementationGuide": "pseudocode:\n- i18n-performance.test 中 mock fetch reject 或返回 500 期望 getCachedMessages 返回 {}\n- 新增 load-messages.fallback.test.ts 模拟 fetch 与 readFile 均失败 期望 loadCriticalMessages 返回 {} 且不抛错",
-      "verificationCriteria": "执行 pnpm test 覆盖新增用例 失败分支不抛错且返回期望结构 覆盖率正常生成",
-      "analysisResult": "根因：1) 单测环境未启动本地服务，i18n-performance.ts 直接 fetch 本地 /messages/*，导致 ECONNREFUSED；2) 服务端翻译加载 load-messages.ts 在 fetch 与文件读取均失败时会 throw，引发页面 500，连带 E2E 与 Lighthouse 失败；3) 生产环境 CSP 仍包含 unsafe-inline 与测试预期不符。策略：优先稳住单测（mock fetch 与容错），再修复服务端加载器的最终回退，最后收紧 CSP。"
+      "implementationGuide": "pseudocode:\n- builder.test: 覆盖 enabled/required/order、隐私复选框关闭策略、域白名单\n- contact-form-container.test: required 与星号切换、字段隐藏\n- whatsapp-button.test: flag 与号码门控\n- README: 配置字段、示例与常见问题",
+      "verificationCriteria": "新增测试全部通过；默认配置下现有测试不回退；README 增加配置说明与示例。",
+      "analysisResult": "以配置优先贯穿 UI 与服务端：新增联系表单配置模块（类型、默认值、Zod 配置校验与动态 Schema 生成器），让基础必填字段可配置，同时维持现有 ContactFormContainer 与服务端处理链。扩展 FEATURE_FLAGS 启用 WhatsApp 聊天入口（懒加载 UI），并提供轻量主题配置（CSS 变量注入）。所有变更保持默认配置与现状一致，并补齐关键测试与文档。"
     }
-,
-    {
-      "id": "4f0a2b31-7f6b-4e3a-9c1d-7d0ef9e2b1a1",
-      "name": "Header：补充 data-testid=\"nav-switcher\"（最小化变更）",
-      "description": "在 Header 右侧导航/操作区真实容器补充 data-testid=\"nav-switcher\"，满足既有单测查询，不改变结构与样式",
-      "notes": "仅测试辅助标识，对生产无影响",
-      "status": "completed",
-      "dependencies": [],
-      "createdAt": "2025-11-10T08:20:00.000Z",
-      "updatedAt": "2025-11-10T08:20:00.000Z",
-      "relatedFiles": [
-        { "path": "src/components/layout/header.tsx", "type": "TO_MODIFY", "description": "右侧 actions 容器添加 data-testid=nav-switcher" },
-        { "path": "src/components/layout/__tests__/header.test.tsx", "type": "REFERENCE", "description": "相关断言位置" }
-      ],
-      "implementationGuide": "在 Header 的右上角 actions 容器添加 data-testid=\"nav-switcher\"，不改变任何业务逻辑",
-      "verificationCriteria": "pnpm test src/components/layout/__tests__/header.test.tsx 用例 2/2 通过"
-    },
-    {
-      "id": "b3d2c4f5-9a7e-4d1c-8b2f-6e5d4c3b2a19",
-      "name": "layout-fonts：统一 next/font/local 解析（全局 mock + alias）",
-      "description": "移除局部 vi.mock，改为在全局 setup 中 mock next/font/local 并通过 Vitest alias 指向 index.js，避免 ESM 目录导入错误",
-      "notes": "测试层改动，不影响生产构建",
-      "status": "completed",
-      "dependencies": [],
-      "createdAt": "2025-11-10T08:21:00.000Z",
-      "updatedAt": "2025-11-10T08:21:00.000Z",
-      "relatedFiles": [
-        { "path": "src/test/setup.ts", "type": "TO_MODIFY", "description": "提供 next/font/local 全局 mock（variable/className/style）" },
-        { "path": "vitest.config.mts", "type": "REFERENCE", "description": "resolve.alias 新增 'next/font/local': 'next/font/local/index.js'" },
-        { "path": "src/app/[locale]/__tests__/layout-fonts.test.ts", "type": "TO_MODIFY", "description": "移除冗余局部 mock，注释指向全局 setup" }
-      ],
-      "implementationGuide": "在 src/test/setup.ts 使用 vi.mock('next/font/local', ()=>({ default: (opts)=>({ variable: opts?.variable ?? '--font-local', className: 'local-font-class', style: { fontFamily: 'Local Font' } }) }))；确保 vitest.config.mts alias 覆盖目录导入",
-      "verificationCriteria": "pnpm test src/app/[locale]/__tests__/layout-fonts.test.ts 通过"
-    },
-    {
-      "id": "f2e1d0c9-b8a7-46d5-9132-0f9e8d7c6b5a",
-      "name": "load-messages：补充 deferred 分支对称回退用例",
-      "description": "在回归测试中新增 deferred.json 分支的 fetch+readFile 双失败最终返回 {}（不抛错）的对称性测试",
-      "notes": "保障 critical 与 deferred 行为一致",
-      "status": "completed",
-      "dependencies": [ { "taskId": "782cd7d0-4ba7-4ce9-9fc8-46bf63a28a43" } ],
-      "createdAt": "2025-11-10T08:22:00.000Z",
-      "updatedAt": "2025-11-10T08:22:00.000Z",
-      "relatedFiles": [
-        { "path": "src/lib/__tests__/load-messages.fallback.test.ts", "type": "TO_MODIFY", "description": "新增 deferred 分支对称性用例" },
-        { "path": "src/lib/load-messages.ts", "type": "REFERENCE", "description": "实现已具备对称回退，无需改动" }
-      ],
-      "implementationGuide": "在 fallback 测试文件中为 deferred 分支添加与 critical 相同的双失败场景断言",
-      "verificationCriteria": "pnpm test src/lib/__tests__/load-messages.fallback.test.ts 全部通过"
-    },
-    {
-      "id": "a7b6c5d4-e3f2-41a0-b9c8-7d6e5f4a3b2c",
-      "name": "CSP 运行时烟测验证（无代码变更）",
-      "description": "本地起服务访问 /en 与 /zh，检查浏览器控制台：不应出现 CSP 拦截或 nonce 相关报错（允许 Web Vitals 采集 400 日志）",
-      "notes": "验证范围：运行时核验；不修改任何代码",
-      "status": "completed",
-      "dependencies": [ { "taskId": "ea2c53c3-9e7a-4e01-8545-2a860991f92c" } ],
-      "createdAt": "2025-11-10T08:23:00.000Z",
-      "updatedAt": "2025-11-10T08:23:00.000Z",
-      "relatedFiles": [
-        { "path": "src/config/security.ts", "type": "REFERENCE", "description": "CSP 生成逻辑（此前已完成收紧）" }
-      ],
-      "implementationGuide": "pnpm dev 后使用自动化浏览器访问 /en 与 /zh，收集 console errorsOnly（期望无 CSP 相关错误）",
-      "verificationCriteria": "浏览器控制台无 'Refused to apply inline style' 等 CSP 违规；页面正常渲染"
-    },
-    {
-      "id": "c9d8e7f6-a5b4-43c2-9d10-2e3f4a5b6c7d",
-      "name": "测试层 fetch mock 行为文档化与开关说明",
-      "description": "为 src/test/setup.ts 的全局 fetch mock 添加完整注释，明确目的/范围/环境开关与示例使用",
-      "notes": "仅文档化注释，不改变逻辑",
-      "status": "completed",
-      "dependencies": [ { "taskId": "4a1d21ab-7688-41d5-b48a-49b9565612ae" } ],
-      "createdAt": "2025-11-10T08:24:00.000Z",
-      "updatedAt": "2025-11-10T08:24:00.000Z",
-      "relatedFiles": [
-        { "path": "src/test/setup.ts", "type": "TO_MODIFY", "description": "在 fetch mock 处补充 JSDoc 风格注释，说明 VITEST_USE_REAL_MESSAGES" }
-      ],
-      "implementationGuide": "在 fetch mock 段前添加注释块：Purpose/Scope/Environment switch/Example/Note",
-      "verificationCriteria": "打开 src/test/setup.ts 可读注释，CI 及本地测试仍全部通过"
-    }
-
   ]
 }

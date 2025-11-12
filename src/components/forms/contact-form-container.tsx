@@ -16,16 +16,17 @@ import { requestIdleCallback } from '@/lib/idle-callback';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/server-action-utils';
 import { type FormSubmissionStatus } from '@/lib/validations';
-import {
-  AdditionalFields,
-  CheckboxFields,
-  ContactFields,
-  MessageField,
-  NameFields,
-} from '@/components/forms/contact-form-fields';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { contactFormAction, type ContactFormResult } from '@/app/actions';
+import {
+  buildFormFieldsFromConfig,
+  CONTACT_FORM_CONFIG,
+  type ContactFormFieldDescriptor,
+} from '@/config/contact-form-config';
 import { FIVE_MINUTES_MS } from '@/constants';
 
 /**
@@ -269,28 +270,122 @@ interface FormFieldsProps {
  * 表单字段组件 - 组合所有字段，使用memo优化性能
  */
 const FormFields = memo(({ t, isPending }: FormFieldsProps) => {
+  const configuredFields = buildFormFieldsFromConfig(CONTACT_FORM_CONFIG);
+  const textInputs = configuredFields.filter(
+    (field) =>
+      !field.isCheckbox && field.type !== 'textarea' && !field.isHoneypot,
+  );
+  const textareas = configuredFields.filter(
+    (field) => field.type === 'textarea',
+  );
+  const checkboxFields = configuredFields.filter((field) => field.isCheckbox);
+  const honeypotField = configuredFields.find((field) => field.isHoneypot);
+
+  const renderLabelClass = (field: ContactFormFieldDescriptor) =>
+    [
+      'text-sm',
+      field.required
+        ? "after:ml-0.5 after:text-red-500 after:content-['*']"
+        : '',
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+  const renderPlaceholder = (field: ContactFormFieldDescriptor) =>
+    field.placeholderKey ? t(field.placeholderKey) : undefined;
+
   return (
     <>
-      <NameFields
-        t={t}
-        isPending={isPending}
-      />
-      <ContactFields
-        t={t}
-        isPending={isPending}
-      />
-      <AdditionalFields
-        t={t}
-        isPending={isPending}
-      />
-      <MessageField
-        t={t}
-        isPending={isPending}
-      />
-      <CheckboxFields
-        t={t}
-        isPending={isPending}
-      />
+      {textInputs.length > 0 && (
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+          {textInputs.map((field) => (
+            <div
+              key={field.key}
+              className='space-y-2'
+            >
+              <Label
+                htmlFor={field.key}
+                className={renderLabelClass(field)}
+              >
+                {t(field.labelKey)}
+              </Label>
+              <Input
+                id={field.key}
+                name={field.key}
+                type={field.type}
+                placeholder={renderPlaceholder(field)}
+                disabled={isPending}
+                required={field.required}
+                aria-describedby={`${field.key}-error`}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {textareas.map((field) => (
+        <div
+          key={field.key}
+          className='space-y-2'
+        >
+          <Label
+            htmlFor={field.key}
+            className={renderLabelClass(field)}
+          >
+            {t(field.labelKey)}
+          </Label>
+          <Textarea
+            id={field.key}
+            name={field.key}
+            placeholder={renderPlaceholder(field)}
+            disabled={isPending}
+            required={field.required}
+            rows={4}
+            aria-describedby={`${field.key}-error`}
+          />
+        </div>
+      ))}
+
+      {checkboxFields.length > 0 && (
+        <div className='space-y-4'>
+          {checkboxFields.map((field) => (
+            <div
+              key={field.key}
+              className='space-y-2'
+            >
+              <div className='flex items-center space-x-2'>
+                <input
+                  id={field.key}
+                  name={field.key}
+                  type='checkbox'
+                  disabled={isPending}
+                  required={field.required}
+                  className='border-input h-4 w-4 rounded border'
+                  aria-describedby={`${field.key}-error`}
+                />
+                <Label
+                  htmlFor={field.key}
+                  className={renderLabelClass(field)}
+                >
+                  {t(field.labelKey)}
+                </Label>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {honeypotField && (
+        <input
+          id={honeypotField.key}
+          name={honeypotField.key}
+          type='text'
+          autoComplete='off'
+          tabIndex={-1}
+          aria-hidden='true'
+          className='sr-only'
+        />
+      )}
     </>
   );
 });

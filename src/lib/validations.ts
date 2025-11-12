@@ -1,164 +1,13 @@
 import { z } from 'zod';
 import {
-  ANIMATION_DURATION_VERY_SLOW,
-  COUNT_FIVE,
-  COUNT_PAIR,
-  COUNT_TEN,
-  PERCENTAGE_FULL,
-  PERCENTAGE_HALF,
-  SECONDS_PER_MINUTE,
-  ZERO,
-} from '@/constants';
-import { MAGIC_15 } from '@/constants/count';
+  contactFormSchema,
+  type ContactFormData,
+} from '@/lib/form-schema/contact-form-schema';
+import { CONTACT_FORM_VALIDATION_CONSTANTS } from '@/config/contact-form-config';
+import { COUNT_FIVE, COUNT_TEN, ZERO } from '@/constants';
 
-/**
- * 验证常量定义
- * Validation constants to avoid magic numbers
- */
-const VALIDATION_CONSTANTS = {
-  // Name field constraints
-  NAME_MIN_LENGTH: COUNT_PAIR,
-  NAME_MAX_LENGTH: PERCENTAGE_HALF,
-
-  // Email constraints
-  EMAIL_MAX_LENGTH: PERCENTAGE_FULL,
-
-  // Company constraints
-  COMPANY_MIN_LENGTH: COUNT_PAIR,
-  COMPANY_MAX_LENGTH: PERCENTAGE_FULL,
-
-  // Message constraints
-  MESSAGE_MIN_LENGTH: COUNT_TEN,
-  MESSAGE_MAX_LENGTH: ANIMATION_DURATION_VERY_SLOW,
-
-  // Subject constraints
-  SUBJECT_MIN_LENGTH: COUNT_FIVE,
-  SUBJECT_MAX_LENGTH: PERCENTAGE_FULL,
-
-  // Phone constraints
-  PHONE_MAX_DIGITS: MAGIC_15,
-
-  // Honeypot constraint
-  HONEYPOT_MAX_LENGTH: ZERO,
-
-  // Rate limiting
-  DEFAULT_COOLDOWN_MINUTES: COUNT_FIVE,
-  COOLDOWN_TO_MS_MULTIPLIER: SECONDS_PER_MINUTE * 1000, // Convert to milliseconds
-  MS_PER_SECOND: ANIMATION_DURATION_VERY_SLOW,
-} as const;
-
-/**
- * 联系表单验证模式
- * Contact form validation schema with comprehensive validation rules
- */
-export const contactFormSchema = z.object({
-  firstName: z
-    .string()
-    .min(
-      VALIDATION_CONSTANTS.NAME_MIN_LENGTH,
-      `First name must be at least ${VALIDATION_CONSTANTS.NAME_MIN_LENGTH} characters`,
-    )
-    .max(
-      VALIDATION_CONSTANTS.NAME_MAX_LENGTH,
-      `First name must be less than ${VALIDATION_CONSTANTS.NAME_MAX_LENGTH} characters`,
-    )
-    .regex(
-      /^[a-zA-Z\s\u4e00-\u9fff]+$/,
-      'First name can only contain letters and spaces',
-    ),
-
-  lastName: z
-    .string()
-    .min(
-      VALIDATION_CONSTANTS.NAME_MIN_LENGTH,
-      `Last name must be at least ${VALIDATION_CONSTANTS.NAME_MIN_LENGTH} characters`,
-    )
-    .max(
-      VALIDATION_CONSTANTS.NAME_MAX_LENGTH,
-      `Last name must be less than ${VALIDATION_CONSTANTS.NAME_MAX_LENGTH} characters`,
-    )
-    .regex(
-      /^[a-zA-Z\s\u4e00-\u9fff]+$/,
-      'Last name can only contain letters and spaces',
-    ),
-
-  email: z
-    .string()
-    .email('Please enter a valid email address')
-    .max(
-      VALIDATION_CONSTANTS.EMAIL_MAX_LENGTH,
-      `Email must be less than ${VALIDATION_CONSTANTS.EMAIL_MAX_LENGTH} characters`,
-    )
-    .transform((val) => val.toLowerCase()),
-
-  company: z
-    .string()
-    .transform((val) => val.trim())
-    .refine(
-      (val) =>
-        val.length >= VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH &&
-        val.length <= VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH,
-      {
-        message: `Company name must be between ${VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH} and ${VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH} characters`,
-      },
-    )
-    .refine((val) => /^[a-zA-Z0-9\s\u4e00-\u9fff&.,'-]+$/.test(val), {
-      message: 'Company name contains invalid characters',
-    }),
-
-  message: z
-    .string()
-    .min(
-      VALIDATION_CONSTANTS.MESSAGE_MIN_LENGTH,
-      `Message must be at least ${VALIDATION_CONSTANTS.MESSAGE_MIN_LENGTH} characters`,
-    )
-    .max(
-      VALIDATION_CONSTANTS.MESSAGE_MAX_LENGTH,
-      `Message must be less than ${VALIDATION_CONSTANTS.MESSAGE_MAX_LENGTH} characters`,
-    )
-    .transform((val) => val.trim()),
-
-  // Optional fields for enhanced form functionality
-  phone: z
-    .string()
-    .optional()
-    .refine((val) => {
-      if (!val) return true;
-      // International phone number validation - using safe static regex
-      return /^[+]?[1-9][\d]{0,15}$/.test(val.replace(/[\s\-()]/g, ''));
-    }, 'Please enter a valid phone number'),
-
-  subject: z
-    .string()
-    .optional()
-    .refine((val) => {
-      if (!val) return true;
-      return (
-        val.length >= VALIDATION_CONSTANTS.SUBJECT_MIN_LENGTH &&
-        val.length <= VALIDATION_CONSTANTS.SUBJECT_MAX_LENGTH
-      );
-    }, `Subject must be between ${VALIDATION_CONSTANTS.SUBJECT_MIN_LENGTH} and ${VALIDATION_CONSTANTS.SUBJECT_MAX_LENGTH} characters`),
-
-  // Privacy and terms acceptance
-  acceptPrivacy: z
-    .boolean()
-    .refine((val) => val === true, 'You must accept the privacy policy'),
-
-  // Marketing consent (optional)
-  marketingConsent: z.boolean().optional(),
-
-  // Honeypot field for bot detection
-  website: z
-    .string()
-    .max(VALIDATION_CONSTANTS.HONEYPOT_MAX_LENGTH, 'This field should be empty')
-    .optional(),
-});
-
-/**
- * 联系表单数据类型
- * Contact form data type derived from schema
- */
-export type ContactFormData = z.infer<typeof contactFormSchema>;
+export { contactFormSchema };
+export type { ContactFormData };
 
 /**
  * API响应验证模式
@@ -213,10 +62,10 @@ export const emailTemplateDataSchema = z.object({
     .transform((val) => val.trim())
     .refine(
       (val) =>
-        val.length >= VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH &&
-        val.length <= VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH,
+        val.length >= CONTACT_FORM_VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH &&
+        val.length <= CONTACT_FORM_VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH,
       {
-        message: `Company name must be between ${VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH} and ${VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH} characters`,
+        message: `Company name must be between ${CONTACT_FORM_VALIDATION_CONSTANTS.COMPANY_MIN_LENGTH} and ${CONTACT_FORM_VALIDATION_CONSTANTS.COMPANY_MAX_LENGTH} characters`,
       },
     ),
   message: z.string(),
@@ -304,14 +153,15 @@ export const validationHelpers = {
    */
   isSubmissionRateLimited: (
     lastSubmission: Date | null,
-    cooldownMinutes = VALIDATION_CONSTANTS.DEFAULT_COOLDOWN_MINUTES,
+    cooldownMinutes = CONTACT_FORM_VALIDATION_CONSTANTS.DEFAULT_COOLDOWN_MINUTES,
   ): boolean => {
     if (!lastSubmission) return false;
 
     const now = new Date();
     const timeDiff = now.getTime() - lastSubmission.getTime();
     const cooldownMs =
-      cooldownMinutes * VALIDATION_CONSTANTS.COOLDOWN_TO_MS_MULTIPLIER;
+      cooldownMinutes *
+      CONTACT_FORM_VALIDATION_CONSTANTS.COOLDOWN_TO_MS_MULTIPLIER;
 
     return timeDiff < cooldownMs;
   },
