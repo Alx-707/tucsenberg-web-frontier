@@ -12,7 +12,7 @@ console.log('🔄 开始翻译同步和更新...\n');
 
 // 配置
 const CONFIG = {
-  LOCALES: ['en', 'zh'],
+  LOCALES: require('../i18n-locales.config').locales,
   MESSAGES_DIR: path.join(process.cwd(), 'messages'),
   BACKUP_DIR: path.join(process.cwd(), 'backups', 'translations'),
   OUTPUT_DIR: path.join(process.cwd(), 'reports'),
@@ -21,7 +21,7 @@ const CONFIG = {
   SYNC_OPTIONS: {
     createMissingKeys: true,
     removeUnusedKeys: false, // 谨慎删除，默认不删除
-    backupBeforeSync: true,
+    backupBeforeSync: false, // 关闭文件级备份，依赖 Git 版本控制
     validateAfterSync: true,
   },
 };

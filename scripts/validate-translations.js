@@ -185,7 +185,7 @@ function main() {
   console.log('🚀 Translation Validation');
   console.log('==========================');
 
-  const locales = ['en', 'zh'];
+  const locales = require('../i18n-locales.config').locales;
   const localeData = {};
   let allValid = true;
 

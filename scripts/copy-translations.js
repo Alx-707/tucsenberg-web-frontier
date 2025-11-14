@@ -18,7 +18,7 @@ const path = require('path');
  * Configuration
  */
 const CONFIG = {
-  locales: ['en', 'zh'],
+  locales: require('../i18n-locales.config').locales,
   types: ['critical', 'deferred'],
   sourceDir: path.join(__dirname, '..', 'messages'),
   targetDir: path.join(__dirname, '..', 'public', 'messages'),

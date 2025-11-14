@@ -62,7 +62,7 @@ async function main() {
   const result = { ok: true, issues: [] };
 
   try {
-    const locales = ['en', 'zh'];
+    const locales = require('../i18n-locales.config').locales;
 
     // Load full sources
     const full = {};

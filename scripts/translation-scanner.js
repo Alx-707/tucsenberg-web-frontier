@@ -34,7 +34,7 @@ const CONFIG = {
   MESSAGES_DIR: path.join(process.cwd(), 'messages'),
 
   // 支持的语言
-  LOCALES: ['en', 'zh'],
+  LOCALES: require('../i18n-locales.config').locales,
 };
 
 const scanResults = {
