@@ -117,6 +117,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "20.19.9",
     "@types/react": "^19.2.4",
     "@types/react-dom": "^19.2.3",
@@ -167,7 +168,8 @@
     "overrides": {
       "playwright@<1.55.1": ">=1.56.1",
       "vite@>=7.1.0 <7.3.0": ">=7.2.2",
-      "tmp": "0.2.4"
+      "tmp": "0.2.4",
+      "js-yaml": "4.1.1"
     },
     "onlyBuiltDependencies": [
       "@sentry/cli",

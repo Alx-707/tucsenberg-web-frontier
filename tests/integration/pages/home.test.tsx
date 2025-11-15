@@ -133,23 +133,26 @@ describe('Home Page Integration Tests', () => {
       );
 
       const hero = await screen.findByTestId('hero-section');
+
+      // Ensure all sections have been loaded (including dynamic imports)
+      await screen.findByTestId('tech-stack-section');
+      await screen.findByTestId('component-showcase');
+      await screen.findByTestId('project-overview');
+      await screen.findByTestId('call-to-action');
+
       const container = hero.parentElement;
-      const sections = container?.children;
+      const sections = Array.from(container?.querySelectorAll('section') ?? []);
 
       expect(sections).toHaveLength(5);
 
-      // Verify order of sections
-      expect(sections?.[0]).toHaveAttribute('data-testid', 'hero-section');
-      expect(sections?.[1]).toHaveAttribute(
-        'data-testid',
+      const ids = sections.map((el) => el.getAttribute('data-testid'));
+      expect(ids).toEqual([
+        'hero-section',
         'tech-stack-section',
-      );
-      expect(sections?.[2]).toHaveAttribute(
-        'data-testid',
         'component-showcase',
-      );
-      expect(sections?.[3]).toHaveAttribute('data-testid', 'project-overview');
-      expect(sections?.[4]).toHaveAttribute('data-testid', 'call-to-action');
+        'project-overview',
+        'call-to-action',
+      ]);
     });
   });
 

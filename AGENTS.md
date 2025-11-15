@@ -10,7 +10,7 @@ type: "manual"
 - 若与本指南冲突的用户显式指令出现，必须遵循并在前置说明记录偏差原因。
 
 ### 技术栈版本
-详见 `.augment/rules/nextjs-architecture.md` 和 `.augment/rules/core-coding-standards.md`，当前版本:
+本项目默认技术栈版本如下，如需调整应通过架构决策或升级说明同步：
 - **Next.js 15** (App Router)
 - **React 19** (Server Components)
 - **TypeScript 5.x** (strict mode)
@@ -22,11 +22,11 @@ type: "manual"
 - **Vercel Analytics** (监控)
 
 ## 1. 适用范围与优先级
-- **CI/CD 约束**: 禁止手动触发或修改 CI/CD 配置文件（`.github/workflows/`、`package.json` scripts、`vercel.json`）。允许代码提交后自动触发的 CI/CD 流程（如 GitHub Actions 自动运行）。详见 `.augment/rules/eslint-cicd-integration.md`。
+- **CI/CD 约束**: 默认不直接修改 CI/CD 配置文件（如 `.github/workflows/`、`package.json` scripts、`vercel.json`），如确有需要需通过评审/PR 说明；允许代码提交后由流水线自动触发（如 GitHub Actions 自动运行）。
 - 每次任务须在开始与结束整理任务日志，将最新结论沉淀至 `evidence/` 或项目日志。
-- 所有沟通、代码注释、文档必须使用中文，新文件需 UTF-8（无 BOM）。
+- 内部沟通、代码注释与默认文档使用中文；面向外部协作/开源的文档可根据受众采用英文；新文件需 UTF-8（无 BOM）。
 - 每次回复开头提供“前置说明”，有外部调用时需在末尾补充“工具调用简报”。
-- 编码前必须完成 Sequential-Thinking 分析，执行时保持最小变更边界。
+- 对智能代理：在编码前必须完成 Sequential-Thinking 分析；在涉及架构/安全/数据迁移等复杂任务前，通过分步思考明确边界与风险；执行时保持最小变更边界。
 - 工作流管理统一使用 `update_plan` 或 `TodoWrite` 维护在制项。
 
 ## 2. 强制约束（MUST）
@@ -45,8 +45,8 @@ type: "manual"
 - 默认仅维持最低安全基线，不增加额外安全机制。
 
 ### 2.4 变更策略
-- 默认采取破坏性改动并拒绝向后兼容，主动清理过时代码、接口与文档。
-- 交付必须完整具体，禁止提交 MVP 或占位方案。
+- 对内部实现（非对外契约）优先采用直接替换并清理过时代码、接口与文档；对对外接口/契约的变更需评估向后兼容性并制定迁移方案。
+- 交付到主干或已发布版本前必须完整具体，禁止长期保留 MVP 或占位实现。
 - 在 PR 或交付说明中明确迁移方案；若无迁移需求需声明“无迁移，直接替换”。
 
 ## 3. 核心原则
@@ -72,7 +72,7 @@ type: "manual"
 ### 4.2 Sequential Thinking MCP
 - 工具标识：`sequential_thinking`，支持动态、可回溯的分步思考流程。
 - 输入字段：`thought`、`nextThoughtNeeded`、`thoughtNumber`、`totalThoughts`；可选 `isRevision`/`revisesThought`（修订）、`branchFromThought`/`branchId`（分支）以及 `needsMoreThoughts`（动态调整）。
-- 适用场景：拆解任务、规划设计、保持上下文、多路径分析、过滤无关信息；用于满足“编码前必须完成 Sequential-Thinking 分析”的硬性要求。
+- 适用场景：拆解任务、规划设计、保持上下文、多路径分析、过滤无关信息；对智能代理属于编码前的硬性步骤，对处理复杂任务的人类开发者也推荐使用。
 
 ### 4.3 Context7 MCP（upstash/context7）
 - 工具流程：先调用 `resolve-library-id`（输入 `libraryName`）获取 `context7CompatibleLibraryID`，再调用 `get-library-docs`（可选 `topic`、`tokens`，默认 10000）获取官方文档。
@@ -108,7 +108,7 @@ type: "manual"
 
 ## 6. 质量与安全门槛
 ### 6.1 代码质量指标
-详见 `.augment/rules/core-coding-standards.md`，关键指标:
+代码质量核心指标如下（作为默认下限要求）:
 - **函数长度**: ≤120行（核心代码）/ ≤160行（测试代码）
 - **圈复杂度**: ≤15（核心代码）/ ≤20（测试代码）
 - **嵌套深度**: ≤4
@@ -119,7 +119,7 @@ type: "manual"
 - **Git 提交**: Conventional Commits 规范
 
 ### 6.2 测试覆盖率
-详见 `.augment/rules/testing-standards.md`，渐进式路线图:
+测试覆盖率采用渐进式提升路线图：
 - **当前基线**: 42.92%
 - **第1阶段(3个月)**: ≥65%
 - **第2阶段(6个月)**: ≥75%
@@ -128,7 +128,7 @@ type: "manual"
 - **Mock 规范**: vi.hoisted 用于变量提升，完整 mock 实现
 
 ### 6.3 安全规范
-详见 `.augment/rules/security-implementation.md`，包含:
+安全规范涵盖以下关键方面：
 - **29条自动化安全规则** (19 ESLint + 10 Semgrep)
 - **XSS 防护**: DOMPurify 配置, CSP 头部设置
 - **CSRF 防护**: CSRF token 生成/验证, SameSite cookies
@@ -146,7 +146,7 @@ type: "manual"
 - 禁止绕过安全检查
 
 ### 6.4 质量门禁
-- 构建、编译、静态检查必须零报错；完整测试矩阵全部通过。
+- 在主干分支与 CI 流水线中，构建、编译、静态检查必须零报错；与发布相关的变更需在完整测试矩阵通过后方可合入。
 - 单元、集成、契约、E2E、性能、压力、容量、混沌与回归测试覆盖关键路径及异常分支。
 - 生成覆盖率报告与 SBOM，确认依赖无高危 CVE。
 - 构建流程需可重复、版本锁定、可审计并可回滚。
@@ -238,3 +238,30 @@ id,description,category,likelihood,impact,mitigation,owner,status
 - 查询胜过猜测，确认胜过假设；复用胜过重复造轮子。
 - 测试胜过跳过，遵循规范胜过随意；谨慎胜过盲目。
 - 如实记录不确定性与风险，主动学习并持续改进。
+
+## 10. 面向智能编码代理的补充规则
+
+- **TypeScript 与静态类型**
+  - 所有新代码必须在 strict 模式下通过类型检查，禁止使用 `any`（包括隐式 any），除非有明确注释说明且范围极小。
+  - 优先使用 `interface` 和类型组合（`&` / `|`）建模领域对象，避免使用 `enum`，推荐使用联合字面量 + `satisfies` 约束。
+  - 对可选属性严格遵守 `exactOptionalPropertyTypes` 语义，禁止显式写入 `prop?: T | undefined`，应使用条件扩展或单独字段表示“未设置”和“显式为空”。
+
+- **Next.js / React 架构**
+  - 默认使用 React Server Components；仅在确需浏览器能力（事件处理、状态管理、DOM API）时才添加 `"use client"`。
+  - 组件应分层：布局/页面负责数据抓取与组装，UI 组件保持无副作用、无业务逻辑，方便复用与测试。
+  - 路由与文件命名保持与 URL 一致，目录统一使用 kebab-case，路径别名统一使用 `@/` 指向 `src/` 根目录。
+
+- **测试与质量**
+  - 仅使用 Vitest 作为测试框架，禁止引入 Jest API（如 `jest.fn`、`jest.mock` 等）。
+  - 新增核心业务逻辑必须配套单元测试；涉及集成边界（API、外部服务等）优先补充集成或契约测试。
+  - Mock 需完整且可读，复杂 mock 应使用 `vi.hoisted` 提升定义，避免在测试体内动态重写模块依赖。
+
+- **安全与日志**
+  - 严禁在生产代码中使用裸 `console.log` / `console.debug`，应通过统一日志工具记录结构化信息，仅在脚本或本地调试代码中放开。
+  - 任何处理外部输入的代码（请求参数、headers、cookie、表单、文件上传等）必须经过显式验证与规范化，包括但不限于防止 XSS、路径遍历、SQL 注入与命令注入。
+  - 涉及敏感数据（密钥、token、个人信息）的代码必须通过配置注入，禁止硬编码或写入仓库历史。
+
+- **UI / 可访问性**
+  - 优先使用现有的 UI 组件体系与样式工具，避免无必要的重复造轮子。
+  - 所有可交互组件必须考虑键盘导航与无障碍属性（`aria-*`），不破坏浏览器默认行为。
+  - 图片、链接和按钮需提供语义化文本或 `aria-label`，避免仅依赖图标或颜色传递关键信息。

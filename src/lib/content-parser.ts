@@ -7,6 +7,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import yaml, { type LoadOptions } from 'js-yaml';
 import {
   ContentError,
   type ContentMetadata,
@@ -18,6 +19,18 @@ import { CONTENT_DIR, validateFilePath } from '@/lib/content-utils';
 import { validateContentMetadata } from '@/lib/content-validation';
 import { logger } from '@/lib/logger';
 import { CONTENT_LIMITS } from '@/constants/app-constants';
+
+type YamlWithSafeLoad = typeof yaml & {
+  safeLoad?: (str: string, opts?: LoadOptions) => unknown;
+};
+
+const yamlWithSafeLoad: YamlWithSafeLoad = yaml as YamlWithSafeLoad;
+// js-yaml v4 移除了 safeLoad，但 gray-matter 等旧依赖仍可能调用该 API。
+// 这里统一将 safeLoad 映射到 load，避免在解析 frontmatter 时抛出兼容性错误。
+if (!yamlWithSafeLoad.safeLoad) {
+  yamlWithSafeLoad.safeLoad = (str: string, opts?: LoadOptions) =>
+    yamlWithSafeLoad.load(str, opts);
+}
 
 /**
  * Parse MDX file with frontmatter
@@ -49,7 +62,11 @@ export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
       );
     }
 
-    const { data: frontmatter, content } = matter(fileContent);
+    const { data: frontmatter, content } = matter(fileContent, {
+      engines: {
+        yaml: (source: string) => yaml.load(source) as Record<string, unknown>,
+      },
+    });
 
     // Validate metadata
     const validation = validateContentMetadata(frontmatter, type);
