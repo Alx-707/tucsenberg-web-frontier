@@ -3,11 +3,13 @@ import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
+import promisePlugin from 'eslint-plugin-promise';
 import reactYouMightNotNeedAnEffect from 'eslint-plugin-react-you-might-not-need-an-effect';
 import securityPlugin from 'eslint-plugin-security';
 import securityNode from 'eslint-plugin-security-node';
 
 const security = securityPlugin.default ?? securityPlugin;
+const promise = promisePlugin.default ?? promisePlugin;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -172,6 +174,9 @@ export default [
       'src/lib/content-parser.ts',
       'src/lib/content-validation.ts',
     ],
+    plugins: {
+      promise,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       'no-throw-literal': 'error',
