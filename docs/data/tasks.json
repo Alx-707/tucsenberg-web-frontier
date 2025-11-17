@@ -1,0 +1,130 @@
+{
+  "tasks": [
+    {
+      "id": "e771e19e-e308-429c-9c2e-070b568255d8",
+      "name": "准备阶段：基线与范围确认",
+      "description": "选择1个试点域（建议src/lib/web-vitals或content/i18n），收集当前dependency-cruiser跨域依赖基线（约70条）并按域归档到docs/analysis-report/arch-violations-<date>.md，记录全局/核心域覆盖率基线；确认规则变更具备开关/降级路径（warning→error），不改CI pipeline。",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2025-11-17T01:57:48.883Z",
+      "updatedAt": "2025-11-17T01:57:48.883Z",
+      "relatedFiles": [
+        {
+          "path": "docs/analysis-report/中长期架构治理思路.md",
+          "type": "REFERENCE",
+          "description": "治理思路草案"
+        }
+      ],
+      "implementationGuide": "1) 运行现有arch-check或dependency-cruiser生成报告；2) 按域分类统计并保存报告；3) 记录覆盖率基线；4) 列出试点域与范围；5) 标注降级/关闭方式（Lefthook阶段或规则级别）。",
+      "verificationCriteria": "存在归档报告文件、基线数值（跨域数、覆盖率）和试点域名单；记录可关闭/降级的方式。",
+      "analysisResult": "中长期架构治理草案审阅：现有工具链完善，需小步、灰度、可回滚。建议启动，按试点→灰度→扩面，重点是依赖收紧、覆盖率增量守卫、规则分层与度量闭环。"
+    },
+    {
+      "id": "76901927-e345-43ca-870c-6d12f29e1581",
+      "name": "试点域规则灰度收紧",
+      "description": "在试点域启用dependency-cruiser依赖方向forbidden/warning规则，目标warning<5；在quality-gate增加“新增试点域文件需有测试”warning；开启diff覆盖率下降>1–2% warning，观察噪音。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e771e19e-e308-429c-9c2e-070b568255d8"
+        }
+      ],
+      "createdAt": "2025-11-17T01:57:48.883Z",
+      "updatedAt": "2025-11-17T01:57:48.883Z",
+      "relatedFiles": [
+        {
+          "path": ".dependency-cruiser.js",
+          "type": "TO_MODIFY",
+          "description": "添加试点域依赖规则"
+        },
+        {
+          "path": "lefthook.yml",
+          "type": "TO_MODIFY",
+          "description": "质量门禁规则调整"
+        }
+      ],
+      "implementationGuide": "1) 对试点域配置DC规则（UI→Domain→Core，Core不依赖UI）为warning；2) 调整quality-gate对试点新增文件需测试；3) 配置diff coverage阈值warning；4) 运行一次检查验证规则生效；5) 记录当前warning数量与噪音反馈。",
+      "verificationCriteria": "试点域DC规则生效且为warning级；新增文件无测时产生warning；diff覆盖率守卫触发阈值；warning数量记录在案（<5为目标）。",
+      "analysisResult": "中长期架构治理草案审阅：现有工具链完善，需小步、灰度、可回滚。建议启动，按试点→灰度→扩面，重点是依赖收紧、覆盖率增量守卫、规则分层与度量闭环。"
+    },
+    {
+      "id": "cca67384-5fa3-4d89-b389-46f88d922a35",
+      "name": "试点收紧与扩面",
+      "description": "当试点warning稳定<5，将试点跨域规则升级为error或对改动文件error，并在同类域复制warning级；覆盖率若连续4周>60%则提升全局阈值到60%（保留缓冲）。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "76901927-e345-43ca-870c-6d12f29e1581"
+        }
+      ],
+      "createdAt": "2025-11-17T01:57:48.883Z",
+      "updatedAt": "2025-11-17T01:57:48.883Z",
+      "relatedFiles": [
+        {
+          "path": ".dependency-cruiser.js",
+          "type": "TO_MODIFY",
+          "description": "升级试点域规则/复制到新域"
+        },
+        {
+          "path": "lefthook.yml",
+          "type": "TO_MODIFY",
+          "description": "覆盖率阈值调整"
+        }
+      ],
+      "implementationGuide": "1) 评估试点warning趋势；2) 升级规则级别并验证不阻塞；3) 选择同类域复制warning规则；4) 覆盖率达标后调整全局下限；5) 记录变更与影响。",
+      "verificationCriteria": "试点域规则升级后依然可通过；新增域收到warning；记录覆盖率提升与阈值调整决策。",
+      "analysisResult": "中长期架构治理草案审阅：现有工具链完善，需小步、灰度、可回滚。建议启动，按试点→灰度→扩面，重点是依赖收紧、覆盖率增量守卫、规则分层与度量闭环。"
+    },
+    {
+      "id": "9c917a3b-aac1-4887-9455-6b110f7311b1",
+      "name": "域级机会式重构与规则分层",
+      "description": "在迭代触达的域按Boy Scout清理跨域依赖、抽公共工具到Core Lib、去UI反向依赖；为安全/解析模块加严ESLint/安全规则（禁any、需异常处理等），tests目录保持放宽复杂度但禁jest.*。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "cca67384-5fa3-4d89-b389-46f88d922a35"
+        }
+      ],
+      "createdAt": "2025-11-17T01:57:48.883Z",
+      "updatedAt": "2025-11-17T01:57:48.883Z",
+      "relatedFiles": [
+        {
+          "path": "eslint.config.mjs",
+          "type": "TO_MODIFY",
+          "description": "域级规则分层"
+        },
+        {
+          "path": "docs/analysis-report/arch-violations-<date>.md",
+          "type": "REFERENCE",
+          "description": "违规趋势基线/对比"
+        }
+      ],
+      "implementationGuide": "1) 每次功能迭代前确定涉及域；2) 补关键路径测试后做小范围解耦/抽取；3) 更新ESLint overrides/安全规则；4) 运行质量检查验证无新违规；5) 记录重构范围与收益。",
+      "verificationCriteria": "重构改动伴随测试；安全/解析模块规则加严且通过；跨域依赖与循环依赖保持下降或为0；记录改动与收益。",
+      "analysisResult": "中长期架构治理草案审阅：现有工具链完善，需小步、灰度、可回滚。建议启动，按试点→灰度→扩面，重点是依赖收紧、覆盖率增量守卫、规则分层与度量闭环。"
+    },
+    {
+      "id": "041193b6-8f01-4455-aa57-11a322da08dd",
+      "name": "度量与阶段总结",
+      "description": "建立季度度量与阶段总结：Arch违规数、循环依赖、全局/核心域覆盖率、安全告警。达标或变更后在docs/analysis-report追加简短总结，记录计划与实际差异。",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "cca67384-5fa3-4d89-b389-46f88d922a35"
+        }
+      ],
+      "createdAt": "2025-11-17T01:57:48.883Z",
+      "updatedAt": "2025-11-17T01:57:48.883Z",
+      "relatedFiles": [
+        {
+          "path": "docs/analysis-report",
+          "type": "REFERENCE",
+          "description": "存放度量与总结"
+        }
+      ],
+      "implementationGuide": "1) 按季度收集指标；2) 与目标对比（3/6/12月目标）；3) 将总结写入docs/analysis-report/arch-violations-<date>.md或新增阶段总结；4) 标注日期与结论。",
+      "verificationCriteria": "存在按季度更新的总结文档，含数据与结论；指标与目标对比清晰。",
+      "analysisResult": "中长期架构治理草案审阅：现有工具链完善，需小步、灰度、可回滚。建议启动，按试点→灰度→扩面，重点是依赖收紧、覆盖率增量守卫、规则分层与度量闭环。"
+    }
+  ]
+}

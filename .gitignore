@@ -122,7 +122,6 @@ reports/**/*.xml
 reports/**/*.html
 # Project data and reports (local only)
 reports/
-docs/data/
 
 backups/
 .lighthouseci/
