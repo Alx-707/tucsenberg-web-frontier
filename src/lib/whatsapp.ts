@@ -3,42 +3,69 @@ import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import { COUNT_TEN, ZERO } from '@/constants';
 
+import { z } from 'zod';
+
 /**
- * WhatsApp webhook消息体类型定义
+ * WhatsApp webhook schema definition using Zod
  */
-interface WhatsAppWebhookBody {
-  entry?: Array<{
-    changes?: Array<{
-      value?: {
-        messages?: Array<{
-          from: string;
-          text?: { body: string };
-        }>;
-      };
-    }>;
-  }>;
-}
+const WhatsAppWebhookSchema = z.object({
+  entry: z
+    .array(
+      z.object({
+        changes: z
+          .array(
+            z.object({
+              value: z.object({
+                messages: z
+                  .array(
+                    z.object({
+                      from: z.string(),
+                      text: z
+                        .object({
+                          body: z.string(),
+                        })
+                        .optional(),
+                    }),
+                  )
+                  .optional(),
+              }),
+            }),
+          )
+          .optional(),
+      }),
+    )
+    .optional(),
+});
 
-function extractIncomingMessage(body: WhatsAppWebhookBody) {
-  const entries = Array.isArray(body.entry) ? body.entry : [];
-  if (entries.length === 0) {
+
+
+function extractIncomingMessage(body: unknown) {
+  const result = WhatsAppWebhookSchema.safeParse(body);
+
+  if (!result.success) {
     return null;
   }
 
-  const firstEntry = entries[0];
-  const changes = Array.isArray(firstEntry?.changes)
-    ? (firstEntry?.changes ?? [])
-    : [];
-  if (changes.length === 0) {
+  const entries = result.data.entry;
+  if (!entries || entries.length === 0) {
     return null;
   }
 
-  const firstChange = changes[0];
-  const rawMessages = Array.isArray(firstChange?.value?.messages)
-    ? (firstChange.value?.messages ?? [])
-    : [];
+  const [firstEntry] = entries;
+  const changes = firstEntry?.changes;
+  if (!changes || changes.length === 0) {
+    return null;
+  }
 
-  return rawMessages.length > 0 ? rawMessages[0]! : null;
+  const [firstChange] = changes;
+  const messages = firstChange?.value.messages;
+
+  if (!messages || messages.length === 0) {
+    return null;
+  }
+
+  const [firstMessage] = messages;
+  return firstMessage;
 }
 
 /**
@@ -152,14 +179,14 @@ export class WhatsAppService {
   /**
    * 处理接收到的消息
    */
-  async handleIncomingMessage(body: WhatsAppWebhookBody) {
+  async handleIncomingMessage(body: unknown) {
     try {
       const message = extractIncomingMessage(body);
       if (!message) {
         return { success: true };
       }
 
-      // nosemgrep: object-injection-sink-dynamic-property -- message 来源受控解析
+      // message is now safely typed and validated by Zod
       const { from } = message;
       const messageBody =
         message.text && typeof message.text === 'object'
