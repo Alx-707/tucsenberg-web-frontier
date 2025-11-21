@@ -140,12 +140,12 @@ const CompanyLogo: FC = () => {
     <div className='flex items-center'>
       <Link
         href='/'
-        className='flex items-center space-x-2 text-gray-900 transition-opacity duration-200 hover:opacity-80 dark:text-gray-100'
+        className='flex items-center space-x-2 text-foreground transition-opacity duration-200 hover:opacity-80'
         aria-label={`${company.name} homepage`}
       >
         {/* Logo placeholder - replace with actual logo */}
-        <div className='flex h-8 w-8 items-center justify-center rounded-md bg-gray-900 dark:bg-gray-100'>
-          <span className='text-sm font-bold text-white dark:text-gray-900'>
+        <div className='flex h-8 w-8 items-center justify-center rounded-md bg-foreground'>
+          <span className='text-sm font-bold text-background'>
             {company.name.charAt(ZERO)}
           </span>
         </div>
@@ -173,7 +173,7 @@ export async function Footer() {
   const locale = (await getLocale()) as 'en' | 'zh';
 
   return (
-    <footer className='border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900'>
+    <footer className='border-t border-border bg-background'>
       <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8'>
         <div className='grid grid-cols-1 gap-8 md:grid-cols-5'>
           {/* Company Logo */}
@@ -201,9 +201,9 @@ export async function Footer() {
         </div>
 
         {/* Copyright and Theme Toggle */}
-        <div className='mt-12 border-t border-gray-200 pt-8 dark:border-gray-800'>
+        <div className='mt-12 border-t border-border pt-8'>
           <div className='flex flex-col items-center justify-between gap-4 sm:flex-row'>
-            <p className='text-sm text-gray-500 dark:text-gray-400'>
+            <p className='text-sm text-muted-foreground'>
               {getCopyrightText(locale)}
             </p>
             {/* Theme Switcher */}
