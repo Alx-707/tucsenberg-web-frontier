@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Phone } from 'lucide-react';
 import Draggable from 'react-draggable';
 
@@ -50,12 +50,8 @@ export function WhatsAppFloatingButton({
 }: WhatsAppFloatingButtonProps) {
   const normalizedNumber = normalizePhoneNumber(number);
   const nodeRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  // 组件挂载时恢复上次保存的位置
-  useEffect(() => {
-    setPosition(loadPosition());
-  }, []);
+  // 使用 lazy initializer 从 localStorage 恢复位置（避免 useEffect 初始化状态）
+  const [position, setPosition] = useState(() => loadPosition());
 
   if (!normalizedNumber) return null;
 

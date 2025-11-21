@@ -26,7 +26,7 @@ vi.mock('lucide-react', () => ({
 vi.mock('react-draggable', () => ({
   default: ({
     children,
-    nodeRef,
+    nodeRef: _nodeRef,
   }: {
     children: React.ReactNode;
     nodeRef: React.RefObject<HTMLElement>;
