@@ -29,7 +29,7 @@
     "size:check": "size-limit",
     "analyze:size": "du -sh .next/static && echo '=== Top 5 Largest JS Files ===' && find .next/static -type f -name '*.js' -exec ls -lh {} \\; | sort -k5 -hr | head -5",
     "analyze:stats": "npx @statoscope/cli@latest generate --input .next/server/webpack-stats.json --output stats.html --open",
-    "build:check": "next build --no-lint",
+    "build:check": "next build",
     "commitlint": "commitlint",
     "hooks:install": "lefthook install",
     "arch:check": "dependency-cruiser src --config .dependency-cruiser.js",

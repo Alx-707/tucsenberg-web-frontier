@@ -11,7 +11,7 @@ This directory contains social media sharing images for SEO optimization.
 - **Content**: Should include:
   - Tucsenberg Web Frontier logo/branding
   - Key messaging: "Modern B2B Enterprise Web Platform"
-  - Technology stack highlights: "Next.js 15 + React 19 + TypeScript"
+  - Technology stack highlights: "Next.js 16 + React 19 + TypeScript"
   - Clean, professional design matching brand colors
 
 ### twitter-image.jpg (Optional)
