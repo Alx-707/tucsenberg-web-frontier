@@ -410,11 +410,9 @@ describe('Label Component Composition Tests', () => {
 
     it('works with error boundary contexts', () => {
       const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
-        try {
-          return <div className='error-boundary'>{children}</div>;
-        } catch {
-          return <div>Error occurred</div>;
-        }
+        // ✅ Fixed: Removed try/catch around JSX - React errors are not caught by try/catch
+        // For proper error handling, use React Error Boundary class component
+        return <div className='error-boundary'>{children}</div>;
       };
 
       render(

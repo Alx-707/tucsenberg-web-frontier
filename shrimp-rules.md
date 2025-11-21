@@ -2,15 +2,15 @@
 
 ## 项目概述
 
-**项目类型**: Next.js 15 + React 19 + TypeScript 企业级B2B网站模板
+**项目类型**: Next.js 16 + React 19 + TypeScript 企业级B2B网站模板
 **核心特性**: 英中双语国际化、主题切换、MDX内容管理、企业级质量保障 **技术栈**:
-Next.js 15.4.6 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
+Next.js 16.0.3 + React 19.1.1 + TypeScript 5.9.2 + Tailwind CSS 4.1.11
 
 ## 强制架构约束
 
 ### 技术栈限制
 
-- **必须使用**: Next.js 15 App Router架构，禁止使用Pages Router
+- **必须使用**: Next.js 16 App Router架构，禁止使用Pages Router
 - **必须使用**: TypeScript严格模式，禁止any类型
 - **必须使用**: Tailwind CSS进行样式开发，禁止内联样式
 - **必须使用**: shadcn/ui组件库，禁止引入其他UI库

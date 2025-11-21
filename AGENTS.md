@@ -11,7 +11,7 @@ type: "manual"
 
 ### 技术栈版本
 本项目默认技术栈版本如下，如需调整应通过架构决策或升级说明同步：
-- **Next.js 15** (App Router)
+- **Next.js 16** (App Router)
 - **React 19** (Server Components)
 - **TypeScript 5.x** (strict mode)
 - **Vitest** (测试框架)

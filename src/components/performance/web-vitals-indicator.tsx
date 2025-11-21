@@ -203,7 +203,8 @@ function useWebVitalsMonitoring() {
  * 支持拖动功能，拖动后 8 秒自动归位到原始位置。
  */
 export function WebVitalsIndicator() {
-  const { registerTool, unregisterTool, getClasses } = useDevToolsLayout();
+  const { registerTool, unregisterTool, getClasses, getZIndex } =
+    useDevToolsLayout();
   const { metrics, isVisible } = useWebVitalsMonitoring();
   const { position, isDragging, isReturning, handleMouseDown } = useDraggable();
 
@@ -229,6 +230,7 @@ export function WebVitalsIndicator() {
       style={{
         transform: `translate(${position.x}px, ${position.y}px)`,
         pointerEvents: isDragging ? 'none' : 'auto',
+        zIndex: getZIndex('webVitalsIndicator'), // 使用 inline style 确保超大 z-index 生效
       }}
       onMouseDown={handleMouseDown}
     >

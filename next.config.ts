@@ -2,7 +2,7 @@ import path from 'path';
 import type { NextConfig } from 'next';
 import bundleAnalyzer from '@next/bundle-analyzer';
 import createMDX from '@next/mdx';
-import { withSentryConfig } from '@sentry/nextjs';
+// import { withSentryConfig } from '@sentry/nextjs'; // Removed: Sentry package not installed
 import createNextIntlPlugin from 'next-intl/plugin';
 import { getSecurityHeaders } from './src/config/security';
 
@@ -28,15 +28,13 @@ const SENTRY_DISABLED =
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // Turbopack 配置 - 明确指定项目根目录
+  turbopack: {
+    root: __dirname,
+  },
+
   // Configure pageExtensions to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-
-  // ESLint 配置
-  eslint: {
-    dirs: ['src'],
-    // 临时放宽构建期 ESLint 阻塞，Phase 3 清零后恢复为严格模式
-    ignoreDuringBuilds: true,
-  },
 
   // Enable source maps for better error tracking
   productionBrowserSourceMaps: true,
@@ -69,8 +67,9 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    // 仅在 CI/测试环境启用 testProxy，生产环境禁用以避免运行时缺少 turbopack runtime 导致的 500
-    testProxy: process.env.CI === 'true',
+    // Next.js 16 已移除 testProxy 配置 - 使用 next/experimental/testing/server 替代
+    // 旧配置: testProxy: process.env.CI === 'true',
+    // 新方式: 在测试文件中使用 unstable_doesProxyMatch() 和相关 API
     // 内联关键CSS，消除渲染阻塞的<link rel="stylesheet">请求，提升首屏渲染（LCP）
     inlineCss: true,
     // PPR 需要 Next.js canary 版本，暂时禁用
@@ -82,6 +81,9 @@ const nextConfig: NextConfig = {
   // 但 Turbopack 在处理它们时遇到问题，所以我们暂时移除这个配置
   // 让 Next.js 使用默认的外部包处理方式
 
+  // ⚠️ Webpack 配置保留 - 待验证 Turbopack 性能后移除
+  // Next.js 16 默认使用 Turbopack，此配置仅在 build:webpack 兜底时生效
+  // 在 Turbopack 通过 size:check 验证后，应移除此配置块和 splitChunks 逻辑
   webpack: (config, { dev, isServer }) => {
     // Path alias configuration for @/ -> src/
     config.resolve.alias = {
@@ -277,46 +279,9 @@ const nextConfig: NextConfig = {
   },
 };
 
+// Sentry integration removed - package not installed
 // Optimized Sentry webpack plugin options for smaller bundle size
-const sentryWebpackPluginOptions = {
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options
+// const sentryWebpackPluginOptions = { ... };
 
-  org: process.env['SENTRY_ORG'] || '',
-  project: process.env['SENTRY_PROJECT'] || '',
-
-  // Only print logs for uploading source maps in CI
-  silent: !process.env['CI'],
-
-  // Optimize for smaller bundle size - disable source map upload in development
-  widenClientFileUpload: process.env['NODE_ENV'] === 'production',
-
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
-
-  // Disable automatic instrumentation to reduce bundle size
-  automaticVercelMonitors: false,
-
-  // Additional bundle size optimizations
-  hideSourceMaps: false, // Temporarily disabled for bundle analysis
-
-  // Only enable in production to reduce development build time
-  enabled: process.env['NODE_ENV'] === 'production',
-};
-
-// Allow disabling Sentry integration entirely for analysis runs
-const base = withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));
-
-export default SENTRY_DISABLED
-  ? base
-  : withSentryConfig(base, {
-      // Build options for withSentryConfig (not just webpack plugin)
-      autoInstrumentAppDirectory: false, // avoid injecting client instrumentation into app router
-      disableManifestInjection: true, // save client bytes by skipping route manifest injection
-      bundleSizeOptimizations: {
-        excludeTracing: true, // 不使用性能追踪时可移除 tracing 相关代码
-        excludeDebugStatements: true,
-      },
-      // Pass through webpack plugin options
-      ...sentryWebpackPluginOptions,
-    });
+// Export final config with all plugins applied
+export default withBundleAnalyzer(withNextIntl(withMDX(nextConfig)));

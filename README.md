@@ -1,11 +1,11 @@
 # 🚀 Tucsenberg Web Frontier
 
-现代化B2B企业网站模板，采用Next.js 15 + React 19 + TypeScript 5.9 + Tailwind CSS
+现代化B2B企业网站模板，采用Next.js 16 + React 19 + TypeScript 5.9 + Tailwind CSS
 4技术栈，实现英中双语国际化、主题切换、响应式设计，确保企业级质量标准。
 
 ## ✨ 特性
 
-- 🎯 **现代技术栈**: Next.js 15.5.4 + React 19.1.1 + TypeScript 5.9.2
+- 🎯 **现代技术栈**: Next.js 16.0.3 + React 19.1.1 + TypeScript 5.9.2
 - 🎨 **现代化UI**: Tailwind CSS 4.1.11 + 响应式设计
 - 📝 **内容管理**: MDX + Git-based 工作流
 - 🌍 **国际化支持**: 英中双语切换 + next-intl
@@ -219,7 +219,7 @@ pnpm test:ui          # 可视化测试界面
 
 ### 核心框架
 
-- **Next.js 15.4.6** - React全栈框架，App Router架构
+- **Next.js 16.0.3** - React全栈框架，App Router架构
 - **React 19.1.1** - 用户界面库，支持服务器组件
 - **TypeScript 5.9.2** - 类型安全的JavaScript超集
 
@@ -312,7 +312,7 @@ pnpm test:ui          # 可视化测试界面
 
 ## 📚 学习资源
 
-- [Next.js 15 文档](https://nextjs.org/docs) - 了解最新特性
+- [Next.js 16 文档](https://nextjs.org/docs) - 了解最新特性
 - [React 19 文档](https://react.dev) - React最新功能
 - [TypeScript 手册](https://www.typescriptlang.org/docs/) - TypeScript指南
 - [Tailwind CSS 文档](https://tailwindcss.com/docs) - 样式框架指南

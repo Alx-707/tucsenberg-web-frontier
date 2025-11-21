@@ -15,7 +15,7 @@
 
 ### 技术要求
 - Node.js 18+
-- Next.js 15+
+- Next.js 16+
 - HTTPS SSL证书
 - 公网可访问的服务器
 

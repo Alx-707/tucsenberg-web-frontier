@@ -7,9 +7,9 @@ import { WhatsAppFloatingButton } from '@/components/whatsapp/whatsapp-floating-
 
 // 局部 Mock lucide-react，避免集中 Mock/真实包体在极端环境下的解析开销
 vi.mock('lucide-react', () => ({
-  Phone: ({ className, ...props }: React.ComponentProps<'svg'>) => (
+  MessageCircle: ({ className, ...props }: React.ComponentProps<'svg'>) => (
     <svg
-      data-testid='mock-phone-icon'
+      data-testid='mock-message-circle-icon'
       className={className}
       {...props}
     >
@@ -26,7 +26,7 @@ vi.mock('lucide-react', () => ({
 vi.mock('react-draggable', () => ({
   default: ({
     children,
-    nodeRef,
+    nodeRef: _nodeRef,
   }: {
     children: React.ReactNode;
     nodeRef: React.RefObject<HTMLElement>;
@@ -62,10 +62,19 @@ describe('WhatsAppFloatingButton', () => {
     expect(draggableWrapper).toBeInTheDocument();
   });
 
-  it('renders drag handle with cursor-move class', () => {
+  it('renders circular FAB with WhatsApp brand color', () => {
     render(<WhatsAppFloatingButton number='+1 (555) 123-4567' />);
 
-    const dragHandle = screen.getByLabelText('Drag to move');
-    expect(dragHandle).toHaveClass('drag-handle', 'cursor-move');
+    const button = screen.getByRole('link', {
+      name: /chat with us on whatsapp/i,
+    });
+    expect(button).toHaveClass('rounded-full', 'bg-[#25D366]');
+  });
+
+  it('renders MessageCircle icon', () => {
+    render(<WhatsAppFloatingButton number='+1 (555) 123-4567' />);
+
+    const icon = screen.getByTestId('mock-message-circle-icon');
+    expect(icon).toBeInTheDocument();
   });
 });

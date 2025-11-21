@@ -94,13 +94,14 @@ export const SIZE_CLASSES: Record<DevToolSize, string> = {
 
 /**
  * 获取开发工具的完整 CSS 类
+ * 注意：z-index 通过 inline style 应用以确保超大数值生效
  */
 export function getDevToolClasses(toolId: string): string {
   // eslint-disable-next-line security/detect-object-injection
   const config = DEV_TOOLS_CONFIG[toolId]; // toolId 来自预定义配置，安全
   if (!config) {
     console.warn(`Dev tool config not found for: ${toolId}`);
-    return 'fixed bottom-4 right-4 z-50';
+    return 'fixed bottom-4 right-4';
   }
 
   const positionClass =
@@ -109,9 +110,10 @@ export function getDevToolClasses(toolId: string): string {
   const sizeClass =
     SIZE_CLASSES[config.size as keyof typeof SIZE_CLASSES] ||
     SIZE_CLASSES.medium;
-  const zIndexClass = `z-[${config.zIndex}]`;
+  // z-index 不再通过 Tailwind arbitrary value 设置，改用 inline style
+  // 因为 z-[2147483647] 这样的超大数值可能不被正确处理
 
-  return `${positionClass} ${sizeClass} ${zIndexClass}`;
+  return `${positionClass} ${sizeClass}`;
 }
 
 /**

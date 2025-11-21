@@ -106,6 +106,11 @@ describe('AnimatedCounter - Performance & Refs', () => {
         (_, index) => index !== id - 1,
       );
     });
+
+    // Mock queueMicrotask to execute immediately for synchronous testing
+    global.queueMicrotask = vi.fn((callback: () => void) => {
+      callback();
+    });
   });
 
   describe('Ref Handling', () => {

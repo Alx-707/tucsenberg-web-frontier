@@ -57,6 +57,11 @@ describe('AnimatedCounter Component', () => {
       value: mockPerformanceNow,
       writable: true,
     });
+
+    // Mock queueMicrotask to execute immediately for synchronous testing
+    global.queueMicrotask = vi.fn((callback: () => void) => {
+      callback();
+    });
   });
 
   afterEach(() => {

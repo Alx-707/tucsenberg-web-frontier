@@ -243,12 +243,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 构建检查
-        run: pnpm build:check
+        run: pnpm build
+        env:
+          NODE_ENV: production
 
-      - name: 包大小检查
-        run: pnpm size:check
-
-      - name: Lighthouse CI
+      - name: Lighthouse CI（包含 Core Web Vitals 和 Bundle 大小监控）
         timeout-minutes: 15
         run: pnpm exec lhci autorun --config=lighthouserc.js
         env:
