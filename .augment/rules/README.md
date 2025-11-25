@@ -1,5 +1,5 @@
 ---
-type: "manual"
+type: "always_apply"
 description: "Comprehensive documentation and maintenance guide for Augment rules system, including file organization, usage patterns, and best practices"
 ---
 

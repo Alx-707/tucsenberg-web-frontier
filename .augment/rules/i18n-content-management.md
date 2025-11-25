@@ -1,5 +1,5 @@
 ---
-type: "auto"
+type: "agent_requested"
 description: "next-intl i18n with strictMessageTypeSafety, messages/[locale].json, getRequestConfig, Providers composition, ICU message arguments, MDX content management, en/zh synchronization, Front Matter validation, Git-based workflow"
 ---
 
@@ -10,6 +10,8 @@ description: "next-intl i18n with strictMessageTypeSafety, messages/[locale].jso
 - Use **next-intl** as the i18n framework
 - Use the `useTranslations` hook inside components
 - Store translations in `messages/[locale].json`
+- **Project-specific layout**: Runtime translations are loaded from `messages/{locale}/critical.json` and `messages/{locale}/deferred.json`. Root files `messages/en.json` and `messages/zh.json` are reserved for Vitest mocks and translation shape validation only and MUST NOT be imported in production code.
+
 - Define a global `AppConfig.Messages` type to enforce ICU arguments at compile time.
 
 - **Strict ICU typing**: enable `strictMessageTypeSafety` in `getRequestConfig` and declare `AppConfig.Messages` in `global.ts` to get compile-time checks for message arguments
