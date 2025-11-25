@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCachedResponse } from '@/lib/api-cache-utils';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 
 /**
@@ -94,7 +95,20 @@ function validateI18nAnalyticsData(data: unknown): data is I18nAnalyticsData {
  */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const parsedBody = await safeParseJson<unknown>(request, {
+      route: '/api/analytics/i18n',
+    });
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parsedBody.error,
+          message: 'Invalid JSON body for i18n analytics endpoint',
+        },
+        { status: 400 },
+      );
+    }
+    const body = parsedBody.data;
 
     // 验证请求数据
     if (!validateI18nAnalyticsData(body)) {

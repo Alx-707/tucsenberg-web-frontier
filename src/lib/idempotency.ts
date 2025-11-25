@@ -15,6 +15,13 @@ import { HTTP_BAD_REQUEST, HTTP_OK } from '@/constants';
 
 /**
  * 幂等键缓存接口
+ *
+ * 说明：
+ * - result：处理函数返回的原始结果（通常为可 JSON 序列化的对象）；
+ * - statusCode：返回给客户端的 HTTP 状态码（通常为 200）；
+ * - timestamp：首次写入缓存的时间戳，用于过期清理。
+ *
+ * 注意：此处只缓存「被视为成功且可安全复用」的结果，错误/异常响应不会进入该缓存。
  */
 interface IdempotencyCache {
   result: unknown;
@@ -90,6 +97,20 @@ export function saveIdempotencyKey(
 
 /**
  * 处理有幂等键的请求
+ *
+ * 行为约定（错误不缓存、成功缓存）：
+ * - 当 handler 返回「普通值」（非 NextResponse）时：
+ *   - 该结果会被视为成功响应写入幂等缓存；
+ *   - 并由 withIdempotency 统一包装为 `NextResponse.json(result, { status: HTTP_OK })` 返回；
+ * - 当 handler 返回 NextResponse 时：
+ *   - 直接透传该 NextResponse（包含自定义状态码和响应体）；
+ *   - 不会写入幂等缓存（常用于 4xx/5xx 错误或特殊响应）；
+ * - 当 handler 抛出异常时：
+ *   - 记录错误日志后继续向上抛出，由调用方负责统一错误处理。
+ *
+ * 推荐使用方式：
+ * - 成功路径：返回普通对象，由 withIdempotency 统一包装并缓存；
+ * - 错误路径：返回 NextResponse（携带非 2xx 状态码），保证错误不会被缓存。
  */
 async function handleWithIdempotencyKey<T>(
   idempotencyKey: string,
@@ -108,6 +129,10 @@ async function handleWithIdempotencyKey<T>(
   // 处理请求并缓存结果
   try {
     const result = await handler();
+    // 如果处理函数已经返回 NextResponse，则直接透传，避免重复包装
+    if (result instanceof NextResponse) {
+      return result;
+    }
     saveIdempotencyKey(idempotencyKey, result, HTTP_OK);
     return NextResponse.json(result, { status: HTTP_OK });
   } catch (error) {
@@ -121,12 +146,20 @@ async function handleWithIdempotencyKey<T>(
 
 /**
  * 处理没有幂等键的请求
+ *
+ * 行为约定：
+ * - 不参与任何幂等缓存逻辑；
+ * - 当 handler 返回 NextResponse 时：直接透传该响应；
+ * - 当 handler 返回普通对象时：统一包装为 `NextResponse.json(result, { status: HTTP_OK })`。
  */
 async function handleWithoutIdempotencyKey<T>(
   handler: () => Promise<T>,
 ): Promise<NextResponse> {
   try {
     const result = await handler();
+    if (result instanceof NextResponse) {
+      return result;
+    }
     return NextResponse.json(result, { status: HTTP_OK });
   } catch (error) {
     logger.error('Request handler failed', { error: error as Error });
@@ -137,11 +170,28 @@ async function handleWithoutIdempotencyKey<T>(
 /**
  * 幂等键中间件
  *
- * 使用方式：
+ * 核心行为（错误不缓存、成功缓存）：
+ * - 当请求携带 Idempotency-Key 时：
+ *   - 命中缓存 → 按缓存中的 statusCode 与 result 直接返回；
+ *   - 未命中 → 执行 handler：
+ *     - 如果 handler 返回 NextResponse：直接透传（通常用于 4xx/5xx 错误或特殊响应），不写入缓存；
+ *     - 如果 handler 返回普通对象：视为成功结果，写入缓存，并统一包装为 200 JSON 返回；
+ * - 当请求未携带 Idempotency-Key 时：
+ *   - 不进行缓存；
+ *   - 仅统一处理 NextResponse 与普通对象的包装逻辑（见 handleWithoutIdempotencyKey）。
+ *
+ * 推荐使用模式：
+ * - 成功路径：返回普通对象（可被缓存与复用）；
+ * - 业务错误 / 校验失败 / 特殊状态码：返回 NextResponse（不会被缓存）。
+ *
+ * 使用示例：
  * ```typescript
  * export async function POST(request: NextRequest) {
  *   return withIdempotency(request, async () => {
- *     // 处理请求
+ *     const data = await doSomething();
+ *     if (!data.ok) {
+ *       return NextResponse.json({ success: false }, { status: 400 });
+ *     }
  *     return { success: true };
  *   });
  * }

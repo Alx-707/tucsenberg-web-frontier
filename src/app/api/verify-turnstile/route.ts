@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import {
@@ -216,8 +217,23 @@ export async function POST(request: NextRequest) {
       return secretKey;
     }
 
-    // Parse request body
-    const body: TurnstileVerificationRequest = await request.json();
+    // Parse request body (safe JSON parse)
+    const parsedBody = await safeParseJson<TurnstileVerificationRequest>(
+      request,
+      {
+        route: '/api/verify-turnstile',
+      },
+    );
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parsedBody.error,
+        },
+        { status: 400 },
+      );
+    }
+    const body = parsedBody.data;
 
     // Validate request body
     const validationError = validateRequestBody(body);

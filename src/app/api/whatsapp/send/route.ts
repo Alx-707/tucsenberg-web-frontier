@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import type { SendMessageRequest, TemplateComponent } from '@/types/whatsapp';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 import { sendWhatsAppMessage } from '@/lib/whatsapp-service';
 
@@ -157,7 +158,15 @@ interface ParsedRequest {
 async function parseSendMessageRequest(
   request: NextRequest,
 ): Promise<{ error?: NextResponse; data?: ParsedRequest }> {
-  const body = await request.json();
+  const parsedBody = await safeParseJson<unknown>(request, {
+    route: '/api/whatsapp/send',
+  });
+  if (!parsedBody.ok) {
+    return {
+      error: NextResponse.json({ _error: parsedBody.error }, { status: 400 }),
+    };
+  }
+  const body = parsedBody.data;
   const validationResult = SendMessageSchema.safeParse(body);
   if (!validationResult.success) {
     return {

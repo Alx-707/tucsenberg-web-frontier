@@ -158,9 +158,10 @@ describe('Verify Turnstile API Route', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      expect(response.status).toBe(500);
+      // 使用 safeParseJson 后，无效 JSON 应返回 400 + INVALID_JSON
+      expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toBe('INVALID_JSON');
     });
 
     it('应该处理Cloudflare API网络错误', async () => {

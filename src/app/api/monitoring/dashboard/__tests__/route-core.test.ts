@@ -136,10 +136,10 @@ describe('Monitoring Dashboard API Route - 核心功能测试', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      // 空请求体会导致JSON解析失败，返回500
-      expect(response.status).toBe(500);
+      // 空请求体会导致 JSON 解析失败，返回 400 + INVALID_JSON
+      expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toBe('INVALID_JSON');
     });
 
     it('应该拒绝无效的JSON', async () => {
@@ -155,10 +155,10 @@ describe('Monitoring Dashboard API Route - 核心功能测试', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      // 无效JSON会导致解析失败，返回500
-      expect(response.status).toBe(500);
+      // 无效 JSON 会导致解析失败，返回 400 + INVALID_JSON
+      expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toBe('INVALID_JSON');
     });
 
     it('应该拒绝缺少必需字段的数据', async () => {

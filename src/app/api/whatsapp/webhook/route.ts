@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 import { getWhatsAppService } from '@/lib/whatsapp';
 
@@ -57,7 +58,13 @@ export function GET(request: NextRequest) {
 // POST 请求用于接收消息
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const parsedBody = await safeParseJson<unknown>(request, {
+      route: '/api/whatsapp/webhook',
+    });
+    if (!parsedBody.ok) {
+      return NextResponse.json({ error: parsedBody.error }, { status: 400 });
+    }
+    const body = parsedBody.data;
 
     // 验证请求来源（可选：验证 Meta 的签名）
     // 这里可以添加更严格的安全验证

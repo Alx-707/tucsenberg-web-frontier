@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 import {
   checkRateLimit,
@@ -38,11 +39,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 解析请求体
-    const body = await request.json();
+    // 解析请求体（安全 JSON 解析）
+    const parsedBody = await safeParseJson<unknown>(request, {
+      route: '/api/contact',
+    });
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parsedBody.error,
+        },
+        { status: 400 },
+      );
+    }
 
     // 验证表单数据
-    const validation = await validateFormData(body, clientIP);
+    const validation = await validateFormData(parsedBody.data, clientIP);
     if (!validation.success || !validation.data) {
       return NextResponse.json(validation, { status: 400 });
     }

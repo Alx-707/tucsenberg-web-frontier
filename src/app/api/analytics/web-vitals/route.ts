@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCachedResponse } from '@/lib/api-cache-utils';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 
 // Web Vitals 数据接口
@@ -38,7 +39,20 @@ function validateWebVitalsData(data: unknown): data is WebVitalsData {
 // 处理 Web Vitals 数据收集
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const parsedBody = await safeParseJson<unknown>(request, {
+      route: '/api/analytics/web-vitals',
+    });
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          _error: parsedBody.error,
+          message: 'Invalid JSON body for Web Vitals endpoint',
+        },
+        { status: 400 },
+      );
+    }
+    const body = parsedBody.data;
 
     // 验证请求数据
     if (!validateWebVitalsData(body)) {

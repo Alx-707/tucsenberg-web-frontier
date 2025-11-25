@@ -273,10 +273,10 @@ describe('Contact API Route - POST Tests', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      expect(response.status).toBe(500);
-      expect(data.error).toBe(
-        'An unexpected error occurred. Please try again later.',
-      );
+      // 使用 safeParseJson 后，JSON 解析错误应返回 400 + INVALID_JSON
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('INVALID_JSON');
     });
   });
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { safeParseJson as safeParseJsonHelper } from '@/lib/api/safe-parse-json';
 import { withIdempotency } from '@/lib/idempotency';
 import { logger } from '@/lib/logger';
 import {
@@ -16,12 +17,36 @@ const subscribeSchema = z.object({
   pageType: z.enum(['products', 'blog', 'about', 'contact']).optional(),
 });
 
+type SafeParseSuccess<T> = { ok: true; data: T };
+type SafeParseFailure = { ok: false; error: string };
+
+function safeParseJson<T>(
+  req: NextRequest,
+): Promise<SafeParseSuccess<T> | SafeParseFailure> {
+  // 复用通用 safeParseJson helper，统一 JSON 解析行为和 INVALID_JSON 语义
+  return safeParseJsonHelper<T>(req, { route: '/api/subscribe' });
+}
+
 export function POST(request: NextRequest) {
   // 使用幂等键中间件包装处理逻辑
   return withIdempotency(request, async () => {
+    const parsedBody = await safeParseJson<{
+      email?: string;
+      pageType?: string;
+    }>(request);
+
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parsedBody.error,
+        },
+        { status: HTTP_BAD_REQUEST_CONST },
+      );
+    }
+
     try {
-      const body = await request.json();
-      const { email, pageType } = subscribeSchema.parse(body);
+      const { email, pageType } = subscribeSchema.parse(parsedBody.data);
 
       // TODO: 集成实际的邮件服务 (Resend)
       // 这里可以添加以下功能：

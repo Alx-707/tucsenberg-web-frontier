@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 import { validateMonitoringData } from '@/app/api/monitoring/dashboard/types';
 import { HTTP_BAD_REQUEST } from '@/constants';
@@ -9,7 +10,20 @@ import { HTTP_BAD_REQUEST } from '@/constants';
  */
 export async function handlePostRequest(request: NextRequest) {
   try {
-    const body = await request.json();
+    const parsedBody = await safeParseJson<unknown>(request, {
+      route: '/api/monitoring/dashboard',
+    });
+    if (!parsedBody.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: parsedBody.error,
+          message: 'Invalid JSON body for monitoring dashboard',
+        },
+        { status: HTTP_BAD_REQUEST },
+      );
+    }
+    const body = parsedBody.data;
 
     // 验证请求数据
     if (!validateMonitoringData(body)) {

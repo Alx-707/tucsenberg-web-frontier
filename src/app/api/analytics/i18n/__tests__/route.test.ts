@@ -89,10 +89,19 @@ describe('/api/analytics/i18n', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      expect(response.status).toBe(500);
+      // 使用 safeParseJson 后，JSON 解析错误应返回 400 + INVALID_JSON
+      expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
-      expect(mockLogger.error).toHaveBeenCalled();
+      expect(data.error).toBe('INVALID_JSON');
+      expect(data.message).toBe(
+        'Invalid JSON body for i18n analytics endpoint',
+      );
+
+      // safeParseJson 会通过 logger.warn 记录解析失败日志
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Failed to parse JSON body',
+        expect.objectContaining({ route: '/api/analytics/i18n' }),
+      );
     });
   });
 
