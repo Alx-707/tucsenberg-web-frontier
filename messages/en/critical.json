@@ -360,6 +360,57 @@
       "social": {
         "title": "Social"
       }
+    },
+    "vercel": {
+      "products": {
+        "title": "Products",
+        "ai": "AI",
+        "enterprise": "Enterprise",
+        "fluidCompute": "Fluid Compute",
+        "nextjs": "Next.js",
+        "observability": "Observability",
+        "previews": "Previews",
+        "rendering": "Rendering",
+        "security": "Security",
+        "turbo": "Turbo",
+        "domains": "Domains",
+        "v0": "v0"
+      },
+      "resources": {
+        "title": "Resources",
+        "docs": "Docs",
+        "guides": "Guides",
+        "academy": "Academy",
+        "help": "Help",
+        "integrations": "Integrations",
+        "pricing": "Pricing",
+        "resources": "Resources",
+        "solutionPartners": "Solution Partners",
+        "startups": "Startups",
+        "templates": "Templates",
+        "sdks": "SDKs by Vercel"
+      },
+      "company": {
+        "title": "Company",
+        "blog": "Blog",
+        "careers": "Careers",
+        "changelog": "Changelog",
+        "contact": "Contact Us",
+        "customers": "Customers",
+        "events": "Events",
+        "partners": "Partners",
+        "shipped": "Shipped",
+        "privacy": "Privacy Policy",
+        "legal": "Legal"
+      },
+      "social": {
+        "title": "Social",
+        "x": "X (Twitter)",
+        "github": "GitHub",
+        "youtube": "YouTube",
+        "linkedin": "LinkedIn",
+        "discord": "Discord"
+      }
     }
   },
   "accessibility": {
@@ -511,6 +562,60 @@
     "product": {
       "defaultName": "Product",
       "defaultDescription": "Product description"
+    }
+  },
+  "footer": {
+    "vercel": {
+      "products": {
+        "title": "Products",
+        "ai": "AI",
+        "enterprise": "Enterprise",
+        "fluidCompute": "Fluid Compute",
+        "nextjs": "Next.js",
+        "observability": "Observability",
+        "previews": "Previews",
+        "rendering": "Rendering",
+        "security": "Security",
+        "turbo": "Turbo",
+        "domains": "Domains",
+        "v0": "v0"
+      },
+      "resources": {
+        "title": "Resources",
+        "community": "Community",
+        "docs": "Docs",
+        "guides": "Guides",
+        "academy": "Academy",
+        "help": "Help",
+        "integrations": "Integrations",
+        "pricing": "Pricing",
+        "resources": "Resources",
+        "solutionPartners": "Solution Partners",
+        "startups": "Startups",
+        "templates": "Templates",
+        "sdks": "SDKs by Vercel"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About",
+        "blog": "Blog",
+        "careers": "Careers",
+        "changelog": "Changelog",
+        "contact": "Contact Us",
+        "customers": "Customers",
+        "events": "Events",
+        "partners": "Partners",
+        "shipped": "Shipped",
+        "privacy": "Privacy Policy",
+        "legal": "Legal"
+      },
+      "social": {
+        "title": "Social",
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "youtube": "YouTube"
+      }
     }
   }
 }

@@ -23,7 +23,17 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { unstable_cache } from 'next/cache';
 import { logger } from '@/lib/logger';
+import { MONITORING_INTERVALS } from '@/constants/performance-constants';
 import { routing } from '@/i18n/routing';
+
+const I18N_CACHE_REVALIDATE_DEFAULT_SECONDS =
+  MONITORING_INTERVALS.CACHE_CLEANUP;
+
+function getRevalidateTime(): number {
+  return process.env.NODE_ENV === 'development'
+    ? 1
+    : I18N_CACHE_REVALIDATE_DEFAULT_SECONDS;
+}
 
 /**
  * Supported locale types
@@ -110,8 +120,11 @@ export const loadCriticalMessages = unstable_cache(
     const url = `${baseUrl}/messages/${safeLocale}/critical.json`;
 
     try {
+      const revalidate = getRevalidateTime();
       const response = await fetch(url, {
-        next: { revalidate: 3600 }, // 1 hour
+        next: { revalidate },
+        cache:
+          process.env.NODE_ENV === 'development' ? 'no-store' : 'force-cache',
       });
 
       if (!response.ok) {
@@ -145,7 +158,10 @@ export const loadCriticalMessages = unstable_cache(
     }
   },
   ['i18n-critical'], // Cache key prefix
-  { revalidate: 3600 }, // 1 hour revalidation
+  {
+    revalidate: getRevalidateTime(),
+    tags: ['i18n', 'critical'],
+  },
 );
 
 /**
@@ -197,8 +213,11 @@ export const loadDeferredMessages = unstable_cache(
     const url = `${baseUrl}/messages/${safeLocale}/deferred.json`;
 
     try {
+      const revalidate = getRevalidateTime();
       const response = await fetch(url, {
-        next: { revalidate: 3600 }, // 1 hour
+        next: { revalidate },
+        cache:
+          process.env.NODE_ENV === 'development' ? 'no-store' : 'force-cache',
       });
 
       if (!response.ok) {
@@ -232,7 +251,10 @@ export const loadDeferredMessages = unstable_cache(
     }
   },
   ['i18n-deferred'], // Cache key prefix
-  { revalidate: 3600 }, // 1 hour revalidation
+  {
+    revalidate: getRevalidateTime(),
+    tags: ['i18n', 'deferred'],
+  },
 );
 
 /**

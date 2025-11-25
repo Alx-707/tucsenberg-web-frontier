@@ -1,4 +1,7 @@
 {
+  "_comment": "⚠️ THIS FILE IS ONLY USED FOR VITEST MOCKS - DO NOT USE IN PRODUCTION CODE",
+  "_usage": "Referenced by vi.mock() in Vitest tests. Runtime translations are loaded from messages/[locale]/critical.json and messages/[locale]/deferred.json.",
+  "_last_updated": "2025-11-24",
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -565,6 +568,58 @@
       },
       "social": {
         "title": "Social"
+      }
+    },
+    "vercel": {
+      "products": {
+        "title": "Products",
+        "ai": "AI",
+        "enterprise": "Enterprise",
+        "fluidCompute": "Fluid Compute",
+        "nextjs": "Next.js",
+        "observability": "Observability",
+        "previews": "Previews",
+        "rendering": "Rendering",
+        "security": "Security",
+        "turbo": "Turbo",
+        "domains": "Domains",
+        "v0": "v0"
+      },
+      "resources": {
+        "title": "Resources",
+        "community": "Community",
+        "docs": "Docs",
+        "guides": "Guides",
+        "academy": "Academy",
+        "help": "Help",
+        "integrations": "Integrations",
+        "pricing": "Pricing",
+        "resources": "Resources",
+        "solutionPartners": "Solution Partners",
+        "startups": "Startups",
+        "templates": "Templates",
+        "sdks": "SDKs by Vercel"
+      },
+      "company": {
+        "title": "Company",
+        "about": "About",
+        "blog": "Blog",
+        "careers": "Careers",
+        "changelog": "Changelog",
+        "contact": "Contact Us",
+        "customers": "Customers",
+        "events": "Events",
+        "partners": "Partners",
+        "shipped": "Shipped",
+        "privacy": "Privacy Policy",
+        "legal": "Legal"
+      },
+      "social": {
+        "title": "Social",
+        "github": "GitHub",
+        "linkedin": "LinkedIn",
+        "twitter": "Twitter",
+        "youtube": "YouTube"
       }
     }
   },

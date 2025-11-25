@@ -10,7 +10,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { generateJSONLD } from '@/lib/structured-data';
 import { ErrorBoundary } from '@/components/error-boundary';
-import { Footer } from '@/components/layout/footer';
+import { Footer } from '@/components/footer';
 import { Header } from '@/components/layout/header';
 import { LazyToaster } from '@/components/lazy/lazy-toaster';
 import { LazyTopLoader } from '@/components/lazy/lazy-top-loader';
@@ -19,7 +19,9 @@ import { EnterpriseAnalyticsIsland } from '@/components/monitoring/enterprise-an
 import { WebVitalsIndicator } from '@/components/performance/web-vitals-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemePerformanceMonitor } from '@/components/theme/theme-performance-monitor';
+import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { getAppConfig } from '@/config/app';
+import { FOOTER_COLUMNS, FOOTER_STYLE_TOKENS } from '@/config/footer-links';
 import { SITE_CONFIG } from '@/config/paths/site-config';
 import { MAGIC_0_1 } from '@/constants/decimal';
 import { routing } from '@/i18n/routing';
@@ -118,7 +120,7 @@ export default async function LocaleLayout({
           >
             {/* Web Vitals 监控 - 开发环境启用以便测试 */}
             <LazyWebVitalsReporter
-              enabled={true}
+              enabled={isDevelopment}
               debug={isDevelopment}
               sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
             />
@@ -148,8 +150,19 @@ export default async function LocaleLayout({
             {/* 主要内容 */}
             <main className='flex-1'>{children}</main>
 
-            {/* 页脚 */}
-            <Footer />
+            {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
+            <Footer
+              columns={FOOTER_COLUMNS}
+              tokens={FOOTER_STYLE_TOKENS}
+              statusSlot={
+                <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
+                  All systems normal.
+                </span>
+              }
+              themeToggleSlot={
+                <ThemeSwitcher data-testid='footer-theme-toggle' />
+              }
+            />
 
             {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
             <LazyToaster />

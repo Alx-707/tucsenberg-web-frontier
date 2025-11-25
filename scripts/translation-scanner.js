@@ -486,6 +486,9 @@ function scanFile(filePath) {
       type: 'parse_error',
     });
     console.error(`❌ 扫描失败: ${filePath} - ${error.message}`);
+    if (error && error.stack) {
+      console.error(error.stack);
+    }
   }
 }
 
