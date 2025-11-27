@@ -3,8 +3,8 @@
  *
  * Tests for the new Footer component (src/components/footer/Footer.tsx)
  */
-import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 import { Footer } from '../Footer';
 
 // Mock next-intl
@@ -39,7 +39,7 @@ describe('Footer Component', () => {
       // Look for headings or elements with these keys
       const elements = screen.queryAllByText(
         (content, element) =>
-          element?.tagName === 'H2' && content.includes(section.toLowerCase())
+          element?.tagName === 'H2' && content.includes(section.toLowerCase()),
       );
       // At least some footer structure should exist
       expect(elements.length >= 0).toBe(true);
@@ -78,7 +78,7 @@ describe('Footer Component', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = render(<Footer className="custom-footer" />);
+    const { container } = render(<Footer className='custom-footer' />);
     const footer = container.querySelector('.custom-footer');
     expect(footer).toBeInTheDocument();
   });
@@ -100,8 +100,14 @@ describe('Footer Component', () => {
       {
         key: 'test',
         title: 'Test Section',
+        translationKey: 'footer.custom.test',
         links: [
-          { text: 'Test Link', href: '/test', translationKey: 'test.link' },
+          {
+            key: 'test-link',
+            label: 'Test Link',
+            href: '/test',
+            translationKey: 'test.link',
+          },
         ],
       },
     ];
@@ -109,7 +115,7 @@ describe('Footer Component', () => {
     render(<Footer columns={customColumns} />);
 
     // Should render custom section
-    const testSection = screen.queryByText(/test/i);
-    expect(testSection).toBeTruthy();
+    const testSections = screen.getAllByText(/test/i);
+    expect(testSections.length).toBeGreaterThan(0);
   });
 });
