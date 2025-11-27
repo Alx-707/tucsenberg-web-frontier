@@ -81,7 +81,7 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
           'accessibility.closeMenu': 'Close menu',
           'seo.siteName': 'Site Name',
           'seo.description': 'Site Description',
-          'contactSales': 'Contact Sales',
+          'navigation.contactSales': 'Contact Sales',
         };
         return translations[key] || key; // key 来自测试数据，安全
       },
