@@ -30,6 +30,7 @@ vi.mock('next-intl', () => ({
     number: vi.fn(),
     relativeTime: vi.fn(),
   })),
+  NextIntlClientProvider: ({ children }: { children: any }) => children,
 }));
 
 // Mock next/navigation

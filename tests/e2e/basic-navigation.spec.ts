@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { getNav } from './helpers/navigation';
 import {
   removeInterferingElements,
   waitForLoadWithFallback,
@@ -32,25 +33,14 @@ test.describe('Basic Navigation', () => {
     await removeInterferingElements(page);
     await waitForStablePage(page);
 
-    // Wait for navigation component to be fully loaded
-    // Use the main navigation selector from vercel-navigation.tsx
-    const navigation = page
-      .locator('nav[aria-label="Main navigation"]')
-      .first();
-    await expect(navigation).toBeVisible({ timeout: 10_000 });
-
-    // Test navigation to different pages - use more specific selector with ARIA label
-    const aboutLink = page
-      .locator('nav[aria-label="Main navigation"] a[href*="/about"]')
-      .first();
+    // 通过主导航测试到 About 页的跳转（与 i18n 导航辅助保持一致）
+    const nav = getNav(page);
+    const aboutLink = nav.getByRole('link', { name: 'About' });
     await expect(aboutLink).toBeVisible({ timeout: 10_000 });
 
-    // Wait for navigation to complete with URL change
-    await Promise.all([
-      page.waitForURL('**/about**', { timeout: 15_000 }),
-      aboutLink.click(),
-    ]);
-    await expect(page.url()).toContain('/about');
+    // 点击 About 链接并使用 URL 断言自动等待导航完成
+    await aboutLink.click();
+    await expect(page).toHaveURL(/\/about/);
   });
 
   test('should handle language switching', async ({ page }) => {

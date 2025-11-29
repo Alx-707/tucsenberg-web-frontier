@@ -2,7 +2,8 @@ import '@/app/globals.css';
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
+import { getMessagesComplete } from '@/lib/i18n/server/getMessagesComplete';
 import { routing } from '@/i18n/routing';
 
 interface LocaleLayoutProps {
@@ -21,13 +22,20 @@ export default async function TestLocaleLayout({
     notFound();
   }
 
-  // Providing all messages to the client
-  const messages = await getMessages();
+  // Align with main LocaleLayout: set request locale explicitly
+  const typedLocale = locale as 'en' | 'zh';
+  setRequestLocale(typedLocale);
+
+  // Providing all messages to the client with an explicit locale
+  const messages = await getMessagesComplete(typedLocale);
 
   return (
-    <html lang={locale}>
+    <html lang={typedLocale}>
       <body className='flex min-h-screen flex-col antialiased'>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider
+          locale={typedLocale}
+          messages={messages}
+        >
           {/* 简化的Header用于测试 */}
           <header className='w-full border-b bg-background/95'>
             <div className='container mx-auto px-4'>

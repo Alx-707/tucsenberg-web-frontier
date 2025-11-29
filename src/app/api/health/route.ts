@@ -1,13 +1,20 @@
-import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export const dynamic = 'force-dynamic';
-
-export function GET(_req: NextRequest) {
-  return new Response(JSON.stringify({ status: 'ok', timestamp: Date.now() }), {
-    status: 200,
-    headers: {
-      'content-type': 'application/json; charset=utf-8',
-      'cache-control': 'no-store',
+/**
+ * Health check endpoint used by monitoring and cron jobs.
+ *
+ * Returns a minimal, stable JSON payload so that both automated checks
+ * and e2e tests can reliably assert service availability.
+ */
+export function GET() {
+  return NextResponse.json(
+    { status: 'ok' },
+    {
+      status: 200,
+      headers: {
+        // Health checks should not be cached by intermediaries.
+        'cache-control': 'no-store',
+      },
     },
-  });
+  );
 }

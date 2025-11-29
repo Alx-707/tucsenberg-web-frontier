@@ -78,13 +78,11 @@ function createSuccessResponse({
     locale,
     messages,
     timeZone: locale === 'zh' ? 'Asia/Shanghai' : 'UTC',
-    now: new Date(),
     formats: getFormats(locale),
     strictMessageTypeSafety: true,
     metadata: {
       loadTime,
       cacheUsed,
-      timestamp: Date.now(),
     },
   };
 }
@@ -95,13 +93,11 @@ async function createFallbackResponse(locale: string, startTime: number) {
     locale,
     messages: (await import(`../../messages/${locale}.json`)).default,
     timeZone: locale === 'zh' ? 'Asia/Shanghai' : 'UTC',
-    now: new Date(),
     formats: getFormats(locale),
     metadata: {
       loadTime: performance.now() - startTime,
       cacheUsed: false,
       error: true,
-      timestamp: Date.now(),
     },
   };
 }

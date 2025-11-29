@@ -1,160 +1,257 @@
 {
   "tasks": [
     {
-      "id": "63c1cf87-c712-41f4-a048-c1d88c5d0aeb",
-      "name": "盤點測試 mock 現狀與差異",
-      "description": "梳理 test-utils.ts、src/test/utils.tsx 以及各測試文件的本地 mock，列出消息/導航 key 差異與覆蓋情況，確認哪些可以集中化、哪些需保留局部覆寫。輸出盤點清單供後續改造參考。",
-      "status": "pending",
+      "id": "17ecb407-af4f-46d1-a0ab-9ec4b61b7697",
+      "name": "P1-1 巩固首页 /[locale] hero Cache Components 实现与测试",
+      "description": "审查并巩固现有 getHomeHeroMessages(locale) + 'use cache' + cacheLife('days') 实现，补充必要的文档与测试，确保首页在多语言场景下构建与运行行为稳定，无 Cache Components 相关错误。",
+      "notes": "此任务不修改缓存逻辑的行为，仅做审查与文档/测试补强，作为后续 contact 与内容系统缓存的基线样板。",
+      "status": "completed",
       "dependencies": [],
-      "createdAt": "2025-11-26T13:21:49.556Z",
-      "updatedAt": "2025-11-26T13:21:49.556Z",
+      "createdAt": "2025-11-29T05:48:18.765Z",
+      "updatedAt": "2025-11-29T06:01:19.090Z",
       "relatedFiles": [
         {
-          "path": "test-utils.ts",
-          "type": "REFERENCE",
-          "description": "根目錄簡易 mock 工具"
+          "path": "src/app/[locale]/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "首页 hero 使用 getHomeHeroMessages 的页面实现"
         },
         {
-          "path": "src/test/utils.tsx",
+          "path": "src/lib/load-messages.ts",
           "type": "REFERENCE",
-          "description": "完整 renderWithIntl 工具"
+          "description": "i18n critical messages 缓存实现"
         },
         {
-          "path": "tests",
+          "path": "docs/cache-components-plan.md",
           "type": "REFERENCE",
-          "description": "測試文件內局部 mock 搜索"
+          "description": "Cache Components 内部规划与约束"
         }
       ],
-      "implementationGuide": "1) 搜索 test-utils.ts、src/test/utils.tsx 以及 tests/** 中的自定義 mock；2) 列出 navigation/seo/其他命名空間的 key 列表與重疊/缺失；3) 確認哪些測試需要特殊 mock，標記不可合併；4) 產出盤點文檔或簡表。",
-      "verificationCriteria": "提供盤點結果（文件/表格），包含：集中可合併的命名空間列表、必須保留局部覆蓋的場景、缺失/重疊的 key。",
-      "analysisResult": "集中管理測試 mock，統一 renderWithIntl 等工具的默認消息來源，減少重複和缺漏。"
+      "implementationGuide": "1) 使用 view/codebase-retrieval 检查 src/app/[locale]/page.tsx 与 src/lib/load-messages.ts 的当前实现；2) 对照 docs/cache-components-plan.md 与 nextjs-architecture 规则，确认 getHomeHeroMessages 仅依赖 locale 与 messages JSON，不使用 request-scoped API；3) 如缺失，补充简要 JSDoc 或注释说明缓存语义；4) 为首页编写或补充集成测试（多 locale 渲染、关键文案存在、无运行时错误），并确保测试独立于具体缓存命中状态。",
+      "verificationCriteria": "1) 运行 pnpm lint:check && pnpm type-check && pnpm build:check 全部通过；2) Vitest 中首页相关测试全部通过（包括多 locale 渲染与基本 smoke test）；3) next build 输出中 /[locale] 路由无新的 Cache Components 或 PPR 错误；4) 文档或注释明确说明 getHomeHeroMessages 的缓存语义与边界。",
+      "analysisResult": "本次 Phase 1-2 任务的全局分析结果：在已启用 cacheComponents: true 的 Next.js 16 项目中，继续沿用“数据函数级 'use cache' + cacheLife()”的模式，避免在 page.tsx 或含有 request-scoped API 的代码段直接使用 Cache Components；先对首页 hero 的实现进行审查与测试补强，再为 /[locale]/contact 文案层抽象出 getContactCopy(locale) 并逐步引入 'use cache' + cacheLife('days')；同时，在 MDX 内容系统之上为 blog/products 设计并实现 cache-friendly wrapper 层（暂不启用缓存），统一未来在 /[locale]/blog 与 /[locale]/products/[category|slug] 等路由上的数据获取入口，并通过类型与文档约束确保与 i18n、next-intl 以及 Cache Components 规则兼容。",
+      "summary": "已为 getHomeHeroMessages(locale) 补充 Cache Components 语义与约束注释，并运行 pnpm lint:check、pnpm type-check、pnpm build:check 及首页 hero 与 HomeStatic 相关 Vitest 测试，均通过且 /[locale] 路由无新的 Cache Components/PPR 错误。",
+      "completedAt": "2025-11-29T06:01:19.088Z"
     },
     {
-      "id": "cb832325-6fc4-42d4-917f-5f4ac23076c5",
-      "name": "建立集中 mock 常量",
-      "description": "在 src/test/constants/mock-messages.ts 按命名空間導出 mock（如 navigation、seo 等），並提供合併的 combinedMessages；確保對象可分拆引用以減少載入。",
-      "status": "pending",
+      "id": "602e05db-42e1-4d38-826e-0f96242fafc2",
+      "name": "P1-2 设计并实现 contact 文案数据模型与 getContactCopy API（无缓存版）",
+      "description": "为 /[locale]/contact 页面设计 ContactCopyModel 数据结构与 getContactCopy(locale) server-side API（暂不加 'use cache'），将页面中的标题/描述/右侧信息卡等文案从直接调用 getTranslationsCached 抽象为结构化数据，确保未来易于挂载 Cache Components。",
+      "notes": "本任务的重点是抽象出 contact 页的 server-side 文案数据层，为后续引入 Cache Components 做准备，暂不引入 'use cache'。",
+      "status": "completed",
       "dependencies": [
         {
-          "taskId": "63c1cf87-c712-41f4-a048-c1d88c5d0aeb"
+          "taskId": "17ecb407-af4f-46d1-a0ab-9ec4b61b7697"
         }
       ],
-      "createdAt": "2025-11-26T13:21:49.556Z",
-      "updatedAt": "2025-11-26T13:21:49.556Z",
+      "createdAt": "2025-11-29T05:48:18.765Z",
+      "updatedAt": "2025-11-29T06:23:47.120Z",
       "relatedFiles": [
         {
-          "path": "src/test/constants/mock-messages.ts",
+          "path": "src/app/[locale]/contact/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "当前 contact 页面实现"
+        },
+        {
+          "path": "src/lib/i18n/server/getTranslationsCached.ts",
+          "type": "REFERENCE",
+          "description": "getTranslationsCached 封装"
+        },
+        {
+          "path": "src/lib/load-messages.ts",
+          "type": "REFERENCE",
+          "description": "如选择经由 messages JSON 构造文案时的依赖"
+        }
+      ],
+      "implementationGuide": "1) 使用 view 检查 src/app/[locale]/contact/page.tsx，列出所有当前通过 getTranslationsCached 获取的文案 key；2) 在合适位置（如 src/lib/contact/getContactCopy.ts）定义 ContactCopyModel interface，包含 header 文案、右侧 panel 列表等字段；3) 新增 getContactCopy(locale: Locale) 函数，内部复用 getTranslationsCached 或 loadCriticalMessages，从 i18n 消息中构造 ContactCopyModel，仅依赖 locale 参数，不调用 headers/cookies/requestLocale 等；4) 修改 ContactPage，使其使用 const copy = await getContactCopy(locale) 并将 copy 传入对应展示组件，同时保持 ContactForm client component 与 Server Actions 原样；5) 为 getContactCopy 编写单元测试，覆盖正常与错误场景（如缺失 key 时的容错策略）。",
+      "verificationCriteria": "1) ContactPage 不再在组件体内直接多次调用 getTranslationsCached，而是通过 getContactCopy(locale) 获取结构化文案；2) 新增的 ContactCopyModel interface 无 any，字段含义清晰并通过 TypeScript 编译；3) 新增单元测试覆盖至少：正常多语言文案构造、缺失 key 时的容错行为；4) pnpm lint:check && pnpm type-check && pnpm build:check 全部通过。",
+      "analysisResult": "本次 Phase 1-2 任务的全局分析结果：在已启用 cacheComponents: true 的 Next.js 16 项目中，继续沿用“数据函数级 'use cache' + cacheLife()”的模式，避免在 page.tsx 或含有 request-scoped API 的代码段直接使用 Cache Components；先对首页 hero 的实现进行审查与测试补强，再为 /[locale]/contact 文案层抽象出 getContactCopy(locale) 并逐步引入 'use cache' + cacheLife('days')；同时，在 MDX 内容系统之上为 blog/products 设计并实现 cache-friendly wrapper 层（暂不启用缓存），统一未来在 /[locale]/blog 与 /[locale]/products/[category|slug] 等路由上的数据获取入口，并通过类型与文档约束确保与 i18n、next-intl 以及 Cache Components 规则兼容。",
+      "summary": "已为 /[locale]/contact 页面实现 ContactCopyModel 与 getContactCopy(locale)（无 Cache Components），将原先在 ContactPage 组件内多次直接调用 getTranslationsCached 的文案（标题、描述、右侧联系信息与营业时间区块）抽象为结构化数据模型：header/title+description，以及 panel.contact 与 panel.hours 的嵌套字段。新增 src/lib/contact/getContactCopy.ts 文件使用明确的 Locale 类型与 getTranslationsCached 从 underConstruction.pages.contact 命名空间构造该模型，并在 ContactPage 中通过 const copy = await getContactCopy(locale as Locale) 使用该数据，保持 ContactForm 与 Server Actions 不变。新增 Vitest 单元测试 src/lib/__tests__/contact-get-contact-copy.test.ts，覆盖正常多语言构造（验证 getTranslationsCached 调用参数与模型字段映射）及缺失 key 场景（mock 返回 missing.key 并确认模型中按原样透传），同时跑通现有 contact 页面 i18n 与渲染测试（page.test.tsx、page-i18n-basic.test.tsx、page-i18n.test.tsx）。pnpm lint:check、pnpm type-check、pnpm build:check 全部通过，Next.js 16 Turbopack 构建中 /[locale]/contact 路由保持 Partial Prerender 状态且无 Cache Components 相关错误。",
+      "completedAt": "2025-11-29T06:23:47.119Z"
+    },
+    {
+      "id": "c002eba3-0691-44f1-8b0b-d97a5afe79db",
+      "name": "P1-3 为 getContactCopy 引入 'use cache' + cacheLife('days') 并接入页面",
+      "description": "在已实现的 getContactCopy(locale) 基础上，安全地引入 'use cache' 与 cacheLife('days')，并验证 /[locale]/contact 在多语言场景下构建、渲染与交互（含 ContactForm）均正常，无 Cache Components 相关错误。",
+      "notes": "此任务正式将 contact 文案层纳入 Cache Components，需特别留意与 next-intl 行为及 i18n 消息更新流程的兼容性。",
+	      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "602e05db-42e1-4d38-826e-0f96242fafc2"
+        }
+      ],
+	      "createdAt": "2025-11-29T05:48:18.765Z",
+	      "updatedAt": "2025-11-29T14:42:22.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/contact/getContactCopy.ts",
+          "type": "TO_MODIFY",
+          "description": "新建的 contact 文案数据函数"
+        },
+        {
+          "path": "src/app/[locale]/contact/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "使用 getContactCopy 的页面"
+        },
+        {
+          "path": "docs/cache-components-plan.md",
+          "type": "REFERENCE",
+          "description": "确认 cacheLife('days') 选择与项目规划一致"
+        }
+      ],
+	      "implementationGuide": "1) 在 getContactCopy(locale) 函数体顶部加入 'use cache' 与 cacheLife('days')，确保函数签名及内部实现未使用任何 request-scoped API；2) 确认 ContactPage 仅通过 locale 参数调用 getContactCopy，不传递 request 相关对象；3) 运行 pnpm lint:check && pnpm type-check && pnpm build:check，观察 next build 报告中 contact 路由的缓存 profile 与潜在警告；4) 通过 existing Playwright 或新增轻量 e2e 测试，在 /en/contact 与 /zh/contact 上验证页面渲染、表单交互与 Turnstile 行为均无异常；5) 如发现缓存导致文案未更新的风险，记录在文档中并评估是否需额外监控。",
+	      "verificationCriteria": "1) getContactCopy(locale) 内部仅依赖 locale 与 i18n 消息数据，不访问 headers/cookies/requestLocale 等 API；2) pnpm lint:check && pnpm type-check && pnpm build:check 全部通过，构建日志中无 contact 路由相关的 Cache Components/PPR 错误；3) Playwright 或等效 e2e 测试在 /en/contact 与 /zh/contact 上通过，表单功能与 Turnstile 正常；4) 如手动修改 messages 文案并重新构建，contact 页显示的新文案与预期一致。",
+	      "analysisResult": "本次 Phase 1-2 任务的全局分析结果：在已启用 cacheComponents: true 的 Next.js 16 项目中，继续沿用“数据函数级 'use cache' + cacheLife()”的模式，避免在 page.tsx 或含有 request-scoped API 的代码段直接使用 Cache Components；先对首页 hero 的实现进行审查与测试补强，再为 /[locale]/contact 文案层抽象出 getContactCopy(locale) 并逐步引入 'use cache' + cacheLife('days')；同时，在 MDX 内容系统之上为 blog/products 设计并实现 cache-friendly wrapper 层（暂不启用缓存），统一未来在 /[locale]/blog 与 /[locale]/products/[category|slug] 等路由上的数据获取入口，并通过类型与文档约束确保与 i18n、next-intl 以及 Cache Components 规则兼容。",
+	      "summary": "已在 src/lib/contact/getContactCopy.ts 中为 getContactCopy(locale) 引入 'use cache' 与 cacheLife('days')，确保函数仅依赖显式 locale 参数与 i18n 消息数据，不访问 headers/cookies/requestLocale 等 request-scoped API，ContactPage 继续通过 getContactCopy(locale as Locale) 获取结构化文案。为 Vitest 增加 next/cache mock，使 contact 相关的所有单测（包括 page.test.tsx、page-i18n*.test.tsx、page-rendering*.test.tsx）以及 src/lib/__tests__/contact-get-contact-copy.test.ts 在启用 cacheComponents: true 的前提下全部通过，并在 getContactCopy 单测中断言 cacheLife('days') 被调用一次以锁定缓存语义。运行 pnpm lint:check、pnpm type-check、pnpm build:check 均通过，next build 输出中 /[locale]/contact 路由的 Revalidate/Expire 为 1d/1w，且无新的 Cache Components/PPR 错误。Playwright e2e 在启动阶段仍因既有 /api/health route 抛出 E887（`cacheLife()` 之外的独立实现问题）而整体失败，本任务未修改该 API route，后续需在独立任务中修复以恢复完整 e2e 覆盖。",
+	      "completedAt": "2025-11-29T14:42:22.000Z"
+    },
+    {
+      "id": "159b99ca-3d80-404e-aa86-a385601c98c3",
+      "name": "P2-1 盘点 content-query 与内容域模型，设计 blog/products wrapper 签名",
+      "description": "全面盘点 lib/content-query、lib/content-parser 等现有内容查询 API 与 Domain Model，结合 /[locale]/blog 与 /[locale]/products/[category|slug] 未来业务需求，设计 getAllPostsCached、getPostBySlugCached、getProductListingCached、getProductDetailCached 等 wrapper 的函数签名与返回模型接口。",
+      "notes": "此任务仅做设计与盘点，不修改实际查询逻辑，实现 wrapper 的具体代码在后续任务中完成。",
+	      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "17ecb407-af4f-46d1-a0ab-9ec4b61b7697"
+        },
+        {
+          "taskId": "602e05db-42e1-4d38-826e-0f96242fafc2"
+        },
+        {
+          "taskId": "c002eba3-0691-44f1-8b0b-d97a5afe79db"
+        }
+      ],
+	      "createdAt": "2025-11-29T05:48:18.765Z",
+	      "updatedAt": "2025-11-29T15:05:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/content-query",
+          "type": "REFERENCE",
+          "description": "内容查询主模块目录"
+        },
+        {
+          "path": "src/lib/content-parser.ts",
+          "type": "REFERENCE",
+          "description": "MDX/front matter 解析逻辑"
+        },
+        {
+          "path": "src/types/content.ts",
+          "type": "REFERENCE",
+          "description": "现有内容相关类型定义（如有）"
+        }
+      ],
+	      "implementationGuide": "1) 使用 view/codebase-retrieval 检查 lib/content-query/*.ts、lib/content-parser.ts、lib/content.ts，整理现有公开函数（getAllPosts、getPostBySlug、getAllPages 等）的参数与返回类型；2) 结合业务背景中对 blog 与 products 的规划，定义 PostSummary、PostDetail、ProductSummary、ProductDetail 等 interface，明确所需字段（标题、slug、locale、发布日期、分类、SEO 信息等）；3) 设计 cache-friendly wrapper 函数签名，例如 getAllPostsCached(locale: Locale, options?: PostListOptions)、getPostBySlugCached(locale: Locale, slug: string)、getProductListingCached(locale: Locale, category: string) 等，保证仅接收显式参数、不依赖 request-scoped API；4) 形成设计文档或内联注释，说明 wrapper 与底层 content-query API 的关系及未来接入 Cache Components 的预期用法。",
+	      "verificationCriteria": "1) 完成一份简要设计说明（可以是注释或文档），列出所有计划中的 wrapper 函数签名与对应 Domain Model 接口；2) 所有新设计的接口与类型均符合 TypeScript strict 规范，无 any，参数数量控制在 3 个以内；3) 经过代码审查后，其他开发者能清晰理解未来在 /[locale]/blog 与 /[locale]/products 子路由中如何使用这些 wrapper。",
+	      "analysisResult": "本次 Phase 1-2 任务的全局分析结果：在已启用 cacheComponents: true 的 Next.js 16 项目中，继续沿用“数据函数级 'use cache' + cacheLife()”的模式，避免在 page.tsx 或含有 request-scoped API 的代码段直接使用 Cache Components；先对首页 hero 的实现进行审查与测试补强，再为 /[locale]/contact 文案层抽象出 getContactCopy(locale) 并逐步引入 'use cache' + cacheLife('days')；同时，在 MDX 内容系统之上为 blog/products 设计并实现 cache-friendly wrapper 层（暂不启用缓存），统一未来在 /[locale]/blog 与 /[locale]/products/[category|slug] 等路由上的数据获取入口，并通过类型与文档约束确保与 i18n、next-intl 以及 Cache Components 规则兼容。",
+	      "summary": "已使用 ACE 盘点 src/lib/content-query/queries.ts、src/lib/content-query.ts、src/lib/content-parser.ts 与 src/lib/content.ts 等模块，确认现有内容查询 API 以 BlogPost/Page/ParsedContent<T> 与 ContentQueryOptions 为基础，完全独立于 request-scoped API，仅依赖显式 locale 与查询选项。在 src/types/content.ts 中新增 PostSummary、PostDetail、ProductSummary、ProductDetail 四个 Domain Model interface：统一包含 slug、locale、title、description、categories/tags 及 SEO 信息，并在 PostSummary/PostDetail 中补充 publishedAt/updatedAt、excerpt、readingTime、coverImage、relatedPosts 等字段，以适配 blog 列表与详情需求；同时定义 PostListOptions 作为 ContentQueryOptions 子集（limit/offset/sortBy/sortOrder/tags/categories/featured/draft），用于未来 blog 列表 wrapper 的可选参数。基于上述类型，设计并在同一文件中声明 cache-friendly wrapper 的函数签名：GetAllPostsCachedFn(locale, options?) => Promise<PostSummary[]>、GetPostBySlugCachedFn(locale, slug) => Promise<PostDetail>、GetProductListingCachedFn(locale, category) => Promise<ProductSummary[]>、GetProductDetailCachedFn(locale, slug) => Promise<ProductDetail>，并通过注释明确：实现将分别落在 src/lib/content/blog.ts 与 src/lib/content/products.ts 中，仅接受显式、可序列化参数，不访问 headers/cookies/requestLocale 等 request-scoped API，以便未来在这些 wrapper 内安全挂载 \"use cache\" + cacheLife()/cacheTag()。所有新接口与类型均无 any，函数参数数量 ≤ 2，已通过 pnpm lint:check 与 pnpm type-check 验证。",
+	      "completedAt": "2025-11-29T15:05:00.000Z"
+    },
+    {
+      "id": "3d10d844-c790-41c7-acc5-26093d8dcd94",
+      "name": "P2-2 为 blog 实现 cache-friendly wrapper（不立即启用 'use cache'）",
+      "description": "基于 P2-1 的设计，为 blog 相关内容实现 getAllPostsCached、getPostBySlugCached 等 wrapper 函数，内部复用现有 content-query API，并为这些 wrapper 编写单元测试与基本错误场景覆盖，暂不在函数体内引入 'use cache'，仅作为统一入口。",
+      "notes": "此阶段 wrapper 仅统一入口与类型，不做缓存启用，便于后续在单一位置添加 'use cache' + cacheLife。",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "159b99ca-3d80-404e-aa86-a385601c98c3"
+        }
+      ],
+      "createdAt": "2025-11-29T05:48:18.765Z",
+      "updatedAt": "2025-11-29T15:15:00.000Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/content-query",
+          "type": "DEPENDENCY",
+          "description": "底层 blog 内容查询实现"
+        },
+        {
+          "path": "src/lib/content/blog.ts",
           "type": "CREATE",
-          "description": "集中 mock 常量文件"
+          "description": "建议的新 blog wrapper 模块",
+          "lineStart": 1,
+          "lineEnd": 200
         },
         {
-          "path": "messages/en/critical.json",
-          "type": "REFERENCE",
-          "description": "英語消息源參考"
-        },
-        {
-          "path": "messages/zh/critical.json",
-          "type": "REFERENCE",
-          "description": "中文消息源參考"
+          "path": "src/types/content.ts",
+          "type": "TO_MODIFY",
+          "description": "博客相关 Domain Model 类型定义"
         }
       ],
-      "implementationGuide": "1) 新建 src/test/constants/mock-messages.ts；2) 拆分導出各命名空間常量 + 默認合併對象；3) 確保類型對齊 next-intl 消息結構，避免 any；4) 若有導航 mock，一併集中。",
-      "verificationCriteria": "存在集中 mock 文件，包含分命名空間導出與 combinedMessages，類型正確，無 ESLint/TS 錯誤。",
-      "analysisResult": "集中管理測試 mock，統一 renderWithIntl 等工具的默認消息來源，減少重複和缺漏。"
+      "implementationGuide": "1) 在合适模块（如 src/lib/content/blog.ts 或 src/lib/content/blog-cache.ts）中实现 getAllPostsCached(locale, options?) 与 getPostBySlugCached(locale, slug) 等函数，内部调用现有 getAllPosts/getPostBySlug；2) 确保这些 wrapper 函数只接受显式 locale/slug/options 参数，不访问 request-scoped API；3) 为 wrapper 编写 Vitest 单元测试，覆盖：正常返回数据、无内容时的行为、底层抛错时的错误传播或包装策略；4) 更新或新增 types/content.ts 中的 PostSummary/PostDetail 等类型定义，使之与 wrapper 返回值保持一致；5) 运行 pnpm test 针对相关测试文件，并确认 lint/type-check 通过。",
+      "verificationCriteria": "1) 新增 blog wrapper 函数均通过 TypeScript 编译，无 any 或隐式 any；2) Vitest 单元测试覆盖正常与错误路径，并全部通过；3) 现有使用 content-query 的代码在不做调用替换的前提下仍能正常构建与运行；4) pnpm lint:check && pnpm type-check && pnpm test 针对相关模块执行无错误。",
+      "analysisResult": "P2-2 在 P2-1 的类型设计基础上，为 blog 内容实现了具体的 cache-friendly wrapper。新建 src/lib/content/blog.ts 模块，实现 getAllPostsCached 与 getPostBySlugCached 两个函数：内部分别复用 content-query 层的 getAllPosts 与 getPostBySlug，将底层 BlogPost 实体映射为面向视图层的 PostSummary 与 PostDetail 域模型，并仅依赖显式的 locale/slug/options 参数，不访问任何 request-scoped API。为适配项目的 exactOptionalPropertyTypes 约束，映射逻辑中通过条件展开（conditional spread）方式设置可选字段，避免将可能为 undefined 的值显式赋给可选属性；同时通过独立的 toContentQueryOptions(options) 辅助函数，将 PostListOptions 安全转换为 ContentQueryOptions，确保字段只在存在时才被赋值 limit/offset/sortBy/sortOrder/tags/categories/featured/draft 等属性，从而兼容类型系统要求。整体实现保持函数参数数量 ≤ 2，函数圈复杂度在限制内，并遵守不在本阶段引入 'use cache' 或 cacheLife() 的约定，为后续 Cache Components 集成留出空间。"
+      ,"summary": "已在 src/lib/content/blog.ts 中实现 blog 专用的 cache-friendly wrapper：导出 getAllPostsCached 与 getPostBySlugCached 两个函数，签名分别符合 P2-1 中在 src/types/content.ts 定义的 GetAllPostsCachedFn 与 GetPostBySlugCachedFn 类型。getAllPostsCached(locale, options?) 内部调用 content-query.getAllPosts(locale, normalizedOptions)，其中 normalizedOptions 由 toContentQueryOptions(options) 辅助函数从 PostListOptions 精确映射到 ContentQueryOptions，确保仅在字段非 undefined 时才设置 limit/offset/sortBy/sortOrder/tags/categories/featured/draft 等属性，从而兼容 exactOptionalPropertyTypes；随后将返回的 BlogPost[] 映射为 PostSummary[]，包含 slug/locale/title/publishedAt 以及根据 BlogPostMetadata 条件补充的 description/updatedAt/tags/categories/featured/excerpt/readingTime/coverImage/seo 等字段。getPostBySlugCached(locale, slug) 则复用 content-query.getPostBySlug(slug, locale)，再通过 mapBlogPostToDetail 将结果映射为 PostDetail，额外携带 content/filePath 及可选的 relatedPosts 字段，并保持底层抛出的错误原样向上传递，便于调用方自行决定 404 或错误处理策略。为上述 wrapper 新增 src/lib/__tests__/content-blog-wrapper.test.ts 单测文件：通过 vi.hoisted + vi.mock('@/lib/content-query') 的方式 mock getAllPosts/getPostBySlug，覆盖了正常有数据时的字段映射与参数转发、无内容时 getAllPostsCached 返回空数组、以及底层 getPostBySlug 抛错时 getPostBySlugCached 直接向外传播同一个 Error 实例等场景。所有新增代码已通过 pnpm lint:check 与 pnpm type-check 校验，且针对该测试文件执行 vitest run，全部 4 个用例通过，未对现有 content-query 使用点产生任何破坏性变更。"
+      ,"completedAt": "2025-11-29T15:15:00.000Z"
     },
     {
-      "id": "ace45b3a-1629-4a4a-b97b-e10a815ffe3a",
-      "name": "整合測試工具入口到統一 mock",
-      "description": "更新 src/test/utils.tsx 使 renderWithIntl 等默認使用集中 mock，支持 partial 覆寫；調整 createMockTranslations 使用集中源；處理 test-utils.ts（根目錄）為輕量重導或標註棄用。",
-      "status": "pending",
+      "id": "a03a5b65-fdf4-4e27-85af-10992f9fb2df",
+      "name": "P2-3 为 products 实现 cache-friendly wrapper（不立即启用 'use cache'）",
+      "description": "基于 P2-1 的设计，为未来 products 页面实现 getProductListingCached 与 getProductDetailCached 等 wrapper 函数，考虑 /[locale]/products/[category] 与 /[locale]/products/[slug] 的路由形态，统一封装产品列表与详情数据获取逻辑，并为其编写单元测试。",
+      "notes": "products 未来可能有较多子路由及不同更新节奏，此 wrapper 层将成为挂载 Cache Components 与潜在 cacheTag 的关键边界。",
+      "status": "completed",
       "dependencies": [
         {
-          "taskId": "cb832325-6fc4-42d4-917f-5f4ac23076c5"
+          "taskId": "159b99ca-3d80-404e-aa86-a385601c98c3"
         }
       ],
-      "createdAt": "2025-11-26T13:21:49.556Z",
-      "updatedAt": "2025-11-26T13:21:49.556Z",
+      "createdAt": "2025-11-29T05:48:18.765Z",
+      "updatedAt": "2025-11-29T05:48:18.765Z",
       "relatedFiles": [
         {
-          "path": "src/test/utils.tsx",
-          "type": "TO_MODIFY",
-          "description": "測試渲染工具"
+          "path": "src/lib/content",
+          "type": "DEPENDENCY",
+          "description": "可能已有的产品相关内容工具"
         },
         {
-          "path": "test-utils.ts",
+          "path": "src/lib/content/products.ts",
+          "type": "CREATE",
+          "description": "建议的新 products wrapper 模块",
+          "lineStart": 1,
+          "lineEnd": 200
+        },
+        {
+          "path": "src/types/content.ts",
           "type": "TO_MODIFY",
-          "description": "根目錄簡易工具需重導/棄用"
+          "description": "产品相关 Domain Model 类型定义"
         }
       ],
-      "implementationGuide": "1) 在 src/test/utils.tsx 引入集中 mock，默認合併並允許 partialMessages；2) createMockTranslations 從集中源生成；3) 如需深合併，使用現有 util 或添加小型合併函數；4) test-utils.ts 視情況重導至 src/test/utils.tsx 或保留 deprecated 標註。",
-      "verificationCriteria": "renderWithIntl 默認載入集中 mock 並可覆寫；createMockTranslations 依賴集中源；test-utils.ts 已處理重導/棄用；TS/ESLint 通過。",
-      "analysisResult": "集中管理測試 mock，統一 renderWithIntl 等工具的默認消息來源，減少重複和缺漏。"
+      "implementationGuide": "1) 在合适模块（如 src/lib/content/products.ts 或 src/lib/content/products-cache.ts）中实现 getProductListingCached(locale, category) 与 getProductDetailCached(locale, slug) 等函数，内部可重用现有或新增的 products 内容查询工具；2) 确认函数签名仅依赖 locale/category/slug 等显式参数，不访问 request-scoped API；3) 为 wrapper 编写 Vitest 单元测试，覆盖：有数据/无数据/错误场景，以及多 locale 情况；4) 根据需要在 src/types/content.ts 中新增或完善 ProductSummary/ProductDetail 接口；5) 运行 lint/type-check/test 验证实现质量。",
+      "verificationCriteria": "1) products wrapper 函数签名与 P2-1 设计文档一致，且通过 TypeScript 编译；2) 新增 Vitest 单元测试覆盖典型与错误场景并通过；3) 在尚未有实际 /[locale]/products 路由使用它们的前提下，现有构建和测试完全不受影响；4) pnpm lint:check && pnpm type-check && pnpm test 对相关文件执行时无错误。",
+      "analysisResult": "P2-3 阶段为未来 /[locale]/products 路由准备了 cache-friendly 数据访问入口。在不改变既有内容系统的前提下，新建了 src/lib/content/products.ts 模块，实现了 getProductListingCached(locale, category) 与 getProductDetailCached(locale, slug) 两个 wrapper 函数；它们只依赖显式参数（locale/category/slug），内部通过 src/lib/content/products-source.ts 暴露的底层查询函数获取产品详情列表或单个产品，并将结果映射为 ProductSummary[] 或 ProductDetail。底层查询模块目前仅提供占位实现，真实的产品内容对接将在后续阶段完成。wrapper 层已经通过 Vitest 单测验证：涵盖有数据、无数据、错误传播以及多 locale 场景；同时通过 pnpm lint:check、pnpm type-check 与针对该测试文件的 pnpm test 运行，确认在当前尚未有实际 /[locale]/products 页面使用这些函数的前提下，对现有构建与测试无任何破坏。",
+      "summary": "实现 products 领域的 cache-friendly wrapper 层：新增 src/lib/content/products.ts，导出 getProductListingCached(locale, category) 与 getProductDetailCached(locale, slug)，仅依赖 locale/category/slug 等显式参数，不触及任何 request-scoped API；内部通过 src/lib/content/products-source.ts 提供的 getProductListing/getProductDetail 底层查询函数获取 ProductDetail，并将列表场景映射为 ProductSummary[]。同时新增 Vitest 单测 src/lib/__tests__/content-products-wrapper.test.ts，通过 vi.hoisted + vi.mock('@/lib/content/products-source') 的方式对底层查询进行替身，实现对 wrapper 行为的验证：包括有数据（字段映射正确）、无数据（返回空数组）、错误场景（错误原样透传）以及多语言 locale( 'en'/'zh' ) 的支持。pnpm lint:check、pnpm type-check 与针对该测试文件的 pnpm test 全部通过，满足任务对类型安全、测试覆盖与对现有构建无影响的要求。",
+      "completedAt": "2025-11-29T14:54:40.000Z"
     },
     {
-      "id": "10039858-e369-454d-9013-045d25e63a35",
-      "name": "遷移測試引用並清理局部 mock",
-      "description": "全局替換測試文件對本地 mock 的引用，改用集中 mock 或其子集；保留確需特別覆寫的場景並記錄；確保路徑更新後測試可運行。",
-      "status": "pending",
+      "id": "c631349e-ecd5-44f3-8bd4-f8739aa5c072",
+      "name": "P2-4 为 blog/products wrapper 与未来 Cache Components 使用编写开发文档与示例",
+      "description": "整理一份面向开发者的说明文档，阐述 blog/products cache-friendly wrapper 的使用方式、类型约束以及未来如何在这些 wrapper 上安全地启用 'use cache' + cacheLife()/cacheTag()，并提供简单的调用示例，方便其他开发者在实现 /[locale]/blog 与 /[locale]/products 子路由时复用。",
+      "notes": "文档有助于在团队范围内统一 Cache Components 使用方式，降低误用风险。",
+      "status": "completed",
       "dependencies": [
         {
-          "taskId": "ace45b3a-1629-4a4a-b97b-e10a815ffe3a"
+          "taskId": "3d10d844-c790-41c7-acc5-26093d8dcd94"
+        },
+        {
+          "taskId": "a03a5b65-fdf4-4e27-85af-10992f9fb2df"
         }
       ],
-      "createdAt": "2025-11-26T13:21:49.556Z",
-      "updatedAt": "2025-11-26T13:21:49.556Z",
+      "createdAt": "2025-11-29T05:48:18.765Z",
+      "updatedAt": "2025-11-29T05:48:18.765Z",
       "relatedFiles": [
         {
-          "path": "tests",
-          "type": "TO_MODIFY",
-          "description": "測試文件需更新導入"
-        },
-        {
-          "path": "src/test/constants/mock-messages.ts",
-          "type": "REFERENCE",
-          "description": "集中 mock 來源"
-        },
-        {
-          "path": "src/test/utils.tsx",
-          "type": "REFERENCE",
-          "description": "統一工具入口"
+          "path": "docs/cache-components-content-wrappers.md",
+          "type": "CREATE",
+          "description": "新开发文档，说明 blog/products wrapper 与 Cache Components 的关系",
+          "lineStart": 1,
+          "lineEnd": 200
         }
       ],
-      "implementationGuide": "1) 搜索 tests/** 中對 navigation/messages 等本地 mock 的導入；2) 替換為集中 mock 或從集中 mock 拆分子集；3) 保留特殊覆寫並在文件內註明原因；4) 確認 import 路徑統一。",
-      "verificationCriteria": "測試文件導入統一路徑；僅保留必要的局部覆寫並有說明；抽樣運行關鍵測試無路徑/類型錯誤。",
-      "analysisResult": "集中管理測試 mock，統一 renderWithIntl 等工具的默認消息來源，減少重複和缺漏。"
-    },
-    {
-      "id": "c78a7ae9-5734-4ff4-bf75-3f635b11e47a",
-      "name": "使用說明與驗證",
-      "description": "補充測試工具使用說明（集中 mock 的導入方式、覆寫示例），並列出驗證步驟（lint/type-check/關鍵測試命令）；更新相關 README 或在 src/test/utils.tsx 添加說明。",
-      "status": "pending",
-      "dependencies": [
-        {
-          "taskId": "10039858-e369-454d-9013-045d25e63a35"
-        }
-      ],
-      "createdAt": "2025-11-26T13:21:49.556Z",
-      "updatedAt": "2025-11-26T13:21:49.556Z",
-      "relatedFiles": [
-        {
-          "path": "src/test/utils.tsx",
-          "type": "REFERENCE",
-          "description": "添加說明/示例"
-        },
-        {
-          "path": "src/test/constants/mock-messages.ts",
-          "type": "REFERENCE",
-          "description": "集中 mock 說明"
-        },
-        {
-          "path": "docs",
-          "type": "REFERENCE",
-          "description": "若有測試文檔需更新"
-        }
-      ],
-      "implementationGuide": "1) 在現有測試說明文件或 utils 頂部添加簡短說明與示例；2) 說明如何按需覆寫 partialMessages；3) 列出推薦驗證命令；4) 如無專門文檔，可在 src/test/README.md 或 utils 頂部註釋補充。",
-      "verificationCriteria": "存在可見的使用說明（文檔或頂部註釋）；示例涵蓋默認使用與覆寫；列出驗證命令；無 lint/TS 錯誤。",
-      "analysisResult": "集中管理測試 mock，統一 renderWithIntl 等工具的默認消息來源，減少重複和缺漏。"
+      "implementationGuide": "1) 在 docs/ 或 src/docs/ 目录下新增一份文档（如 docs/cache-components-content-wrappers.md），简要说明：设计背景、相关模块位置、各 wrapper 函数签名与返回类型；2) 在文档中给出 1-2 个示例，例如 HomeBlogSection 或 ProductsGrid 将如何在 Server Component 中调用 getAllPostsCached/getProductListingCached（不必立即实现真实组件）；3) 标明未来在这些 wrapper 内启用 'use cache' + cacheLife() 时需要注意的事项（禁止使用 request-scoped API、仅依赖 locale/slug 等）；4) 运行 lint:check（如有对 docs 的 lint 规则）并通过人工 review 确认文档内容与现有架构规则一致。",
+      "verificationCriteria": "1) 文档中列出的 wrapper 名称、签名与实际实现一致；2) 文档通过同事或 reviewer 的人工审阅，认为足以指导在 /[locale]/blog 与 /[locale]/products 子路由中正确使用；3) 如仓库对 docs 有 lint/格式检查，相关检查全部通过。",
+      "analysisResult": "P2-4 阶段在前两步已完成 blog/products cache-friendly wrapper 实现的基础上，为团队补齐了配套的开发文档。文档位于 docs/cache-components-content-wrappers.md，系统说明了：1）相关类型与模块的位置（src/types/content.ts、src/lib/content/blog.ts、src/lib/content/products.ts 等）；2）四个 wrapper 函数的签名与返回类型（getAllPostsCached/getPostBySlugCached/getProductListingCached/getProductDetailCached），以及它们只依赖 locale/slug/category/options 等显式参数且不访问 request-scoped API 的约束；3）在 Server Component 中调用这些 wrapper 的示例（例如 BlogListSection、ProductsGrid、BlogPostPage、ProductDetailPage），帮助在 /[locale]/blog 与 /[locale]/products 子路由中复用统一的数据入口；4）未来在 wrapper 内启用 “use cache” + cacheLife()/cacheTag() 时需要遵守的规则（缓存边界应位于数据函数中、禁止与 cookies()/headers()/draftMode() 混用等）。通过该文档，可以在不改变现有实现的前提下，为后续 Cache Components 接入与团队协作提供清晰的一致性约束。",
+      "summary": "为 blog/products 内容 wrapper 编写开发文档 docs/cache-components-content-wrappers.md，覆盖设计背景、类型与模块位置、四个 wrapper 函数的签名与返回类型，以及在 Server Component 中的典型调用示例（如 BlogListSection、ProductsGrid、BlogPostPage、ProductDetailPage）。文档还明确说明了与 Cache Components 的集成策略：未来应在 wrapper 内部而不是 page.tsx 中使用 “use cache” + cacheLife()/cacheTag()，并强调 wrapper 只依赖 locale/slug/category/options 等显式参数且不访问 request-scoped API，从而保证在 Next.js 16 cacheComponents 模式下保持可缓存性与架构一致性。已运行 pnpm lint:check && pnpm type-check，确认新增文档不会破坏现有检查流程。",
+      "completedAt": "2025-11-29T15:02:00.000Z"
     }
   ]
 }

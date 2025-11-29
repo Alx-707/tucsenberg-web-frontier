@@ -32,6 +32,7 @@ vi.mock('next-intl', () => ({
     };
     return translations[key] || key;
   }),
+  NextIntlClientProvider: ({ children }: { children: any }) => children,
 }));
 
 // Mock next/navigation

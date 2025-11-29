@@ -1331,7 +1331,7 @@ vi.mock('@/constants/i18n-constants', async (importOriginal) => {
   };
 });
 
-// Mock next-intl - 提供实际的翻译映射
+// Mock next-intl - 提供实际的翻译映射和基础 Provider
 const mockTranslations: Record<string, string> = {
   'navigation.home': 'Home',
   'navigation.about': 'About',
@@ -1353,6 +1353,14 @@ vi.mock('next-intl', () => ({
     number: vi.fn(),
     relativeTime: vi.fn(),
   })),
+  // 最小实现：用于与 renderWithIntl 和 NextIntlClientProvider API 兼容
+  NextIntlClientProvider: ({
+    children,
+  }: {
+    children: React.ReactNode;
+    locale?: string;
+    messages?: Record<string, unknown>;
+  }) => React.createElement(React.Fragment, null, children),
 }));
 
 // Mock next-intl/server

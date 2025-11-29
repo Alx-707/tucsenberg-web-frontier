@@ -77,6 +77,122 @@ export interface ContentQueryOptions {
   draft?: boolean;
 }
 
+// Domain models for cache-friendly blog and products wrappers (Phase 2 - P2-1)
+
+/**
+ * Summary view of a blog post for listing pages.
+ *
+ * Derived primarily from BlogPostMetadata, flattened for consumption in
+ * Server Components and future cache-friendly wrappers.
+ */
+export interface PostSummary {
+  slug: string;
+  locale: Locale;
+  title: string;
+  description?: string;
+  publishedAt: string;
+  updatedAt?: string;
+  tags?: string[];
+  categories?: string[];
+  featured?: boolean;
+  excerpt?: string;
+  readingTime?: number;
+  coverImage?: string;
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    ogImage?: string;
+  };
+}
+
+/**
+ * Detail view of a blog post for individual post pages.
+ */
+export interface PostDetail extends PostSummary {
+  content: string;
+  filePath: string;
+  relatedPosts?: string[];
+}
+
+/**
+ * Summary view of a product for listing and overview sections.
+ *
+ * Products currently re-use the generic ContentMetadata shape; this domain
+ * model keeps the fields we expect to surface in the UI.
+ */
+export interface ProductSummary {
+  slug: string;
+  locale: Locale;
+  title: string;
+  description?: string;
+  categories?: string[];
+  tags?: string[];
+  seo?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    ogImage?: string;
+  };
+}
+
+/**
+ * Detail view of a product for dedicated product pages.
+ */
+export interface ProductDetail extends ProductSummary {
+  content: string;
+  filePath: string;
+}
+
+/**
+ * Options for cache-friendly blog post listing wrappers.
+ *
+ * These map directly to a subset of ContentQueryOptions and are intentionally
+ * limited to explicit, serializable fields so that future Cache Components
+ * wrappers can remain request-agnostic.
+ */
+export interface PostListOptions {
+  limit?: number;
+  offset?: number;
+  sortBy?: ContentQueryOptions['sortBy'];
+  sortOrder?: ContentQueryOptions['sortOrder'];
+  tags?: string[];
+  categories?: string[];
+  featured?: boolean;
+  draft?: boolean;
+}
+
+/**
+ * High-level cache-friendly wrapper signatures designed in P2-1.
+ *
+ * Implementations will live in src/lib/content/blog.ts and
+ * src/lib/content/products.ts in later tasks (P2-2 / P2-3).
+ *
+ * These functions are intentionally designed to:
+ * - accept only explicit, serializable parameters
+ * - avoid any request-scoped APIs (cookies, headers, etc.)
+ * - be compatible with future "use cache" + cacheLife()/cacheTag() usage
+ */
+export type GetAllPostsCachedFn = (
+  locale: Locale,
+  options?: PostListOptions,
+) => Promise<PostSummary[]>;
+
+export type GetPostBySlugCachedFn = (
+  locale: Locale,
+  slug: string,
+) => Promise<PostDetail>;
+
+export type GetProductListingCachedFn = (
+  locale: Locale,
+  category: string,
+) => Promise<ProductSummary[]>;
+
+export type GetProductDetailCachedFn = (
+  locale: Locale,
+  slug: string,
+) => Promise<ProductDetail>;
+
 // Content validation result
 export interface ContentValidationResult {
   isValid: boolean;

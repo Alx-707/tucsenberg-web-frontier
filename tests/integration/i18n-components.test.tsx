@@ -14,6 +14,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
  */
 
 // Mock配置 - 使用vi.hoisted确保Mock在模块导入前设置
+// 注意：本文件用于验证完整中英文 i18n 行为，刻意保留独立 mockEnMessages/mockZhMessages
+// 而不复用集中 mock 常量，以避免过度耦合测试数据与测试工具实现
 const {
   mockUseLocale,
   mockUseTranslations,

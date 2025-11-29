@@ -29,6 +29,14 @@ description: "Vitest unit/integration testing standards: vi.hoisted, complete mo
 
 Note: Current repository metrics (49 test files analyzed) show test-callback p95 ≈ 91 lines and general function p95 ≈ 63 lines; the budgets above aim to catch outliers while staying practical.
 
+## Centralized Test Mocks (i18n & UI)
+
+- i18n-aware and UI/layout tests **MUST** use centralized message fixtures from `src/test/constants/mock-messages.ts` and test utilities from `@/test/utils` (for example `renderWithIntl`, `createMockTranslations`) instead of creating new per-file `test-utils` or inline `mockMessages` that duplicate them.
+- Local, file-scoped i18n mocks are allowed **ONLY** for highly specific core-configuration or full message-structure tests (for example `tests/unit/i18n.test.ts`); such files **MUST** include a short comment explaining why centralized mocks are not reused.
+- New test utilities or message fixtures **MUST NOT** reimplement behavior already covered by `@/test/utils`, `src/test/mock-utils.ts`, or `src/test/constants/mock-messages.ts`.
+- When using `vi.hoisted`, you **MUST NOT** reference imported symbols inside the hoisted callback; use inline literals only to avoid ESM initialization order issues.
+- For detailed examples and migration patterns, see `docs/testing/mock-usage-guide.md`.
+
 ## ESLint Configuration Requirements
 
 ### Vitest Global Variables Configuration

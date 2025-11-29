@@ -4,35 +4,100 @@ import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 
 // Web Vitals 数据接口
-interface WebVitalsData {
+//
+// 说明：
+// - 为兼容当前前端上报的精简结构，仅以下字段为必填：
+//   - name / value / rating / delta / timestamp
+// - 其余字段（id / navigationType / url / userAgent / path）为可选扩展字段，
+//   未来如需更细粒度分析可在前端按需补充，而不会破坏现有后端校验。
+interface WebVitalsBaseData {
   name: string;
   value: number;
   rating: 'good' | 'needs-improvement' | 'poor';
   delta: number;
-  id: string;
-  navigationType: string;
-  url: string;
-  userAgent: string;
   timestamp: number;
 }
 
-// 验证 Web Vitals 数据
+interface WebVitalsExtendedData {
+  id?: string;
+  navigationType?: string;
+  url?: string;
+  userAgent?: string;
+  path?: string;
+}
+
+type WebVitalsData = WebVitalsBaseData & WebVitalsExtendedData;
+
+// 验证 Web Vitals 数据 - 拆分基础字段与可选字段校验，降低复杂度
+function isValidWebVitalsBaseFields(obj: Record<string, unknown>): boolean {
+  return (
+    typeof obj.name === 'string' &&
+    typeof obj.value === 'number' &&
+    ['good', 'needs-improvement', 'poor'].includes(obj.rating as string) &&
+    typeof obj.delta === 'number' &&
+    typeof obj.timestamp === 'number'
+  );
+}
+
+function hasValidOptionalId(obj: Record<string, unknown>): boolean {
+  if (!('id' in obj)) {
+    return true;
+  }
+
+  return typeof obj.id === 'string';
+}
+
+function hasValidOptionalNavigationType(obj: Record<string, unknown>): boolean {
+  if (!('navigationType' in obj)) {
+    return true;
+  }
+
+  return typeof obj.navigationType === 'string';
+}
+
+function hasValidOptionalUrl(obj: Record<string, unknown>): boolean {
+  if (!('url' in obj)) {
+    return true;
+  }
+
+  return typeof obj.url === 'string';
+}
+
+function hasValidOptionalUserAgent(obj: Record<string, unknown>): boolean {
+  if (!('userAgent' in obj)) {
+    return true;
+  }
+
+  return typeof obj.userAgent === 'string';
+}
+
+function hasValidOptionalPath(obj: Record<string, unknown>): boolean {
+  if (!('path' in obj)) {
+    return true;
+  }
+
+  return typeof obj.path === 'string';
+}
+
 function validateWebVitalsData(data: unknown): data is WebVitalsData {
   if (typeof data !== 'object' || data === null) {
     return false;
   }
 
   const obj = data as Record<string, unknown>;
+
+  // 1) 必填字段校验：与前端 WebVitalsReporter 上报的精简结构对齐
+  if (!isValidWebVitalsBaseFields(obj)) {
+    return false;
+  }
+
+  // 2) 可选扩展字段：如存在则做类型校验，否则忽略
   return (
-    typeof obj.name === 'string' &&
-    typeof obj.value === 'number' &&
-    ['good', 'needs-improvement', 'poor'].includes(obj.rating as string) &&
-    typeof obj.delta === 'number' &&
-    typeof obj.id === 'string' &&
-    typeof obj.navigationType === 'string' &&
-    typeof obj.url === 'string' &&
-    typeof obj.userAgent === 'string' &&
-    typeof obj.timestamp === 'number'
+    hasValidOptionalId(obj) &&
+    hasValidOptionalNavigationType(obj) &&
+    hasValidOptionalUrl(obj) &&
+    hasValidOptionalUserAgent(obj) &&
+    hasValidOptionalPath(obj)
   );
 }
 
@@ -72,7 +137,12 @@ export async function POST(request: NextRequest) {
       metric: body.name,
       value: body.value,
       rating: body.rating,
-      url: body.url,
+      // 仅在存在时记录可选字段，避免 exactOptionalPropertyTypes 下显式传入 undefined
+      ...(body.path ? { path: body.path } : {}),
+      ...(body.url ? { url: body.url } : {}),
+      ...(body.navigationType ? { navigationType: body.navigationType } : {}),
+      ...(body.userAgent ? { userAgent: body.userAgent } : {}),
+      ...(body.id ? { id: body.id } : {}),
       timestamp: body.timestamp,
     });
 

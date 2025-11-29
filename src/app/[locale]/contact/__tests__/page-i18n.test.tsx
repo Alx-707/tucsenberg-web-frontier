@@ -29,6 +29,13 @@ vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
 }));
 
+// 在测试环境中将 cacheLife 处理为 no-op，避免依赖 Next.js cacheComponents 运行时配置
+vi.mock('next/cache', () => ({
+  cacheLife: () => {
+    // no-op in tests; real cache behavior is validated via Next.js build/e2e
+  },
+}));
+
 // Mock next/image
 vi.mock('next/image', () => ({
   default: ({

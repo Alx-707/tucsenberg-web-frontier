@@ -3,8 +3,6 @@ import { createCachedResponse } from '@/lib/api-cache-utils';
 import { getAllPages, getAllPosts, getContentStats } from '@/lib/content';
 import { logger } from '@/lib/logger';
 
-export const dynamic = 'force-dynamic';
-
 // Helper function to safely extract content example
 function getContentExample<
   T extends {

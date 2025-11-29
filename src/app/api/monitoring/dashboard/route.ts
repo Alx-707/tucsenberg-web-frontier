@@ -4,8 +4,6 @@ import { handleGetRequest } from '@/app/api/monitoring/dashboard/handlers/get-ha
 import { handlePostRequest } from '@/app/api/monitoring/dashboard/handlers/post-handler';
 import { handlePutRequest } from '@/app/api/monitoring/dashboard/handlers/put-handler';
 
-export const dynamic = 'force-dynamic';
-
 /**
  * POST /api/monitoring/dashboard
  * 收集监控仪表板数据

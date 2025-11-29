@@ -69,6 +69,7 @@ Package manager: pnpm only
 - **Internationalization**: See `i18n-content-management.md` for next-intl and MDX content management setup
 - **Service integrations**: See `service-integration.md` for Resend and Analytics
 - **CI/CD setup**: See `eslint-cicd-integration.md` for complete pipeline
+- **Testing & Mocks**: See `testing-standards.md` and `docs/testing/mock-usage-guide.md` for Vitest patterns, centralized mocks, and test utilities
 
 ## Naming Conventions
 

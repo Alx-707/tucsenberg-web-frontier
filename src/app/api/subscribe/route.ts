@@ -9,8 +9,6 @@ import {
   PERCENTAGE_FULL,
 } from '@/constants';
 
-export const dynamic = 'force-dynamic';
-
 // 邮件订阅请求验证模式
 const subscribeSchema = z.object({
   email: z.string().email('Invalid email address'),

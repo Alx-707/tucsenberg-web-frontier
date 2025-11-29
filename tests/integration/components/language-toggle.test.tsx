@@ -14,6 +14,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageToggle } from '@/components/language-toggle';
+import { languageMessages } from '@/test/constants/mock-messages';
 
 // Mock next-intl hooks
 const mockUseTranslations = vi.fn();
@@ -160,9 +161,9 @@ describe('LanguageToggle Integration Tests', () => {
     // Setup default mock returns
     mockUseTranslations.mockImplementation((key: string) => {
       const translations: Record<string, string> = {
-        toggle: 'Toggle language',
-        english: 'English',
-        chinese: '中文',
+        toggle: languageMessages.toggle,
+        english: languageMessages.english,
+        chinese: languageMessages.chinese,
       };
 
       return (

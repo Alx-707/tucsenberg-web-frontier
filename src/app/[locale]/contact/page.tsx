@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import type { Locale } from '@/types/i18n';
+import { getContactCopy } from '@/lib/contact/getContactCopy';
 import { getTranslationsCached } from '@/lib/i18n/server/getTranslationsCached';
 import { ContactForm } from '@/components/contact/contact-form';
 import { Card } from '@/components/ui/card';
@@ -54,17 +56,14 @@ function ContactPageHeader({
 
 export default async function ContactPage({ params }: ContactPageProps) {
   const { locale } = await params;
-  const t = await getTranslationsCached({
-    locale,
-    namespace: 'underConstruction.pages.contact',
-  });
+  const copy = await getContactCopy(locale as Locale);
 
   return (
     <main className='min-h-[80vh] px-4 py-16'>
       <div className='mx-auto max-w-4xl'>
         <ContactPageHeader
-          title={t('title')}
-          description={t('description')}
+          title={copy.header.title}
+          description={copy.header.description}
         />
 
         <div className='grid gap-8 md:grid-cols-2'>
@@ -74,7 +73,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
           <div className='space-y-6'>
             <Card className='p-6'>
               <h3 className='mb-4 text-xl font-semibold'>
-                {t('panel.contactTitle')}
+                {copy.panel.contact.title}
               </h3>
               <div className='space-y-4'>
                 <div className='flex items-center space-x-3'>
@@ -94,7 +93,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className='font-medium'>{t('panel.email')}</p>
+                    <p className='font-medium'>
+                      {copy.panel.contact.emailLabel}
+                    </p>
                     <p className='text-muted-foreground'>
                       contact@tucsenberg.com
                     </p>
@@ -118,7 +119,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
                     </svg>
                   </div>
                   <div>
-                    <p className='font-medium'>{t('panel.phone')}</p>
+                    <p className='font-medium'>
+                      {copy.panel.contact.phoneLabel}
+                    </p>
                     <p className='text-muted-foreground'>+1-555-0123</p>
                   </div>
                 </div>
@@ -127,21 +130,21 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
             <Card className='p-6'>
               <h3 className='mb-4 text-xl font-semibold'>
-                {t('panel.hoursTitle')}
+                {copy.panel.hours.title}
               </h3>
               <div className='space-y-2 text-sm'>
                 <div className='flex justify-between'>
-                  <span>{t('panel.weekdays')}</span>
+                  <span>{copy.panel.hours.weekdaysLabel}</span>
                   <span className='text-muted-foreground'>9:00 - 18:00</span>
                 </div>
                 <div className='flex justify-between'>
-                  <span>{t('panel.saturday')}</span>
+                  <span>{copy.panel.hours.saturdayLabel}</span>
                   <span className='text-muted-foreground'>10:00 - 16:00</span>
                 </div>
                 <div className='flex justify-between'>
-                  <span>{t('panel.sunday')}</span>
+                  <span>{copy.panel.hours.sundayLabel}</span>
                   <span className='text-muted-foreground'>
-                    {t('panel.closed')}
+                    {copy.panel.hours.closedLabel}
                   </span>
                 </div>
               </div>

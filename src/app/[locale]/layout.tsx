@@ -28,9 +28,6 @@ import { routing } from '@/i18n/routing';
 
 // Client analytics are rendered as an island to avoid impacting LCP
 
-export const dynamic = 'force-static';
-export const revalidate = 3600;
-
 // 重新导出元数据生成函数
 export const generateMetadata = generateLocaleMetadata;
 
@@ -47,6 +44,126 @@ const LazyWhatsAppFloatingButton = nextDynamic(
 interface LocaleLayoutProps {
   children: ReactNode;
   params: Promise<{ locale: string }>;
+}
+interface AsyncLocaleLayoutContentProps {
+  locale: 'en' | 'zh';
+  isDevelopment: boolean;
+  children: ReactNode;
+}
+
+async function AsyncLocaleLayoutContent({
+  locale,
+  isDevelopment,
+  children,
+}: AsyncLocaleLayoutContentProps) {
+  const appConfig = getAppConfig();
+  const showWhatsAppButton =
+    appConfig.features.ENABLE_WHATSAPP_CHAT &&
+    Boolean(SITE_CONFIG.contact.whatsappNumber);
+
+  const headerList = await headers();
+  const nonce = headerList.get('x-csp-nonce') ?? undefined;
+
+  // Load critical messages dynamically for root provider (keeps client i18n stable across routes)
+  const messages = await (
+    await import('@/lib/load-messages')
+  ).loadCriticalMessages(locale);
+
+  // 生成结构化数据
+  const { organizationData, websiteData } =
+    await generatePageStructuredData(locale);
+
+  return (
+    <>
+      {/* JSON-LD 结构化数据 */}
+      <script
+        nonce={nonce}
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: generateJSONLD(organizationData),
+        }}
+      />
+      <script
+        nonce={nonce}
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: generateJSONLD(websiteData),
+        }}
+      />
+      <NextIntlClientProvider
+        locale={locale}
+        messages={messages}
+      >
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+        >
+          {/* Web Vitals 监控 - 开发环境启用以便测试 */}
+          <LazyWebVitalsReporter
+            enabled={isDevelopment}
+            debug={isDevelopment}
+            sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
+          />
+
+          {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
+          <LazyTopLoader nonce={nonce} />
+
+          {isDevelopment && (
+            <Suspense fallback={null}>
+              <ErrorBoundary
+                fallback={
+                  <div className='fixed bottom-4 right-4 z-[1100] rounded-md bg-destructive/80 px-3 py-2 text-xs text-white shadow-lg'>
+                    监控组件加载失败
+                  </div>
+                }
+              >
+                {/* i18n preloader depends on next-intl context; disable here now that provider is scoped */}
+                <ThemePerformanceMonitor />
+                <WebVitalsIndicator />
+              </ErrorBoundary>
+            </Suspense>
+          )}
+
+          {/* 导航栏 */}
+          <Header locale={locale} />
+
+          {/* 主要内容 */}
+          <main className='flex-1'>{children}</main>
+
+          {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
+          <Footer
+            columns={FOOTER_COLUMNS}
+            tokens={FOOTER_STYLE_TOKENS}
+            statusSlot={
+              <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
+                All systems normal.
+              </span>
+            }
+            themeToggleSlot={
+              <ThemeSwitcher data-testid='footer-theme-toggle' />
+            }
+          />
+
+          {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
+          <LazyToaster />
+
+          {showWhatsAppButton && (
+            <Suspense fallback={null}>
+              <LazyWhatsAppFloatingButton
+                number={SITE_CONFIG.contact.whatsappNumber}
+              />
+            </Suspense>
+          )}
+
+          {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
+          {process.env.NODE_ENV === 'production' ? (
+            <EnterpriseAnalyticsIsland />
+          ) : null}
+        </ThemeProvider>
+      </NextIntlClientProvider>
+    </>
+  );
 }
 
 export default async function LocaleLayout({
@@ -65,28 +182,11 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const isDevelopment = process.env.NODE_ENV === 'development';
-
-  const appConfig = getAppConfig();
-  const showWhatsAppButton =
-    appConfig.features.ENABLE_WHATSAPP_CHAT &&
-    Boolean(SITE_CONFIG.contact.whatsappNumber);
-
-  const headerList = await headers();
-  const nonce = headerList.get('x-csp-nonce') ?? undefined;
-
-  // Load critical messages dynamically for root provider (keeps client i18n stable across routes)
-  const messages = await (
-    await import('@/lib/load-messages')
-  ).loadCriticalMessages(locale as 'en' | 'zh');
-
-  // 生成结构化数据
-  const { organizationData, websiteData } = await generatePageStructuredData(
-    locale as 'en' | 'zh',
-  );
+  const typedLocale = locale as 'en' | 'zh';
 
   return (
     <html
-      lang={locale}
+      lang={typedLocale}
       className={getFontClassNames()}
       suppressHydrationWarning
     >
@@ -94,93 +194,14 @@ export default async function LocaleLayout({
         className='flex min-h-screen flex-col antialiased'
         suppressHydrationWarning
       >
-        {/* JSON-LD 结构化数据 */}
-        <script
-          nonce={nonce}
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{
-            __html: generateJSONLD(organizationData),
-          }}
-        />
-        <script
-          nonce={nonce}
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{
-            __html: generateJSONLD(websiteData),
-          }}
-        />
-        <NextIntlClientProvider
-          locale={locale as 'en' | 'zh'}
-          messages={messages}
-        >
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
+        <Suspense fallback={null}>
+          <AsyncLocaleLayoutContent
+            locale={typedLocale}
+            isDevelopment={isDevelopment}
           >
-            {/* Web Vitals 监控 - 开发环境启用以便测试 */}
-            <LazyWebVitalsReporter
-              enabled={isDevelopment}
-              debug={isDevelopment}
-              sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
-            />
-
-            {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyTopLoader nonce={nonce} />
-
-            {isDevelopment && (
-              <Suspense fallback={null}>
-                <ErrorBoundary
-                  fallback={
-                    <div className='fixed bottom-4 right-4 z-[1100] rounded-md bg-destructive/80 px-3 py-2 text-xs text-white shadow-lg'>
-                      监控组件加载失败
-                    </div>
-                  }
-                >
-                  {/* i18n preloader depends on next-intl context; disable here now that provider is scoped */}
-                  <ThemePerformanceMonitor />
-                  <WebVitalsIndicator />
-                </ErrorBoundary>
-              </Suspense>
-            )}
-
-            {/* 导航栏 */}
-            <Header locale={locale as 'en' | 'zh'} />
-
-            {/* 主要内容 */}
-            <main className='flex-1'>{children}</main>
-
-            {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
-            <Footer
-              columns={FOOTER_COLUMNS}
-              tokens={FOOTER_STYLE_TOKENS}
-              statusSlot={
-                <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
-                  All systems normal.
-                </span>
-              }
-              themeToggleSlot={
-                <ThemeSwitcher data-testid='footer-theme-toggle' />
-              }
-            />
-
-            {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyToaster />
-
-            {showWhatsAppButton && (
-              <Suspense fallback={null}>
-                <LazyWhatsAppFloatingButton
-                  number={SITE_CONFIG.contact.whatsappNumber}
-                />
-              </Suspense>
-            )}
-
-            {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
-            {process.env.NODE_ENV === 'production' ? (
-              <EnterpriseAnalyticsIsland />
-            ) : null}
-          </ThemeProvider>
-        </NextIntlClientProvider>
+            {children}
+          </AsyncLocaleLayoutContent>
+        </Suspense>
       </body>
     </html>
   );

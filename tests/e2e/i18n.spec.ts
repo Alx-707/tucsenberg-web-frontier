@@ -3,6 +3,7 @@ import { checkA11y, injectAxe } from './helpers/axe';
 import { clickNavLinkByName, getNav } from './helpers/navigation';
 import {
   removeInterferingElements,
+  safeClick,
   waitForStablePage,
 } from './test-environment-setup';
 
@@ -25,8 +26,8 @@ test.describe('Internationalization (i18n)', () => {
     const htmlLang = await page.locator('html').getAttribute('lang');
     expect(htmlLang).toBe('en');
 
-    // Verify English content is displayed
-    const heroSection = page.getByTestId('hero-section');
+    // Verify English content is displayed（严格模式下只使用第一个 hero section）
+    const heroSection = page.getByTestId('hero-section').first();
     await expect(heroSection).toBeVisible();
 
     // Check navigation per form factor
@@ -49,17 +50,20 @@ test.describe('Internationalization (i18n)', () => {
     test('should switch from English to Chinese and update content', async ({
       page,
     }) => {
-      // Open language dropdown
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await expect(languageToggleButton).toBeVisible();
-      await languageToggleButton.click();
+      // Open language dropdown using a robust selector (exclude disabled variants)
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
+      );
 
       // Verify dropdown is open
       const dropdownContent = page.getByTestId('language-dropdown-content');
-      await expect(page.getByTestId('language-toggle-button')).toHaveAttribute(
-        'aria-expanded',
-        'true',
-      );
+      const expandedToggle = page
+        .locator(
+          'button[data-testid="language-toggle-button"][aria-expanded="true"]',
+        )
+        .first();
+      await expect(expandedToggle).toBeVisible();
       await expect(dropdownContent).toHaveAttribute('data-state', 'open');
 
       // Verify English is currently active
@@ -116,21 +120,25 @@ test.describe('Internationalization (i18n)', () => {
         }
       }
 
-      // Verify hero section content is in Chinese
-      const heroSection = page.getByTestId('hero-section');
+      // Verify hero section content is in Chinese（页面存在多个 hero section 时仅断言第一个）
+      const heroSection = page.getByTestId('hero-section').first();
       await expect(heroSection).toBeVisible();
     });
 
     test('should switch from Chinese back to English', async ({ page }) => {
-      // First switch to Chinese
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await languageToggleButton.click();
+      // First switch to Chinese (open dropdown)
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
+      );
       // Ensure dropdown is fully open before interacting
       const dropdownContentA = page.getByTestId('language-dropdown-content');
-      await expect(languageToggleButton).toHaveAttribute(
-        'aria-expanded',
-        'true',
-      );
+      const expandedToggleA = page
+        .locator(
+          'button[data-testid="language-toggle-button"][aria-expanded="true"]',
+        )
+        .first();
+      await expect(expandedToggleA).toBeVisible();
       await expect(dropdownContentA).toHaveAttribute('data-state', 'open');
 
       const chineseLink = page.getByTestId('language-link-zh');
@@ -138,17 +146,20 @@ test.describe('Internationalization (i18n)', () => {
       await page.waitForURL('**/zh');
       await waitForStablePage(page);
 
-      // Now switch back to English
-      const languageToggleButton2 = page.getByTestId('language-toggle-button');
-      await expect(languageToggleButton2).toBeVisible();
-      await languageToggleButton2.click();
+      // Now switch back to English (reopen dropdown)
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
+      );
       const dropdownContentReopen = page.getByTestId(
         'language-dropdown-content',
       );
-      await expect(languageToggleButton2).toHaveAttribute(
-        'aria-expanded',
-        'true',
-      );
+      const expandedToggleB = page
+        .locator(
+          'button[data-testid="language-toggle-button"][aria-expanded="true"]',
+        )
+        .first();
+      await expect(expandedToggleB).toBeVisible();
       await expect(dropdownContentReopen).toHaveAttribute('data-state', 'open');
 
       const englishLink = page.getByTestId('language-link-en');
@@ -193,13 +204,17 @@ test.describe('Internationalization (i18n)', () => {
     test('should show loading indicator during language switch', async ({
       page,
     }) => {
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await languageToggleButton.click();
-      const dropdownContentB = page.getByTestId('language-dropdown-content');
-      await expect(languageToggleButton).toHaveAttribute(
-        'aria-expanded',
-        'true',
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
       );
+      const dropdownContentB = page.getByTestId('language-dropdown-content');
+      const expandedToggle = page
+        .locator(
+          'button[data-testid="language-toggle-button"][aria-expanded="true"]',
+        )
+        .first();
+      await expect(expandedToggle).toBeVisible();
       await expect(dropdownContentB).toHaveAttribute('data-state', 'open');
 
       // Click Chinese link and immediately check for loading state
@@ -263,13 +278,17 @@ test.describe('Internationalization (i18n)', () => {
       await page.waitForURL('**/en/about');
 
       // Switch language
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await languageToggleButton.click();
-      const dropdownContentC = page.getByTestId('language-dropdown-content');
-      await expect(languageToggleButton).toHaveAttribute(
-        'aria-expanded',
-        'true',
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
       );
+      const dropdownContentC = page.getByTestId('language-dropdown-content');
+      const expandedToggle = page
+        .locator(
+          'button[data-testid="language-toggle-button"][aria-expanded="true"]',
+        )
+        .first();
+      await expect(expandedToggle).toBeVisible();
       await expect(dropdownContentC).toHaveAttribute('data-state', 'open');
 
       const chineseLink = page.getByTestId('language-link-zh');
@@ -627,8 +646,10 @@ test.describe('Internationalization (i18n)', () => {
       expect(htmlLang).toBe('en');
 
       // Switch to Chinese
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await languageToggleButton.click();
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
+      );
 
       const chineseLink = page.getByTestId('language-link-zh');
       await chineseLink.click();
@@ -646,10 +667,16 @@ test.describe('Internationalization (i18n)', () => {
       }
 
       // Verify language toggle has proper ARIA labels
-      await expect(languageToggleButton).toHaveAttribute('aria-label');
+      const anyLanguageToggle = page
+        .locator('button[data-testid="language-toggle-button"]')
+        .first();
+      await expect(anyLanguageToggle).toHaveAttribute('aria-label');
 
       // Verify language links have proper attributes
-      await languageToggleButton.click();
+      await safeClick(
+        page,
+        'button[data-testid="language-toggle-button"]:not(:disabled)',
+      );
       const englishLink = page.getByTestId('language-link-en');
       await expect(englishLink).toHaveAttribute('data-locale', 'en');
       await expect(chineseLink).toHaveAttribute('data-locale', 'zh');

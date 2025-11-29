@@ -14,6 +14,19 @@ const baseMetric = {
   timestamp: Date.now(),
 };
 
+// 
+// 
+// 
+//  Web VitalsReporter  Web Vitals 
+const clientMetricPayload = {
+  name: 'LCP',
+  value: 2500,
+  rating: 'needs-improvement',
+  delta: 50,
+  path: '/zh',
+  timestamp: Date.now(),
+};
+
 describe('api/analytics/web-vitals', () => {
   it('returns 400 for invalid JSON body', async () => {
     const req = new NextRequest(
@@ -47,6 +60,20 @@ describe('api/analytics/web-vitals', () => {
       new Request('http://localhost/api/analytics/web-vitals', {
         method: 'POST',
         body: JSON.stringify(baseMetric),
+      }),
+    );
+
+    const res = await route.POST(req);
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+  });
+
+  it('accepts minimal payload matching client reporter shape', async () => {
+    const req = new NextRequest(
+      new Request('http://localhost/api/analytics/web-vitals', {
+        method: 'POST',
+        body: JSON.stringify(clientMetricPayload),
       }),
     );
 

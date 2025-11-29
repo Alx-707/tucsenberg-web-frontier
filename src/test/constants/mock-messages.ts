@@ -123,7 +123,7 @@ export const accessibilityMessages = {
 } as const;
 
 /**
- * Theme 命名空间 - 主题切换相��消息
+ * Theme 命名空间 - 主题切换相关消息
  * 包含主题选择器、主题模式文本
  */
 export const themeMessages = {

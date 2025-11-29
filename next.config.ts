@@ -28,6 +28,9 @@ const SENTRY_DISABLED =
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // Enable Next.js 16 Cache Components mode
+  cacheComponents: true,
+
   // Turbopack 配置 - 明确指定项目根目录
   turbopack: {
     root: __dirname,

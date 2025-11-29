@@ -102,6 +102,14 @@ export const applyNextIntlMocks = (
     useFormatter: mocks.mockUseFormatter,
     useNow: mocks.mockUseNow,
     useTimeZone: mocks.mockUseTimeZone,
+    // 2068507890 NextIntlClientProvider 805 190 renderWithIntl 998c0009e
+    NextIntlClientProvider: ({
+      children,
+    }: {
+      children: React.ReactNode;
+      locale?: string;
+      messages?: Record<string, unknown>;
+    }) => React.createElement(React.Fragment, null, children),
   }));
 
   vi.mock('next-intl/link', () => ({

@@ -8,6 +8,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
  * - 专注于核心逻辑测试
  * - 使用 Mock 模拟外部依赖
  * - 覆盖 locale 检测、消息加载、格式化等核心功能
+ *
+ * 注意：本文件用于验证 i18n 内部配置与消息加载逻辑，刻意保留独立的
+ * mockEnMessages/mockZhMessages 结构，不复用 src/test/constants/mock-messages
+ * 以避免单元测试与集中 mock 工具产生额外耦合。
  */
 
 // Mock配置 - 使用vi.hoisted确保Mock在模块导入前设置
