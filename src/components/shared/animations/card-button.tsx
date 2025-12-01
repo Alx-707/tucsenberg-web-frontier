@@ -28,22 +28,37 @@ export const AnimatedCard = ({
   </Card>
 );
 
+interface AnimatedButtonProps {
+  'children': React.ReactNode;
+  'variant'?: 'default' | 'outline' | 'ghost';
+  'isLoading'?: boolean;
+  'className'?: string;
+  'type'?: 'button' | 'submit' | 'reset';
+  'disabled'?: boolean;
+  'onClick'?: React.MouseEventHandler<HTMLButtonElement>;
+  'title'?: string;
+  'data-testid'?: string;
+}
+
 // 4. 按钮交互动画
 export const AnimatedButton = ({
   children,
   variant = 'default',
   isLoading = false,
   className,
-  ...props
-}: {
-  children: React.ReactNode;
-  variant?: 'default' | 'outline' | 'ghost';
-  isLoading?: boolean;
-  className?: string;
-} & React.ComponentProps<typeof Button>) => (
+  type,
+  disabled,
+  onClick,
+  title,
+  'data-testid': dataTestId,
+}: AnimatedButtonProps) => (
   <Button
     variant={variant}
-    disabled={isLoading}
+    type={type}
+    disabled={disabled ?? isLoading}
+    onClick={onClick}
+    title={title}
+    data-testid={dataTestId}
     className={cn(
       'transition-all duration-200 ease-out',
       'hover:scale-105 active:scale-95',
@@ -53,7 +68,6 @@ export const AnimatedButton = ({
       variant === 'ghost' && 'hover:bg-primary/10',
       className,
     )}
-    {...props}
   >
     {isLoading ? (
       <>

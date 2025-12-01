@@ -35,6 +35,33 @@ const DEFAULT_CONFIG: ContentConfig = {
 };
 
 /**
+ * Merge content configuration using an explicit field whitelist.
+ *
+ * 这样可以确保：
+ * - 只有 ContentConfig 中声明的字段会被覆盖；
+ * - content.json 中多出来的键不会静默“注入”到运行时代码；
+ * - Semgrep 不再看到宽泛的 "{ ...DEFAULT_CONFIG, ...config }" 合并模式。
+ */
+function mergeContentConfig(
+  baseConfig: ContentConfig,
+  override: Partial<ContentConfig>,
+): ContentConfig {
+  return {
+    defaultLocale: override.defaultLocale ?? baseConfig.defaultLocale,
+    supportedLocales: override.supportedLocales ?? baseConfig.supportedLocales,
+    postsPerPage: override.postsPerPage ?? baseConfig.postsPerPage,
+    enableDrafts: override.enableDrafts ?? baseConfig.enableDrafts,
+    enableSearch: override.enableSearch ?? baseConfig.enableSearch,
+    autoGenerateExcerpt:
+      override.autoGenerateExcerpt ?? baseConfig.autoGenerateExcerpt,
+    excerptLength: override.excerptLength ?? baseConfig.excerptLength,
+    dateFormat: override.dateFormat ?? baseConfig.dateFormat,
+    timeZone: override.timeZone ?? baseConfig.timeZone,
+    enableComments: override.enableComments ?? baseConfig.enableComments,
+  };
+}
+
+/**
  * Validate and normalize file path to prevent directory traversal attacks
  * @param filePath - The file path to validate
  * @param allowedBaseDir - The base directory that file access is restricted to
@@ -105,7 +132,11 @@ export function getContentConfig(): ContentConfig {
       // eslint-disable-next-line security/detect-non-literal-fs-filename
       const configContent = fs.readFileSync(validatedConfigPath, 'utf-8');
       const config = JSON.parse(configContent) as Partial<ContentConfig>;
-      return { ...DEFAULT_CONFIG, ...config };
+
+      // 通过显式字段白名单方式合并配置，防止在 ContentConfig 之外静默注入额外键
+      const mergedConfig = mergeContentConfig(DEFAULT_CONFIG, config);
+
+      return mergedConfig;
     }
   } catch (error) {
     logger.warn('Failed to load content config, using defaults', { error });

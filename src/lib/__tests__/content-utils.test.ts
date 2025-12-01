@@ -255,7 +255,7 @@ describe('Content Utils', () => {
       });
     });
 
-    it('should load and merge custom config when file exists', () => {
+    it('should load and merge custom config when file exists (ignoring unknown keys)', () => {
       const customConfig = {
         postsPerPage: 20,
         enableComments: true,
@@ -278,7 +278,6 @@ describe('Content Utils', () => {
         excerptLength: 160,
         dateFormat: 'YYYY-MM-DD',
         timeZone: 'UTC',
-        customField: 'custom value', // Added
       });
     });
 

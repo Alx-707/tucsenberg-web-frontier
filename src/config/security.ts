@@ -248,11 +248,23 @@ export const SECURITY_MODES = {
  */
 export function getSecurityConfig(testMode = false) {
   // Use process.env directly in tests to avoid env validation issues
-  const mode =
+  const rawMode =
     (testMode || process.env.NODE_ENV === 'test'
       ? process.env.NEXT_PUBLIC_SECURITY_MODE
       : process.env.NEXT_PUBLIC_SECURITY_MODE) || 'strict';
-  return SECURITY_MODES[mode as keyof typeof SECURITY_MODES];
+
+  const mode =
+    rawMode === 'moderate' || rawMode === 'relaxed' ? rawMode : 'strict';
+
+  switch (mode) {
+    case 'moderate':
+      return SECURITY_MODES.moderate;
+    case 'relaxed':
+      return SECURITY_MODES.relaxed;
+    case 'strict':
+    default:
+      return SECURITY_MODES.strict;
+  }
 }
 
 /**

@@ -26,11 +26,18 @@ const AnimatedIconComponent = ({
 
   // 安全的属性访问
   const getSizeClass = (sizeKey: string) => {
-    const allowedSizes = ['sm', 'md', 'lg', 'xl'];
-    if (!allowedSizes.includes(sizeKey)) {
-      return sizeClasses.lg; // 默认值
+    switch (sizeKey) {
+      case 'sm':
+        return sizeClasses.sm;
+      case 'md':
+        return sizeClasses.md;
+      case 'lg':
+        return sizeClasses.lg;
+      case 'xl':
+        return sizeClasses.xl;
+      default:
+        return sizeClasses.lg; // 默认值
     }
-    return sizeClasses[sizeKey as keyof typeof sizeClasses];
   };
 
   if (variant === 'construction') {

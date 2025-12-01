@@ -158,7 +158,7 @@ export function useIntersectionObserver<T extends HTMLElement = HTMLElement>(
 
   const handleIntersection = useCallback(
     (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-      const entry = entries.length > 0 ? entries[0] : null;
+      const [entry] = entries;
       if (!entry) return;
 
       const isCurrentlyVisible = entry.isIntersecting;

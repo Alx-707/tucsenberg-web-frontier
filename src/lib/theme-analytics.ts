@@ -37,14 +37,21 @@ export const recordThemeSwitch = (params: {
   const { fromTheme, toTheme, duration, options } = params;
   const now = Date.now();
   const startTime = duration ? now - duration : now;
-  themeAnalytics.recordThemeSwitch({
-    fromTheme,
-    toTheme,
-    startTime,
-    endTime: now,
-    ...(options?.supportsViewTransitions !== undefined && {
+  if (options?.supportsViewTransitions !== undefined) {
+    themeAnalytics.recordThemeSwitch({
+      fromTheme,
+      toTheme,
+      startTime,
+      endTime: now,
       supportsViewTransitions: options.supportsViewTransitions,
-    }),
-  });
+    });
+  } else {
+    themeAnalytics.recordThemeSwitch({
+      fromTheme,
+      toTheme,
+      startTime,
+      endTime: now,
+    });
+  }
 };
 export const sendThemeReport = () => themeAnalytics.sendPerformanceReport();

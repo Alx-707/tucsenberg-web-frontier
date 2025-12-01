@@ -3,6 +3,12 @@ import { createCachedResponse } from '@/lib/api-cache-utils';
 import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 
+// HTTP 状态码常量
+const HTTP_STATUS = {
+  BAD_REQUEST: 400,
+  INTERNAL_SERVER_ERROR: 500,
+} as const;
+
 // Web Vitals 数据接口
 //
 // 说明：
@@ -101,78 +107,119 @@ function validateWebVitalsData(data: unknown): data is WebVitalsData {
   );
 }
 
+// 构建日志载荷，将可选字段追加到基础对象
+interface LogPayload {
+  metric: string;
+  value: number;
+  rating: string;
+  timestamp: number;
+  path?: string;
+  url?: string;
+  navigationType?: string;
+  userAgent?: string;
+  id?: string;
+}
+
+function buildLogPayload(body: WebVitalsData): LogPayload {
+  const payload: LogPayload = {
+    metric: body.name,
+    value: body.value,
+    rating: body.rating,
+    timestamp: body.timestamp,
+  };
+
+  // 仅在存在时记录可选字段，避免 exactOptionalPropertyTypes 下显式传入 undefined
+  if (body.path) {
+    payload.path = body.path;
+  }
+  if (body.url) {
+    payload.url = body.url;
+  }
+  if (body.navigationType) {
+    payload.navigationType = body.navigationType;
+  }
+  if (body.userAgent) {
+    payload.userAgent = body.userAgent;
+  }
+  if (body.id) {
+    payload.id = body.id;
+  }
+
+  return payload;
+}
+
+// 构建成功响应
+function buildSuccessResponse(body: WebVitalsData) {
+  return NextResponse.json({
+    success: true,
+    message: 'Web Vitals data recorded successfully',
+    data: {
+      metric: body.name,
+      value: body.value,
+      rating: body.rating,
+      timestamp: body.timestamp,
+    },
+  });
+}
+
+// 构建错误响应
+function buildErrorResponse(
+  errorType: string,
+  message: string,
+  status: number,
+) {
+  return NextResponse.json(
+    {
+      success: false,
+      _error: errorType,
+      message,
+    },
+    { status },
+  );
+}
+
 // 处理 Web Vitals 数据收集
 export async function POST(request: NextRequest) {
   try {
     const parsedBody = await safeParseJson<unknown>(request, {
       route: '/api/analytics/web-vitals',
     });
+
     if (!parsedBody.ok) {
-      return NextResponse.json(
-        {
-          success: false,
-          _error: parsedBody.error,
-          message: 'Invalid JSON body for Web Vitals endpoint',
-        },
-        { status: 400 },
+      return buildErrorResponse(
+        parsedBody.error,
+        'Invalid JSON body for Web Vitals endpoint',
+        HTTP_STATUS.BAD_REQUEST,
       );
     }
+
     const body = parsedBody.data;
 
     // 验证请求数据
     if (!validateWebVitalsData(body)) {
-      return NextResponse.json(
-        {
-          success: false,
-          _error: 'Invalid web vitals data format',
-          message:
-            'The provided data does not match the expected Web Vitals format',
-        },
-        { status: 400 },
+      return buildErrorResponse(
+        'Invalid web vitals data format',
+        'The provided data does not match the expected Web Vitals format',
+        HTTP_STATUS.BAD_REQUEST,
       );
     }
 
     // 记录 Web Vitals 数据
-    logger.info('Web Vitals data received', {
-      metric: body.name,
-      value: body.value,
-      rating: body.rating,
-      // 仅在存在时记录可选字段，避免 exactOptionalPropertyTypes 下显式传入 undefined
-      ...(body.path ? { path: body.path } : {}),
-      ...(body.url ? { url: body.url } : {}),
-      ...(body.navigationType ? { navigationType: body.navigationType } : {}),
-      ...(body.userAgent ? { userAgent: body.userAgent } : {}),
-      ...(body.id ? { id: body.id } : {}),
-      timestamp: body.timestamp,
-    });
+    logger.info('Web Vitals data received', buildLogPayload(body));
 
     // 在实际应用中，这里会将数据存储到数据库或发送到分析服务
     // 目前只是记录日志
-
-    return NextResponse.json({
-      success: true,
-      message: 'Web Vitals data recorded successfully',
-      data: {
-        metric: body.name,
-        value: body.value,
-        rating: body.rating,
-        timestamp: body.timestamp,
-      },
-    });
+    return buildSuccessResponse(body);
   } catch (_error) {
-    // 忽略错误变量
     logger.error('Failed to process Web Vitals data', {
       _error: _error instanceof Error ? _error.message : String(_error),
       stack: _error instanceof Error ? _error.stack : undefined,
     });
 
-    return NextResponse.json(
-      {
-        success: false,
-        _error: 'Internal server _error',
-        message: 'Failed to process Web Vitals data',
-      },
-      { status: 500 },
+    return buildErrorResponse(
+      'Internal server _error',
+      'Failed to process Web Vitals data',
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
     );
   }
 }

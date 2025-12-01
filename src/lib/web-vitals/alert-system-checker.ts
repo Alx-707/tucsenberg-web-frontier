@@ -128,8 +128,18 @@ export class AlertSystemChecker {
   static convertToDetailedWebVitals(
     metrics: Record<string, number>,
   ): DetailedWebVitals {
+    const coreMetrics = extractCoreMetrics(metrics);
+
     return {
-      ...extractCoreMetrics(metrics),
+      cls: coreMetrics.cls,
+      fid: coreMetrics.fid,
+      lcp: coreMetrics.lcp,
+      fcp: coreMetrics.fcp,
+      ttfb: coreMetrics.ttfb,
+      inp: coreMetrics.inp,
+      domContentLoaded: coreMetrics.domContentLoaded,
+      loadComplete: coreMetrics.loadComplete,
+      firstPaint: coreMetrics.firstPaint,
       resourceTiming: getDefaultResourceTiming(),
       connection: getDefaultConnection(),
       device: getDefaultDevice(),

@@ -35,6 +35,10 @@ const CONFIG = {
 
   // 支持的语言
   LOCALES: require('../i18n-locales.config').locales,
+
+  // 允许多命名空间匹配的键（这些键在多个命名空间中重复存在，scanner 无法确定具体使用哪个）
+  // 当代码中使用短键名且存在多个完整路径匹配时，跳过缺失检测
+  ALLOW_MULTI_NAMESPACE_KEYS: ['submitting'],
 };
 
 const scanResults = {
@@ -593,6 +597,7 @@ function analyzeTranslationUsage(translations) {
 
   // 找出缺失的键（代码中使用但翻译文件中没有）
   const missingKeys = [];
+  const allowedMultiNamespaceKeys = CONFIG.ALLOW_MULTI_NAMESPACE_KEYS || [];
   scanResults.translationKeys.forEach((key) => {
     if (allTranslationKeys.has(key)) {
       return;
@@ -604,6 +609,11 @@ function analyzeTranslationUsage(translations) {
     );
 
     if (fallbackMatches.length === 1) {
+      return;
+    }
+
+    // 允许配置的多命名空间键（存在多个匹配但都是有效的）
+    if (fallbackMatches.length > 1 && allowedMultiNamespaceKeys.includes(key)) {
       return;
     }
 

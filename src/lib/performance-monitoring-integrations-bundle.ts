@@ -59,10 +59,12 @@ export function useBundleAnalyzerIntegration(
     recordBundleSize: (bundleName: string, size: number, gzipSize?: number) => {
       if (!config.bundleAnalyzer.enabled) return;
 
-      bundleData.set(bundleName, {
-        size,
-        ...(gzipSize !== undefined && { gzipSize }),
-      });
+      const bundleSizeEntry: { size: number; gzipSize?: number } = { size };
+      if (gzipSize !== undefined) {
+        bundleSizeEntry.gzipSize = gzipSize;
+      }
+
+      bundleData.set(bundleName, bundleSizeEntry);
 
       recordMetric({
         source: 'bundle-analyzer',
@@ -183,11 +185,16 @@ export class BundleAnalyzerAnalyzer {
   recordBundleSize(bundleName: string, size: number, gzipSize?: number): void {
     if (!this.config.bundleAnalyzer.enabled) return;
 
-    this.bundles.set(bundleName, {
+    const bundleInfo: { size: number; gzipSize?: number; timestamp: number } = {
       size,
-      ...(gzipSize !== undefined && { gzipSize }),
       timestamp: Date.now(),
-    });
+    };
+
+    if (gzipSize !== undefined) {
+      bundleInfo.gzipSize = gzipSize;
+    }
+
+    this.bundles.set(bundleName, bundleInfo);
 
     // 检查是否超过大小限制 (使用bundle配置的阈值)
     const maxSize = this.config.bundle?.thresholds?.size || MB; // 1MB
@@ -249,14 +256,24 @@ export class BundleAnalyzerAnalyzer {
     );
 
     const largestBundles = bundles
-      .map(([name, bundle]) => ({
-        name,
-        size: bundle.size,
-        ...(bundle.gzipSize !== undefined && { gzipSize: bundle.gzipSize }),
-        ...(bundle.gzipSize !== undefined && {
-          compressionRatio: bundle.gzipSize / bundle.size,
-        }),
-      }))
+      .map(([name, bundle]) => {
+        const bundleInfo: {
+          name: string;
+          size: number;
+          gzipSize?: number;
+          compressionRatio?: number;
+        } = {
+          name,
+          size: bundle.size,
+        };
+
+        if (bundle.gzipSize !== undefined) {
+          bundleInfo.gzipSize = bundle.gzipSize;
+          bundleInfo.compressionRatio = bundle.gzipSize / bundle.size;
+        }
+
+        return bundleInfo;
+      })
       .sort((a, b) => b.size - a.size)
       .slice(ZERO, COUNT_TEN);
 

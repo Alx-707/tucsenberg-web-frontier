@@ -85,7 +85,12 @@ const useWebVitalsRefresh = (
   }, []);
 
   const refreshDiagnostics = useCallback((): void => {
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({
+      currentReport: prev.currentReport,
+      historicalReports: prev.historicalReports,
+      isLoading: true,
+      error: null,
+    }));
 
     try {
       const newReport = generateReport();
@@ -93,16 +98,17 @@ const useWebVitalsRefresh = (
       const updatedReports = [...historicalReports, newReport];
 
       setState((prev) => ({
-        ...prev,
         currentReport: newReport,
         historicalReports: updatedReports,
         isLoading: false,
+        error: prev.error,
       }));
 
       saveToStorage(updatedReports);
     } catch (error) {
       setState((prev) => ({
-        ...prev,
+        currentReport: prev.currentReport,
+        historicalReports: prev.historicalReports,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Unknown error',
       }));
@@ -135,9 +141,10 @@ function useDataManagement(
 ) {
   const clearHistory = useCallback(() => {
     setState((prev) => ({
-      ...prev,
-      historicalReports: [],
       currentReport: null,
+      historicalReports: [],
+      isLoading: prev.isLoading,
+      error: prev.error,
     }));
     localStorage.removeItem('webVitalsDiagnostics');
   }, [setState]);
@@ -191,8 +198,10 @@ export function useWebVitalsDiagnostics(): UseWebVitalsDiagnosticsReturn {
   useEffect(() => {
     const initializeData = () => {
       setState((prev) => ({
-        ...prev,
+        currentReport: prev.currentReport,
         historicalReports: initialData.historicalReports,
+        isLoading: prev.isLoading,
+        error: prev.error,
       }));
 
       if (initialData.shouldRefresh && !isTestEnvironment) {

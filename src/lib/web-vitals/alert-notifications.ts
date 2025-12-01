@@ -127,16 +127,30 @@ export function storeAlerts(alerts: AlertData[]): void {
 
   try {
     const batchTimestamp = Date.now();
-    const existingAlerts = JSON.parse(
+    const rawExistingAlerts = JSON.parse(
       localStorage.getItem('performance_alerts') || '[]',
     );
-    const newAlerts = alerts.map((alert) => ({
-      ...alert,
-      id: generateAlertId(`alert-${batchTimestamp}`),
-      timestamp: Date.now(),
-    }));
+    const existingAlerts = Array.isArray(rawExistingAlerts)
+      ? rawExistingAlerts
+      : [];
 
-    const allAlerts = [...existingAlerts, ...newAlerts];
+    const newAlerts = alerts.map((alert) => {
+      const id = generateAlertId(`alert-${batchTimestamp}`);
+      const timestamp = Date.now();
+
+      return {
+        type: alert.type,
+        severity: alert.severity,
+        message: alert.message,
+        metric: alert.metric,
+        value: alert.value,
+        threshold: alert.threshold,
+        id,
+        timestamp,
+      };
+    });
+
+    const allAlerts = existingAlerts.concat(newAlerts);
 
     // 限制存储的警报数量
     const maxAlerts = PERCENTAGE_FULL;

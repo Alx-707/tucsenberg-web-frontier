@@ -261,7 +261,16 @@ export function validateTemplateParameter(
   };
 
   const validateMedia = () => {
-    const media = parameter[parameter.type as 'image' | 'document' | 'video'];
+    let media: { id?: string; link?: string } | undefined;
+
+    if (parameter.type === 'image') {
+      media = parameter.image;
+    } else if (parameter.type === 'document') {
+      media = parameter.document;
+    } else if (parameter.type === 'video') {
+      media = parameter.video;
+    }
+
     if (!media?.id && !media?.link) {
       errors.push(`${parameter.type} parameter must have either id or link`);
     }
@@ -324,15 +333,13 @@ export function validateTemplateComponent(
     component.parameters.forEach((param, index) => {
       const paramValidation = validateTemplateParameter(param);
       if (!paramValidation.isValid) {
-        errors.push(
-          ...paramValidation.errors.map((err) => `Parameter ${index}: ${err}`),
-        );
+        for (const err of paramValidation.errors) {
+          errors.push(`Parameter ${index}: ${err}`);
+        }
       }
-      warnings.push(
-        ...paramValidation.warnings.map(
-          (warn) => `Parameter ${index}: ${warn}`,
-        ),
-      );
+      for (const warn of paramValidation.warnings) {
+        warnings.push(`Parameter ${index}: ${warn}`);
+      }
     });
   }
 
@@ -369,17 +376,13 @@ export function validateTemplateMessage(
     template.components.forEach((component, index) => {
       const componentValidation = validateTemplateComponent(component);
       if (!componentValidation.isValid) {
-        errors.push(
-          ...componentValidation.errors.map(
-            (err) => `Component ${index}: ${err}`,
-          ),
-        );
+        for (const err of componentValidation.errors) {
+          errors.push(`Component ${index}: ${err}`);
+        }
       }
-      warnings.push(
-        ...componentValidation.warnings.map(
-          (warn) => `Component ${index}: ${warn}`,
-        ),
-      );
+      for (const warn of componentValidation.warnings) {
+        warnings.push(`Component ${index}: ${warn}`);
+      }
     });
   }
 
@@ -424,10 +427,19 @@ export function createMediaParameter(
   type: 'image' | 'document' | 'video',
   options: { id?: string; link?: string; filename?: string },
 ): MediaParameterBuilder {
-  return {
-    type,
-    ...options,
-  };
+  const parameter: MediaParameterBuilder = { type };
+
+  if (options.id !== undefined) {
+    parameter.id = options.id;
+  }
+  if (options.link !== undefined) {
+    parameter.link = options.link;
+  }
+  if (options.filename !== undefined) {
+    parameter.filename = options.filename;
+  }
+
+  return parameter;
 }
 
 // Export commonly used types with shorter names

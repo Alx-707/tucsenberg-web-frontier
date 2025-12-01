@@ -169,11 +169,23 @@ export class PerformanceRegressionDetector {
   ): 'warning' | 'critical' {
     const thresholds = PerformanceRegressionDetector.REGRESSION_THRESHOLDS;
 
-    // 基于绝对值变化判断
-    const metricThreshold = thresholds[metric as keyof typeof thresholds];
-    if (metricThreshold && typeof metricThreshold === 'object') {
-      if (Math.abs(change) >= metricThreshold.critical) return 'critical';
-      if (Math.abs(change) >= metricThreshold.warning) return 'warning';
+    // 基于绝对值变化判断（使用安全的阈值获取方法，避免动态属性访问）
+    const criticalThreshold = PerformanceRegressionDetector.getMetricThreshold(
+      metric,
+      'critical',
+    );
+    const warningThreshold = PerformanceRegressionDetector.getMetricThreshold(
+      metric,
+      'warning',
+    );
+
+    const absChange = Math.abs(change);
+    if (criticalThreshold !== undefined && absChange >= criticalThreshold) {
+      return 'critical';
+    }
+
+    if (warningThreshold !== undefined && absChange >= warningThreshold) {
+      return 'warning';
     }
 
     // 基于百分比变化判断

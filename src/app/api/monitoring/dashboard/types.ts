@@ -27,11 +27,10 @@ export interface MonitoringData {
   source: string;
   metrics: Record<string, unknown>;
   timestamp: number;
-  [key: string]: unknown;
 }
 
 /**
- * 验证监控数据格式
+ * 验证监控数据格式（字段存在 + 基本类型）
  */
 export function validateMonitoringData(data: unknown): data is MonitoringData {
   if (!data || typeof data !== 'object') {
@@ -39,6 +38,11 @@ export function validateMonitoringData(data: unknown): data is MonitoringData {
   }
 
   const record = data as Record<string, unknown>;
-  const requiredFields = ['source', 'metrics', 'timestamp'];
-  return requiredFields.every((field) => field in record);
+  const hasRequiredFields =
+    typeof record.source === 'string' &&
+    typeof record.metrics === 'object' &&
+    record.metrics !== null &&
+    typeof record.timestamp === 'number';
+
+  return hasRequiredFields;
 }

@@ -33,6 +33,18 @@ const defaultOptions: Required<KeyboardNavigationOptions> = {
   onNavigate: () => {},
 };
 
+function createKeyboardNavigationConfig(
+  options: KeyboardNavigationOptions = {},
+): KeyboardNavigationConfig {
+  return {
+    enabled: options.enabled ?? defaultOptions.enabled,
+    loop: options.loop ?? defaultOptions.loop,
+    orientation: options.orientation ?? defaultOptions.orientation,
+    selector: options.selector ?? defaultOptions.selector,
+    onNavigate: options.onNavigate ?? defaultOptions.onNavigate,
+  };
+}
+
 // 箭头键处理配置接口
 interface ArrowKeyConfig {
   key: string;
@@ -94,9 +106,11 @@ function handleTabKey(args: {
   const direction = event.shiftKey ? 'previous' : 'next';
   const elements = getFocusableElements();
   const currentIndex = getCurrentFocusIndex();
-  const targetElement = event.shiftKey
-    ? elements[currentIndex - ONE]
-    : elements[currentIndex + ONE];
+  const indexDelta = event.shiftKey ? -ONE : ONE;
+  const targetIndex = currentIndex + indexDelta;
+
+  // 使用 Array.prototype.at 进行安全索引，避免触发对象注入类规则
+  const targetElement = elements.at(targetIndex);
 
   if (targetElement) {
     config.onNavigate(targetElement, direction);
@@ -268,7 +282,10 @@ function useKeyboardHandler(args: {
 export function useKeyboardNavigation(
   options: KeyboardNavigationOptions = {},
 ): UseKeyboardNavigationReturn {
-  const config = useMemo(() => ({ ...defaultOptions, ...options }), [options]);
+  const config = useMemo(
+    () => createKeyboardNavigationConfig(options),
+    [options],
+  );
   const containerRef = useRef<HTMLElement | null>(null);
 
   const { getFocusableElements, getCurrentFocusIndex, setFocusIndex } =
@@ -298,7 +315,10 @@ export function useKeyboardNavigation(
 
   return {
     containerRef,
-    ...navigationActions,
+    focusFirst: navigationActions.focusFirst,
+    focusLast: navigationActions.focusLast,
+    focusNext: navigationActions.focusNext,
+    focusPrevious: navigationActions.focusPrevious,
     getCurrentFocusIndex,
     setFocusIndex,
   };

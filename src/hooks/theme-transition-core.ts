@@ -105,11 +105,21 @@ function executeTransitionLogic(args: {
   }
 
   try {
-    const baseArgs = { originalSetTheme, newTheme, currentTheme, startTime };
     if (animationSetup) {
-      performViewTransition({ ...baseArgs, animationSetup });
+      performViewTransition({
+        originalSetTheme,
+        newTheme,
+        currentTheme,
+        startTime,
+        animationSetup,
+      });
     } else {
-      performViewTransition(baseArgs);
+      performViewTransition({
+        originalSetTheme,
+        newTheme,
+        currentTheme,
+        startTime,
+      });
     }
   } catch (transitionError) {
     logger.error('Failed to start view transition', {
@@ -159,13 +169,22 @@ export function executeThemeTransition(args: {
 
   try {
     initializeThemeTransitionMetrics(newTheme, currentTheme);
-    executeTransitionLogic({
-      originalSetTheme,
-      newTheme,
-      currentTheme,
-      startTime,
-      ...(animationSetup && { animationSetup }),
-    });
+    if (animationSetup) {
+      executeTransitionLogic({
+        originalSetTheme,
+        newTheme,
+        currentTheme,
+        startTime,
+        animationSetup,
+      });
+    } else {
+      executeTransitionLogic({
+        originalSetTheme,
+        newTheme,
+        currentTheme,
+        startTime,
+      });
+    }
   } catch (error) {
     logger.error('Theme transition failed', { error, newTheme });
     safeSetTheme(originalSetTheme, newTheme);
@@ -181,14 +200,26 @@ function fallbackThemeChange(args: {
 }) {
   const { originalSetTheme, newTheme, currentTheme, startTime, error } = args;
   originalSetTheme(newTheme);
-  recordThemeTransition({
+  const transitionRecord: {
+    fromTheme: string;
+    toTheme: string;
+    startTime: number;
+    endTime: number;
+    hasViewTransition: boolean;
+    error?: Error;
+  } = {
     fromTheme: currentTheme,
     toTheme: newTheme,
     startTime,
     endTime: performance.now(),
     hasViewTransition: false,
-    ...(error ? { error } : {}),
-  });
+  };
+
+  if (error) {
+    transitionRecord.error = error;
+  }
+
+  recordThemeTransition(transitionRecord);
 }
 
 /**

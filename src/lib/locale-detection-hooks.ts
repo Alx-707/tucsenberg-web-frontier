@@ -37,20 +37,27 @@ export function useClientLocaleDetection() {
       for (const lang of languages) {
         if (!lang || typeof lang !== 'string') continue;
         const normalizedLang = lang.toLowerCase();
-        // 安全的对象属性访问，避免对象注入
-        const detectedLocale = Object.prototype.hasOwnProperty.call(
+
+        const hasLocaleMapping = Object.prototype.hasOwnProperty.call(
           BROWSER_LOCALE_MAP,
           normalizedLang,
-        )
-          ? Object.prototype.hasOwnProperty.call(
-              BROWSER_LOCALE_MAP,
-              normalizedLang,
-            )
-            ? (BROWSER_LOCALE_MAP as Record<string, Locale>)[
-                normalizedLang as keyof typeof BROWSER_LOCALE_MAP
-              ]
-            : undefined
-          : undefined;
+        );
+
+        let detectedLocale: Locale | undefined;
+        if (hasLocaleMapping) {
+          // nosemgrep: object-injection-sink-dynamic-property
+          // 安全说明：
+          // - BROWSER_LOCALE_MAP 是在 src/lib/locale-constants.ts 中定义的静态常量映射，
+          //   仅包含我们明确列出的浏览器 locale 字符串 → Locale（'en' | 'zh'）。
+          // - normalizedLang 来源于 navigator.language / navigator.languages，
+          //   这里只被用于在受控常量对象上做查找，不写入任何对象属性。
+          // - 通过 hasOwnProperty 先判断键是否存在，像 "constructor" 这类原型链注入值
+          //   不会通过校验，对应的测试用例在 locale-detection-hooks.test.ts 中覆盖，
+          //   最终会回退到 DEFAULT_LOCALE。
+          detectedLocale = (BROWSER_LOCALE_MAP as Record<string, Locale>)[
+            normalizedLang as keyof typeof BROWSER_LOCALE_MAP
+          ]; // nosemgrep: object-injection-sink-dynamic-property
+        }
 
         if (detectedLocale && SUPPORTED_LOCALES.includes(detectedLocale)) {
           return {

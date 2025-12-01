@@ -360,6 +360,59 @@ export function validateServiceOptions(
 }
 
 /**
+ * Build merged config from input config
+ */
+function buildMergedConfig(config: WhatsAppConfig): WhatsAppConfig {
+  const mergedConfig: WhatsAppConfig = {
+    accessToken: config.accessToken,
+    phoneNumberId: config.phoneNumberId,
+    verifyToken: config.verifyToken,
+    apiVersion: config.apiVersion ?? 'v18.0',
+  };
+
+  if (config.webhookUrl !== undefined)
+    mergedConfig.webhookUrl = config.webhookUrl;
+  if (config.businessAccountId !== undefined)
+    mergedConfig.businessAccountId = config.businessAccountId;
+  if (config.appSecret !== undefined) mergedConfig.appSecret = config.appSecret;
+
+  return mergedConfig;
+}
+
+/**
+ * Build merged options from input options
+ */
+function buildMergedOptions(
+  options?: WhatsAppServiceOptions,
+): Required<WhatsAppServiceOptions> {
+  const {
+    timeout = DEFAULT_SERVICE_OPTIONS.timeout,
+    retries = DEFAULT_SERVICE_OPTIONS.retries,
+    retryDelay = DEFAULT_SERVICE_OPTIONS.retryDelay,
+    maxRetryDelay = DEFAULT_SERVICE_OPTIONS.maxRetryDelay,
+    retryMultiplier = DEFAULT_SERVICE_OPTIONS.retryMultiplier,
+    enableLogging = DEFAULT_SERVICE_OPTIONS.enableLogging,
+    logLevel = DEFAULT_SERVICE_OPTIONS.logLevel,
+    validateMessages = DEFAULT_SERVICE_OPTIONS.validateMessages,
+    rateLimitStrategy = DEFAULT_SERVICE_OPTIONS.rateLimitStrategy,
+    rateLimitMaxAttempts = DEFAULT_SERVICE_OPTIONS.rateLimitMaxAttempts,
+  } = options ?? {};
+
+  return {
+    timeout,
+    retries,
+    retryDelay,
+    maxRetryDelay,
+    retryMultiplier,
+    enableLogging,
+    logLevel,
+    validateMessages,
+    rateLimitStrategy,
+    rateLimitMaxAttempts,
+  };
+}
+
+/**
  * Merge Configuration with Defaults
  * Combines user configuration with default values
  */
@@ -368,13 +421,7 @@ export function mergeWithDefaults(
   options?: WhatsAppServiceOptions,
 ): { config: WhatsAppConfig; options: Required<WhatsAppServiceOptions> } {
   return {
-    config: {
-      apiVersion: 'v18.0',
-      ...config,
-    },
-    options: {
-      ...DEFAULT_SERVICE_OPTIONS,
-      ...options,
-    },
+    config: buildMergedConfig(config),
+    options: buildMergedOptions(options),
   };
 }

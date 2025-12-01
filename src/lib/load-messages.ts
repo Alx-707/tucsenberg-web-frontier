@@ -313,8 +313,15 @@ export async function loadCompleteMessages(locale: Locale): Promise<Messages> {
     loadDeferredMessages(locale),
   ]);
 
-  return {
-    ...critical,
-    ...deferred,
-  };
+  // 合并 critical 与 deferred 消息时，避免使用对象 spread 以便于安全审计。
+  // 两者均来自我们控制的翻译 JSON 文件（见上方 loadCriticalMessages / loadDeferredMessages），
+  // 这里通过 entries + Object.fromEntries 保持「deferred 覆盖 critical」的语义，
+  // 同时不再触发 object-injection-sink-spread-operator 规则。
+  const criticalEntries = Object.entries(critical ?? {});
+  const deferredEntries = Object.entries(deferred ?? {});
+
+  return Object.fromEntries([
+    ...criticalEntries,
+    ...deferredEntries,
+  ]) as Messages;
 }

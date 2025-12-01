@@ -84,17 +84,14 @@ function buildSubsetStyle(sources: SubsetSource[]): string | null {
     return null;
   }
 
-  const grouped = sources.reduce<Record<number, SubsetSource[]>>(
-    (acc, entry) => {
-      const bucket = acc[entry.weight] ?? [];
-      bucket.push(entry);
-      acc[entry.weight] = bucket;
-      return acc;
-    },
-    {},
-  );
+  const grouped = sources.reduce<Map<number, SubsetSource[]>>((acc, entry) => {
+    const bucket = acc.get(entry.weight) ?? [];
+    bucket.push(entry);
+    acc.set(entry.weight, bucket);
+    return acc;
+  }, new Map<number, SubsetSource[]>());
 
-  const fontFaceBlocks = Object.entries(grouped)
+  const fontFaceBlocks = Array.from(grouped.entries())
     .map(([weight, entries]) => {
       const ordered = entries
         .sort((a, b) =>

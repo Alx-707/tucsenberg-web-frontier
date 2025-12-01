@@ -2,6 +2,7 @@
 
 import { ArrowRight, ExternalLink, Github, Star } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 import { ActionCards } from '@/components/home/cta/action-cards';
 import { CommunitySection } from '@/components/home/cta/community-section';
 import { getCallToActionData } from '@/components/home/cta/data';
@@ -36,9 +37,14 @@ export function CallToAction() {
       <div className='container mx-auto px-4'>
         <div
           ref={ref}
-          className={`mx-auto max-w-4xl transition-all duration-[${UI_CONSTANTS.LONG_ANIMATION_DURATION}ms] ease-out ${
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          }`}
+          className={cn(
+            'mx-auto max-w-4xl',
+            'transition-all ease-out',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0',
+          )}
+          style={{
+            transitionDuration: `${UI_CONSTANTS.LONG_ANIMATION_DURATION}ms`,
+          }}
         >
           {/* 主要行动号召 */}
           <div className='mb-16 text-center'>

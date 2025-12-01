@@ -177,6 +177,15 @@ pnpm config:check           # 配置一致性检查
 pnpm unused:check           # 未使用代码检查（knip）
 ```
 
+> 推荐流程：
+> - **提交 PR 前** 本地至少执行一次 `pnpm security:check`，确保依赖审计和 Semgrep 均通过；
+> - 对于 Semgrep 报警：
+>   - 优先 **改代码消除真实风险**（尤其是 `object-injection-sink-*` / `nextjs-unsafe-*` 规则）；
+>   - 若确认是受控例外（仅操作受控配置或测试辅助代码），请：
+>     1. 在代码附近补充安全说明注释；
+>     2. 使用 `// nosemgrep: <rule-id>` 标注具体规则；
+>   - 严禁简单在 `semgrep.yml` 全局禁用规则，除非在安全评审中已有明确结论。
+
 ### 测试相关
 
 ```bash

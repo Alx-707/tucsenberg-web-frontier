@@ -33,6 +33,21 @@ export interface ThemeHookMock {
   };
 }
 
+function setMockAriaAttribute(
+  mock: ThemeHookMock,
+  key: 'aria-current' | 'aria-expanded',
+  value: string,
+): void {
+  if (!mock.ariaAttributes) {
+    return;
+  }
+
+  // nosemgrep: object-injection-sink-dynamic-property
+  // 安全说明：ThemeHookMock.ariaAttributes 来自测试内部构造的受控对象，仅用于
+  // 在 Vitest 环境中模拟 aria-* 属性的更新，不会暴露到生产代码路径或接收用户输入。
+  mock.ariaAttributes[key] = value;
+}
+
 /**
  * 主题测试工具类
  */
@@ -60,6 +75,9 @@ export class ThemeTestUtils {
       },
     };
 
+    // nosemgrep: object-injection-sink-spread-operator
+    // 安全说明：defaultMock 与 overrides 均为测试内部构造的 ThemeHookMock 片段，
+    // 仅用于 Vitest 用例中模拟主题 Hook 状态，不会直接接收用户输入或写入生产对象。
     return { ...defaultMock, ...overrides };
   }
 
@@ -73,13 +91,17 @@ export class ThemeTestUtils {
     Object.assign(mock, updates);
 
     // 自动同步aria-current与theme
-    if (updates.theme && mock.ariaAttributes) {
-      mock.ariaAttributes['aria-current'] = updates.theme;
+    if (updates.theme) {
+      setMockAriaAttribute(mock, 'aria-current', updates.theme);
     }
 
     // 自动同步aria-expanded与isOpen
-    if (updates.isOpen !== undefined && mock.ariaAttributes) {
-      mock.ariaAttributes['aria-expanded'] = updates.isOpen ? 'true' : 'false';
+    if (updates.isOpen !== undefined) {
+      setMockAriaAttribute(
+        mock,
+        'aria-expanded',
+        updates.isOpen ? 'true' : 'false',
+      );
     }
   }
 
@@ -179,7 +201,7 @@ export class ThemeTestUtils {
         name: 'Invalid Theme State',
         setup: (mock: ThemeHookMock) => {
           mock.theme = undefined as unknown as ThemeType;
-          mock.ariaAttributes['aria-current'] = 'light'; // fallback
+          setMockAriaAttribute(mock, 'aria-current', 'light'); // fallback
         },
         description: 'should handle invalid theme state',
       },

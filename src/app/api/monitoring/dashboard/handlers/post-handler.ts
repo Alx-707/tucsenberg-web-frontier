@@ -44,10 +44,12 @@ export async function handlePostRequest(request: NextRequest) {
       metricsCount: Object.keys(body.metrics).length,
     });
 
-    // 模拟数据处理
+    // 模拟数据处理 - 仅使用明确字段，避免直接展开请求体
     const processedData = {
       id: `monitoring-${Date.now()}`,
-      ...body,
+      source: body.source,
+      metrics: body.metrics,
+      timestamp: body.timestamp,
       processedAt: new Date().toISOString(),
       status: 'processed',
     };

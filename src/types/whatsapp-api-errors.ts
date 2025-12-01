@@ -431,13 +431,24 @@ export const ErrorUtils = {
 
     const suggestions = ErrorUtils.generateSuggestions(error);
 
+    if (retryAfter !== undefined) {
+      return {
+        error,
+        context,
+        severity,
+        category,
+        retryable,
+        retryAfter,
+        suggestions,
+      };
+    }
+
     return {
       error,
       context,
       severity,
       category,
       retryable,
-      ...(retryAfter !== undefined && { retryAfter }),
       suggestions,
     };
   },
@@ -451,53 +462,44 @@ export const ErrorUtils = {
 
     if (isAuthenticationError(error)) {
       suggestions.push(
-        ...[
-          'Check your access token',
-          'Verify token permissions',
-          'Ensure token has not expired',
-        ],
+        'Check your access token',
+        'Verify token permissions',
+        'Ensure token has not expired',
       );
     }
 
     if (isValidationError(error)) {
       suggestions.push(
-        ...[
-          'Check request parameters',
-          'Validate input format',
-          'Review API documentation',
-        ],
+        'Check request parameters',
+        'Validate input format',
+        'Review API documentation',
       );
     }
 
     if (isRateLimitError(error)) {
       suggestions.push(
-        ...[
-          'Implement exponential backoff',
-          'Reduce request frequency',
-          'Consider upgrading your plan',
-        ],
+        'Implement exponential backoff',
+        'Reduce request frequency',
+        'Consider upgrading your plan',
       );
     }
 
     if (isNetworkError(error)) {
       suggestions.push(
-        ...[
-          'Check network connectivity',
-          'Verify API endpoint URL',
-          'Try again later',
-        ],
+        'Check network connectivity',
+        'Verify API endpoint URL',
+        'Try again later',
       );
     }
 
     if (isBusinessLogicError(error)) {
       if (error.code === 'INVALID_PHONE_NUMBER') {
-        suggestions.push(
-          ...['Verify phone number format', 'Include country code'],
-        );
+        suggestions.push('Verify phone number format', 'Include country code');
       }
       if (error.code === 'MESSAGE_UNDELIVERABLE') {
         suggestions.push(
-          ...['Check recipient status', 'Verify phone number is active'],
+          'Check recipient status',
+          'Verify phone number is active',
         );
       }
     }

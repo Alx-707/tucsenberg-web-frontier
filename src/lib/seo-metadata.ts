@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection */
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { SITE_CONFIG, type Locale, type PageType } from '@/config/paths';
@@ -21,6 +20,52 @@ interface SEOConfig {
   modifiedTime?: string;
   authors?: string[];
   section?: string;
+}
+
+/**
+ * Apply base fields to merged config
+ */
+function applyBaseFields(target: SEOConfig, base: SEOConfig): void {
+  if (base.type !== undefined) target.type = base.type;
+  if (base.keywords !== undefined) target.keywords = base.keywords;
+  if (base.image !== undefined) target.image = base.image;
+}
+
+/**
+ * Apply custom fields to merged config
+ */
+function applyCustomFields(
+  target: SEOConfig,
+  custom: Partial<SEOConfig>,
+): void {
+  if (custom.type !== undefined) target.type = custom.type;
+  if (custom.keywords !== undefined) target.keywords = custom.keywords;
+  if (custom.image !== undefined) target.image = custom.image;
+  if (custom.title !== undefined) target.title = custom.title;
+  if (custom.description !== undefined) target.description = custom.description;
+  if (custom.publishedTime !== undefined)
+    target.publishedTime = custom.publishedTime;
+  if (custom.modifiedTime !== undefined)
+    target.modifiedTime = custom.modifiedTime;
+  if (custom.authors !== undefined) target.authors = custom.authors;
+  if (custom.section !== undefined) target.section = custom.section;
+}
+
+function mergeSEOConfig(
+  baseConfig: SEOConfig,
+  customConfig?: Partial<SEOConfig> | null,
+): SEOConfig {
+  const mergedConfig: SEOConfig = {};
+
+  applyBaseFields(mergedConfig, baseConfig);
+
+  if (customConfig === null || customConfig === undefined) {
+    return mergedConfig;
+  }
+
+  applyCustomFields(mergedConfig, customConfig);
+
+  return mergedConfig;
 }
 
 /**
@@ -157,12 +202,41 @@ export function createPageSEOConfig(
     },
   };
 
-  const baseConfig = Object.prototype.hasOwnProperty.call(baseConfigs, pageType)
-    ? baseConfigs[pageType]
-    : baseConfigs.home;
+  let baseConfig = baseConfigs.home;
+  switch (pageType) {
+    case 'home':
+      baseConfig = baseConfigs.home;
+      break;
+    case 'about':
+      baseConfig = baseConfigs.about;
+      break;
+    case 'contact':
+      baseConfig = baseConfigs.contact;
+      break;
+    case 'blog':
+      baseConfig = baseConfigs.blog;
+      break;
+    case 'products':
+      baseConfig = baseConfigs.products;
+      break;
+    case 'services':
+      baseConfig = baseConfigs.services;
+      break;
+    case 'pricing':
+      baseConfig = baseConfigs.pricing;
+      break;
+    case 'support':
+      baseConfig = baseConfigs.support;
+      break;
+    case 'privacy':
+      baseConfig = baseConfigs.privacy;
+      break;
+    case 'terms':
+      baseConfig = baseConfigs.terms;
+      break;
+    default:
+      baseConfig = baseConfigs.home;
+  }
 
-  return {
-    ...baseConfig,
-    ...customConfig,
-  };
+  return mergeSEOConfig(baseConfig, customConfig);
 }

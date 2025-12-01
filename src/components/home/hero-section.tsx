@@ -217,16 +217,24 @@ function getByPath(source: TranslationMessages, path: string): string {
   const parts = path.split('.');
   let cur: unknown = source;
   for (const p of parts) {
-    if (
-      typeof cur === 'object' &&
-      cur !== null &&
-      p in (cur as Record<string, unknown>)
-    ) {
-      // eslint-disable-next-line security/detect-object-injection
-      cur = (cur as Record<string, unknown>)[p];
-    } else {
+    if (typeof cur !== 'object' || cur === null) {
       return '';
     }
+
+    const record = cur as Record<string, unknown>;
+    let next: unknown;
+    for (const [key, value] of Object.entries(record)) {
+      if (key === p) {
+        next = value;
+        break;
+      }
+    }
+
+    if (next === undefined) {
+      return '';
+    }
+
+    cur = next;
   }
   return typeof cur === 'string' ? cur : '';
 }

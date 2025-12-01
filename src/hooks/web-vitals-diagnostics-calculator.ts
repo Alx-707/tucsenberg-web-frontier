@@ -180,11 +180,9 @@ export const calculateMedian = (values: number[]): number => {
     );
   }
 
-  return Number(
-    (sorted.slice(middle, middle + 1)[0] ?? 0).toFixed(
-      WEB_VITALS_CONSTANTS.DECIMAL_PLACES,
-    ),
-  );
+  const [middleValue = 0] = sorted.slice(middle, middle + 1);
+
+  return Number(middleValue.toFixed(WEB_VITALS_CONSTANTS.DECIMAL_PLACES));
 };
 
 /**
@@ -195,12 +193,10 @@ export const calculateP95 = (values: number[]): number => {
 
   const sorted = [...values].sort((a, b) => a - b);
   const index = Math.ceil(sorted.length * MAGIC_0_95) - 1;
+  const safeIndex = Math.max(0, index);
+  const [p95Value = 0] = sorted.slice(safeIndex, safeIndex + 1);
 
-  return Number(
-    (sorted.slice(Math.max(0, index), Math.max(0, index) + 1)[0] ?? 0).toFixed(
-      WEB_VITALS_CONSTANTS.DECIMAL_PLACES,
-    ),
-  );
+  return Number(p95Value.toFixed(WEB_VITALS_CONSTANTS.DECIMAL_PLACES));
 };
 
 /**

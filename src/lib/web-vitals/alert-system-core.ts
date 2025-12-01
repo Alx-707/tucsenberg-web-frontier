@@ -59,6 +59,91 @@ export class PerformanceAlertSystem {
   private sender = new AlertSystemSender();
 
   /**
+   * 应用单个指标阈值覆盖
+   */
+  private applyMetricThreshold(
+    target: { warning: number; critical: number },
+    source: { warning?: number; critical?: number } | undefined,
+  ): void {
+    if (!source || typeof source !== 'object') return;
+    if (typeof source.warning === 'number') {
+      target.warning = source.warning;
+    }
+    if (typeof source.critical === 'number') {
+      target.critical = source.critical;
+    }
+  }
+
+  /**
+   * 应用所有阈值覆盖
+   */
+  private applyThresholdOverrides(
+    thresholds: PerformanceAlertConfig['thresholds'] | undefined,
+  ): void {
+    if (!thresholds || typeof thresholds !== 'object') return;
+    const currentThresholds = this.config.thresholds;
+    this.applyMetricThreshold(currentThresholds.cls, thresholds.cls);
+    this.applyMetricThreshold(currentThresholds.lcp, thresholds.lcp);
+    this.applyMetricThreshold(currentThresholds.fid, thresholds.fid);
+    this.applyMetricThreshold(currentThresholds.fcp, thresholds.fcp);
+    this.applyMetricThreshold(currentThresholds.ttfb, thresholds.ttfb);
+    this.applyMetricThreshold(currentThresholds.score, thresholds.score);
+  }
+
+  /**
+   * 应用通道配置覆盖
+   */
+  private applyChannelOverrides(
+    channels: PerformanceAlertConfig['channels'] | undefined,
+  ): void {
+    if (!channels || typeof channels !== 'object') return;
+    if ('console' in channels && typeof channels.console === 'boolean') {
+      this.config.channels.console = channels.console;
+    }
+    if ('storage' in channels && typeof channels.storage === 'boolean') {
+      this.config.channels.storage = channels.storage;
+    }
+    if ('webhook' in channels && typeof channels.webhook === 'string') {
+      this.config.channels.webhook = channels.webhook;
+    }
+    if ('callback' in channels && typeof channels.callback === 'function') {
+      this.config.channels.callback = channels.callback;
+    }
+  }
+
+  /**
+   * 应用部分配置
+   */
+  private applyPartialConfig(
+    partialConfig: Partial<PerformanceAlertConfig>,
+  ): void {
+    if (typeof partialConfig.enabled === 'boolean') {
+      this.config.enabled = partialConfig.enabled;
+    }
+    this.applyThresholdOverrides(partialConfig.thresholds);
+    this.applyChannelOverrides(partialConfig.channels);
+  }
+
+  /**
+   * 应用通知配置
+   */
+  private applyNotificationConfig(config: {
+    console?: boolean;
+    storage?: boolean;
+    webhook?: string;
+  }): void {
+    if (typeof config.console === 'boolean') {
+      this.config.channels.console = config.console;
+    }
+    if (typeof config.storage === 'boolean') {
+      this.config.channels.storage = config.storage;
+    }
+    if (typeof config.webhook === 'string' && config.webhook) {
+      this.config.channels.webhook = config.webhook;
+    }
+  }
+
+  /**
    * 配置预警系统
    */
   configure(
@@ -71,33 +156,15 @@ export class PerformanceAlertSystem {
       webhook?: string;
     },
   ): void {
-    // 处理测试中的notifications配置
-    if ('notifications' in config) {
-      const { notifications } = config;
-      if (notifications) {
-        this.config.channels = {
-          ...this.config.channels,
-          console: notifications.console ?? this.config.channels.console,
-          storage: notifications.storage ?? this.config.channels.storage,
-        };
-
-        // 处理webhook配置
-        if (notifications.webhook) {
-          this.config.channels.webhook = notifications.webhook;
-        }
-      }
-
-      // 移除notifications属性，避免类型错误
-      const { notifications: _notifications, ...restConfig } = config;
-      this.config = { ...this.config, ...restConfig };
-    } else {
-      this.config = { ...this.config, ...config };
+    const { notifications, webhook } = config;
+    if (notifications) {
+      this.applyNotificationConfig(notifications);
     }
 
-    // 直接处理webhook配置
-    if ('webhook' in config && config.webhook) {
-      this.config.channels = this.config.channels || {};
-      this.config.channels.webhook = config.webhook;
+    this.applyPartialConfig(config);
+
+    if (typeof webhook === 'string' && webhook) {
+      this.config.channels.webhook = webhook;
     }
   }
 
@@ -147,12 +214,20 @@ export class PerformanceAlertSystem {
     message: string;
     data?: Record<string, unknown>;
   }): Promise<void> {
-    const payload = {
+    const payload: {
+      severity: 'warning' | 'critical';
+      message: string;
+      config: PerformanceAlertConfig;
+      data?: Record<string, unknown>;
+    } = {
       severity: args.severity,
       message: args.message,
       config: this.config,
-      ...(args.data !== undefined && { data: args.data }),
     };
+
+    if (args.data !== undefined) {
+      payload.data = args.data;
+    }
 
     return this.sender.sendAlert(payload);
   }
@@ -182,7 +257,13 @@ export class PerformanceAlertSystem {
    * 获取当前配置
    */
   getConfig(): PerformanceAlertConfig {
-    return { ...this.config };
+    const { enabled, thresholds, channels } = this.config;
+
+    return {
+      enabled,
+      thresholds,
+      channels,
+    };
   }
 
   /**

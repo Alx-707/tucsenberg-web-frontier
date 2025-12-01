@@ -212,30 +212,25 @@ export class AccessibilityUtils {
     }
 
     // 处理常见的命名颜色和简单情况
-    const colorMap: Record<string, OKLCHColor> = {
-      'white': { l: ONE, c: ZERO, h: ZERO, alpha: ONE },
-      'black': { l: ZERO, c: ZERO, h: ZERO, alpha: ONE },
-      '#ffffff': { l: ONE, c: ZERO, h: ZERO, alpha: ONE },
-      '#000000': { l: ZERO, c: ZERO, h: ZERO, alpha: ONE },
-      '#fff': { l: ONE, c: ZERO, h: ZERO, alpha: ONE },
-      '#000': { l: ZERO, c: ZERO, h: ZERO, alpha: ONE },
-    };
-
-    // Safe property access using Object.prototype.hasOwnProperty
-    if (Object.prototype.hasOwnProperty.call(colorMap, trimmed)) {
-      const color = colorMap[trimmed as keyof typeof colorMap];
-      if (color) {
-        return color;
-      }
+    // 使用显式的分支而不是动态属性访问，便于安全审计并避免对象注入模式
+    switch (trimmed) {
+      case 'white':
+      case '#ffffff':
+      case '#fff':
+        return { l: ONE, c: ZERO, h: ZERO, alpha: ONE };
+      case 'black':
+      case '#000000':
+      case '#000':
+        return { l: ZERO, c: ZERO, h: ZERO, alpha: ONE };
+      default:
+        // 默认返回中等灰色
+        return {
+          l: OPACITY_CONSTANTS.MEDIUM_OPACITY,
+          c: ZERO,
+          h: ZERO,
+          alpha: ONE,
+        };
     }
-
-    // 默认返回中等灰色
-    return {
-      l: OPACITY_CONSTANTS.MEDIUM_OPACITY,
-      c: ZERO,
-      h: ZERO,
-      alpha: ONE,
-    };
   }
 
   /**

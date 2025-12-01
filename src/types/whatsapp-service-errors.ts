@@ -124,8 +124,19 @@ export class WhatsAppApiError extends WhatsAppError {
    * Convert to JSON with API error details
    */
   override toJSON() {
+    const base = super.toJSON();
+    const { name, message, code, type, subcode, traceId, timestamp, stack } =
+      base;
+
     return {
-      ...super.toJSON(),
+      name,
+      message,
+      code,
+      type,
+      subcode,
+      traceId,
+      timestamp,
+      stack,
       apiError: this.apiError,
     };
   }
@@ -166,8 +177,19 @@ export class WhatsAppValidationError extends WhatsAppError {
    * Convert to JSON with validation details
    */
   override toJSON() {
+    const base = super.toJSON();
+    const { name, message, code, type, subcode, traceId, timestamp, stack } =
+      base;
+
     return {
-      ...super.toJSON(),
+      name,
+      message,
+      code,
+      type,
+      subcode,
+      traceId,
+      timestamp,
+      stack,
       field: this.field,
       value: this.value,
     };
@@ -227,8 +249,19 @@ export class WhatsAppRateLimitError extends WhatsAppError {
    * Convert to JSON with rate limit details
    */
   override toJSON() {
+    const base = super.toJSON();
+    const { name, message, code, type, subcode, traceId, timestamp, stack } =
+      base;
+
     return {
-      ...super.toJSON(),
+      name,
+      message,
+      code,
+      type,
+      subcode,
+      traceId,
+      timestamp,
+      stack,
       retryAfter: this.retryAfter,
       limit: this.limit,
       remaining: this.remaining,
@@ -278,8 +311,19 @@ export class WhatsAppNetworkError extends WhatsAppError {
    * Convert to JSON with network error details
    */
   override toJSON() {
+    const base = super.toJSON();
+    const { name, message, code, type, subcode, traceId, timestamp, stack } =
+      base;
+
     return {
-      ...super.toJSON(),
+      name,
+      message,
+      code,
+      type,
+      subcode,
+      traceId,
+      timestamp,
+      stack,
       originalError: this.originalError?.message,
       isTimeout: this.isTimeout,
     };
@@ -333,8 +377,19 @@ export class WhatsAppAuthError extends WhatsAppError {
    * Convert to JSON with auth details
    */
   override toJSON() {
+    const base = super.toJSON();
+    const { name, message, code, type, subcode, traceId, timestamp, stack } =
+      base;
+
     return {
-      ...super.toJSON(),
+      name,
+      message,
+      code,
+      type,
+      subcode,
+      traceId,
+      timestamp,
+      stack,
       tokenExpired: this.tokenExpired,
       tokenInvalid: this.tokenInvalid,
     };

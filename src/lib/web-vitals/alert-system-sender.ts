@@ -28,6 +28,10 @@ export interface AlertHistoryEntry {
   value?: number;
   threshold?: number;
   level?: 'warning' | 'critical'; // 为了兼容测试
+  /**
+   * 额外诊断信息，仅用于测试和调试，不参与正式通知负载
+   */
+  diagnostics?: Record<string, unknown>;
 }
 
 /**
@@ -49,10 +53,20 @@ export class AlertSystemSender {
         severity: alert.severity,
         message: alert.message,
         level: alert.severity, // 为了兼容测试
-        ...(alert.metric && { metric: alert.metric }),
-        ...(alert.value !== undefined && { value: alert.value }),
-        ...(alert.threshold !== undefined && { threshold: alert.threshold }),
       };
+
+      if (alert.metric) {
+        historyEntry.metric = alert.metric;
+      }
+
+      if (alert.value !== undefined) {
+        historyEntry.value = alert.value;
+      }
+
+      if (alert.threshold !== undefined) {
+        historyEntry.threshold = alert.threshold;
+      }
+
       this.alertHistory.push(historyEntry);
     });
 
@@ -76,6 +90,54 @@ export class AlertSystemSender {
   }
 
   /**
+   * 根据数据创建 AlertInfo 对象
+   */
+  private createAlertInfo(
+    severity: 'warning' | 'critical',
+    message: string,
+    data?: Record<string, unknown>,
+  ): AlertInfo {
+    const alert: AlertInfo = { type: 'metric', severity, message };
+    if (data && typeof data.metric === 'string') {
+      alert.metric = data.metric;
+    }
+    if (data && typeof data.value === 'number') {
+      alert.value = data.value;
+    }
+    if (data && typeof data.threshold === 'number') {
+      alert.threshold = data.threshold;
+    }
+    return alert;
+  }
+
+  /**
+   * 创建历史条目参数接口
+   */
+  private createAndStoreHistoryEntry(input: {
+    alert: AlertInfo;
+    severity: 'warning' | 'critical';
+    message: string;
+    data?: Record<string, unknown>;
+  }): void {
+    const { alert, severity, message, data } = input;
+    const historyEntry: AlertHistoryEntry = {
+      id: this.generateAlertId(),
+      timestamp: Date.now(),
+      severity,
+      message,
+      level: severity,
+    };
+
+    if (alert.metric !== undefined) historyEntry.metric = alert.metric;
+    if (alert.value !== undefined) historyEntry.value = alert.value;
+    if (alert.threshold !== undefined) historyEntry.threshold = alert.threshold;
+    if (data && Object.keys(data).length > 0) historyEntry.diagnostics = data;
+
+    this.alertHistory.push(historyEntry);
+    this.limitHistorySize();
+  }
+
+  /**
    * 发送单个警报 (测试方法)
    */
   async sendAlert(args: {
@@ -85,34 +147,22 @@ export class AlertSystemSender {
     data?: Record<string, unknown>;
   }): Promise<void> {
     const { severity, message, config, data } = args;
-    const alert: AlertInfo = {
-      type: 'metric',
-      severity,
-      message,
-      ...data,
-    };
+    const alert = this.createAlertInfo(severity, message, data);
 
-    // 直接添加到历史记录，不通过sendAlerts避免重复
-    const alertId = this.generateAlertId();
-    const historyEntry: AlertHistoryEntry = {
-      id: alertId,
-      timestamp: Date.now(),
-      severity,
-      message,
-      level: severity, // 为了兼容测试
-      ...data,
-    };
-    this.alertHistory.push(historyEntry);
+    const historyInput: {
+      alert: AlertInfo;
+      severity: 'warning' | 'critical';
+      message: string;
+      data?: Record<string, unknown>;
+    } = { alert, severity, message };
+    if (data !== undefined) {
+      historyInput.data = data;
+    }
+    this.createAndStoreHistoryEntry(historyInput);
 
-    // 限制历史记录大小
-    this.limitHistorySize();
-
-    // 直接发送通知，不通过sendAlerts避免重复添加历史
     if (config.channels.console) {
       sendConsoleAlerts([alert]);
     }
-
-    // 处理webhook通知
     if (config.channels?.webhook) {
       await sendWebhookNotification(alert, config.channels.webhook);
     }
@@ -146,7 +196,7 @@ export class AlertSystemSender {
    * 获取警报历史 (测试方法)
    */
   getAlertHistory(): AlertHistoryEntry[] {
-    return [...this.alertHistory];
+    return this.alertHistory.slice();
   }
 
   /**
@@ -215,14 +265,24 @@ export class AlertSystemSender {
     const criticals = this.alertHistory.filter(
       (alert) => alert.severity === 'critical',
     ).length;
-    const lastAlert = this.alertHistory[this.alertHistory.length - ONE];
+    const lastAlert = this.alertHistory.at(-ONE);
 
-    return {
+    const result: {
+      total: number;
+      warnings: number;
+      criticals: number;
+      lastAlert?: AlertHistoryEntry;
+    } = {
       total: this.alertHistory.length,
       warnings,
       criticals,
-      ...(lastAlert && { lastAlert }),
     };
+
+    if (lastAlert) {
+      result.lastAlert = lastAlert;
+    }
+
+    return result;
   }
 
   /**

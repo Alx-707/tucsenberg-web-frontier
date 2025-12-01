@@ -25,6 +25,14 @@ import type {
  * 配置工具函数
  * Configuration utility functions
  */
+// Internal map for efficient & safe error code lookup
+const ERROR_CODE_MESSAGE_MAP: ReadonlyMap<number, string> = new Map(
+  Object.entries(ERROR_CODE_MESSAGES).map(([code, message]) => [
+    Number(code),
+    message,
+  ]),
+);
+
 export const ConfigUtils = {
   /**
    * 合并配置
@@ -34,6 +42,10 @@ export const ConfigUtils = {
     base: T,
     override: Partial<T>,
   ): T {
+    // nosemgrep: object-injection-sink-spread-operator
+    // Safe merge of typed WhatsApp config objects. This utility is currently
+    // unused at runtime; when adding usages, ensure base/override are internal
+    // config structures and never raw user input.
     return { ...base, ...override };
   },
 
@@ -71,7 +83,8 @@ export const ConfigUtils = {
    * Get error message
    */
   getErrorMessage(errorCode: number): string {
-    return ERROR_CODE_MESSAGES[errorCode as ErrorCode] || 'Unknown error';
+    const message = ERROR_CODE_MESSAGE_MAP.get(errorCode);
+    return message ?? 'Unknown error';
   },
 
   /**

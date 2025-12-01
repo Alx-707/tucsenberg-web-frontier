@@ -14,6 +14,33 @@ import {
   PERCENTAGE_CONSTANTS,
 } from '@/constants/app-constants';
 
+const createScreenReaderConfig = (
+  config?: Partial<ScreenReaderConfig>,
+): ScreenReaderConfig => ({
+  enabled: typeof config?.enabled === 'boolean' ? config.enabled : true,
+  language: config?.language ?? 'en',
+  announceDelay:
+    typeof config?.announceDelay === 'number'
+      ? config.announceDelay
+      : PERCENTAGE_CONSTANTS.FULL,
+});
+
+const getThemeAnnouncements = (language: ScreenReaderConfig['language']) =>
+  language === 'zh' ? THEME_ANNOUNCEMENTS.zh : THEME_ANNOUNCEMENTS.en;
+
+const applyScreenReaderConfigUpdate = (
+  current: ScreenReaderConfig,
+  update: Partial<ScreenReaderConfig>,
+): ScreenReaderConfig => ({
+  enabled:
+    typeof update.enabled === 'boolean' ? update.enabled : current.enabled,
+  language: update.language ?? current.language,
+  announceDelay:
+    typeof update.announceDelay === 'number'
+      ? update.announceDelay
+      : current.announceDelay,
+});
+
 /**
  * 无障碍性管理器
  */
@@ -22,12 +49,7 @@ export class AccessibilityManager {
   private liveRegion: HTMLElement | null = null;
 
   constructor(config?: Partial<ScreenReaderConfig>) {
-    this.config = {
-      enabled: true,
-      language: 'en',
-      announceDelay: PERCENTAGE_CONSTANTS.FULL, // 100ms
-      ...config,
-    };
+    this.config = createScreenReaderConfig(config);
 
     this.initializeLiveRegion();
   }
@@ -63,10 +85,18 @@ export class AccessibilityManager {
   announceThemeChange(theme: string): void {
     if (!this.config.enabled || !this.liveRegion) return;
 
-    const announcements = THEME_ANNOUNCEMENTS[this.config.language];
-    const message =
-      announcements[theme as keyof typeof announcements] ||
-      `Switched to ${theme} mode`;
+    const announcements = getThemeAnnouncements(this.config.language);
+    let message: string;
+
+    if (theme === 'light') {
+      message = announcements.light;
+    } else if (theme === 'dark') {
+      message = announcements.dark;
+    } else if (theme === 'system') {
+      message = announcements.system;
+    } else {
+      message = `Switched to ${theme} mode`;
+    }
 
     // 延迟播报以确保屏幕阅读器能够捕获
     setTimeout(() => {
@@ -109,7 +139,7 @@ export class AccessibilityManager {
   announceSwitching(): void {
     if (!this.config.enabled || !this.liveRegion) return;
 
-    const announcements = THEME_ANNOUNCEMENTS[this.config.language];
+    const announcements = getThemeAnnouncements(this.config.language);
     const message = announcements.switching;
 
     try {
@@ -143,14 +173,15 @@ export class AccessibilityManager {
    * 更新配置
    */
   updateConfig(newConfig: Partial<ScreenReaderConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    this.config = applyScreenReaderConfigUpdate(this.config, newConfig);
   }
 
   /**
    * 获取当前配置
    */
   getConfig(): ScreenReaderConfig {
-    return { ...this.config };
+    const { enabled, language, announceDelay } = this.config;
+    return { enabled, language, announceDelay };
   }
 
   /**

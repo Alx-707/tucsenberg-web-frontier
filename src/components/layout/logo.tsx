@@ -104,22 +104,22 @@ export function Logo({
 
 // Compact logo for mobile/small spaces
 export function LogoCompact({ className }: { className?: string }) {
-  const props = {
-    showText: false as const,
-    size: 'sm' as const,
-    ...(className && { className }),
-  };
-
-  return <Logo {...props} />;
+  return (
+    <Logo
+      showText={false}
+      size='sm'
+      className={className ?? ''}
+    />
+  );
 }
 
 // Large logo for headers/hero sections
 export function LogoLarge({ className }: { className?: string }) {
-  const props = {
-    showText: true as const,
-    size: 'lg' as const,
-    ...(className && { className }),
-  };
-
-  return <Logo {...props} />;
+  return (
+    <Logo
+      showText={true}
+      size='lg'
+      className={className ?? ''}
+    />
+  );
 }

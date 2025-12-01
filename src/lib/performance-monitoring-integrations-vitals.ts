@@ -442,8 +442,8 @@ export class WebVitalsAnalyzer {
 
       const average =
         data.values.reduce((sum, val) => sum + val, ZERO) / data.values.length;
-      const latest = data.values[data.values.length - ONE] ?? ZERO;
-      const latestRating = data.ratings[data.ratings.length - ONE] ?? 'poor';
+      const latest = data.values.at(-ONE) ?? ZERO;
+      const latestRating = data.ratings.at(-ONE) ?? 'poor';
 
       // 计算趋势
       const trend = this.evaluateTrend(data.values);

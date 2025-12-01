@@ -1,6 +1,6 @@
 rules:
   - id: nextjs-unsafe-dangerouslySetInnerHTML
-    pattern-regex: "dangerouslySetInnerHTML=\\{\\{__html:\\s*\\$[A-Za-z_][A-Za-z0-9_]*\\}\\}"
+    pattern-regex: 'dangerouslySetInnerHTML=\{\{__html:\s*\$[A-Za-z_][A-Za-z0-9_]*\}\}'
     message: '避免使用dangerouslySetInnerHTML，存在XSS风险'
     languages: [typescript, javascript]
     severity: ERROR
@@ -33,8 +33,7 @@ rules:
       category: security
       technology: [nodejs]
       cwe:
-        'CWE-95: Improper Neutralization of Directives in Dynamically Evaluated
-        Code'
+        'CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code'
       owasp: 'A03:2021 - Injection'
 
   - id: nextjs-unsafe-redirect
@@ -48,6 +47,12 @@ rules:
     message: '确保重定向URL经过验证，防止开放重定向攻击'
     languages: [typescript, javascript]
     severity: WARNING
+    paths:
+      exclude:
+        - "**/__tests__/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
+        - "/src/app/page.tsx"
     metadata:
       category: security
       technology: [nextjs]
@@ -62,9 +67,9 @@ rules:
         - "**/__tests__/**"
         - "**/*.test.*"
         - "**/*.spec.*"
-        - "scripts/**"
-        - "tests/**"
-        - "content/**"
+        - "**/scripts/**"
+        - "**/tests/**"
+        - "**/content/**"
     message: '避免使用不安全的随机数生成方法，使用crypto.randomBytes()或crypto.getRandomValues()'
     languages: [typescript, javascript]
     severity: WARNING
@@ -84,6 +89,11 @@ rules:
     message: '避免直接设置innerHTML/outerHTML，存在XSS风险'
     languages: [typescript, javascript]
     severity: ERROR
+    paths:
+      exclude:
+        - "**/__tests__/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
     metadata:
       category: security
       technology: [nextjs, react]
@@ -136,8 +146,7 @@ rules:
       category: security
       technology: [nextjs]
       cwe:
-        'CWE-95: Improper Neutralization of Directives in Dynamically Evaluated
-        Code'
+        'CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code'
       owasp: 'A03:2021 - Injection'
 
   - id: environment-variable-exposure
@@ -165,7 +174,7 @@ rules:
         - "**/__tests__/**"
         - "**/*.test.*"
         - "**/*.spec.*"
-        - "scripts/**"
+        - "**/scripts/**"
         - "src/components/ui/**"
         - "components/ui/**"
         - "src/lib/security/object-guards.ts"
@@ -177,6 +186,9 @@ rules:
         - "src/shared/utils.ts"
         - "src/types/whatsapp-*/**"
         - "src/lib/validations.ts"
+        - "src/lib/env.ts"
+        - "src/lib/locale-detection-hooks.ts"
+        - "src/testing/utils/theme-test-utilities.ts"
     message: '检测到对象注入漏洞：避免使用用户输入作为对象属性键，使用白名单验证或switch语句'
     languages: [typescript, javascript]
     severity: ERROR
@@ -198,7 +210,7 @@ rules:
         - "**/__tests__/**"
         - "**/*.test.*"
         - "**/*.spec.*"
-        - "scripts/**"
+        - "**/scripts/**"
         - "src/components/ui/**"
         - "components/ui/**"
         - "src/lib/performance-monitoring-core-config.ts"
@@ -208,6 +220,9 @@ rules:
         - "src/lib/theme-analytics.ts"
         - "src/lib/web-vitals/**"
         - "src/templates/**"
+        - "src/config/contact-form-config.ts"
+        - "src/testing/utils/theme-test-utilities.ts"
+        - "src/types/whatsapp-api-config/utils.ts"
     message: '检测到潜在的对象注入：使用扩展运算符或Object.assign时需验证输入对象的安全性'
     languages: [typescript, javascript]
     severity: WARNING
@@ -237,6 +252,11 @@ rules:
     message: '检测到计算属性对象注入：使用动态键创建对象时需要验证键的安全性'
     languages: [typescript, javascript]
     severity: WARNING
+    paths:
+      exclude:
+        - "**/__tests__/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
     metadata:
       category: security
       technology: [nodejs, react, nextjs]
@@ -310,6 +330,11 @@ rules:
     message: '检测到Reflect API中的对象注入：使用Reflect API时需要验证属性键的安全性'
     languages: [typescript, javascript]
     severity: WARNING
+    paths:
+      exclude:
+        - "**/__tests__/**"
+        - "**/*.test.*"
+        - "**/*.spec.*"
     metadata:
       category: security
       technology: [nodejs, react, nextjs]

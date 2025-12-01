@@ -6,15 +6,7 @@
  */
 
 import type { Locale } from '@/types/i18n';
-import type { AdvancedCacheConfig } from '@/lib/i18n-cache-types-advanced';
-import type {
-  CacheConfig,
-  CacheConfigValidation,
-  CacheEvent,
-  CacheEventType,
-  CacheItem,
-  CacheStats,
-} from '@/lib/i18n-cache-types-base';
+import type { CacheStats } from '@/lib/i18n-cache-types-base';
 import {
   ANIMATION_DURATION_VERY_SLOW,
   BYTES_PER_KB,
@@ -25,7 +17,7 @@ import {
   SECONDS_PER_MINUTE,
   ZERO,
 } from '@/constants';
-import { COUNT_256, COUNT_100000, MAGIC_9 } from '@/constants/count';
+import { COUNT_256 } from '@/constants/count';
 
 /**
  * 缓存键工具函数
@@ -54,11 +46,23 @@ export const CacheKeyUtils = {
   } {
     const parts = cacheKey.split(':');
     const [loc, ns, k] = parts;
-    return {
+    const result: {
+      locale: Locale;
+      namespace?: string;
+      key?: string;
+    } = {
       locale: (loc ?? '') as Locale,
-      ...(ns ? { namespace: ns } : {}),
-      ...(k ? { key: k } : {}),
     };
+
+    if (ns) {
+      result.namespace = ns;
+    }
+
+    if (k) {
+      result.key = k;
+    }
+
+    return result;
   },
 
   /**
@@ -140,26 +144,41 @@ export const CacheTimeUtils = {
    * Parse time string
    */
   parseTimeString(timeStr: string): number {
-    const units: Record<string, number> = {
-      ms: ONE,
-      s: ANIMATION_DURATION_VERY_SLOW,
-      m: SECONDS_PER_MINUTE * ANIMATION_DURATION_VERY_SLOW,
-      h: SECONDS_PER_MINUTE * SECONDS_PER_MINUTE * ANIMATION_DURATION_VERY_SLOW,
-      d:
-        HOURS_PER_DAY *
-        SECONDS_PER_MINUTE *
-        SECONDS_PER_MINUTE *
-        ANIMATION_DURATION_VERY_SLOW,
-    };
-
     const match = timeStr.match(/^(\d+)(ms|s|m|h|d)$/);
     if (!match) throw new Error(`Invalid time format: ${timeStr}`);
 
     const [, value, unit] = match;
     if (!value || !unit) throw new Error(`Invalid time format: ${timeStr}`);
-    return (
-      parseInt(value, COUNT_TEN) * (units[unit as keyof typeof units] || ONE)
-    );
+
+    let multiplier = ONE;
+    switch (unit) {
+      case 'ms':
+        multiplier = ONE;
+        break;
+      case 's':
+        multiplier = ANIMATION_DURATION_VERY_SLOW;
+        break;
+      case 'm':
+        multiplier = SECONDS_PER_MINUTE * ANIMATION_DURATION_VERY_SLOW;
+        break;
+      case 'h':
+        multiplier =
+          SECONDS_PER_MINUTE *
+          SECONDS_PER_MINUTE *
+          ANIMATION_DURATION_VERY_SLOW;
+        break;
+      case 'd':
+        multiplier =
+          HOURS_PER_DAY *
+          SECONDS_PER_MINUTE *
+          SECONDS_PER_MINUTE *
+          ANIMATION_DURATION_VERY_SLOW;
+        break;
+      default:
+        throw new Error(`Invalid time format: ${timeStr}`);
+    }
+
+    return parseInt(value, COUNT_TEN) * multiplier;
   },
 } as const;
 
@@ -315,138 +334,6 @@ export const CacheStatsUtils = {
 } as const;
 
 /**
- * 缓存验证工具函数
- * Cache validation utility functions
- */
-export const CacheValidationUtils = {
-  /**
-   * 验证缓存项
-   * Validate cache item
-   */
-  validateItem<T>(item: unknown): item is CacheItem<T> {
-    return (
-      typeof item === 'object' &&
-      item !== null &&
-      'data' in item &&
-      'timestamp' in item &&
-      'ttl' in item &&
-      'hits' in item &&
-      typeof (item as CacheItem<T>).timestamp === 'number' &&
-      typeof (item as CacheItem<T>).ttl === 'number' &&
-      typeof (item as CacheItem<T>).hits === 'number'
-    );
-  },
-
-  /**
-   * 验证缓存配置
-   * Validate cache configuration
-   */
-  validateConfig(config: Partial<CacheConfig>): CacheConfigValidation {
-    const errors: string[] = [];
-    const warnings: string[] = [];
-
-    if (config.maxSize !== undefined) {
-      if (typeof config.maxSize !== 'number' || config.maxSize < ONE) {
-        errors.push('maxSize must be a positive number');
-      } else if (config.maxSize > COUNT_100000) {
-        warnings.push('maxSize is very large, consider reducing it');
-      }
-    }
-
-    if (config.ttl !== undefined) {
-      if (typeof config.ttl !== 'number' || config.ttl < ZERO) {
-        errors.push('ttl must be a non-negative number');
-      } else if (
-        config.ttl >
-        HOURS_PER_DAY *
-          SECONDS_PER_MINUTE *
-          SECONDS_PER_MINUTE *
-          ANIMATION_DURATION_VERY_SLOW
-      ) {
-        warnings.push('ttl is very long (>24h), consider reducing it');
-      }
-    }
-
-    if (config.storageKey !== undefined) {
-      if (
-        typeof config.storageKey !== 'string' ||
-        config.storageKey.length === ZERO
-      ) {
-        errors.push('storageKey must be a non-empty string');
-      }
-    }
-
-    if (config.enablePersistence !== undefined) {
-      if (typeof config.enablePersistence !== 'boolean') {
-        errors.push('enablePersistence must be a boolean');
-      }
-    }
-
-    return {
-      isValid: errors.length === ZERO,
-      errors,
-      warnings,
-    };
-  },
-
-  /**
-   * 验证高级配置
-   * Validate advanced configuration
-   */
-  validateAdvancedConfig(
-    config: Partial<AdvancedCacheConfig>,
-  ): CacheConfigValidation {
-    const errors: string[] = [];
-    const warnings: string[] = [];
-
-    // 验证基础配置
-    const baseValidation = this.validateConfig(config);
-    errors.push(...baseValidation.errors);
-    warnings.push(...baseValidation.warnings);
-
-    // 验证压缩配置
-    if (config.compression) {
-      if (
-        config.compression.enableCompression &&
-        config.compression.threshold < ZERO
-      ) {
-        errors.push('compression threshold must be non-negative');
-      }
-      if (
-        config.compression.level !== undefined &&
-        (config.compression.level < ONE || config.compression.level > MAGIC_9)
-      ) {
-        errors.push('compression level must be between 1 and 9');
-      }
-    }
-
-    // 验证性能配置
-    if (config.performance) {
-      if (
-        config.performance.maxConcurrentLoads !== undefined &&
-        config.performance.maxConcurrentLoads < ONE
-      ) {
-        errors.push('maxConcurrentLoads must be at least 1');
-      }
-      if (
-        config.performance.loadTimeout !== undefined &&
-        config.performance.loadTimeout < ANIMATION_DURATION_VERY_SLOW
-      ) {
-        warnings.push(
-          'loadTimeout is very short (<1s), consider increasing it',
-        );
-      }
-    }
-
-    return {
-      isValid: errors.length === ZERO,
-      errors,
-      warnings,
-    };
-  },
-} as const;
-
-/**
  * 缓存序列化工具函数
  * Cache serialization utility functions
  */
@@ -504,105 +391,7 @@ export const CacheSerializationUtils = {
   },
 } as const;
 
-/**
- * 缓存事件工具函数
- * Cache event utility functions
- */
-export const CacheEventUtils = {
-  /**
-   * 创建缓存事件
-   * Create cache event
-   */
-  createEvent<T>(type: string, data?: T, key?: string): CacheEvent<T> {
-    return {
-      type: type as CacheEventType,
-      timestamp: Date.now(),
-      ...(key && { key }),
-      ...(data && { data }),
-    };
-  },
-
-  /**
-   * 过滤事件
-   * Filter events
-   */
-  filterEvents<T>(
-    events: CacheEvent<T>[],
-    type?: string,
-    timeRange?: { start: number; end: number },
-  ): CacheEvent<T>[] {
-    return events.filter((event) => {
-      if (type && event.type !== type) return false;
-      if (
-        timeRange &&
-        (event.timestamp < timeRange.start || event.timestamp > timeRange.end)
-      )
-        return false;
-      return true;
-    });
-  },
-
-  /**
-   * 聚合事件统计
-   * Aggregate event statistics
-   */
-  aggregateEvents<T>(events: CacheEvent<T>[]): Record<string, number> {
-    const stats: Record<string, number> = {};
-    events.forEach((event) => {
-      stats[event.type] = (stats[event.type] || ZERO) + ONE;
-    });
-    return stats;
-  },
-} as const;
-
-/**
- * 缓存调试工具函数
- * Cache debug utility functions
- */
-export const CacheDebugUtils = {
-  /**
-   * 生成调试信息
-   * Generate debug information
-   */
-  generateDebugInfo(cache: unknown): Record<string, unknown> {
-    return {
-      timestamp: Date.now(),
-      environment: process.env.NODE_ENV,
-      memoryUsage: process.memoryUsage?.(),
-      cacheInfo: cache,
-    };
-  },
-
-  /**
-   * 格式化调试输出
-   * Format debug output
-   */
-  formatDebugOutput(info: Record<string, unknown>): string {
-    return JSON.stringify(info, null, COUNT_PAIR);
-  },
-
-  /**
-   * 创建性能标记
-   * Create performance mark
-   */
-  mark(name: string): void {
-    if (typeof performance !== 'undefined' && performance.mark) {
-      performance.mark(name);
-    }
-  },
-
-  /**
-   * 测量性能
-   * Measure performance
-   */
-  measure(name: string, startMark: string, endMark?: string): number {
-    if (typeof performance !== 'undefined' && performance.measure) {
-      performance.measure(name, startMark, endMark);
-      const entries = performance.getEntriesByName(name);
-      return entries.length > ZERO
-        ? (entries[entries.length - ONE]?.duration ?? ZERO)
-        : ZERO;
-    }
-    return ZERO;
-  },
-} as const;
+// Re-export from split modules for backward compatibility
+export { CacheDebugUtils } from '@/lib/i18n-cache-debug-utils';
+export { CacheEventUtils } from '@/lib/i18n-cache-event-utils';
+export { CacheValidationUtils } from '@/lib/i18n-cache-validation-utils';

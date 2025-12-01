@@ -33,10 +33,15 @@ describe('Label Validation Scenarios Tests', () => {
           email: '',
         });
 
-        const handleChange =
-          (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-            setValues((prev) => ({ ...prev, [field]: e.target.value }));
-          };
+        const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.target.value;
+          setValues((prev) => ({ ...prev, name: value }));
+        };
+
+        const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.target.value;
+          setValues((prev) => ({ ...prev, email: value }));
+        };
 
         return (
           <form>
@@ -46,7 +51,7 @@ describe('Label Validation Scenarios Tests', () => {
                 id='state-name'
                 type='text'
                 value={values.name}
-                onChange={handleChange('name')}
+                onChange={handleNameChange}
               />
             </div>
             <div>
@@ -55,7 +60,7 @@ describe('Label Validation Scenarios Tests', () => {
                 id='state-email'
                 type='email'
                 value={values.email}
-                onChange={handleChange('email')}
+                onChange={handleEmailChange}
               />
             </div>
           </form>
@@ -79,15 +84,15 @@ describe('Label Validation Scenarios Tests', () => {
       const FormWithLibrary = () => {
         const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-        const validate = (field: string, value: string) => {
+        const validate = (value: string) => {
           if (!value) {
             setErrors((prev) => ({
               ...prev,
-              [field]: 'This field is required',
+              name: 'This field is required',
             }));
           } else {
             setErrors((prev) => {
-              const { [field]: _, ...newErrors } = prev;
+              const { name: _removed, ...newErrors } = prev;
               return newErrors;
             });
           }
@@ -105,7 +110,7 @@ describe('Label Validation Scenarios Tests', () => {
               <input
                 id='lib-name'
                 type='text'
-                onBlur={(e) => validate('name', e.target.value)}
+                onBlur={(e) => validate(e.target.value)}
                 className={errors.name ? 'border-red-500' : ''}
               />
             </div>

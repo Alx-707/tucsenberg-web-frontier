@@ -201,7 +201,20 @@ export function createDefaultConfig(): WhatsAppConfig {
  * Create default service options
  */
 export function createDefaultServiceOptions(): Required<WhatsAppServiceOptions> {
-  return { ...DEFAULT_SERVICE_OPTIONS };
+  const defaults = DEFAULT_SERVICE_OPTIONS;
+
+  return {
+    timeout: defaults.timeout,
+    retries: defaults.retries,
+    retryDelay: defaults.retryDelay,
+    maxRetryDelay: defaults.maxRetryDelay,
+    retryMultiplier: defaults.retryMultiplier,
+    enableLogging: defaults.enableLogging,
+    logLevel: defaults.logLevel,
+    validateMessages: defaults.validateMessages,
+    rateLimitStrategy: defaults.rateLimitStrategy,
+    rateLimitMaxAttempts: defaults.rateLimitMaxAttempts,
+  };
 }
 
 /**

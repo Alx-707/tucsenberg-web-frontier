@@ -106,9 +106,16 @@ export function handleGetRequest(request: NextRequest) {
         {
           success: true,
           data: {
-            ...mockDashboardData,
+            timeRange: mockDashboardData.timeRange,
+            environment: mockDashboardData.environment,
+            // 显式设置 source 字段，避免使用对象扩展运算符合并潜在不受控字段
             source,
-            // 可以根据source过滤特定的监控数据
+            systemHealth: mockDashboardData.systemHealth,
+            performance: mockDashboardData.performance,
+            i18n: mockDashboardData.i18n,
+            security: mockDashboardData.security,
+            alerts: mockDashboardData.alerts,
+            summary: mockDashboardData.summary,
           },
         },
         { maxAge: 60 },

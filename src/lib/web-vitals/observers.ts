@@ -56,7 +56,7 @@ export class WebVitalsObservers {
     try {
       const observer = new PerformanceObserver((list) => {
         const entries = list.getEntries();
-        const lastEntry = entries[entries.length - ONE];
+        const lastEntry = entries.at(-ONE);
         if (lastEntry) {
           this.metrics.lcp = lastEntry.startTime;
         }

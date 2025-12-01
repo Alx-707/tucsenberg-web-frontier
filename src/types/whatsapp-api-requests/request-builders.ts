@@ -21,15 +21,20 @@ export const RequestBuilders = {
     text: string,
     previewUrl?: boolean,
   ): SendMessageRequest {
+    const textPayload: { body: string; preview_url?: boolean } = {
+      body: text,
+    };
+
+    if (previewUrl !== undefined) {
+      textPayload.preview_url = previewUrl;
+    }
+
     return {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
       to,
       type: 'text',
-      text: {
-        body: text,
-        ...(previewUrl !== undefined && { preview_url: previewUrl }),
-      },
+      text: textPayload,
     };
   },
 
@@ -59,13 +64,47 @@ export const RequestBuilders = {
     type: 'image' | 'document' | 'audio' | 'video',
     media: { id?: string; link?: string; caption?: string; filename?: string },
   ): SendMessageRequest {
-    return {
-      messaging_product: 'whatsapp',
-      recipient_type: 'individual',
-      to,
-      type,
-      [type]: media,
-    } as SendMessageRequest;
+    // 使用显式分支而不是动态属性，避免 computed property 带来的潜在注入风险，
+    // 同时保持与 WhatsApp API 要求一致的 payload 结构。
+    switch (type) {
+      case 'image':
+        return {
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to,
+          type: 'image',
+          image: media,
+        } as SendMessageRequest;
+      case 'document':
+        return {
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to,
+          type: 'document',
+          document: media,
+        } as SendMessageRequest;
+      case 'audio':
+        return {
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to,
+          type: 'audio',
+          audio: media,
+        } as SendMessageRequest;
+      case 'video':
+        return {
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to,
+          type: 'video',
+          video: media,
+        } as SendMessageRequest;
+      default: {
+        // TypeScript 保证此处不可达，仅为运行时安全兜底
+        const exhaustiveCheck: never = type;
+        throw new Error(`Unsupported media message type: ${exhaustiveCheck}`);
+      }
+    }
   },
 
   /**

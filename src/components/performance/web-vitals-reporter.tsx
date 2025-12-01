@@ -85,12 +85,17 @@ export function WebVitalsReporter({
     function handleMetric(metric: Metric) {
       // 开发环境：输出到控制台
       if (debug) {
-        const emoji = getMetricEmoji(metric.rating);
-        logger.warn(`${emoji} [Web Vitals] ${metric.name}:`, {
+        const { name, rating, delta, id } = metric;
+        const emoji = getMetricEmoji(rating);
+
+        // 使用结构化日志：固定消息 + 上下文对象，避免在模板字符串中混入属性访问
+        logger.warn('[Web Vitals] metric reported', {
+          emoji,
+          name,
           value: formatMetricValue(metric),
-          rating: metric.rating,
-          delta: metric.delta,
-          id: metric.id,
+          rating,
+          delta,
+          id,
         });
       }
 

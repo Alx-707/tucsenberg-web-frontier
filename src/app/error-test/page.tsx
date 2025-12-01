@@ -152,27 +152,35 @@ function ErrorDisplay({ errorState }: { errorState: ErrorState }) {
   if (errorState.type === 'none') return null;
 
   const getErrorStyles = (type: ErrorType) => {
-    const styles: Record<ErrorType, string> = {
-      client: 'border border-blue-500 bg-blue-100',
-      api: 'border border-purple-500 bg-purple-100',
-      breadcrumb: 'border border-green-500 bg-green-100',
-      user: 'border border-yellow-500 bg-yellow-100',
-      none: 'border border-red-500 bg-red-100',
-    };
-    // eslint-disable-next-line security/detect-object-injection
-    return styles[type];
+    switch (type) {
+      case 'client':
+        return 'border border-blue-500 bg-blue-100';
+      case 'api':
+        return 'border border-purple-500 bg-purple-100';
+      case 'breadcrumb':
+        return 'border border-green-500 bg-green-100';
+      case 'user':
+        return 'border border-yellow-500 bg-yellow-100';
+      case 'none':
+      default:
+        return 'border border-red-500 bg-red-100';
+    }
   };
 
   const getErrorTitle = (type: ErrorType) => {
-    const titles: Record<ErrorType, string> = {
-      client: 'Client Error Triggered',
-      api: 'API Error Triggered',
-      breadcrumb: 'Breadcrumb Added',
-      user: 'User Context Set',
-      none: 'Unhandled Error Triggered',
-    };
-    // eslint-disable-next-line security/detect-object-injection
-    return titles[type];
+    switch (type) {
+      case 'client':
+        return 'Client Error Triggered';
+      case 'api':
+        return 'API Error Triggered';
+      case 'breadcrumb':
+        return 'Breadcrumb Added';
+      case 'user':
+        return 'User Context Set';
+      case 'none':
+      default:
+        return 'Unhandled Error Triggered';
+    }
   };
 
   return (

@@ -17,7 +17,6 @@ export function ThemeProvider({
   defaultTheme = 'system',
   enableSystem = true,
   disableTransitionOnChange = false,
-  ...props
 }: ThemeProviderProps) {
   return (
     <NextThemesProvider
@@ -25,7 +24,6 @@ export function ThemeProvider({
       defaultTheme={defaultTheme}
       enableSystem={enableSystem}
       disableTransitionOnChange={disableTransitionOnChange}
-      {...props}
     >
       {children}
     </NextThemesProvider>

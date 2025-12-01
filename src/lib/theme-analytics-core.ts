@@ -53,8 +53,11 @@ export class ThemeAnalytics {
       sampleRate: MAGIC_0_1, // 10% 采样
       enableDetailedTracking: true,
       enableUserBehaviorAnalysis: true,
-      ...config,
     };
+
+    if (config) {
+      this.applyPartialConfig(config);
+    }
 
     // 初始化Sentry自定义标签
     if (this.config.enabled) {
@@ -255,14 +258,44 @@ export class ThemeAnalytics {
    * 获取配置
    */
   getConfig(): ThemeAnalyticsConfig {
-    return { ...this.config };
+    return {
+      enabled: this.config.enabled,
+      performanceThreshold: this.config.performanceThreshold,
+      sampleRate: this.config.sampleRate,
+      enableDetailedTracking: this.config.enableDetailedTracking,
+      enableUserBehaviorAnalysis: this.config.enableUserBehaviorAnalysis,
+    };
   }
 
   /**
    * 更新配置
    */
   updateConfig(newConfig: Partial<ThemeAnalyticsConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    this.applyPartialConfig(newConfig);
+  }
+
+  /**
+   * 应用部分配置更新（显式字段白名单）
+   */
+  private applyPartialConfig(
+    partialConfig: Partial<ThemeAnalyticsConfig>,
+  ): void {
+    if (typeof partialConfig.enabled === 'boolean') {
+      this.config.enabled = partialConfig.enabled;
+    }
+    if (typeof partialConfig.performanceThreshold === 'number') {
+      this.config.performanceThreshold = partialConfig.performanceThreshold;
+    }
+    if (typeof partialConfig.sampleRate === 'number') {
+      this.config.sampleRate = partialConfig.sampleRate;
+    }
+    if (typeof partialConfig.enableDetailedTracking === 'boolean') {
+      this.config.enableDetailedTracking = partialConfig.enableDetailedTracking;
+    }
+    if (typeof partialConfig.enableUserBehaviorAnalysis === 'boolean') {
+      this.config.enableUserBehaviorAnalysis =
+        partialConfig.enableUserBehaviorAnalysis;
+    }
   }
 
   /**

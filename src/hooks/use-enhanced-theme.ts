@@ -23,7 +23,8 @@ import { createDebounce, DEFAULT_CONFIG } from '@/hooks/theme-transition-utils';
  * - 类型安全的 API 设计
  */
 export function useEnhancedTheme(): EnhancedThemeHook {
-  const { theme, setTheme: originalSetTheme, ...rest } = useTheme();
+  const themeContext = useTheme();
+  const { theme, setTheme: originalSetTheme } = themeContext;
 
   // 使用 ref 来存储防抖函数，避免重复创建
   const debouncedSetThemeRef = useRef<((_theme: string) => void) | null>(null);
@@ -82,12 +83,12 @@ export function useEnhancedTheme(): EnhancedThemeHook {
       theme,
       setTheme,
       setCircularTheme,
-      themes: rest.themes,
-      forcedTheme: rest.forcedTheme,
-      resolvedTheme: rest.resolvedTheme,
-      systemTheme: rest.systemTheme,
+      themes: themeContext.themes,
+      forcedTheme: themeContext.forcedTheme,
+      resolvedTheme: themeContext.resolvedTheme,
+      systemTheme: themeContext.systemTheme,
     }),
-    [theme, setTheme, setCircularTheme, rest],
+    [theme, setTheme, setCircularTheme, themeContext],
   );
 }
 

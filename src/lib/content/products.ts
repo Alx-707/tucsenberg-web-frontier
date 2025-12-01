@@ -23,19 +23,29 @@ import { getProductDetail, getProductListing } from '@/lib/content/products-sour
 function mapProductDetailToSummary(product: ProductDetail): ProductSummary {
   const { slug, locale, title } = product;
 
-  return {
-    slug,
-    locale,
-    title,
-    ...(product.description !== undefined
-      ? { description: product.description }
-      : {}),
-    ...(product.categories !== undefined
-      ? { categories: product.categories }
-      : {}),
-    ...(product.tags !== undefined ? { tags: product.tags } : {}),
-    ...(product.seo !== undefined ? { seo: product.seo } : {}),
-  };
+	  const summary: ProductSummary = {
+	    slug,
+	    locale,
+	    title,
+	  };
+
+	  if (product.description !== undefined) {
+	    summary.description = product.description;
+	  }
+
+	  if (product.categories !== undefined) {
+	    summary.categories = product.categories;
+	  }
+
+	  if (product.tags !== undefined) {
+	    summary.tags = product.tags;
+	  }
+
+	  if (product.seo !== undefined) {
+	    summary.seo = product.seo;
+	  }
+
+	  return summary;
 }
 
 export const getProductListingCached: GetProductListingCachedFn = async (

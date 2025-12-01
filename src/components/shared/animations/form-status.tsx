@@ -30,12 +30,57 @@ export const AnimatedProgress = ({
   </div>
 );
 
+interface AnimatedInputProps {
+  'className'?: string;
+  'type'?: string;
+  'name'?: string;
+  'id'?: string;
+  'value'?: string;
+  'placeholder'?: string;
+  'disabled'?: boolean;
+  'autoComplete'?: string;
+  'onChange'?: React.ChangeEventHandler<HTMLInputElement>;
+  'onBlur'?: React.FocusEventHandler<HTMLInputElement>;
+  'onFocus'?: React.FocusEventHandler<HTMLInputElement>;
+  'title'?: string;
+  'data-testid'?: string;
+  'aria-label'?: string;
+  'aria-describedby'?: string;
+}
+
 // 6. 表单输入动画
 export const AnimatedInput = ({
   className,
-  ...props
-}: React.ComponentProps<'input'>) => (
+  type,
+  name,
+  id,
+  value,
+  placeholder,
+  disabled,
+  autoComplete,
+  onChange,
+  onBlur,
+  onFocus,
+  title,
+  'data-testid': dataTestId,
+  'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
+}: AnimatedInputProps) => (
   <input
+    type={type}
+    name={name}
+    id={id}
+    value={value}
+    placeholder={placeholder}
+    disabled={disabled}
+    autoComplete={autoComplete}
+    onChange={onChange}
+    onBlur={onBlur}
+    onFocus={onFocus}
+    title={title}
+    data-testid={dataTestId}
+    aria-label={ariaLabel}
+    aria-describedby={ariaDescribedBy}
     className={cn(
       'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2',
       'text-sm ring-offset-background file:border-0 file:bg-transparent',
@@ -49,7 +94,6 @@ export const AnimatedInput = ({
       'focus:scale-[1.02] focus:shadow-sm',
       className,
     )}
-    {...props}
   />
 );
 

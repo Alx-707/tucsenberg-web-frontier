@@ -444,7 +444,8 @@ export const ResponseUtils = {
    * Extract message ID
    */
   extractMessageId(response: SendMessageResponse): string | null {
-    return response.messages?.[0]?.id || null;
+    const [firstMessage] = response.messages ?? [];
+    return firstMessage?.id ?? null;
   },
 
   /**
@@ -454,7 +455,8 @@ export const ResponseUtils = {
   extractContactInfo(
     response: SendMessageResponse,
   ): { input: string; wa_id: string } | null {
-    return response.contacts?.[0] || null;
+    const [firstContact] = response.contacts ?? [];
+    return firstContact ?? null;
   },
 
   /**

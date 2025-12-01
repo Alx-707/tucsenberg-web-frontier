@@ -102,15 +102,17 @@ export function generateCSSVariables(
   colors: Partial<ThemeColors>,
   prefix = '',
 ): Record<string, string> {
-  const variables: Record<string, string> = {};
+  const entries: [string, string][] = [];
 
   Object.entries(colors).forEach(([key, color]) => {
+    if (!color) {
+      return;
+    }
     const cssKey = `--${prefix}${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
-    // eslint-disable-next-line security/detect-object-injection
-    variables[cssKey] = oklchToCSS(color);
+    entries.push([cssKey, oklchToCSS(color as OKLCHColor)]);
   });
 
-  return variables;
+  return Object.fromEntries(entries);
 }
 
 /**

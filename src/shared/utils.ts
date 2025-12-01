@@ -23,7 +23,8 @@ const EMAIL_VALIDATION = {
  * ```
  */
 export function formatDate(date: Date): string {
-  return date.toISOString().split('T')[0]!;
+  const [datePart] = date.toISOString().split('T');
+  return datePart ?? '';
 }
 
 /**

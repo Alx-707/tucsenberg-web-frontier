@@ -439,7 +439,12 @@ export class PerformanceToolConflictChecker {
     const tool = toolDetailsMap.get(toolName);
     if (!tool) return null;
 
-    return { name: toolName, ...tool };
+    return {
+      name: toolName,
+      detected: tool.detected,
+      impact: tool.impact,
+      description: tool.description,
+    };
   }
 
   /**

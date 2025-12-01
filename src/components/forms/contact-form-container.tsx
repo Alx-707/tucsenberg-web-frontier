@@ -4,18 +4,18 @@ import {
   memo,
   useActionState,
   useEffect,
-  useOptimistic,
   useRef,
   useState,
   useTransition,
 } from 'react';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useFormStatus } from 'react-dom';
-import { requestIdleCallback } from '@/lib/idle-callback';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/server-action-utils';
 import { type FormSubmissionStatus } from '@/lib/validations';
+import { LazyTurnstile } from '@/components/forms/lazy-turnstile';
+import { useOptimisticFormState } from '@/components/forms/use-optimistic-form-state';
+import { useRateLimit } from '@/components/forms/use-rate-limit';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,16 +27,36 @@ import {
   CONTACT_FORM_CONFIG,
   type ContactFormFieldDescriptor,
 } from '@/config/contact-form-config';
-import { FIVE_MINUTES_MS } from '@/constants';
-import { useCurrentTime } from '@/hooks/use-current-time';
 
 /**
- * 乐观更新状态类型
+ * 获取状态消息配置
  */
-interface OptimisticFormState {
-  status: FormSubmissionStatus;
-  message?: string;
-  timestamp?: number;
+function getStatusConfig(
+  status: FormSubmissionStatus,
+  t: (key: string) => string,
+  optimisticMessage?: string,
+): { className: string; message: string } | undefined {
+  // 使用 switch 代替对象索引访问，避免 security/detect-object-injection
+  switch (status) {
+    case 'success':
+      return {
+        className: 'bg-green-50 border-green-200 text-green-800',
+        message: t('submitSuccess'),
+      };
+    case 'error':
+      return {
+        className: 'bg-red-50 border-red-200 text-red-800',
+        message: t('submitError'),
+      };
+    case 'submitting':
+      return {
+        className: 'bg-blue-50 border-blue-200 text-blue-800',
+        message: optimisticMessage || t('submitting'),
+      };
+    case 'idle':
+    default:
+      return undefined;
+  }
 }
 
 /**
@@ -52,29 +72,7 @@ const StatusMessage = memo(
   ({ status, t, optimisticMessage }: StatusMessageProps) => {
     if (status === 'idle') return null;
 
-    const statusConfig: Record<
-      FormSubmissionStatus,
-      { className: string; message: string } | undefined
-    > = {
-      success: {
-        className: 'bg-green-50 border-green-200 text-green-800',
-        message: t('submitSuccess'),
-      },
-      error: {
-        className: 'bg-red-50 border-red-200 text-red-800',
-        message: t('submitError'),
-      },
-      submitting: {
-        className: 'bg-blue-50 border-blue-200 text-blue-800',
-        message: optimisticMessage || t('submitting'),
-      },
-      idle: undefined,
-    };
-
-    // Use Object.prototype.hasOwnProperty to safely access object properties
-    const config = Object.prototype.hasOwnProperty.call(statusConfig, status)
-      ? statusConfig[status as keyof typeof statusConfig]
-      : undefined;
+    const config = getStatusConfig(status, t, optimisticMessage);
     if (!config) return null;
 
     return (
@@ -90,7 +88,26 @@ const StatusMessage = memo(
 
 StatusMessage.displayName = 'StatusMessage';
 
-// 移除未使用的handleFormSubmission函数和SubmitDeps接口，现在使用React 19 Server Actions
+/**
+ * 计算提交状态的输入参数
+ */
+interface SubmitStatusInput {
+  optimisticStatus: FormSubmissionStatus;
+  isPending: boolean;
+  stateSuccess: boolean | undefined;
+  stateError: string | undefined;
+}
+
+/**
+ * 计算提交状态，优先使用乐观更新状态
+ */
+function computeSubmitStatus(input: SubmitStatusInput): FormSubmissionStatus {
+  if (input.optimisticStatus !== 'idle') return input.optimisticStatus;
+  if (input.isPending) return 'submitting';
+  if (input.stateSuccess) return 'success';
+  if (input.stateError) return 'error';
+  return 'idle';
+}
 
 /**
  * 自定义Hook：管理联系表单状态和逻辑（React 19 useActionState + useOptimistic版本）
@@ -102,101 +119,32 @@ function useContactForm() {
     null,
   );
   const [turnstileToken, setTurnstileToken] = useState<string>('');
-  const [lastSubmissionTime, setLastSubmissionTime] = useState<Date | null>(
-    null,
-  );
-  const rateLimitResetTimeoutRef = useRef<number | null>(null);
   const lastRecordedSuccessRef = useRef(false);
   const [isPendingTransition, startTransition] = useTransition();
 
-  // ✅ Use custom hook for current time to avoid purity violation
-  // Update every 5 seconds (sufficient for rate limiting UI)
-  const currentTime = useCurrentTime(5000);
+  // 使用提取的 hooks
+  const { isRateLimited, recordSubmission, setLastSubmissionTime } =
+    useRateLimit();
+  const { optimisticState, setOptimisticState, optimisticMessage } =
+    useOptimisticFormState();
 
-  // React 19原生useOptimistic Hook - 乐观更新状态管理
-  const [optimisticState, setOptimisticState] = useOptimistic(
-    { status: 'idle' as FormSubmissionStatus, message: '', timestamp: 0 },
-    (
-      currentState: OptimisticFormState,
-      optimisticValue: OptimisticFormState,
-    ) => ({
-      ...currentState,
-      ...optimisticValue,
-      timestamp: Date.now(),
-    }),
-  );
+  // 从Server Action状态中提取提交状态
+  const submitStatus = computeSubmitStatus({
+    optimisticStatus: optimisticState.status,
+    isPending,
+    stateSuccess: state?.success,
+    stateError: state?.error,
+  });
 
-  // 从Server Action状态中提取提交状态，优先使用乐观更新状态
-  const submitStatus: FormSubmissionStatus =
-    optimisticState.status !== 'idle'
-      ? optimisticState.status
-      : isPending
-        ? 'submitting'
-        : state?.success
-          ? 'success'
-          : state?.error
-            ? 'error'
-            : 'idle';
-
-  // Rate limiting window (default 5 minutes, overrideable for tests via env)
-  const configuredCooldownMs =
-    typeof process !== 'undefined'
-      ? Number(process.env.NEXT_PUBLIC_CONTACT_FORM_COOLDOWN_MS)
-      : Number.NaN;
-  const RATE_LIMIT_WINDOW =
-    Number.isFinite(configuredCooldownMs) && configuredCooldownMs > 0
-      ? configuredCooldownMs
-      : FIVE_MINUTES_MS;
-  // ✅ Fixed: Use currentTime from hook instead of Date.now() during render
-  const isRateLimited = Boolean(
-    lastSubmissionTime &&
-      currentTime - lastSubmissionTime.getTime() < RATE_LIMIT_WINDOW,
-  );
-
+  // 成功提交后记录时间
   useEffect(() => {
     if (state?.success && !lastRecordedSuccessRef.current) {
-      // ✅ Fixed: Use queueMicrotask to avoid synchronous setState in effect
       queueMicrotask(() => {
         setLastSubmissionTime(new Date());
       });
     }
     lastRecordedSuccessRef.current = Boolean(state?.success);
-  }, [state?.success]);
-
-  useEffect(() => {
-    let timeoutId: number | null = null;
-
-    if (rateLimitResetTimeoutRef.current !== null) {
-      window.clearTimeout(rateLimitResetTimeoutRef.current);
-      rateLimitResetTimeoutRef.current = null;
-    }
-
-    if (lastSubmissionTime) {
-      const elapsed = Date.now() - lastSubmissionTime.getTime();
-      const remaining = RATE_LIMIT_WINDOW - elapsed;
-
-      if (remaining <= 0) {
-        // ✅ Fixed: Use setTimeout to avoid synchronous setState in effect
-        timeoutId = window.setTimeout(() => {
-          setLastSubmissionTime(null);
-        }, 0);
-        rateLimitResetTimeoutRef.current = timeoutId;
-      } else {
-        timeoutId = window.setTimeout(() => {
-          setLastSubmissionTime(null);
-        }, remaining);
-
-        rateLimitResetTimeoutRef.current = timeoutId;
-      }
-    }
-
-    return () => {
-      if (timeoutId !== null) {
-        window.clearTimeout(timeoutId);
-        rateLimitResetTimeoutRef.current = null;
-      }
-    };
-  }, [lastSubmissionTime, RATE_LIMIT_WINDOW]);
+  }, [state?.success, setLastSubmissionTime]);
 
   // 创建增强的formAction，使用React 19原生乐观更新
   const enhancedFormAction = (formData: FormData) => {
@@ -216,8 +164,8 @@ function useContactForm() {
     formData.append('turnstileToken', turnstileToken);
     formData.append('submittedAt', new Date().toISOString());
 
-    // 更新最后提交时间
-    setLastSubmissionTime(new Date());
+    // 记录提交时间
+    recordSubmission();
 
     // 使用useTransition的startTransition包装Server Action调用
     startTransition(() => {
@@ -234,7 +182,7 @@ function useContactForm() {
     setTurnstileToken,
     isRateLimited,
     optimisticState,
-    optimisticMessage: optimisticState.message,
+    optimisticMessage,
   };
 }
 
@@ -502,89 +450,5 @@ export function ContactFormContainer() {
         )}
       </form>
     </Card>
-  );
-}
-// 懒加载 Turnstile 组件（进入视口或空闲时）
-const DynamicTurnstile = dynamic(
-  () =>
-    import('@/components/security/turnstile').then((m) => m.TurnstileWidget),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className='h-12 w-full animate-pulse rounded-md bg-muted'
-        aria-hidden='true'
-      />
-    ),
-  },
-);
-
-function LazyTurnstile({
-  onSuccess,
-  onError,
-  onExpire,
-  onLoad,
-}: {
-  onSuccess: (token: string) => void;
-  onError: (reason?: string) => void;
-  onExpire: () => void;
-  onLoad: () => void;
-}) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [shouldRender, setShouldRender] = useState(false);
-
-  useEffect(() => {
-    let didSet = false;
-
-    // 优先：进入视口时加载
-    const el = containerRef.current;
-    if (typeof IntersectionObserver !== 'undefined' && el) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting && !didSet) {
-              didSet = true;
-              setShouldRender(true);
-              io.disconnect();
-              break;
-            }
-          }
-        },
-        { rootMargin: '200px' },
-      );
-      io.observe(el);
-      return () => io.disconnect();
-    }
-
-    // 退化：空闲时加载
-    const cleanup = requestIdleCallback(() => setShouldRender(true), {
-      timeout: 1500,
-    });
-    return cleanup;
-  }, []);
-
-  return (
-    <div
-      className='space-y-2'
-      ref={containerRef}
-    >
-      {shouldRender ? (
-        <DynamicTurnstile
-          onSuccess={onSuccess}
-          onError={onError}
-          onExpire={onExpire}
-          onLoad={onLoad}
-          className='w-full'
-          action='contact_form'
-          theme='auto'
-          size='normal'
-        />
-      ) : (
-        <div
-          className='h-12 w-full animate-pulse rounded-md bg-muted'
-          aria-hidden='true'
-        />
-      )}
-    </div>
   );
 }

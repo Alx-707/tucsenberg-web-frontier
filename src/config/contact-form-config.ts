@@ -300,11 +300,15 @@ export function buildFormFieldsFromConfig(
     .filter((field) => shouldRenderField(field, config.features))
     .sort((a, b) => a.order - b.order)
     .map((field) => ({
+      // nosemgrep: object-injection-sink-spread-operator
+      // Safe spread: field is a strongly typed ContactFormFieldConfig from
+      // static form configuration, not user-provided input.
       ...field,
       labelKey: field.i18nKey,
-      placeholderKey: PLACEHOLDER_KEYS[field.key]
-        ? PLACEHOLDER_KEYS[field.key]!
-        : undefined,
+      // nosemgrep: object-injection-sink-dynamic-property
+      // Safe lookup: PLACEHOLDER_KEYS is keyed by ContactFormFieldKey union type,
+      // and field.key is a trusted enum-like key from config, not user input.
+      placeholderKey: PLACEHOLDER_KEYS[field.key],
       isCheckbox: field.type === 'checkbox',
       isHoneypot: field.key === 'website',
     }));

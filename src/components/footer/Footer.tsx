@@ -161,15 +161,13 @@ export function Footer({
     hover.light.underline || hover.dark.underline ? 'hover:underline' : null,
   );
 
-  const footerStyle: CSSProperties = {
+  const footerStyle = {
     // 通过自定义属性暴露 selection 配置，方便后续在样式层使用
-    ['--footer-selection-dark-bg' as string]: colors.selection.dark.background,
-    ['--footer-selection-dark-fg' as string]: colors.selection.dark.foreground,
-    ['--footer-selection-light-bg' as string]:
-      colors.selection.light.background,
-    ['--footer-selection-light-fg' as string]:
-      colors.selection.light.foreground,
-  };
+    '--footer-selection-dark-bg': colors.selection.dark.background,
+    '--footer-selection-dark-fg': colors.selection.dark.foreground,
+    '--footer-selection-light-bg': colors.selection.light.background,
+    '--footer-selection-light-fg': colors.selection.light.foreground,
+  } as CSSProperties;
 
   return (
     <footer

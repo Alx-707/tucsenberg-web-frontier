@@ -4,16 +4,14 @@ import { forwardRef } from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-interface ThemeToggleButtonProps
-  extends Omit<
-    React.ButtonHTMLAttributes<HTMLButtonElement>,
-    'onClick' | 'onKeyDown'
-  > {
-  ariaAttributes: Record<string, string>;
-  prefersHighContrast: boolean;
-  prefersReducedMotion: boolean;
-  onKeyDown: (_e: React.KeyboardEvent) => void;
-  onClick?: (_e: React.MouseEvent) => void;
+interface ThemeToggleButtonProps {
+  'ariaAttributes': Record<string, string>;
+  'prefersHighContrast': boolean;
+  'prefersReducedMotion': boolean;
+  'onKeyDown': (_e: React.KeyboardEvent) => void;
+  'onClick'?: (_e: React.MouseEvent) => void;
+  'title'?: string;
+  'data-testid'?: string;
 }
 
 export const ThemeToggleButton = forwardRef<
@@ -27,20 +25,49 @@ export const ThemeToggleButton = forwardRef<
       prefersReducedMotion,
       onKeyDown,
       onClick,
-      ...props
+      title,
+      'data-testid': dataTestId,
     },
     ref,
   ) => {
+    const {
+      'aria-label': ariaLabel,
+      'aria-pressed': ariaPressed,
+      'aria-expanded': ariaExpanded,
+      'aria-describedby': ariaDescribedBy,
+      'aria-controls': ariaControls,
+      role,
+    } = ariaAttributes;
+
+    const ariaPressedBool =
+      ariaPressed === 'true'
+        ? true
+        : ariaPressed === 'false'
+          ? false
+          : undefined;
+    const ariaExpandedBool =
+      ariaExpanded === 'true'
+        ? true
+        : ariaExpanded === 'false'
+          ? false
+          : undefined;
+
     return (
       <Button
         ref={ref}
         variant='outline'
         size='icon'
-        {...ariaAttributes}
+        data-testid={dataTestId}
+        title={title}
+        aria-label={ariaLabel}
+        aria-pressed={ariaPressedBool}
+        aria-expanded={ariaExpandedBool}
+        aria-describedby={ariaDescribedBy}
+        aria-controls={ariaControls}
+        role={role}
         onKeyDown={onKeyDown}
         onClick={onClick}
         className={`focus:ring-2 focus:ring-ring focus:ring-offset-2 ${prefersHighContrast ? 'border-2 border-foreground' : ''} ${prefersReducedMotion ? '' : 'transition-all duration-200'} `}
-        {...props}
       >
         <Sun
           className={`h-[1.2rem] w-[1.2rem] rotate-0 scale-100 dark:-rotate-90 dark:scale-0 ${

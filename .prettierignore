@@ -109,3 +109,15 @@ docs/
 
 # Content files
 content/
+
+# Local MCP config (may contain comments / non-standard JSON)
+.mcp.json
+
+# Claude Code local settings
+.claude/
+
+# Semgrep generated reports
+semgrep-*.json
+
+# CommonJS service files (legacy format)
+src/services/*-cjs.js

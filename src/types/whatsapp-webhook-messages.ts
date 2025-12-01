@@ -429,6 +429,36 @@ export function isInteractiveMessageType(
 }
 
 /**
+ * Extract text from media messages (image, document, video)
+ */
+function getMediaMessageText(message: IncomingWhatsAppMessage): string | null {
+  switch (message.type) {
+    case 'image':
+      return message.image.caption ?? null;
+    case 'document':
+      return message.document.caption ?? null;
+    case 'video':
+      return message.video.caption ?? null;
+    default:
+      return null;
+  }
+}
+
+/**
+ * Extract text from interactive message
+ */
+function getInteractiveMessageText(
+  message: IncomingWhatsAppMessage,
+): string | null {
+  if (message.type !== 'interactive') return null;
+  return (
+    message.interactive.button_reply?.title ||
+    message.interactive.list_reply?.title ||
+    null
+  );
+}
+
+/**
  * 消息内容提取器
  * Message content extractors
  */
@@ -441,13 +471,9 @@ export function getMessageText(
     case 'image':
     case 'document':
     case 'video':
-      return message[message.type]?.caption || null;
+      return getMediaMessageText(message);
     case 'interactive':
-      return (
-        message.interactive.button_reply?.title ||
-        message.interactive.list_reply?.title ||
-        null
-      );
+      return getInteractiveMessageText(message);
     case 'button':
       return message.button.text;
     case 'template_reply':
@@ -458,21 +484,6 @@ export function getMessageText(
       return null;
   }
 }
-
-// 媒体类型到属性的映射，避免动态属性访问
-const MEDIA_TYPE_MAP = {
-  image: (msg: IncomingWhatsAppMessage) =>
-    (msg as { image?: { id?: string } }).image?.id ?? null,
-  document: (msg: IncomingWhatsAppMessage) =>
-    (msg as { document?: { id?: string } }).document?.id ?? null,
-  audio: (msg: IncomingWhatsAppMessage) =>
-    (msg as { audio?: { id?: string } }).audio?.id ?? null,
-  video: (msg: IncomingWhatsAppMessage) =>
-    (msg as { video?: { id?: string } }).video?.id ?? null,
-  sticker: (msg: IncomingWhatsAppMessage) =>
-    (msg as { sticker?: { id?: string } }).sticker?.id ?? null,
-} as const;
-
 export function getMessageMediaId(
   message: IncomingWhatsAppMessage,
 ): string | null {
@@ -480,8 +491,20 @@ export function getMessageMediaId(
     return null;
   }
 
-  const extractor = MEDIA_TYPE_MAP[message.type as keyof typeof MEDIA_TYPE_MAP];
-  return extractor ? extractor(message) : null;
+  switch (message.type) {
+    case 'image':
+      return message.image.id;
+    case 'document':
+      return message.document.id;
+    case 'audio':
+      return message.audio.id;
+    case 'video':
+      return message.video.id;
+    case 'sticker':
+      return message.sticker.id;
+    default:
+      return null;
+  }
 }
 
 export function hasMessageContext(message: IncomingWhatsAppMessage): boolean {

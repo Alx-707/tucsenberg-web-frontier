@@ -93,9 +93,12 @@ export class PerformanceBaselineManager {
       });
 
       // 返回最新的基准数据
-      return filtered.length > ZERO
-        ? filtered[filtered.length - ONE] || null
-        : null;
+      if (filtered.length === ZERO) {
+        return null;
+      }
+
+      const lastBaseline = filtered.at(-ONE) ?? null;
+      return lastBaseline;
     } catch (error) {
       logger.error('Failed to get recent baseline', { error });
       return null;

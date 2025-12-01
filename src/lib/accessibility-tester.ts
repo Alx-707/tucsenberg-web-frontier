@@ -32,76 +32,105 @@ export class AccessibilityTester {
   private results: AccessibilityTestResult[] = [];
 
   /**
+   * Build empty focusable elements result
+   */
+  private buildNoFocusableResult(testName: string): AccessibilityTestResult {
+    return {
+      testName,
+      passed: false,
+      details: '未找到可聚焦的导航元素',
+      suggestions: [
+        '确保导航元素具有正确的tabindex属性',
+        '检查元素是否被正确渲染',
+      ],
+    };
+  }
+
+  /**
+   * Build tab navigation result
+   */
+  private buildTabNavResult(
+    testName: string,
+    isValid: boolean,
+    count: number,
+  ): AccessibilityTestResult {
+    const result: AccessibilityTestResult = {
+      testName,
+      passed: isValid,
+      details: `测试了${count}个可聚焦元素，Tab键导航${isValid ? '正常' : '异常'}`,
+    };
+
+    if (!isValid) {
+      result.suggestions = [
+        '检查tabindex属性设置',
+        '确保元素按逻辑顺序排列',
+        '验证隐藏元素不在Tab序列中',
+      ];
+    }
+
+    return result;
+  }
+
+  /**
+   * Simulate tab navigation and collect tab order
+   */
+  private async collectTabOrder(
+    focusableElements: HTMLElement[],
+    currentElement: HTMLElement,
+  ): Promise<HTMLElement[]> {
+    const tabOrder: HTMLElement[] = [];
+
+    for (let i = 0; i < focusableElements.length; i++) {
+      currentElement.focus();
+      tabOrder.push(document.activeElement as HTMLElement);
+
+      const tabEvent = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        bubbles: true,
+        cancelable: true,
+      });
+      document.dispatchEvent(tabEvent);
+
+      await new Promise((resolve) => setTimeout(resolve, PERCENTAGE_HALF));
+    }
+
+    return tabOrder;
+  }
+
+  /**
    * 测试Tab键循环导航
    */
   async testTabNavigation(): Promise<AccessibilityTestResult> {
     const testName = 'Tab键循环导航测试';
 
     try {
-      // 获取所有可聚焦元素
       const focusableElements = this.getFocusableElements();
 
       if (focusableElements.length === ZERO) {
-        return {
-          testName,
-          passed: false,
-          details: '未找到可聚焦的导航元素',
-          suggestions: [
-            '确保导航元素具有正确的tabindex属性',
-            '检查元素是否被正确渲染',
-          ],
-        };
+        return this.buildNoFocusableResult(testName);
       }
 
-      // 测试Tab键导航顺序
-      const tabOrder: HTMLElement[] = [];
       const currentElement = focusableElements.at(0) ?? null;
 
       if (!currentElement) {
-        return {
-          testName,
-          passed: false,
-          details: '未找到可聚焦的导航元素',
-        };
+        return { testName, passed: false, details: '未找到可聚焦的导航元素' };
       }
 
-      for (let i = 0; i < focusableElements.length; i++) {
-        currentElement.focus();
-        tabOrder.push(document.activeElement as HTMLElement);
-
-        // 模拟Tab键
-        const tabEvent = new KeyboardEvent('keydown', {
-          key: 'Tab',
-          bubbles: true,
-          cancelable: true,
-        });
-        document.dispatchEvent(tabEvent);
-
-        // 等待焦点变化
-        await new Promise((resolve) => setTimeout(resolve, PERCENTAGE_HALF));
-      }
-
+      const tabOrder = await this.collectTabOrder(
+        focusableElements,
+        currentElement,
+      );
       const isValidTabOrder = this.validateTabOrder(
         tabOrder,
         focusableElements,
       );
 
-      return {
+      return this.buildTabNavResult(
         testName,
-        passed: isValidTabOrder,
-        details: `测试了${focusableElements.length}个可聚焦元素，Tab键导航${isValidTabOrder ? '正常' : '异常'}`,
-        ...(isValidTabOrder
-          ? {}
-          : {
-              suggestions: [
-                '检查tabindex属性设置',
-                '确保元素按逻辑顺序排列',
-                '验证隐藏元素不在Tab序列中',
-              ],
-            }),
-      };
+        isValidTabOrder,
+        focusableElements.length,
+      );
     } catch (_error) {
-      // 忽略错误变量
       return {
         testName,
         passed: false,
@@ -135,20 +164,21 @@ export class AccessibilityTester {
       const successRate =
         activationTests > ZERO ? passedTests / activationTests : ZERO;
 
-      return {
+      const result: AccessibilityTestResult = {
         testName,
         passed: successRate >= MAGIC_0_8, // 80%通过率
         details: `测试了${activationTests}个激活操作，成功率: ${(successRate * PERCENTAGE_FULL).toFixed(ONE)}%`,
-        ...(successRate < MAGIC_0_8
-          ? {
-              suggestions: [
-                '确保所有交互元素支持Enter键激活',
-                '验证Space键在按钮元素上的激活功能',
-                '检查键盘事件处理器的实现',
-              ],
-            }
-          : {}),
       };
+
+      if (successRate < MAGIC_0_8) {
+        result.suggestions = [
+          '确保所有交互元素支持Enter键激活',
+          '验证Space键在按钮元素上的激活功能',
+          '检查键盘事件处理器的实现',
+        ];
+      }
+
+      return result;
     } catch (_error) {
       // 忽略错误变量
       return {
@@ -218,20 +248,21 @@ export class AccessibilityTester {
 
       const successRate = escapeTests > ZERO ? passedTests / escapeTests : ZERO;
 
-      return {
+      const result: AccessibilityTestResult = {
         testName,
         passed: successRate >= MAGIC_0_8,
         details: `测试了${escapeTests}个Escape关闭操作，成功率: ${(successRate * PERCENTAGE_FULL).toFixed(ONE)}%`,
-        ...(successRate < MAGIC_0_8
-          ? {
-              suggestions: [
-                '确保Escape键事件处理器正确实现',
-                '验证菜单状态管理',
-                '检查事件冒泡和传播',
-              ],
-            }
-          : {}),
       };
+
+      if (successRate < MAGIC_0_8) {
+        result.suggestions = [
+          '确保Escape键事件处理器正确实现',
+          '验证菜单状态管理',
+          '检查事件冒泡和传播',
+        ];
+      }
+
+      return result;
     } catch (_error) {
       // 忽略错误变量
       return {
@@ -315,15 +346,20 @@ export class AccessibilityTester {
         suggestions.push('为当前页面链接添加aria-current="page"属性');
       }
 
-      return {
+      const result: AccessibilityTestResult = {
         testName,
         passed: issues.length === ZERO,
         details:
           issues.length === ZERO
             ? '所有ARIA属性配置正确'
             : `发现${issues.length}个ARIA属性问题: ${issues.join('; ')}`,
-        ...(suggestions.length > ZERO ? { suggestions } : {}),
       };
+
+      if (suggestions.length > ZERO) {
+        result.suggestions = suggestions;
+      }
+
+      return result;
     } catch (_error) {
       // 忽略错误变量
       return {

@@ -71,6 +71,60 @@ export class URLGenerator {
   }
 
   /**
+   * Merge options with defaults
+   */
+  private mergeOptions(
+    options: URLGeneratorOptions,
+  ): Required<URLGeneratorOptions> {
+    return {
+      includeLocale: options.includeLocale ?? DEFAULT_OPTIONS.includeLocale,
+      absolute: options.absolute ?? DEFAULT_OPTIONS.absolute,
+      trailingSlash: options.trailingSlash ?? DEFAULT_OPTIONS.trailingSlash,
+      protocol: options.protocol ?? DEFAULT_OPTIONS.protocol,
+      host: options.host ?? DEFAULT_OPTIONS.host,
+    };
+  }
+
+  /**
+   * Build path with locale prefix and page path
+   */
+  private buildPath(
+    locale: Locale,
+    localizedPath: string,
+    includeLocale: boolean,
+  ): string {
+    let path = '';
+    if (includeLocale && locale !== this.defaultLocale) {
+      path += `/${locale}`;
+    }
+    if (localizedPath !== '/' || path === '') {
+      path += localizedPath;
+    }
+    return path;
+  }
+
+  /**
+   * Apply trailing slash if needed
+   */
+  private applyTrailingSlash(path: string, trailingSlash: boolean): string {
+    if (trailingSlash && !path.endsWith('/') && path !== '') {
+      return `${path}/`;
+    }
+    return path;
+  }
+
+  /**
+   * Build absolute URL
+   */
+  private buildAbsoluteURL(
+    path: string,
+    opts: Required<URLGeneratorOptions>,
+  ): string {
+    const host = opts.host || this.baseUrl.replace(/^https?:\/\//, '');
+    return `${opts.protocol}://${host}${path}`;
+  }
+
+  /**
    * 生成页面URL
    */
   generatePageURL(
@@ -78,33 +132,14 @@ export class URLGenerator {
     locale: Locale,
     options: URLGeneratorOptions = {},
   ): string {
-    const opts = { ...DEFAULT_OPTIONS, ...options };
-
-    // 获取本地化路径
+    const opts = this.mergeOptions(options);
     const localizedPath = getLocalizedPath(pageType, locale);
 
-    // 构建路径
-    let path = '';
+    let path = this.buildPath(locale, localizedPath, opts.includeLocale);
+    path = this.applyTrailingSlash(path, opts.trailingSlash);
 
-    // 添加语言前缀（如果需要且不是默认语言）
-    if (opts.includeLocale && locale !== this.defaultLocale) {
-      path += `/${locale}`;
-    }
-
-    // 添加页面路径（对于主页，如果已有语言前缀则不添加额外的斜杠）
-    if (localizedPath !== '/' || path === '') {
-      path += localizedPath;
-    }
-
-    // 添加尾部斜杠
-    if (opts.trailingSlash && !path.endsWith('/') && path !== '') {
-      path += '/';
-    }
-
-    // 返回绝对或相对URL
     if (opts.absolute) {
-      const host = opts.host || this.baseUrl.replace(/^https?:\/\//, '');
-      return `${opts.protocol}://${host}${path}`;
+      return this.buildAbsoluteURL(path, opts);
     }
 
     return path || '/';

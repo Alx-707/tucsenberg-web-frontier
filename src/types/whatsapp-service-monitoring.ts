@@ -404,13 +404,33 @@ export function updateMetrics(
   update: Partial<ServiceMetrics>,
 ): ServiceMetrics {
   return {
-    ...current,
-    ...update,
-    // Recalculate average response time if new response time provided
+    messagesSent:
+      update.messagesSent !== undefined
+        ? update.messagesSent
+        : current.messagesSent,
+    messagesDelivered:
+      update.messagesDelivered !== undefined
+        ? update.messagesDelivered
+        : current.messagesDelivered,
+    messagesRead:
+      update.messagesRead !== undefined
+        ? update.messagesRead
+        : current.messagesRead,
+    messagesFailed:
+      update.messagesFailed !== undefined
+        ? update.messagesFailed
+        : current.messagesFailed,
+    apiCalls:
+      update.apiCalls !== undefined ? update.apiCalls : current.apiCalls,
+    apiErrors:
+      update.apiErrors !== undefined ? update.apiErrors : current.apiErrors,
     averageResponseTime:
       update.averageResponseTime !== undefined
         ? update.averageResponseTime
         : current.averageResponseTime,
+    uptime: update.uptime !== undefined ? update.uptime : current.uptime,
+    lastReset:
+      update.lastReset !== undefined ? update.lastReset : current.lastReset,
   };
 }
 

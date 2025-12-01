@@ -1,5 +1,6 @@
 import type React from 'react';
 import { ArrowRight, ExternalLink } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -35,11 +36,15 @@ export function ActionCards({ t, actions }: ActionCardsProps) {
         return (
           <Card
             key={index}
-            className={`group transition-all duration-[${UI_CONSTANTS.ANIMATION_DURATION}ms] hover:shadow-lg ${
+            className={cn(
+              'group transition-all hover:shadow-lg',
               action.primary
                 ? 'border-primary/20 bg-primary/5 hover:shadow-primary/10'
-                : 'hover:shadow-primary/5'
-            }`}
+                : 'hover:shadow-primary/5',
+            )}
+            style={{
+              transitionDuration: `${UI_CONSTANTS.ANIMATION_DURATION}ms`,
+            }}
           >
             <CardHeader className='text-center'>
               <div className='mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>

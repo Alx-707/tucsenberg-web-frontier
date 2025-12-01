@@ -111,7 +111,12 @@ export class MonitoringUtils {
    */
   static extractLocale(url: string): string {
     const match = url.match(/\/([a-z]{2})(?:\/|$)/);
-    return match?.[1] ?? 'en';
+    if (!match) {
+      return 'en';
+    }
+
+    const [, locale = 'en'] = match;
+    return locale;
   }
 
   /**

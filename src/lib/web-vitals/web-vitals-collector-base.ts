@@ -49,17 +49,23 @@ export class WebVitalsCollectorBase {
       deviceMemory?: number;
       hardwareConcurrency?: number;
     };
-    this.metrics.device = {
+    const device: DetailedWebVitals['device'] = {
       userAgent: navigator.userAgent,
-      ...(nav.deviceMemory !== undefined && { memory: nav.deviceMemory }),
-      ...(nav.hardwareConcurrency !== undefined && {
-        cores: nav.hardwareConcurrency,
-      }),
       viewport: {
         width: window.innerWidth,
         height: window.innerHeight,
       },
     };
+
+    if (nav.deviceMemory !== undefined) {
+      device.memory = nav.deviceMemory;
+    }
+
+    if (nav.hardwareConcurrency !== undefined) {
+      device.cores = nav.hardwareConcurrency;
+    }
+
+    this.metrics.device = device;
   }
 
   protected collectNetworkInfo() {
@@ -82,9 +88,9 @@ export class WebVitalsCollectorBase {
   }
 
   protected collectNavigationTiming() {
-    const navigation = performance.getEntriesByType(
+    const [navigation] = performance.getEntriesByType(
       'navigation',
-    )[0] as PerformanceNavigationTiming;
+    ) as PerformanceNavigationTiming[];
     if (navigation) {
       // 使用 startTime 作为基准时间点（相当于 navigationStart）
       this.metrics.fcp = navigation.responseEnd - navigation.startTime;
@@ -168,15 +174,23 @@ export class WebVitalsCollectorBase {
     const { deviceMemory } = navigator as Navigator & { deviceMemory?: number };
     const { hardwareConcurrency } = navigator;
 
-    return {
-      ...(deviceMemory !== undefined && { memory: deviceMemory }),
-      ...(hardwareConcurrency !== undefined && { cores: hardwareConcurrency }),
+    const device: DetailedWebVitals['device'] = {
       userAgent: navigator.userAgent,
       viewport: {
         width: window?.innerWidth || ZERO,
         height: window?.innerHeight || ZERO,
       },
     };
+
+    if (deviceMemory !== undefined) {
+      device.memory = deviceMemory;
+    }
+
+    if (hardwareConcurrency !== undefined) {
+      device.cores = hardwareConcurrency;
+    }
+
+    return device;
   }
 
   /**

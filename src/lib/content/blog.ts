@@ -25,38 +25,57 @@ import type {
 import { getAllPosts, getPostBySlug } from '@/lib/content-query';
 
 /**
+ * Assign optional metadata fields to summary
+ */
+function assignOptionalSummaryFields(
+  summary: PostSummary,
+  metadata: BlogPost['metadata'],
+  excerpt?: string,
+): void {
+  if (metadata.description !== undefined) summary.description = metadata.description;
+  if (metadata.updatedAt !== undefined) summary.updatedAt = metadata.updatedAt;
+  if (metadata.tags !== undefined) summary.tags = metadata.tags;
+  if (metadata.categories !== undefined) summary.categories = metadata.categories;
+  if (metadata.featured !== undefined) summary.featured = metadata.featured;
+  if (metadata.readingTime !== undefined) summary.readingTime = metadata.readingTime;
+  if (metadata.coverImage !== undefined) summary.coverImage = metadata.coverImage;
+  if (metadata.seo !== undefined) summary.seo = metadata.seo;
+
+  const effectiveExcerpt = metadata.excerpt ?? excerpt;
+  if (effectiveExcerpt !== undefined) summary.excerpt = effectiveExcerpt;
+}
+
+/**
  * Map a BlogPost entity to a PostSummary domain model.
  */
 function mapBlogPostToSummary(post: BlogPost, locale: Locale): PostSummary {
   const { metadata, excerpt, slug } = post;
 
-  return {
+  const summary: PostSummary = {
     slug: metadata.slug ?? slug,
     locale,
     title: metadata.title,
     publishedAt: metadata.publishedAt,
-    ...(metadata.description !== undefined
-      ? { description: metadata.description }
-      : {}),
-    ...(metadata.updatedAt !== undefined
-      ? { updatedAt: metadata.updatedAt }
-      : {}),
-    ...(metadata.tags !== undefined ? { tags: metadata.tags } : {}),
-    ...(metadata.categories !== undefined
-      ? { categories: metadata.categories }
-      : {}),
-    ...(metadata.featured !== undefined ? { featured: metadata.featured } : {}),
-    ...(metadata.excerpt !== undefined || excerpt !== undefined
-      ? { excerpt: metadata.excerpt ?? excerpt }
-      : {}),
-    ...(metadata.readingTime !== undefined
-      ? { readingTime: metadata.readingTime }
-      : {}),
-    ...(metadata.coverImage !== undefined
-      ? { coverImage: metadata.coverImage }
-      : {}),
-    ...(metadata.seo !== undefined ? { seo: metadata.seo } : {}),
   };
+
+  assignOptionalSummaryFields(summary, metadata, excerpt);
+
+  return summary;
+}
+
+/**
+ * Copy optional fields from summary to detail
+ */
+function copyOptionalFieldsToDetail(detail: PostDetail, summary: PostSummary): void {
+  if (summary.description !== undefined) detail.description = summary.description;
+  if (summary.updatedAt !== undefined) detail.updatedAt = summary.updatedAt;
+  if (summary.tags !== undefined) detail.tags = summary.tags;
+  if (summary.categories !== undefined) detail.categories = summary.categories;
+  if (summary.featured !== undefined) detail.featured = summary.featured;
+  if (summary.excerpt !== undefined) detail.excerpt = summary.excerpt;
+  if (summary.readingTime !== undefined) detail.readingTime = summary.readingTime;
+  if (summary.coverImage !== undefined) detail.coverImage = summary.coverImage;
+  if (summary.seo !== undefined) detail.seo = summary.seo;
 }
 
 /**
@@ -65,14 +84,22 @@ function mapBlogPostToSummary(post: BlogPost, locale: Locale): PostSummary {
 function mapBlogPostToDetail(post: BlogPost, locale: Locale): PostDetail {
   const summary = mapBlogPostToSummary(post, locale);
 
-  return {
-    ...summary,
+  const detail: PostDetail = {
+    slug: summary.slug,
+    locale: summary.locale,
+    title: summary.title,
+    publishedAt: summary.publishedAt,
     content: post.content,
     filePath: post.filePath,
-    ...(post.metadata.relatedPosts !== undefined
-      ? { relatedPosts: post.metadata.relatedPosts }
-      : {}),
   };
+
+  copyOptionalFieldsToDetail(detail, summary);
+
+  if (post.metadata.relatedPosts !== undefined) {
+    detail.relatedPosts = post.metadata.relatedPosts;
+  }
+
+  return detail;
 }
 
 function toContentQueryOptions(options?: PostListOptions): ContentQueryOptions {

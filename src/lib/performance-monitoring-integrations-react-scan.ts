@@ -297,7 +297,7 @@ export class ReactScanAnalyzer {
 
     // 生成建议
     if (topSlowComponents.length > 0) {
-      const slowestComponent = topSlowComponents[0];
+      const [slowestComponent] = topSlowComponents;
       if (slowestComponent && slowestComponent.averageTime > MAGIC_16) {
         // 超过一帧的时间
         recommendations.push(

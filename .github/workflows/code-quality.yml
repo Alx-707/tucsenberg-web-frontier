@@ -124,12 +124,52 @@ jobs:
       - name: 依赖安全审计
         run: pnpm run security:audit
 
-      - name: Semgrep安全扫描
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: semgrep.yml
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+      - name: 安装 Semgrep CLI
+        run: |
+          python3 -m pip install --user "semgrep<2"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Semgrep 安全扫描（ERROR fail，PR 使用 baseline）
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          # 为当前 PR 获取基线分支最新提交（通常是 main 或 develop）
+          git fetch origin "$GITHUB_BASE_REF" --depth=1
+          BASELINE_COMMIT=$(git merge-base HEAD "origin/${GITHUB_BASE_REF}")
+          echo "Using Semgrep baseline commit: ${BASELINE_COMMIT}"
+
+          # 1) 只运行 ERROR 级规则，作为 CI 的硬门禁；仅对相对于 baseline 的新增问题报错
+          semgrep scan \
+            --config semgrep.yml \
+            --severity ERROR \
+            --error \
+            --baseline-commit "${BASELINE_COMMIT}" \
+            src/
+
+          # 2) 运行 WARNING 级规则：只输出日志，不影响退出码，同样只关注新增告警
+          semgrep scan \
+            --config semgrep.yml \
+            --severity WARNING \
+            --baseline-commit "${BASELINE_COMMIT}" \
+            src/
+
+      - name: Semgrep 安全扫描（ERROR fail，主干完整扫描）
+        if: github.event_name != 'pull_request'
+        run: |
+          set -euo pipefail
+
+          # 主干 / 非 PR 场景：对 ERROR 级规则做完整扫描
+          semgrep scan \
+            --config semgrep.yml \
+            --severity ERROR \
+            --error \
+            src/
+
+          # WARNING 级规则只作信息提示，不阻塞 CI
+          semgrep scan \
+            --config semgrep.yml \
+            --severity WARNING \
+            src/
 
       - name: 架构依赖检查
         run: pnpm run arch:check

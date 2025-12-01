@@ -284,7 +284,7 @@ export const calculatePageComparison = (
         reports.reduce((sum, report) => sum + report.score, 0) / reports.length;
 
       // 确保有最新报告
-      const latestReport = sortedReports[0];
+      const [latestReport] = sortedReports;
       if (!latestReport) {
         throw new Error(`No reports found for URL: ${url}`);
       }

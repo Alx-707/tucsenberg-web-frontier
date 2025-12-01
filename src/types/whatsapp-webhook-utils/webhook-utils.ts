@@ -421,10 +421,12 @@ export class WebhookUtils {
               processingTimes.length
             : ZERO,
         min_ms:
-          processingTimes.length > ZERO ? (processingTimes[0] ?? ZERO) : ZERO,
+          processingTimes.length > ZERO
+            ? (processingTimes.at(0) ?? ZERO)
+            : ZERO,
         max_ms:
           processingTimes.length > ZERO
-            ? (processingTimes[processingTimes.length - ONE] ?? ZERO)
+            ? (processingTimes.at(-ONE) ?? ZERO)
             : ZERO,
         p95_ms: getQuantile(MAGIC_0_95),
         p99_ms: getQuantile(MAGIC_0_99),

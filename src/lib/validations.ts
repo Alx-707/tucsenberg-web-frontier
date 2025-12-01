@@ -111,7 +111,11 @@ export const validationHelpers = {
     if (!allowedDomains || allowedDomains.length === ZERO) return true;
 
     const parts = email.split('@');
-    const domain = parts.length > 1 ? parts[1]?.toLowerCase() : undefined;
+    const [, rawDomain] = parts;
+    const domain = rawDomain?.toLowerCase();
+    if (!domain) {
+      return false;
+    }
     return allowedDomains.some((allowed) => domain === allowed.toLowerCase());
   },
 

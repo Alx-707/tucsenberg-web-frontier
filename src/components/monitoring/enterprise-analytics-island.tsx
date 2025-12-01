@@ -33,10 +33,10 @@ export function EnterpriseAnalyticsIsland() {
     import('web-vitals')
       .then(({ onCLS, onFCP, onLCP, onTTFB, onINP }) => {
         const baseDims = () => {
-          const nav = performance.getEntriesByType('navigation')[0] as
-            | PerformanceNavigationTiming
-            | undefined;
-          const navType = nav?.type ?? 'navigate';
+          const [navEntry] = performance.getEntriesByType(
+            'navigation',
+          ) as PerformanceNavigationTiming[];
+          const navType = navEntry?.type ?? 'navigate';
           type NetworkInformation = { effectiveType?: string };
           type NavigatorWithConnection = Navigator & {
             connection?: NetworkInformation;
@@ -67,11 +67,17 @@ export function EnterpriseAnalyticsIsland() {
             try {
               // Dynamic import to avoid pulling @vercel/analytics into initial vendors
               const { track } = await import('@vercel/analytics');
+              const dims = baseDims();
               track('web-vital', {
                 name: m.name,
                 value: Math.round(m.value),
                 rating: m.rating,
-                ...baseDims(),
+                locale: dims.locale,
+                navType: dims.navType,
+                conn: dims.conn,
+                device: dims.device,
+                rootMargin: dims.rootMargin,
+                zhFastLcp: dims.zhFastLcp,
               });
             } catch {
               // ignore any analytics error

@@ -123,12 +123,17 @@ export class PerformanceReportGenerator {
     // 计算性能评分
     const score = this.calculatePerformanceScore(windowMetrics);
 
-    return {
+    const report: PerformanceReport = {
       summary,
       details: windowMetrics,
       recommendations,
-      ...(score !== undefined && { score }),
     };
+
+    if (score !== undefined) {
+      report.score = score;
+    }
+
+    return report;
   }
 
   /**

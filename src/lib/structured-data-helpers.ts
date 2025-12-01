@@ -75,20 +75,28 @@ export function generateArticleSchema(
   // 为缺失的 URL 使用规范化地址（测试中已对该函数进行 mock）
   const url = generateCanonicalURL('blog' as PageType, locale);
   const now = new Date().toISOString();
-  const payload = {
+  const payload: Partial<ArticleData> = {
     title: article.title,
     description: article.description,
-    ...(article.author && { author: article.author }),
     publishedTime: article.publishedTime ?? now,
     modifiedTime: article.modifiedTime ?? article.publishedTime ?? now,
     url,
-    ...(article.image && { image: article.image }),
-    ...(article.section && { section: article.section }),
-  } as const;
+  };
+
+  if (article.author) {
+    payload.author = article.author;
+  }
+  if (article.image) {
+    payload.image = article.image;
+  }
+  if (article.section) {
+    payload.section = article.section;
+  }
+
   return generateLocalizedStructuredData(
     locale,
     'Article',
-    payload as unknown as ArticleData,
+    payload as ArticleData,
   );
 }
 
@@ -108,20 +116,34 @@ export function generateProductSchema(
   // 规范化价格为 number | undefined 以适配内部类型
   const normalizedPrice =
     typeof product.price === 'string' ? Number(product.price) : product.price;
-  const payload = {
+  const payload: Partial<ProductData> = {
     name: product.name,
     description: product.description,
-    ...(product.brand && { brand: product.brand }),
-    ...(product.image && { image: product.image }),
-    ...(normalizedPrice !== undefined && { price: normalizedPrice }),
-    ...(product.currency && { currency: product.currency }),
-    ...(product.availability && { availability: product.availability }),
-    ...(product.sku && { sku: product.sku }),
-  } as const;
+  };
+
+  if (product.brand) {
+    payload.brand = product.brand;
+  }
+  if (product.image) {
+    payload.image = product.image;
+  }
+  if (normalizedPrice !== undefined) {
+    payload.price = normalizedPrice;
+  }
+  if (product.currency) {
+    payload.currency = product.currency;
+  }
+  if (product.availability) {
+    payload.availability = product.availability;
+  }
+  if (product.sku) {
+    payload.sku = product.sku;
+  }
+
   return generateLocalizedStructuredData(
     locale,
     'Product',
-    payload as unknown as ProductData,
+    payload as ProductData,
   );
 }
 
@@ -155,7 +177,7 @@ export function generateLocalBusinessSchema(
   },
   _locale: Locale,
 ) {
-  return {
+  const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     'name': business.name,
@@ -163,12 +185,23 @@ export function generateLocalBusinessSchema(
       '@type': 'PostalAddress',
       'streetAddress': business.address,
     },
-    ...(business.phone && { telephone: business.phone }),
-    ...(business.email && { email: business.email }),
-    ...(business.openingHours && { openingHours: business.openingHours }),
-    ...(business.priceRange && { priceRange: business.priceRange }),
     'url': SITE_CONFIG.baseUrl,
-  } as Record<string, unknown>;
+  };
+
+  if (business.phone) {
+    schema.telephone = business.phone;
+  }
+  if (business.email) {
+    schema.email = business.email;
+  }
+  if (business.openingHours) {
+    schema.openingHours = business.openingHours;
+  }
+  if (business.priceRange) {
+    schema.priceRange = business.priceRange;
+  }
+
+  return schema;
 }
 
 /**

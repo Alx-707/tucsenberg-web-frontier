@@ -6,7 +6,6 @@ import {
   BREAKPOINT_SM,
   BREAKPOINT_XL,
   BYTES_PER_KB,
-  ONE,
   ZERO,
 } from '@/constants';
 import { COUNT_1536 } from '@/constants/count';
@@ -29,6 +28,55 @@ const defaultBreakpoints: BreakpointConfig = {
   '2xl': COUNT_1536,
 };
 
+function createBreakpointConfig(
+  customBreakpoints?: Partial<BreakpointConfig>,
+): BreakpointConfig {
+  return {
+    'sm': customBreakpoints?.sm ?? defaultBreakpoints.sm,
+    'md': customBreakpoints?.md ?? defaultBreakpoints.md,
+    'lg': customBreakpoints?.lg ?? defaultBreakpoints.lg,
+    'xl': customBreakpoints?.xl ?? defaultBreakpoints.xl,
+    '2xl': customBreakpoints?.['2xl'] ?? defaultBreakpoints['2xl'],
+  };
+}
+
+function getBreakpointValue(
+  breakpoint: Breakpoint,
+  config: BreakpointConfig,
+): number {
+  switch (breakpoint) {
+    case 'sm':
+      return config.sm;
+    case 'md':
+      return config.md;
+    case 'lg':
+      return config.lg;
+    case 'xl':
+      return config.xl;
+    case '2xl':
+      return config['2xl'];
+    default:
+      return config.sm;
+  }
+}
+
+function getNextBreakpoint(breakpoint: Breakpoint): Breakpoint | null {
+  switch (breakpoint) {
+    case 'sm':
+      return 'md';
+    case 'md':
+      return 'lg';
+    case 'lg':
+      return 'xl';
+    case 'xl':
+      return '2xl';
+    case '2xl':
+      return null;
+    default:
+      return null;
+  }
+}
+
 export interface UseBreakpointReturn {
   currentBreakpoint: Breakpoint;
   isAbove: (_breakpoint: Breakpoint) => boolean;
@@ -40,7 +88,7 @@ export interface UseBreakpointReturn {
 export function useBreakpoint(
   customBreakpoints?: Partial<BreakpointConfig>,
 ): UseBreakpointReturn {
-  const breakpoints = { ...defaultBreakpoints, ...customBreakpoints };
+  const breakpoints = createBreakpointConfig(customBreakpoints);
   const [width, setWidth] = useState<number>(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth;
@@ -75,31 +123,22 @@ export function useBreakpoint(
   const currentBreakpoint = getCurrentBreakpoint(width);
 
   const isAbove = (breakpoint: Breakpoint): boolean => {
-    const safeBreakpoints = new Map(Object.entries(breakpoints));
-    const breakpointValue = safeBreakpoints.get(breakpoint);
-    return breakpointValue !== undefined ? width >= breakpointValue : false;
+    const breakpointValue = getBreakpointValue(breakpoint, breakpoints);
+    return width >= breakpointValue;
   };
 
   const isBelow = (breakpoint: Breakpoint): boolean => {
-    const safeBreakpoints = new Map(Object.entries(breakpoints));
-    const breakpointValue = safeBreakpoints.get(breakpoint);
-    return breakpointValue !== undefined ? width < breakpointValue : false;
+    const breakpointValue = getBreakpointValue(breakpoint, breakpoints);
+    return width < breakpointValue;
   };
 
   const isExactly = (breakpoint: Breakpoint): boolean => {
-    const breakpointKeys: Breakpoint[] = ['sm', 'md', 'lg', 'xl', '2xl'];
-    const currentIndex = breakpointKeys.indexOf(breakpoint);
-
-    if (currentIndex === -ONE) return false;
-
-    const safeBreakpoints = new Map(Object.entries(breakpoints));
-    const currentValue = safeBreakpoints.get(breakpoint);
-    if (currentValue === undefined) return false;
-
-    const nextBreakpoint = breakpointKeys[currentIndex + ONE];
-    const nextValue = nextBreakpoint
-      ? safeBreakpoints.get(nextBreakpoint) || Infinity
-      : Infinity;
+    const currentValue = getBreakpointValue(breakpoint, breakpoints);
+    const nextBreakpoint = getNextBreakpoint(breakpoint);
+    const nextValue =
+      nextBreakpoint !== null
+        ? getBreakpointValue(nextBreakpoint, breakpoints)
+        : Infinity;
 
     return width >= currentValue && width < nextValue;
   };
