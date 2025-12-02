@@ -36,6 +36,63 @@ tests/
 └── unit/          # Isolated unit tests
 ```
 
+## Test Quality Budgets
+
+| Metric | Limit |
+|--------|-------|
+| Test function length | ≤ 160 lines (recommended ≤ 100) |
+| Cyclomatic complexity | ≤ 20 |
+| Parameters | ≤ 5 (relaxed for tests) |
+
+Extract helpers to `__tests__/utils` or `src/test/` when exceeding limits.
+
+## vi.hoisted Usage
+
+**ESM Mock core technique**: `vi.hoisted` declares variables that must exist before module loading.
+
+**Key rule**: `vi.hoisted` callback **cannot reference external imports**, only inline literals.
+
+```typescript
+// ❌ Error: referencing external import
+import { someHelper } from './helpers';
+const mockFn = vi.hoisted(() => {
+  return someHelper(); // ESM initialization order error!
+});
+
+// ✅ Correct: use inline literals
+const mockFn = vi.hoisted(() => vi.fn());
+const mockData = vi.hoisted(() => ({
+  id: 'test-id',
+  name: 'Test Name'
+}));
+
+vi.mock('@/lib/api', () => ({
+  fetchData: mockFn
+}));
+```
+
+## Centralized Mock System
+
+**Must use centralized mocks**, no duplicate creation:
+
+| Resource | Path |
+|----------|------|
+| i18n mock messages | `src/test/constants/mock-messages.ts` |
+| Test utilities | `@/test/utils` (`renderWithIntl`, `createMockTranslations`) |
+| Mock utilities | `src/test/mock-utils.ts` |
+
+```typescript
+// ✅ Correct: use centralized mocks
+import { renderWithIntl } from '@/test/utils';
+import { mockMessages } from '@/test/constants/mock-messages';
+
+// ❌ Error: duplicate creation
+const mockMessages = { ... }; // Forbidden!
+function renderWithIntl() { ... } // Forbidden!
+```
+
+**Exception**: Local mocks allowed only when testing i18n core config. Must comment reason.
+
 ## Writing Tests
 
 ### Naming Convention

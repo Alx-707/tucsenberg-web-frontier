@@ -2,63 +2,64 @@
 
 ## TypeScript
 
-### Strict Mode Rules
-- `strict: true`, `noImplicitAny: true` enforced
-- **No `any`** in application code (tests may have limited exceptions)
-- Prefer `interface` over `type` for object shapes
+### Strict Mode
+- `strict: true`, `noImplicitAny: true`
+- **No `any`** (tests have limited exceptions)
+- Prefer `interface` over `type`
 - Use `satisfies` for type-safe object literals
-- Avoid `enum`, use `const` objects instead
+- Avoid `enum`, use `const` objects
 
-### Naming Conventions
+### exactOptionalPropertyTypes
+
+Cannot pass explicit `undefined` to optional properties:
+
+```typescript
+// ❌ Error
+const config: Config = { name: 'test', description: undefined };
+
+// ✅ Correct: conditional spread
+const config: Config = { name: 'test', ...(desc ? { description: desc } : {}) };
+```
+
+## Naming Conventions
+
 | Type | Convention | Example |
 |------|------------|---------|
 | Components | PascalCase | `ProductCard.tsx` |
-| Hooks | camelCase with `use` prefix | `useBreakpoint.ts` |
+| Hooks | `use` prefix | `useBreakpoint.ts` |
 | Utilities | camelCase | `formatPrice.ts` |
-| Constants | SCREAMING_SNAKE_CASE | `MAX_ITEMS` |
-| Types/Interfaces | PascalCase | `ProductSummary` |
+| Constants | SCREAMING_SNAKE | `MAX_ITEMS` |
+| Directories | kebab-case | `user-profile/` |
+| Booleans | `is/has/can/should` | `isLoading` |
+| Event handlers | `handle` prefix | `handleSubmit` |
 
-## Imports & Modules
+## Imports
 
 ### Path Aliases
-Always use `@/` alias. Never use deep relative imports.
-```typescript
-// Good
-import { Button } from '@/components/ui/button';
-
-// Bad
-import { Button } from '../../../components/ui/button';
-```
+Always use `@/` alias. No deep relative imports.
 
 ### Import Order
-1. React/Next.js imports
-2. Third-party libraries
-3. Internal aliases (`@/`)
-4. Relative imports (same directory only)
-5. Types (with `type` keyword)
-
-## Complexity Budgets
-
-| Metric | Limit |
-|--------|-------|
-| Function length | ≤ 120 lines |
-| File length | ≤ 500 lines |
-| Cyclomatic complexity | ≤ 15 |
-
-**Refactor-First Strategy**: If adding code would exceed limits, refactor existing code first.
+1. React/Next.js
+2. Third-party
+3. `@/` aliases
+4. Relative (same directory)
+5. Types (`type` keyword)
 
 ## Constants
 
-- No magic numbers in code
-- Group constants by domain in `src/constants/`
-- Use `as const` for literal types
-- User-facing text must use i18n keys, not hardcoded strings
+- No magic numbers
+- Organize by domain in `src/constants/`
+- Use `as const`
+- User-facing text must use i18n keys
+
+## Logging
+
+- **No `console.log` in production**
+- Only `console.error`, `console.warn` allowed
+- Use `src/lib/logger.ts` for structured logging
 
 ## Git Commits
 
-Follow Conventional Commits:
-```
-type(scope): description
+Conventional Commits: `type(scope): description`
 
-Types: feat, fix, refactor, docs, test, chore, perf
-```
+Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`

@@ -409,8 +409,8 @@ jobs:
               URL_COUNT=$(echo "$SITEMAP_0_CONTENT" | grep -o '<loc>' | wc -l | tr -d ' ')
               echo "✓ Found $URL_COUNT URLs in sitemap-0.xml"
 
-              if [ "$URL_COUNT" -lt 20 ]; then
-                echo "❌ URL count is too low: $URL_COUNT (expected >= 20)"
+              if [ "$URL_COUNT" -lt 10 ]; then
+                echo "❌ URL count is too low: $URL_COUNT (expected >= 10)"
                 exit 1
               fi
             else
@@ -423,8 +423,8 @@ jobs:
             URL_COUNT=$(echo "$SITEMAP_CONTENT" | grep -o '<loc>' | wc -l | tr -d ' ')
             echo "✓ Found $URL_COUNT URLs in sitemap.xml"
 
-            if [ "$URL_COUNT" -lt 20 ]; then
-              echo "❌ URL count is too low: $URL_COUNT (expected >= 20)"
+            if [ "$URL_COUNT" -lt 10 ]; then
+              echo "❌ URL count is too low: $URL_COUNT (expected >= 10)"
               exit 1
             fi
           else

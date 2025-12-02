@@ -1,62 +1,68 @@
 # Security Implementation
 
+## Security Principles
+
+- **Defense in Depth**: Multiple layers of security controls
+- **Least Privilege**: Minimum necessary permissions
+- **Secure by Default**: Security enabled out of the box
+- **Zero Trust**: Verify everything, trust no input
+
+## XSS Prevention
+
+- **Never** use unfiltered `dangerouslySetInnerHTML`
+- Must use `DOMPurify.sanitize()` to filter user HTML
+- URLs must validate protocol (only allow `https://` or `/`)
+
 ## Input Validation
 
-### Form Data
-- Validate all user input on server side
-- Use Zod schemas for type-safe validation
-- Sanitize before database storage
+- **All user input** must use Zod schema validation
+- API routes must call `schema.parse(body)` before processing
 
 ### File Paths
-- Never construct paths from user input directly
-- Use allowlists for valid paths
-- Validate against path traversal attacks
+- Never construct paths directly from user input
+- Must use allowlist or `path.resolve()` + prefix check
 
 ## API Security
 
-### Rate Limiting
-- Implemented on contact form and API routes
-- Default: 5 requests per minute per IP
+| Measure | Config |
+|---------|--------|
+| Rate Limiting | 5 requests/min/IP |
+| CSRF | Cloudflare Turnstile |
+| Headers | Configured in `src/config/security.ts` |
 
-### CSRF Protection
-- Cloudflare Turnstile for public forms
-- Verify tokens server-side
+### Security Headers
+- `X-Frame-Options: DENY`
+- `X-Content-Type-Options: nosniff`
+- `Referrer-Policy: strict-origin-when-cross-origin`
 
-### Headers
-```typescript
-// Security headers in next.config.ts
-headers: [
-  { key: 'X-Frame-Options', value: 'DENY' },
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-]
-```
+## Content Security Policy
 
-## Content Security Policy (CSP)
+- Config location: `src/config/security.ts`
+- Mode: Report-only (monitoring)
+- Report endpoint: `/api/csp-report`
 
-- Configured in middleware
-- Report-only mode for monitoring
-- Endpoint: `/api/csp-report`
+## Sensitive Data
 
-## Environment Variables
-
-### Sensitive Keys
-Never commit to git:
+### Environment Variables (Never Commit)
 - `AIRTABLE_API_KEY`
 - `RESEND_API_KEY`
 - `TURNSTILE_SECRET_KEY`
 
-### Validation
-Environment variables validated at build time via `env.mjs`
-
-## Dependencies
-
-- Run `pnpm audit` regularly
-- Dependabot configured for automated updates
-- Review security advisories before updating
+### Cookie Security Config
+- `httpOnly: true` — Prevent XSS access
+- `secure: true` — HTTPS only
+- `sameSite: 'strict'` — Prevent CSRF
 
 ## Logging
 
 - **Never log**: Passwords, API keys, PII
-- Use structured logging (`src/lib/logger.ts`)
+- Use `src/lib/logger.ts` for structured logging
 - No `console.log` in production code
+
+## Security Checklist
+
+- [ ] All user input validated with Zod
+- [ ] No unfiltered `dangerouslySetInnerHTML`
+- [ ] API routes have Rate Limiting
+- [ ] Sensitive cookies set httpOnly + secure
+- [ ] Logs are sanitized

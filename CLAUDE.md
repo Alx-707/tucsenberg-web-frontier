@@ -2,9 +2,11 @@
 
 ## Project: B2B Foreign Trade Enterprise Website Template
 
-**Stack**: Next.js 16 + React 19 + TypeScript 5.8 + Tailwind CSS 4 + next-intl
+**Stack**: Next.js 16 (App Router, Cache Components) + React 19 + TypeScript 5 + Tailwind CSS 4 + next-intl
 
-**Purpose**: Production-ready B2B enterprise website template with i18n (en/zh), SSR/SSG, and enterprise-grade quality gates.
+**Philosophy**: Adopt latest stable tech stack versions, maximize new features for performance.
+
+**Purpose**: Enterprise website template with i18n (en/zh), SSR/SSG, and enterprise-grade quality gates.
 
 ---
 
@@ -18,6 +20,7 @@ src/
 ├── i18n/                  # next-intl config (request.ts, routing.ts)
 ├── hooks/                 # Custom React hooks
 └── types/                 # TypeScript definitions
+content/{posts,pages,products}/{locale}/ # MDX content files
 messages/[locale]/         # i18n JSON (critical.json + deferred.json)
 ```
 
@@ -37,10 +40,10 @@ pnpm test         # Vitest unit tests
 
 ## Hard Constraints
 
-1. **TypeScript strict mode** - No `any` in app code, prefer `interface` over `type`
-2. **Server Components default** - Use `"use client"` only when necessary
-3. **i18n via next-intl** - All user-facing text must use translation keys
-4. **Complexity budgets** - Function ≤120 lines, File ≤500 lines, Complexity ≤15
+1. **TypeScript strict** - No `any`, prefer `interface`
+2. **Server Components first** - Use `"use client"` only for interactivity
+3. **i18n required** - All user-facing text must use translation keys
+4. **Complexity limits** - Function ≤120 lines, File ≤500 lines (see `coding-standards.md`)
 
 ---
 
@@ -50,23 +53,27 @@ Read these **only when relevant** to your current task:
 
 | Document | When to Read |
 |----------|--------------|
-| `agent_docs/architecture.md` | App Router, routing, data fetching |
-| `agent_docs/coding-standards.md` | Code style, naming, imports |
-| `agent_docs/testing.md` | Writing/running tests |
-| `agent_docs/i18n.md` | Translations, locale handling |
-| `agent_docs/security.md` | Input validation, CSP, auth |
-| `agent_docs/ui-system.md` | Components, styling, themes |
+| `agent_docs/architecture.md` | Routing, data fetching, Cache Components, RSC boundaries |
+| `agent_docs/coding-standards.md` | Naming, imports, complexity, bundle budgets |
+| `agent_docs/content.md` | MDX content creation, frontmatter schemas, B2B product fields |
+| `agent_docs/testing.md` | Writing tests, vi.hoisted, Mock system |
+| `agent_docs/i18n.md` | Translations, locales, critical/deferred split |
+| `agent_docs/security.md` | Input validation, security rules, sensitive data |
+| `agent_docs/ui-system.md` | Components, styling, design specs |
+| `agent_docs/quality-gates.md` | Complexity exemptions, CI/CD, magic numbers |
 
 ---
 
-## Tool Usage
+## Recommended Tools
 
-- **ACE `search_context`**: Use for discovering code locations before editing
-- **Serena**: Use for symbol-level navigation and structured edits
-- **Next.js DevTools**: Use `nextjs_docs` for official Next.js documentation
+When exploring codebase or querying docs:
+
+- **ACE `search_context`**: Semantic code search
+- **Serena**: Symbol-level navigation and structured edits
+- **Next.js DevTools `nextjs_docs`**: Official Next.js docs query
 
 ---
 
 ## Communication
 
-All responses in **Chinese**. Technical terms (e.g., `Server Component`, `useEffect`) in English.
+Reply in Chinese. Technical terms (e.g., `Server Component`, `useEffect`) stay in English.
