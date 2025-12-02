@@ -335,7 +335,7 @@ jobs:
           DEPLOYMENT_URL="${{ needs.deploy-to-vercel.outputs.preview_url }}"
           BYPASS_SECRET="${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}"
 
-          # 带重试的 curl 函数
+          # 带重试的 curl 函数 - 日志输出到 stderr，内容输出到 stdout
           fetch_with_retry() {
             local url="$1"
             local max_retries=3
@@ -343,7 +343,7 @@ jobs:
             local attempt=1
 
             while [ $attempt -le $max_retries ]; do
-              echo "  尝试 $attempt/$max_retries: $url"
+              echo "  尝试 $attempt/$max_retries: $url" >&2
 
               # 获取 HTTP 状态码和内容
               HTTP_RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" \
@@ -353,20 +353,20 @@ jobs:
               HTTP_CODE=$(echo "$HTTP_RESPONSE" | grep "HTTP_CODE:" | cut -d: -f2)
               CONTENT=$(echo "$HTTP_RESPONSE" | sed '/HTTP_CODE:/d')
 
-              echo "  HTTP 状态码: $HTTP_CODE"
+              echo "  HTTP 状态码: $HTTP_CODE" >&2
 
               if [ "$HTTP_CODE" = "200" ]; then
                 echo "$CONTENT"
                 return 0
               fi
 
-              echo "  ⚠️ 请求失败 (HTTP $HTTP_CODE)，${retry_delay}s 后重试..."
+              echo "  ⚠️ 请求失败 (HTTP $HTTP_CODE)，${retry_delay}s 后重试..." >&2
               sleep $retry_delay
               attempt=$((attempt + 1))
               retry_delay=$((retry_delay * 2))
             done
 
-            echo "  ❌ 所有重试均失败"
+            echo "  ❌ 所有重试均失败" >&2
             return 1
           }
 
@@ -378,7 +378,8 @@ jobs:
             exit 1
           }
 
-          if echo "$ROBOTS_CONTENT" | grep -q "User-agent"; then
+          # 使用大小写不敏感匹配 (robots.txt 可能返回 User-Agent 或 User-agent)
+          if echo "$ROBOTS_CONTENT" | grep -qi "User-agent"; then
             echo "✓ robots.txt 验证通过"
           else
             echo "❌ robots.txt 格式无效"
