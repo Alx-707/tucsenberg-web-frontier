@@ -143,6 +143,10 @@ export function ProductTradeInfo({
   title = 'Trade Information',
   className,
 }: ProductTradeInfoProps) {
+  // nosemgrep: object-injection-sink-spread-operator
+  // Reason: DEFAULT_TRADE_LABELS and labels are controlled trade info label
+  // mappings for UI display only. They never carry user input or flow into
+  // security-sensitive operations.
   const mergedLabels = { ...DEFAULT_TRADE_LABELS, ...labels };
 
   const items = [

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Download, MessageSquare } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import type { Locale, ProductDetail } from '@/types/content';
 import {
@@ -108,6 +108,8 @@ interface ProductInfoSectionProps {
   leadTimeLabel: string;
   certificationsTitle: string;
   requestQuoteLabel: string;
+  downloadPdfLabel: string;
+  downloadPdfHref: string;
 }
 
 function ProductInfoSection({
@@ -116,6 +118,8 @@ function ProductInfoSection({
   leadTimeLabel,
   certificationsTitle,
   requestQuoteLabel,
+  downloadPdfLabel,
+  downloadPdfHref,
 }: ProductInfoSectionProps) {
   const hasCertifications =
     product.certifications !== undefined && product.certifications.length > 0;
@@ -143,7 +147,7 @@ function ProductInfoSection({
         />
       )}
 
-      <div className='pt-4'>
+      <div className='flex flex-col gap-3 pt-4 sm:flex-row'>
         <Button
           size='lg'
           className='w-full sm:w-auto'
@@ -151,13 +155,35 @@ function ProductInfoSection({
           <MessageSquare className='mr-2 h-4 w-4' />
           {requestQuoteLabel}
         </Button>
+
+        <Button
+          size='lg'
+          variant='outline'
+          className='w-full sm:w-auto'
+          asChild
+        >
+          <Link
+            href={downloadPdfHref}
+            target='_blank'
+            rel='noreferrer'
+          >
+            <Download className='mr-2 h-4 w-4' />
+            {downloadPdfLabel}
+          </Link>
+        </Button>
       </div>
     </div>
   );
 }
 
 // Helper to build trade info props
-// Uses object spread pattern to avoid Semgrep object-injection false positives
+// Uses object spread pattern to build a shallow, display-only map from the
+// internal ProductDetail model. All fields originate from controlled content
+// sources (MDX/product config), not from user input.
+// nosemgrep: object-injection-sink-spread-operator
+// Reason: The resulting object is only consumed by the ProductTradeInfo
+// component for UI rendering and never passed to DB, filesystem, or exec
+// functions.
 function buildTradeInfoProps(product: ProductDetail): Record<string, string> {
   return {
     ...(product.moq !== undefined && { moq: product.moq }),
@@ -188,6 +214,8 @@ export default async function ProductDetailPage({
   const images = [product.coverImage, ...(product.images ?? [])];
   const hasSpecs =
     product.specs !== undefined && Object.keys(product.specs).length > 0;
+
+  const downloadPdfHref = `/pdfs/products/${locale}/${product.slug}.pdf`;
 
   const tradeInfoLabels = {
     moq: t('detail.labels.moq'),
@@ -220,6 +248,8 @@ export default async function ProductDetailPage({
           leadTimeLabel={t('card.leadTime')}
           certificationsTitle={t('detail.certifications')}
           requestQuoteLabel={t('requestQuote')}
+          downloadPdfLabel={t('detail.downloadPdf')}
+          downloadPdfHref={downloadPdfHref}
         />
       </div>
 

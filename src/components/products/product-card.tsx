@@ -133,6 +133,10 @@ export function ProductCard({
   className,
   labels = DEFAULT_LABELS,
 }: ProductCardProps) {
+  // nosemgrep: object-injection-sink-spread-operator
+  // Reason: DEFAULT_LABELS and labels are controlled UI label definitions
+  // used solely for rendering text in the product card. They do not contain
+  // user input and are not propagated to any persistence or execution sinks.
   const mergedLabels = { ...DEFAULT_LABELS, ...labels };
   const {
     slug,

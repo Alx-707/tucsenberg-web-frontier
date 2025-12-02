@@ -122,6 +122,10 @@ interface ValuesSectionProps {
 }
 
 function ValuesSection({ title, values }: ValuesSectionProps) {
+  // nosemgrep: object-injection-sink-spread-operator
+  // Reason: values is derived from controlled translation/config objects
+  // and only used to render UI content (title/description/icons). It never
+  // flows into persistence, command execution, or other sensitive sinks.
   const valueItems = [
     { key: 'quality', icon: <Award className='h-6 w-6' />, ...values.quality },
     {
