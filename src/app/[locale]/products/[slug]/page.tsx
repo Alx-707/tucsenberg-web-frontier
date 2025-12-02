@@ -157,16 +157,19 @@ function ProductInfoSection({
 }
 
 // Helper to build trade info props
-function buildTradeInfoProps(product: ProductDetail) {
-  const props: Record<string, string> = {};
-  if (product.moq !== undefined) props['moq'] = product.moq;
-  if (product.leadTime !== undefined) props['leadTime'] = product.leadTime;
-  if (product.supplyCapacity !== undefined)
-    props['supplyCapacity'] = product.supplyCapacity;
-  if (product.packaging !== undefined) props['packaging'] = product.packaging;
-  if (product.portOfLoading !== undefined)
-    props['portOfLoading'] = product.portOfLoading;
-  return props;
+// Uses object spread pattern to avoid Semgrep object-injection false positives
+function buildTradeInfoProps(product: ProductDetail): Record<string, string> {
+  return {
+    ...(product.moq !== undefined && { moq: product.moq }),
+    ...(product.leadTime !== undefined && { leadTime: product.leadTime }),
+    ...(product.supplyCapacity !== undefined && {
+      supplyCapacity: product.supplyCapacity,
+    }),
+    ...(product.packaging !== undefined && { packaging: product.packaging }),
+    ...(product.portOfLoading !== undefined && {
+      portOfLoading: product.portOfLoading,
+    }),
+  };
 }
 
 export default async function ProductDetailPage({
