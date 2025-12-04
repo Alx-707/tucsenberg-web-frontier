@@ -252,3 +252,47 @@
   - Geist 字体：118KB（可考虑子集化或延迟加载）
   - Favicon：27KB（可压缩优化）
 - LCP 波动范围较大（2429-4331ms），后续可通过图片/字体优化稳定
+
+---
+
+#### 2025-12-04: Phase 2 字体与资源减重优化
+
+**目标**：将 `total-byte-weight` 从 ~600KB 降至 ~480KB
+
+**已完成优化**：
+
+1. **Geist Mono 全局移除**（节省 ~59KB）
+   - 从 `layout-fonts.ts` 移除 Geist Mono 全局导出
+   - 从 `head.tsx` 移除 Geist Mono 预加载
+   - 更新 `globals.css` 和 `tailwind.config.js` 使用系统等宽字体栈：
+     ```
+     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace
+     ```
+   - 等宽字体仍可在需要时使用，只是不再预加载/全局注入
+
+2. **Favicon 压缩**（节省 ~24KB，95% 压缩率）
+   - 原始：25,931 bytes (25.3KB)，包含 4 种分辨率
+   - 优化后：1,296 bytes (1.3KB)，仅包含 16x16 和 32x32 PNG
+   - 使用 `scripts/optimize-favicon.mjs` 脚本生成
+
+**实际结果**：
+
+| 页面 | 优化前 | 优化后 | 节省 |
+|------|--------|--------|------|
+| `/en` | ~600KB | ~515-519KB | ~83KB (14%) |
+| `/zh` | ~610KB | ~527-528KB | ~83KB (13%) |
+
+**与目标对比**：
+- 目标：480KB
+- 实际：515-528KB
+- 差距：35-48KB
+
+**未完全达标原因分析**：
+- Geist Sans 字体本身仍需约 59KB（保持 UI 一致性必要）
+- PingFang SC 中文子集字体
+- JS bundle 和其他资源
+
+**Phase 3 待处理**（如需进一步优化）：
+- 考虑 Geist Sans 字体子集化（需确认 License）
+- 进一步优化 JS bundle 大小
+- 图片懒加载和 WebP 转换

@@ -25,7 +25,17 @@ module.exports = {
           '-apple-system',
           'sans-serif',
         ],
-        mono: ['var(--font-geist-mono)', 'monospace'],
+        // P2-1 Phase 2: 使用系统等宽字体栈替代 Geist Mono（节省 ~59KB）
+        mono: [
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Monaco',
+          'Consolas',
+          'Liberation Mono',
+          'Courier New',
+          'monospace',
+        ],
       },
       fontSize: {
         // Semantic typography system - Vercel inspired

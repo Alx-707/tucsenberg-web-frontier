@@ -42,6 +42,7 @@ const ANALYTICS_DNS_PREFETCHES: string[] = enableAnalyticsPreconnect
 
 // Geist 字体预加载配置（用于 LCP 优化）
 // 根据 Next.js 官方最佳实践，预加载关键字体以减少 LCP
+// P2-1 Phase 2：仅预加载 Geist Sans，Mono 使用系统字体回退（节省 ~59KB）
 const GEIST_FONT_PRELOADS: Array<{
   href: string;
   type: string;
@@ -50,10 +51,7 @@ const GEIST_FONT_PRELOADS: Array<{
     href: '/_next/static/media/geist-sans-variable.woff2',
     type: 'font/woff2',
   },
-  {
-    href: '/_next/static/media/geist-mono-variable.woff2',
-    type: 'font/woff2',
-  },
+  // Geist Mono 不再预加载 - 等宽字体使用系统字体栈回退
 ];
 
 const SUBSET_SOURCES: SubsetSource[] = [

@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import {
-  geistMono,
-  geistSans,
-  getFontClassNames,
-} from '@/app/[locale]/layout-fonts';
+import { geistSans, getFontClassNames } from '@/app/[locale]/layout-fonts';
 
 // 使用全局 setup 中的 next/font/local mock（src/test/setup.ts）
 // 该全局 mock 提供 variable/className/style，避免 ESM 目录导入问题
+//
+// P2-1 Phase 2 更新说明：
+// - 移除 geistMono 全局导出，等宽字体使用系统字体栈回退
+// - getFontClassNames() 现在只返回 geistSans.variable
+// - 这样可以节省 ~59KB 的 Geist Mono 字体下载
 
 describe('Layout Fonts Configuration', () => {
   describe('geistSans字体配置', () => {
@@ -27,40 +28,21 @@ describe('Layout Fonts Configuration', () => {
     });
   });
 
-  describe('geistMono字体配置', () => {
-    it('应该正确配置Geist Mono字体', () => {
-      expect(geistMono).toBeDefined();
-      expect(geistMono.variable).toBe('--font-geist-mono');
-    });
-
-    it('应该包含正确的字体配置选项', () => {
-      // 验证字体配置对象的结构
-      expect(geistMono).toHaveProperty('variable');
-      expect(geistMono).toHaveProperty('className');
-      expect(geistMono).toHaveProperty('style');
-    });
-
-    it('应该设置正确的CSS变量名', () => {
-      expect(geistMono.variable).toBe('--font-geist-mono');
-    });
-  });
-
-  describe('getFontClassNames函数', () => {
-    it('应该返回组合的字体类名字符串', () => {
+  describe('getFontClassNames函数 (P2-1 Phase 2 优化后)', () => {
+    it('应该只返回 Geist Sans 变量', () => {
       const classNames = getFontClassNames();
 
       expect(typeof classNames).toBe('string');
       expect(classNames).toContain('--font-geist-sans');
-      expect(classNames).toContain('--font-geist-mono');
+      // P2-1 Phase 2: Geist Mono 不再包含在全局类名中
+      expect(classNames).not.toContain('--font-geist-mono');
     });
 
-    it('应该包含两个字体变量并用空格分隔', () => {
+    it('应该只包含一个字体变量', () => {
       const classNames = getFontClassNames();
-      const parts = classNames.split(' ');
 
-      expect(parts).toHaveLength(2);
-      expect(parts[0]).toContain('--font-geist-sans');
-      expect(parts[1]).toContain('--font-geist-mono');
+      // P2-1 Phase 2: 只有 Geist Sans，不再有 Mono
+      expect(classNames).toBe(geistSans.variable);
     });
 
     // 中文字体子集由 head.tsx 注入，不再通过 next/font 变量控制
@@ -81,20 +63,14 @@ describe('Layout Fonts Configuration', () => {
   });
 
   describe('字体变量一致性', () => {
-    it('geistSans和geistMono应该有不同的变量名', () => {
-      expect(geistSans.variable).not.toBe(geistMono.variable);
-    });
-
     it('字体变量应该遵循CSS自定义属性命名规范', () => {
       expect(geistSans.variable).toMatch(/^--font-/);
-      expect(geistMono.variable).toMatch(/^--font-/);
     });
 
-    it('getFontClassNames应该包含所有定义的字体变量', () => {
+    it('getFontClassNames应该包含geistSans变量', () => {
       const classNames = getFontClassNames();
 
       expect(classNames).toContain(geistSans.variable);
-      expect(classNames).toContain(geistMono.variable);
       // 中文字体变量不再出现在类名中
     });
   });
@@ -108,31 +84,19 @@ describe('Layout Fonts Configuration', () => {
       expect(typeof geistSans.style).toBe('object');
     });
 
-    it('geistMono应该包含必要的Next.js字体属性', () => {
-      // 验证Next.js字体对象的基本结构
-      expect(geistMono).toHaveProperty('className');
-      expect(geistMono).toHaveProperty('style');
-      expect(typeof geistMono.className).toBe('string');
-      expect(typeof geistMono.style).toBe('object');
-    });
-
     it('字体样式对象应该包含fontFamily属性', () => {
       expect(geistSans.style).toHaveProperty('fontFamily');
-      expect(geistMono.style).toHaveProperty('fontFamily');
       expect(typeof geistSans.style.fontFamily).toBe('string');
-      expect(typeof geistMono.style.fontFamily).toBe('string');
     });
   });
 
   describe('边界条件测试', () => {
     it('字体变量名不应该为空', () => {
       expect(geistSans.variable.length).toBeGreaterThan(0);
-      expect(geistMono.variable.length).toBeGreaterThan(0);
     });
 
     it('字体类名不应该为空', () => {
       expect(geistSans.className.length).toBeGreaterThan(0);
-      expect(geistMono.className.length).toBeGreaterThan(0);
     });
 
     it('getFontClassNames返回值不应该包含多余的空格', () => {
