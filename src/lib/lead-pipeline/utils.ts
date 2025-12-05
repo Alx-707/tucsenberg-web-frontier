@@ -40,6 +40,7 @@ export function splitName(fullName: string): SplitNameResult {
 
   if (parts.length === ONE) {
     // Single word name (common for Chinese names)
+    // nosemgrep: object-injection-sink-dynamic-property -- ZERO is a trusted constant (value: 0)
     // eslint-disable-next-line security/detect-object-injection -- safe array access with constant index
     const firstPart = parts[ZERO];
     return { firstName: firstPart ?? '', lastName: '' };

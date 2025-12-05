@@ -163,12 +163,17 @@ rules:
   - id: object-injection-sink-dynamic-property
     patterns:
       - pattern-either:
-          - pattern: |
-              $OBJ[$VAR]
-          - pattern: |
-              $OBJ[$VAR] = $VALUE
-      - pattern-not: $OBJ["..."]
-      - pattern-not: $OBJ['...']
+          - pattern: $OBJ[$KEY]
+          - pattern: $OBJ[$KEY] = $VALUE
+      # Exclude string literal keys (single and double quotes)
+      - pattern-not: $OBJ["$LIT"]
+      - pattern-not: $OBJ['$LIT']
+      # Exclude numeric literal indices
+      - pattern-not: $OBJ[$NUM]
+      - metavariable-regex:
+          metavariable: $NUM
+          regex: "^[0-9]+$"
+      # Exclude for-loop index patterns
       - pattern-not-inside: |
           for (let $VAR = 0; $VAR < $OBJ.length; $VAR += 1) {
             ...
@@ -193,11 +198,6 @@ rules:
         - "**/src/lib/env.ts"
         - "**/src/lib/locale-detection-hooks.ts"
         - "**/src/testing/utils/theme-test-utilities.ts"
-        # Reviewed 2025-12-05: These files use hardcoded string literals or numeric
-        # indices as object keys, NOT user-controlled input. See Codex analysis.
-        - "**/src/lib/airtable/service.ts"
-        - "**/src/components/products/product-actions.tsx"
-        - "**/src/lib/lead-pipeline/utils.ts"
     message: '检测到对象注入漏洞：避免使用用户输入作为对象属性键，使用白名单验证或switch语句'
     languages: [typescript, javascript]
     severity: ERROR
