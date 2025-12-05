@@ -22,6 +22,7 @@
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { unstable_cache } from 'next/cache';
+import { mergeObjects } from '@/lib/locale-storage-types-utils/object-utils';
 import { logger } from '@/lib/logger';
 import { MONITORING_INTERVALS } from '@/constants/performance-constants';
 import { routing } from '@/i18n/routing';
@@ -350,17 +351,12 @@ export async function loadCompleteMessages(locale: Locale): Promise<Messages> {
       : loadDeferredMessages(locale),
   ]);
 
-  // 合并 critical 与 deferred 消息时，避免使用对象 spread 以便于安全审计。
-  // 两者均来自我们控制的翻译 JSON 文件（见上方 loadCriticalMessages / loadDeferredMessages），
-  // 这里通过 entries + Object.fromEntries 保持「deferred 覆盖 critical」的语义，
-  // 同时不再触发 object-injection-sink-spread-operator 规则。
-  const criticalEntries = Object.entries(critical ?? {});
-  const deferredEntries = Object.entries(deferred ?? {});
-
-  const merged = Object.fromEntries([
-    ...criticalEntries,
-    ...deferredEntries,
-  ]) as Messages;
+  // 使用安全加固的深度合并，确保相同顶层键的嵌套字段不会被整体覆盖
+  // 例如：critical 的 footer.vercel.* 与 deferred 的 footer.copyright 可以共存
+  const merged = mergeObjects(
+    (critical ?? {}) as Record<string, unknown>,
+    (deferred ?? {}) as Record<string, unknown>,
+  ) as Messages;
 
   // 在构建阶段按需输出调试信息，用于诊断 MISSING_MESSAGE 根因
   if (
