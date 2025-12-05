@@ -223,6 +223,7 @@ describe('Lead Schema', () => {
         subject: CONTACT_SUBJECTS.OTHER,
         message: 'Test message.',
         turnstileToken: 'token',
+        marketingConsent: false,
       };
       expect(isContactLead(contactLead)).toBe(true);
       expect(isProductLead(contactLead)).toBe(false);
@@ -237,6 +238,7 @@ describe('Lead Schema', () => {
         productSlug: 'test',
         productName: 'Test',
         quantity: 1,
+        marketingConsent: false,
       };
       expect(isProductLead(productLead)).toBe(true);
       expect(isContactLead(productLead)).toBe(false);

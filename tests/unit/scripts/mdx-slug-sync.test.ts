@@ -343,8 +343,10 @@ describe('mdx-slug-sync', () => {
 
       // File exists in zh but not in en, so it's a missing pair
       expect(result.issues).toHaveLength(1);
-      expect(result.issues[0].type).toBe('missing_pair');
-      expect(result.issues[0].baseLocale).toBe('en');
+      const issue = result.issues[0];
+      expect(issue).toBeDefined();
+      expect(issue?.type).toBe('missing_pair');
+      expect(issue?.baseLocale).toBe('en');
     });
   });
 

@@ -175,6 +175,16 @@ describe('processLead', () => {
       );
       vi.mocked(airtableService.createLead).mockResolvedValue({
         id: 'record-456',
+        fields: {
+          'First Name': 'Test',
+          'Last Name': 'User',
+          'Email': 'test@example.com',
+          'Company': 'Manufacturing Corp',
+          'Message': 'Product inquiry',
+          'Submitted At': new Date().toISOString(),
+          'Status': 'New',
+          'Source': 'Product Inquiry Form',
+        },
       });
 
       const result = await processLead(validProductLead);
@@ -190,7 +200,19 @@ describe('processLead', () => {
       const { airtableService } = await import('@/lib/airtable');
 
       vi.mocked(resendService.sendProductInquiryEmail).mockResolvedValue('id');
-      vi.mocked(airtableService.createLead).mockResolvedValue({ id: 'rec' });
+      vi.mocked(airtableService.createLead).mockResolvedValue({
+        id: 'rec',
+        fields: {
+          'First Name': 'Test',
+          'Last Name': 'User',
+          'Email': 'test@example.com',
+          'Company': 'Test Co',
+          'Message': 'Test',
+          'Submitted At': new Date().toISOString(),
+          'Status': 'New',
+          'Source': 'Product Inquiry Form',
+        },
+      });
 
       await processLead(validProductLead);
 
@@ -215,6 +237,16 @@ describe('processLead', () => {
 
       vi.mocked(airtableService.createLead).mockResolvedValue({
         id: 'record-789',
+        fields: {
+          'First Name': 'Subscriber',
+          'Last Name': '',
+          'Email': 'subscriber@example.com',
+          'Company': '',
+          'Message': 'Newsletter subscription',
+          'Submitted At': new Date().toISOString(),
+          'Status': 'New',
+          'Source': 'Newsletter Signup',
+        },
       });
 
       const result = await processLead(validNewsletterLead);
@@ -229,7 +261,19 @@ describe('processLead', () => {
       const { resendService } = await import('@/lib/resend');
       const { airtableService } = await import('@/lib/airtable');
 
-      vi.mocked(airtableService.createLead).mockResolvedValue({ id: 'rec' });
+      vi.mocked(airtableService.createLead).mockResolvedValue({
+        id: 'rec',
+        fields: {
+          'First Name': 'Subscriber',
+          'Last Name': '',
+          'Email': 'subscriber@example.com',
+          'Company': '',
+          'Message': 'Newsletter',
+          'Submitted At': new Date().toISOString(),
+          'Status': 'New',
+          'Source': 'Newsletter Signup',
+        },
+      });
 
       await processLead(validNewsletterLead);
 

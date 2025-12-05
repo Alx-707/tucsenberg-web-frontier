@@ -320,8 +320,8 @@ describe('Contact API Route', () => {
         success: true,
         emailSent: false,
         recordCreated: false,
-        emailMessageId: null,
-        airtableRecordId: null,
+        emailMessageId: undefined,
+        airtableRecordId: undefined,
       });
 
       global.fetch = vi.fn().mockResolvedValue({
