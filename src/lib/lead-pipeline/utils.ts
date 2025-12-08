@@ -2,6 +2,7 @@
  * Lead Pipeline Utility Functions
  */
 
+import { randomBytes } from 'crypto';
 import { ONE, ZERO } from '@/constants';
 
 /**
@@ -109,12 +110,15 @@ export function sanitizeInput(input: string): string {
 /**
  * Generate a reference ID for lead tracking
  *
+ * Uses cryptographically secure random bytes instead of Math.random()
+ * for better uniqueness guarantees (not for security purposes).
+ *
  * @param type - Lead type (contact, product, newsletter)
  * @returns Unique reference ID
  */
 export function generateLeadReferenceId(type: string): string {
   const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 8);
+  const random = randomBytes(4).toString('hex');
   const prefix = type.substring(ZERO, 3).toUpperCase();
   return `${prefix}-${timestamp}-${random}`;
 }

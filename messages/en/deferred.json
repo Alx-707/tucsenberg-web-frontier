@@ -480,5 +480,51 @@
       "changes": "Changes to This Policy",
       "contact": "Contact Us"
     }
+  },
+  "cookie": {
+    "title": "Cookie Preferences",
+    "description": "We use cookies to enhance your browsing experience and analyze site traffic.",
+    "learnMore": "Learn more",
+    "acceptAll": "Accept All",
+    "rejectAll": "Reject All",
+    "manage": "Manage",
+    "close": "Close",
+    "cancel": "Cancel",
+    "savePreferences": "Save Preferences",
+    "preferences": {
+      "title": "Cookie Preferences",
+      "description": "Choose which cookies you want to allow. Essential cookies are always enabled."
+    },
+    "categories": {
+      "necessary": "Essential",
+      "necessaryDesc": "Required for the website to function properly. Cannot be disabled.",
+      "analytics": "Analytics",
+      "analyticsDesc": "Help us understand how visitors interact with our website.",
+      "marketing": "Marketing",
+      "marketingDesc": "Used to deliver personalized content and advertisements."
+    }
+  },
+  "terms": {
+    "pageTitle": "Terms of Service",
+    "pageDescription": "Read our terms and conditions for using our services and purchasing products.",
+    "lastUpdated": "Last Updated",
+    "effectiveDate": "Effective Date",
+    "tableOfContents": "Table of Contents",
+    "sections": {
+      "introduction": "Introduction",
+      "acceptance": "Acceptance of Terms",
+      "services": "Services Description",
+      "orders": "Orders & Contracts",
+      "payment": "Payment Terms",
+      "shipping": "Shipping & Delivery",
+      "warranty": "Warranty & Returns",
+      "liability": "Limitation of Liability",
+      "ip": "Intellectual Property",
+      "confidentiality": "Confidentiality",
+      "termination": "Termination",
+      "governing": "Governing Law",
+      "disputes": "Dispute Resolution",
+      "contact": "Contact Information"
+    }
   }
 }

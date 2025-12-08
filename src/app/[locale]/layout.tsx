@@ -8,6 +8,7 @@ import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
+import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { generateJSONLD } from '@/lib/structured-data';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
@@ -36,6 +37,14 @@ const LazyWhatsAppFloatingButton = nextDynamic(
     import('@/components/whatsapp/whatsapp-floating-button').then(
       (mod) => mod.WhatsAppFloatingButton,
     ),
+  {
+    loading: () => null,
+  },
+);
+
+const LazyCookieBanner = nextDynamic(
+  () =>
+    import('@/components/cookie/cookie-banner').then((mod) => mod.CookieBanner),
   {
     loading: () => null,
   },
@@ -99,67 +108,74 @@ async function AsyncLocaleLayoutContent({
           defaultTheme='system'
           enableSystem
         >
-          {/* Web Vitals 监控 - 开发环境启用以便测试 */}
-          <LazyWebVitalsReporter
-            enabled={isDevelopment}
-            debug={isDevelopment}
-            sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
-          />
+          <CookieConsentProvider>
+            {/* Web Vitals 监控 - 开发环境启用以便测试 */}
+            <LazyWebVitalsReporter
+              enabled={isDevelopment}
+              debug={isDevelopment}
+              sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
+            />
 
-          {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
-          <LazyTopLoader nonce={nonce} />
+            {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
+            <LazyTopLoader nonce={nonce} />
 
-          {isDevelopment && (
+            {isDevelopment && (
+              <Suspense fallback={null}>
+                <ErrorBoundary
+                  fallback={
+                    <div className='fixed bottom-4 right-4 z-[1100] rounded-md bg-destructive/80 px-3 py-2 text-xs text-white shadow-lg'>
+                      监控组件加载失败
+                    </div>
+                  }
+                >
+                  {/* i18n preloader depends on next-intl context; disable here now that provider is scoped */}
+                  <ThemePerformanceMonitor />
+                  <WebVitalsIndicator />
+                </ErrorBoundary>
+              </Suspense>
+            )}
+
+            {/* 导航栏 */}
+            <Header locale={locale} />
+
+            {/* 主要内容 */}
+            <main className='flex-1'>{children}</main>
+
+            {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
+            <Footer
+              columns={FOOTER_COLUMNS}
+              tokens={FOOTER_STYLE_TOKENS}
+              statusSlot={
+                <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
+                  All systems normal.
+                </span>
+              }
+              themeToggleSlot={
+                <ThemeSwitcher data-testid='footer-theme-toggle' />
+              }
+            />
+
+            {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
+            <LazyToaster />
+
+            {showWhatsAppButton && (
+              <Suspense fallback={null}>
+                <LazyWhatsAppFloatingButton
+                  number={SITE_CONFIG.contact.whatsappNumber}
+                />
+              </Suspense>
+            )}
+
+            {/* Cookie Consent Banner - 懒加载，仅在未同意时显示 */}
             <Suspense fallback={null}>
-              <ErrorBoundary
-                fallback={
-                  <div className='fixed bottom-4 right-4 z-[1100] rounded-md bg-destructive/80 px-3 py-2 text-xs text-white shadow-lg'>
-                    监控组件加载失败
-                  </div>
-                }
-              >
-                {/* i18n preloader depends on next-intl context; disable here now that provider is scoped */}
-                <ThemePerformanceMonitor />
-                <WebVitalsIndicator />
-              </ErrorBoundary>
+              <LazyCookieBanner />
             </Suspense>
-          )}
 
-          {/* 导航栏 */}
-          <Header locale={locale} />
-
-          {/* 主要内容 */}
-          <main className='flex-1'>{children}</main>
-
-          {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
-          <Footer
-            columns={FOOTER_COLUMNS}
-            tokens={FOOTER_STYLE_TOKENS}
-            statusSlot={
-              <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
-                All systems normal.
-              </span>
-            }
-            themeToggleSlot={
-              <ThemeSwitcher data-testid='footer-theme-toggle' />
-            }
-          />
-
-          {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
-          <LazyToaster />
-
-          {showWhatsAppButton && (
-            <Suspense fallback={null}>
-              <LazyWhatsAppFloatingButton
-                number={SITE_CONFIG.contact.whatsappNumber}
-              />
-            </Suspense>
-          )}
-
-          {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
-          {process.env.NODE_ENV === 'production' ? (
-            <EnterpriseAnalyticsIsland />
-          ) : null}
+            {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
+            {process.env.NODE_ENV === 'production' ? (
+              <EnterpriseAnalyticsIsland />
+            ) : null}
+          </CookieConsentProvider>
         </ThemeProvider>
       </NextIntlClientProvider>
     </>

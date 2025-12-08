@@ -243,6 +243,13 @@ rules:
         - "**/src/app/*/products/*/page.tsx"
         - "**/src/components/products/product-card.tsx"
         - "**/src/components/products/product-specs.tsx"
+        # Lead pipeline files - spread operators used with Zod-validated data only:
+        # - inquiry/route.ts: leadData spread after Zod schema validation (productLeadSchema)
+        # - product-inquiry-form.tsx: client-side form with hardcoded field names
+        # - lead-schema.ts: Zod schema definitions using baseLeadFields spread (compile-time safe)
+        - "**/src/app/api/inquiry/route.ts"
+        - "**/src/components/products/product-inquiry-form.tsx"
+        - "**/src/lib/lead-pipeline/lead-schema.ts"
     message: '检测到潜在的对象注入：使用扩展运算符或Object.assign时需验证输入对象的安全性'
     languages: [typescript, javascript]
     severity: WARNING

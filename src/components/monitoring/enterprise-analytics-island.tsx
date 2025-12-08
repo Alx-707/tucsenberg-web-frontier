@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useLocale } from 'next-intl';
+import { useCookieConsentOptional } from '@/lib/cookie-consent';
 import { logger } from '@/lib/logger';
 
 const Analytics = dynamic(
@@ -18,8 +19,17 @@ const SpeedInsights = dynamic(
 export function EnterpriseAnalyticsIsland() {
   const locale = useLocale();
   const isProd = process.env.NODE_ENV === 'production';
+  const cookieConsent = useCookieConsentOptional();
+
+  // Check if analytics consent is granted (default to true if no consent system)
+  const analyticsAllowed = cookieConsent?.ready
+    ? cookieConsent.consent.analytics
+    : true;
 
   useEffect(() => {
+    // Skip web vitals if analytics consent not granted
+    if (!analyticsAllowed) return;
+
     const RUM_ENABLED =
       process.env.NEXT_PUBLIC_RUM === '1' ||
       process.env.NEXT_PUBLIC_RUM === 'true';
@@ -92,7 +102,12 @@ export function EnterpriseAnalyticsIsland() {
         onINP(report);
       })
       .catch((e) => logger.error('Failed to load web-vitals', e));
-  }, [locale]);
+  }, [locale, analyticsAllowed]);
+
+  // Only render analytics if consent is granted
+  if (!analyticsAllowed) {
+    return null;
+  }
 
   return (
     <>

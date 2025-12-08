@@ -238,6 +238,13 @@ export const FOOTER_COLUMNS: FooterColumnConfig[] = [
         external: false,
         translationKey: 'footer.sections.support.privacy',
       },
+      {
+        key: 'terms',
+        label: 'Terms of Service',
+        href: '/terms',
+        external: false,
+        translationKey: 'footer.sections.support.terms',
+      },
     ],
   },
   {

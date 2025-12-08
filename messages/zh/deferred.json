@@ -480,5 +480,51 @@
       "changes": "政策变更",
       "contact": "联系我们"
     }
+  },
+  "cookie": {
+    "title": "Cookie 偏好设置",
+    "description": "我们使用 Cookie 来改善您的浏览体验并分析网站流量。",
+    "learnMore": "了解更多",
+    "acceptAll": "全部接受",
+    "rejectAll": "全部拒绝",
+    "manage": "管理",
+    "close": "关闭",
+    "cancel": "取消",
+    "savePreferences": "保存设置",
+    "preferences": {
+      "title": "Cookie 偏好设置",
+      "description": "选择您允许的 Cookie 类型。必要的 Cookie 始终处于启用状态。"
+    },
+    "categories": {
+      "necessary": "必要",
+      "necessaryDesc": "网站正常运行所必需，无法禁用。",
+      "analytics": "分析",
+      "analyticsDesc": "帮助我们了解访客如何与网站互动。",
+      "marketing": "营销",
+      "marketingDesc": "用于提供个性化内容和广告。"
+    }
+  },
+  "terms": {
+    "pageTitle": "服务条款",
+    "pageDescription": "阅读我们的服务使用条款和产品采购条件。",
+    "lastUpdated": "最后更新",
+    "effectiveDate": "生效日期",
+    "tableOfContents": "目录",
+    "sections": {
+      "introduction": "引言",
+      "acceptance": "条款接受",
+      "services": "服务说明",
+      "orders": "订单与合同",
+      "payment": "付款条款",
+      "shipping": "运输与交付",
+      "warranty": "保修与退换",
+      "liability": "责任限制",
+      "ip": "知识产权",
+      "confidentiality": "保密条款",
+      "termination": "终止条款",
+      "governing": "适用法律",
+      "disputes": "争议解决",
+      "contact": "联系方式"
+    }
   }
 }

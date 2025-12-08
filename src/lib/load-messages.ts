@@ -81,14 +81,13 @@ function sanitizeLocale(input: string): Locale {
 
 /**
  * Get the base URL for fetching translation files
- * Uses NEXT_PUBLIC_BASE_URL in production, localhost in development
+ * Used only in production runtime for HTTP fetch with CDN caching
  */
 function getBaseUrl(): string {
   if (process.env.NEXT_PUBLIC_BASE_URL) {
     return process.env.NEXT_PUBLIC_BASE_URL;
   }
 
-  // Development fallback
   const port = process.env.PORT || 3000;
   return `http://localhost:${port}`;
 }
@@ -117,12 +116,12 @@ export const loadCriticalMessages = unstable_cache(
   async (locale: Locale): Promise<Messages> => {
     const safeLocale = sanitizeLocale(locale as string);
 
-    // 构建阶段（next build）不应通过 HTTP 访问自身站点，
-    // 否则在没有运行中的服务器时会导致长时间超时。
-    // 这里直接从 public/messages 目录读取 externalized JSON，
-    // 既避免了网络调用，又与运行时使用的文件保持一致。
+    // 构建阶段和开发阶段直接从文件系统读取，避免 HTTP 请求的端口问题
+    // 生产环境运行时通过 HTTP fetch 以利用 CDN 缓存
     const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
-    if (isBuildTime) {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    if (isBuildTime || isDevelopment) {
       try {
         const filePath = join(
           process.cwd(),
@@ -136,16 +135,14 @@ export const loadCriticalMessages = unstable_cache(
         return JSON.parse(content) as Messages;
       } catch (error) {
         logger.error(
-          `Build-time read of critical messages failed for ${locale}:`,
+          `File system read of critical messages failed for ${locale}:`,
           error,
         );
-        // 保守起见返回空对象，避免阻塞构建；MISSING_MESSAGE 将在
-        // next-intl 严格模式下暴露真实问题。
         return {} as Messages;
       }
     }
 
-    // Runtime: Fetch from public directory via HTTP + unstable_cache
+    // Production runtime: Fetch from public directory via HTTP
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/messages/${safeLocale}/critical.json`;
 
@@ -153,8 +150,7 @@ export const loadCriticalMessages = unstable_cache(
       const revalidate = getRevalidateTime();
       const response = await fetch(url, {
         next: { revalidate },
-        cache:
-          process.env.NODE_ENV === 'development' ? 'no-store' : 'force-cache',
+        cache: 'force-cache',
       });
 
       if (!response.ok) {
@@ -182,7 +178,6 @@ export const loadCriticalMessages = unstable_cache(
           `Fallback file read also failed for ${locale}:`,
           fallbackError,
         );
-        // Final fallback: return empty messages instead of throwing
         return {} as Messages;
       }
     }
@@ -217,10 +212,12 @@ export const loadDeferredMessages = unstable_cache(
   async (locale: Locale): Promise<Messages> => {
     const safeLocale = sanitizeLocale(locale as string);
 
-    // 构建阶段同样直接从 public/messages 读取 deferred JSON，
-    // 避免在没有服务器的环境中通过 HTTP 访问自身站点导致超时。
+    // 构建阶段和开发阶段直接从文件系统读取，避免 HTTP 请求的端口问题
+    // 生产环境运行时通过 HTTP fetch 以利用 CDN 缓存
     const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build';
-    if (isBuildTime) {
+    const isDevelopment = process.env.NODE_ENV === 'development';
+
+    if (isBuildTime || isDevelopment) {
       try {
         const filePath = join(
           process.cwd(),
@@ -234,14 +231,14 @@ export const loadDeferredMessages = unstable_cache(
         return JSON.parse(content) as Messages;
       } catch (error) {
         logger.error(
-          `Build-time read of deferred messages failed for ${locale}:`,
+          `File system read of deferred messages failed for ${locale}:`,
           error,
         );
         return {} as Messages;
       }
     }
 
-    // Runtime: Fetch from public directory via HTTP + unstable_cache
+    // Production runtime: Fetch from public directory via HTTP
     const baseUrl = getBaseUrl();
     const url = `${baseUrl}/messages/${safeLocale}/deferred.json`;
 
@@ -249,8 +246,7 @@ export const loadDeferredMessages = unstable_cache(
       const revalidate = getRevalidateTime();
       const response = await fetch(url, {
         next: { revalidate },
-        cache:
-          process.env.NODE_ENV === 'development' ? 'no-store' : 'force-cache',
+        cache: 'force-cache',
       });
 
       if (!response.ok) {
@@ -278,7 +274,6 @@ export const loadDeferredMessages = unstable_cache(
           `Fallback file read also failed for ${locale}:`,
           fallbackError,
         );
-        // Final fallback: return empty messages instead of throwing
         return {} as Messages;
       }
     }
