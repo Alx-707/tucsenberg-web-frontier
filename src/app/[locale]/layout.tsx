@@ -1,4 +1,3 @@
-import { getFontClassNames } from '@/app/[locale]/layout-fonts';
 import { generateLocaleMetadata } from '@/app/[locale]/layout-metadata';
 import { generatePageStructuredData } from '@/app/[locale]/layout-structured-data';
 import '@/app/globals.css';
@@ -201,24 +200,13 @@ export default async function LocaleLayout({
   const typedLocale = locale as 'en' | 'zh';
 
   return (
-    <html
-      lang={typedLocale}
-      className={getFontClassNames()}
-      suppressHydrationWarning
-    >
-      <body
-        className='flex min-h-screen flex-col antialiased'
-        suppressHydrationWarning
+    <Suspense fallback={null}>
+      <AsyncLocaleLayoutContent
+        locale={typedLocale}
+        isDevelopment={isDevelopment}
       >
-        <Suspense fallback={null}>
-          <AsyncLocaleLayoutContent
-            locale={typedLocale}
-            isDevelopment={isDevelopment}
-          >
-            {children}
-          </AsyncLocaleLayoutContent>
-        </Suspense>
-      </body>
-    </html>
+        {children}
+      </AsyncLocaleLayoutContent>
+    </Suspense>
   );
 }
