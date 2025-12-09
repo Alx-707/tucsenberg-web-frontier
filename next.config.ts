@@ -84,10 +84,9 @@ const nextConfig: NextConfig = {
   // 但 Turbopack 在处理它们时遇到问题，所以我们暂时移除这个配置
   // 让 Next.js 使用默认的外部包处理方式
 
-  // ⚠️ Webpack 配置保留 - 待验证 Turbopack 性能后移除
+  // Webpack 配置 - 仅用于 resolve.alias/externals/Sentry 禁用映射
   // Next.js 16 默认使用 Turbopack，此配置仅在 build:webpack 兜底时生效
-  // 在 Turbopack 通过 size:check 验证后，应移除此配置块和 splitChunks 逻辑
-  webpack: (config, { dev, isServer }) => {
+  webpack: (config, { isServer }) => {
     // Path alias configuration for @/ -> src/
     config.resolve.alias = {
       ...config.resolve.alias,
@@ -125,119 +124,6 @@ const nextConfig: NextConfig = {
       };
     }
 
-    // 生产环境包大小优化 - 细粒度代码分割
-    if (!dev && !isServer) {
-      // 显式启用 tree-shaking 标记（默认即为开启，这里加固配置）
-      config.optimization.usedExports = true;
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        // React 核心库单独分离
-        react: {
-          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-          name: 'react',
-          chunks: 'all',
-          priority: 20,
-          enforce: true,
-        },
-        // Radix UI 组件库分离
-        radixui: {
-          test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-          name: 'radix-ui',
-          chunks: 'async',
-          priority: 15,
-          enforce: true,
-        },
-        // Floating UI 弹层库分离（优先级高于 Radix UI）
-        // 只包括异步导入，减少首屏加载
-        floatingui: {
-          test: /[\\/]node_modules[\\/]@floating-ui[\\/]/,
-          name: 'floating-ui',
-          chunks: 'async',
-          priority: 16,
-          enforce: true,
-        },
-        // Lucide 图标库分离
-        lucide: {
-          test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-          name: 'lucide',
-          chunks: 'async',
-          priority: 15,
-          enforce: true,
-        },
-        // Sentry 监控工具分离（仅异步导入，避免打入首屏vendors）
-        sentry: {
-          test: /[\\/]node_modules[\\/]@sentry[\\/]/,
-          name: 'sentry',
-          chunks: 'async',
-          priority: 15,
-          enforce: true,
-        },
-        // Next.js 相关库分离
-        nextjs: {
-          test: /[\\/]node_modules[\\/](next-intl|@next[\\/]|next-themes|nextjs-toploader)[\\/]/,
-          name: 'nextjs-libs',
-          chunks: 'async',
-          priority: 10,
-          enforce: true,
-        },
-        // MDX 相关库分离
-        mdx: {
-          test: /[\\/]node_modules[\\/](@mdx-js|gray-matter|remark|rehype)[\\/]/,
-          name: 'mdx-libs',
-          chunks: 'async',
-          priority: 12,
-          enforce: true,
-        },
-        // 验证库分离
-        validation: {
-          test: /[\\/]node_modules[\\/](zod)[\\/]/,
-          name: 'validation-libs',
-          chunks: 'async',
-          priority: 12,
-          enforce: true,
-        },
-        // 工具库分离
-        utils: {
-          test: /[\\/]node_modules[\\/](clsx|class-variance-authority|tailwind-merge)[\\/]/,
-          name: 'utils',
-          chunks: 'all',
-          priority: 8,
-          enforce: true,
-        },
-        // 轮播库分离（仅异步，避免打入首屏）
-        carousel: {
-          test: /[\\/]node_modules[\\/]embla-carousel[\\/]/,
-          name: 'carousel',
-          chunks: 'async',
-          priority: 12,
-          enforce: true,
-        },
-        // 分析和监控库分离
-        analytics: {
-          test: /[\\/]node_modules[\\/](@vercel\/analytics|web-vitals)[\\/]/,
-          name: 'analytics-libs',
-          chunks: 'async',
-          priority: 14,
-          enforce: true,
-        },
-        // UI通知和交互库分离
-        ui: {
-          test: /[\\/]node_modules[\\/](sonner|@marsidev\/react-turnstile)[\\/]/,
-          name: 'ui-libs',
-          chunks: 'async',
-          priority: 11,
-          enforce: true,
-        },
-        // 其他第三方库
-        vendor: {
-          test: /[\\/]node_modules[\\/](?!(react|react-dom|@radix-ui|lucide-react|@sentry|next-intl|@next[\\/]|next-themes|nextjs-toploader|@mdx-js|gray-matter|remark|rehype|zod|clsx|class-variance-authority|tailwind-merge|embla-carousel|@vercel\/analytics|web-vitals|sonner|@marsidev\/react-turnstile)[\\/])/,
-          name: 'vendors',
-          chunks: 'all',
-          priority: 5,
-          enforce: true,
-        },
-      };
-    }
     return config;
   },
 

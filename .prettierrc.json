@@ -36,6 +36,6 @@
   ],
   "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
 
-  "tailwindConfig": "./tailwind.config.js",
+  "tailwindStylesheet": "./src/app/globals.css",
   "tailwindFunctions": ["clsx", "cn", "cva", "tw"]
 }
