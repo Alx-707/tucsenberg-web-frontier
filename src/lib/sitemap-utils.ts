@@ -70,7 +70,7 @@ export function getContentLastModified(
  */
 export function getProductLastModified(product: {
   publishedAt: string;
-  updatedAt?: string;
+  updatedAt?: string | undefined;
 }): Date {
   return getContentLastModified({
     publishedAt: product.publishedAt,
