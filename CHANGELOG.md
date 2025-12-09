@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+### Changed
+- 升级 Next.js 16.0.7 → 16.0.8（补丁版本，CNA 模板 React canary 更新）
+
 ### Security
 - **[CRITICAL]** 升级 Next.js 16.0.4 → 16.0.7，修复 CVE-2025-66478（CVSS 10.0）
   - 漏洞类型：React Server Components (RSC) "Flight" 协议反序列化漏洞
