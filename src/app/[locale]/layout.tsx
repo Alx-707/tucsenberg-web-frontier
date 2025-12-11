@@ -21,6 +21,7 @@ import { WebVitalsIndicator } from '@/components/performance/web-vitals-indicato
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemePerformanceMonitor } from '@/components/theme/theme-performance-monitor';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
+import { LazyWhatsAppButton } from '@/components/whatsapp/lazy-whatsapp-button';
 import { getAppConfig } from '@/config/app';
 import { FOOTER_COLUMNS, FOOTER_STYLE_TOKENS } from '@/config/footer-links';
 import { SITE_CONFIG } from '@/config/paths/site-config';
@@ -31,16 +32,6 @@ import { routing } from '@/i18n/routing';
 
 // 重新导出元数据生成函数
 export const generateMetadata = generateLocaleMetadata;
-
-const LazyWhatsAppButtonWithTranslations = nextDynamic(
-  () =>
-    import('@/components/whatsapp/whatsapp-button-with-translations').then(
-      (mod) => mod.WhatsAppButtonWithTranslations,
-    ),
-  {
-    loading: () => null,
-  },
-);
 
 const LazyCookieBanner = nextDynamic(
   () =>
@@ -159,11 +150,7 @@ async function AsyncLocaleLayoutContent({
             <LazyToaster />
 
             {showWhatsAppButton && (
-              <Suspense fallback={null}>
-                <LazyWhatsAppButtonWithTranslations
-                  number={SITE_CONFIG.contact.whatsappNumber}
-                />
-              </Suspense>
+              <LazyWhatsAppButton number={SITE_CONFIG.contact.whatsappNumber} />
             )}
 
             {/* Cookie Consent Banner - 懒加载，仅在未同意时显示 */}
