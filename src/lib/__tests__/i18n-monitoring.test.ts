@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ErrorLevel, MonitoringEventType } from '@/lib/i18n-monitoring';
 
 // Mock constants
@@ -47,6 +47,10 @@ describe('i18n-monitoring', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockFetch.mockResolvedValue({ ok: true });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   describe('ErrorLevel enum', () => {
@@ -188,8 +192,8 @@ describe('i18n-monitoring', () => {
     });
 
     it('should handle missing browser APIs gracefully', () => {
-      const originalNavigator = global.navigator;
-      delete (global as { navigator?: Navigator }).navigator;
+      // Use vi.stubGlobal for safe global mocking (avoids delete on non-configurable)
+      vi.stubGlobal('navigator', undefined);
 
       // Should not throw when navigator is undefined
       expect(() => {
@@ -198,8 +202,7 @@ describe('i18n-monitoring', () => {
         expect(userAgent).toBe('unknown');
       }).not.toThrow();
 
-      // Restore navigator
-      global.navigator = originalNavigator;
+      // vi.unstubAllGlobals() in afterEach restores navigator
     });
   });
 

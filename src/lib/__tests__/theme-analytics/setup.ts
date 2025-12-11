@@ -19,12 +19,6 @@ import {
   type ThemeAnalyticsConfig,
 } from '../../theme-analytics';
 
-type MutableGlobal = typeof globalThis & {
-  crypto?: unknown;
-  navigator?: unknown;
-};
-const mutableGlobal = globalThis as MutableGlobal;
-
 // Note: Sentry is mocked in the test file using vi.hoisted
 
 // Mock crypto for secure random
@@ -231,12 +225,12 @@ export function cleanupThemeAnalyticsTest() {
 
 // 辅助方法：移除 crypto 用于验证退化逻辑
 export function removeGlobalCrypto() {
-  delete mutableGlobal.crypto;
+  vi.stubGlobal('crypto', undefined);
 }
 
 // 辅助方法：移除 navigator 用于测试边界场景
 export function removeGlobalNavigator() {
-  delete mutableGlobal.navigator;
+  vi.stubGlobal('navigator', undefined);
 }
 
 // 辅助方法：配置全局实例以便通过公开接口进行断言

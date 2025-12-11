@@ -130,6 +130,7 @@ const setupLocaleDetectorTest = () => {
 };
 
 const cleanupLocaleDetectorTest = () => {
+  vi.unstubAllGlobals();
   vi.restoreAllMocks();
 };
 
@@ -621,6 +622,10 @@ describe('Factory Functions', () => {
     setupLocaleDetectorTest();
   });
 
+  afterEach(() => {
+    cleanupLocaleDetectorTest();
+  });
+
   describe('createSmartLocaleDetector', () => {
     it('should create a SmartLocaleDetector instance', () => {
       const detector = createSmartLocaleDetector();
@@ -664,6 +669,10 @@ describe('Factory Functions', () => {
 describe('Convenience Functions', () => {
   beforeEach(() => {
     setupLocaleDetectorTest();
+  });
+
+  afterEach(() => {
+    cleanupLocaleDetectorTest();
   });
 
   describe('detectCurrentLocale', () => {
@@ -722,6 +731,10 @@ describe('BaseLocaleDetector - Additional Coverage', () => {
     baseDetector = new BaseLocaleDetector();
   });
 
+  afterEach(() => {
+    cleanupLocaleDetectorTest();
+  });
+
   describe('getBrowserLanguages', () => {
     it('should return browser languages array', () => {
       const languages = baseDetector.getBrowserLanguages();
@@ -747,19 +760,15 @@ describe('BaseLocaleDetector - Additional Coverage', () => {
     });
 
     it('should return empty array when navigator unavailable', () => {
-      const originalNavigator = global.navigator;
-      // @ts-expect-error - testing undefined navigator
-      delete global.navigator;
+      // Use vi.stubGlobal for safe global mocking (avoids delete on non-configurable)
+      vi.stubGlobal('navigator', undefined);
 
       const localDetector = new BaseLocaleDetector();
       const languages = localDetector.getBrowserLanguages();
 
       expect(languages).toEqual([]);
 
-      Object.defineProperty(global, 'navigator', {
-        value: originalNavigator,
-        writable: true,
-      });
+      // vi.unstubAllGlobals() in afterEach restores navigator
     });
   });
 
@@ -829,6 +838,10 @@ describe('SmartLocaleDetector - Additional Methods', () => {
   beforeEach(() => {
     setupLocaleDetectorTest();
     smartDetector = new SmartLocaleDetector();
+  });
+
+  afterEach(() => {
+    cleanupLocaleDetectorTest();
   });
 
   describe('getDetectionQuality', () => {
