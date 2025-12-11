@@ -49,6 +49,8 @@
     "quality:monitor": "node scripts/quality-monitor.js",
     "quality:report:local": "node scripts/quality-monitor.js && open reports/quality/latest-quality-summary.json",
     "quality:gate": "node scripts/quality-gate.js",
+    "quality:gate:fast": "node scripts/quality-gate.js --mode=fast",
+    "quality:gate:full": "node scripts/quality-gate.js --mode=full",
     "quality:quick:staged": "node scripts/quality-quick-staged.js",
     "arch:metrics": "node scripts/architecture-metrics.js",
     "transform:barrel": "node scripts/transform-barrel-exports.js",

@@ -84,13 +84,20 @@ pre-push:
       run: pnpm validate:translations
       fail_text: '翻译验证失败 - 请确保所有翻译文件同步'
 
-    # 质量门禁（A+：在本地执行；可用 RUN_FAST_PUSH=1 跳过应急推送）
+    # 质量门禁
+    # - 本地: 使用 --mode=fast 跳过覆盖率和性能测试（<2分钟）
+    # - CI: 使用完整模式（由 CI 配置控制）
+    # - 紧急推送: 设置 RUN_FAST_PUSH=1 完全跳过
     quality-gate:
       run: |
         if [ -n "$RUN_FAST_PUSH" ]; then
           echo "⏭️  RUN_FAST_PUSH=1: 跳过质量门禁（仅用于紧急推送，CI 会兜底）";
-        else
+        elif [ -n "$CI" ]; then
+          echo "🤖 CI 环境: 运行完整质量门禁";
           pnpm quality:gate
+        else
+          echo "💻 本地环境: 运行快速质量门禁（跳过覆盖率和性能测试）";
+          pnpm quality:gate:fast
         fi
       fail_text: '质量门禁失败 - 请修复质量问题后再推送'
 

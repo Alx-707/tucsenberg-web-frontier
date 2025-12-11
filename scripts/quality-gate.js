@@ -4,12 +4,25 @@
  * 质量门禁系统
  *
  * 在CI/CD流程中执行质量检查，确保代码质量标准
+ *
+ * 运行模式：
+ * - 完整模式 (默认): node scripts/quality-gate.js
+ *   执行所有检查：代码质量、覆盖率、性能、安全
+ *
+ * - 快速模式: node scripts/quality-gate.js --mode=fast
+ *   仅执行快速检查：代码质量、安全（跳过覆盖率和性能测试）
+ *   适用于本地 pre-push hook，保持 <2 分钟的快速反馈
  */
 
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 const { execSync, spawnSync } = require('child_process');
+
+// 解析命令行参数
+const args = process.argv.slice(2);
+const isFastMode = args.includes('--mode=fast');
+const isFullMode = args.includes('--mode=full') || !isFastMode;
 
 const ESLINT_PACKAGE_PATH = require.resolve('eslint/package.json');
 const ESLINT_CLI_PATH = path.join(
@@ -72,10 +85,13 @@ function runEslintWithJson() {
 class QualityGate {
   constructor() {
     this.config = {
+      // 运行模式
+      fastMode: isFastMode,
+      fullMode: isFullMode,
       // 质量门禁标准
       gates: {
         coverage: {
-          enabled: true,
+          enabled: isFullMode, // 快速模式下禁用覆盖率检查
           thresholds: {
             lines: 85,
             functions: 85,
@@ -87,7 +103,7 @@ class QualityGate {
           diffWarningThreshold: 1.5, // 变更覆盖率较全量下降超过该阈值触发 warning（目标 1-2% 区间）
         },
         codeQuality: {
-          enabled: true,
+          enabled: true, // 始终启用代码质量检查
           thresholds: {
             eslintErrors: 0,
             eslintWarnings: 10,
@@ -96,7 +112,7 @@ class QualityGate {
           blocking: false, // 渐进式改进：代码质量问题警告但不阻塞
         },
         performance: {
-          enabled: true,
+          enabled: isFullMode, // 快速模式下禁用性能检查（避免重复构建和测试）
           thresholds: {
             buildTime: 120000, // 2分钟
             testTime: 180000, // 3分钟
@@ -104,7 +120,7 @@ class QualityGate {
           blocking: false, // 性能问题不阻塞，但会警告
         },
         security: {
-          enabled: true,
+          enabled: true, // 始终启用安全检查（速度快）
           thresholds: {
             vulnerabilities: 0,
             highSeverity: 0,
@@ -301,7 +317,14 @@ class QualityGate {
     console.log('🚪 开始执行质量门禁检查...\n');
     console.log(`🌿 分支: ${this.config.branch}`);
     console.log(`🏗️  环境: ${this.config.environment}`);
-    console.log(`🤖 CI模式: ${this.config.ciMode ? '是' : '否'}\n`);
+    console.log(`🤖 CI模式: ${this.config.ciMode ? '是' : '否'}`);
+    console.log(
+      `⚡ 运行模式: ${this.config.fastMode ? '快速 (--mode=fast)' : '完整'}`,
+    );
+    if (this.config.fastMode) {
+      console.log('   跳过: 覆盖率检查、性能测试（将在 CI 中执行）');
+    }
+    console.log('');
 
     // 执行各项门禁检查
     if (this.config.gates.codeQuality.enabled) {
@@ -310,10 +333,26 @@ class QualityGate {
 
     if (this.config.gates.coverage.enabled) {
       this.results.gates.coverage = await this.checkCoverage();
+    } else {
+      this.results.gates.coverage = {
+        name: 'Coverage',
+        status: 'skipped',
+        checks: {},
+        blocking: false,
+        issues: ['快速模式下跳过覆盖率检查'],
+      };
     }
 
     if (this.config.gates.performance.enabled) {
       this.results.gates.performance = await this.checkPerformance();
+    } else {
+      this.results.gates.performance = {
+        name: 'Performance',
+        status: 'skipped',
+        checks: {},
+        blocking: false,
+        issues: ['快速模式下跳过性能测试'],
+      };
     }
 
     if (this.config.gates.security.enabled) {
@@ -738,6 +777,13 @@ class QualityGate {
         case 'warning':
           this.results.summary.warnings++;
           break;
+        case 'skipped':
+          // skipped 状态不计入通过/失败，仅记录
+          if (!this.results.summary.skipped) {
+            this.results.summary.skipped = 0;
+          }
+          this.results.summary.skipped++;
+          break;
       }
     });
   }
@@ -752,6 +798,9 @@ class QualityGate {
     console.log(`✅ 通过: ${this.results.summary.passed}`);
     console.log(`❌ 失败: ${this.results.summary.failed}`);
     console.log(`⚠️  警告: ${this.results.summary.warnings}`);
+    if (this.results.summary.skipped) {
+      console.log(`⏭️  跳过: ${this.results.summary.skipped}`);
+    }
     console.log(`🚫 阻塞构建: ${this.results.summary.blocked ? '是' : '否'}`);
 
     console.log('\n📋 详细结果:');
@@ -759,7 +808,7 @@ class QualityGate {
       console.log(
         `${this.getStatusEmoji(gate.status)} ${gate.name}: ${gate.status}`,
       );
-      if (gate.issues.length > 0) {
+      if (gate.issues && gate.issues.length > 0) {
         gate.issues.forEach((issue) => {
           console.log(`   - ${issue}`);
         });
@@ -843,6 +892,8 @@ class QualityGate {
         return '⚠️';
       case 'error':
         return '💥';
+      case 'skipped':
+        return '⏭️';
       default:
         return '❓';
     }
