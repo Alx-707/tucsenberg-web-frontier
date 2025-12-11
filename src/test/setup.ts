@@ -13,6 +13,9 @@ import React from 'react';
 // 扩展 Vitest 的 expect 断言
 import type { TestingLibraryMatchers } from '@testing-library/jest-dom/matchers';
 
+// Mock CSS imports to avoid PostCSS processing in tests
+vi.mock('@/app/globals.css', () => ({ default: {} }));
+
 // Mock next/font/local for local font loading (P2-1 Phase 3: Geist Sans Latin subset)
 vi.mock('next/font/local', () => ({
   default: vi.fn(() => ({
@@ -1385,6 +1388,9 @@ vi.mock('next-intl/server', () => ({
     number: vi.fn(),
     relativeTime: vi.fn(),
   })),
+  setRequestLocale: vi.fn(),
+  getRequestConfig: vi.fn(() => ({})),
+  unstable_setRequestLocale: vi.fn(),
 }));
 
 // Mock @/i18n/routing - 提供完整的路由Mock配置
@@ -1618,8 +1624,8 @@ vi.mock('@t3-oss/env-nextjs', () => ({
 }));
 
 // Mock the env module directly
-vi.mock('@/lib/env', () => ({
-  env: {
+vi.mock('@/lib/env', () => {
+  const mockEnv = {
     NODE_ENV: 'test',
     TURNSTILE_SECRET_KEY: 'test-secret-key',
     RESEND_API_KEY: 'test-resend-key',
@@ -1638,20 +1644,34 @@ vi.mock('@/lib/env', () => ({
     WHATSAPP_PHONE_NUMBER_ID: 'test-phone-id',
     WHATSAPP_BUSINESS_ACCOUNT_ID: 'test-business-id',
     WHATSAPP_WEBHOOK_VERIFY_TOKEN: 'test-webhook-token',
-  },
-  envUtils: {
-    isDevelopment: () => false,
-    isProduction: () => false,
-    isTest: () => true,
-    getWhatsAppToken: () => 'test-whatsapp-token',
-    getWhatsAppPhoneId: () => 'test-phone-id',
-    getTurnstileSecret: () => 'test-secret-key',
-    getTurnstileSiteKey: () => 'test-site-key',
-    getResendApiKey: () => 'test-resend-key',
-    getAirtableToken: () => 'test-airtable-key',
-    getAirtableBaseId: () => 'test-base-id',
-  },
-}));
+  } as Record<string, string | boolean | number | undefined>;
+
+  return {
+    env: mockEnv,
+    getEnvVar: (key: string) => mockEnv[key],
+    requireEnvVar: (key: string) => {
+      const value = mockEnv[key];
+      if (!value || typeof value === 'boolean' || typeof value === 'number') {
+        throw new Error(
+          `Required environment variable ${key} is not set or is not a string`,
+        );
+      }
+      return value;
+    },
+    envUtils: {
+      isDevelopment: () => false,
+      isProduction: () => false,
+      isTest: () => true,
+      getWhatsAppToken: () => 'test-whatsapp-token',
+      getWhatsAppPhoneId: () => 'test-phone-id',
+      getTurnstileSecret: () => 'test-secret-key',
+      getTurnstileSiteKey: () => 'test-site-key',
+      getResendApiKey: () => 'test-resend-key',
+      getAirtableToken: () => 'test-airtable-key',
+      getAirtableBaseId: () => 'test-base-id',
+    },
+  };
+});
 
 // 不Mock validations模块，保留真实验证逻辑
 

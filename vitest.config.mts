@@ -249,96 +249,100 @@ export default defineConfig({
         'src/types/**',
       ],
       thresholds: {
-        // 覆盖率分阶段目标（Phase 1 → 65% | Phase 2 → 75% | Phase 3 → 80%）
+        // 全局覆盖率目标 → 85%（统一标准，2025年12月启用）
         'global': {
-          branches: 65,
-          functions: 65,
-          lines: 65,
-          statements: 65,
+          branches: 85,
+          functions: 85,
+          lines: 85,
+          statements: 85,
         },
 
-        // 关键业务逻辑 - 保持高标准但现实化
+        // 核心业务模块 - 90-92% 高标准
+        // content-parser.ts functions 阈值降低到 80%，因为 yaml safeLoad polyfill
+        // 是在模块加载时按条件执行的兼容性代码，无法通过正常测试路径触发
         'src/lib/content-parser.ts': {
-          branches: 85, // 适度降低，保持质量导向
-          functions: 80, // 根据最新覆盖率 (≈83%) 下调至可达成区间，仍高于55%短期目标
-          lines: 90, // 适度降低，保持质量导向
-          statements: 90, // 适度降低，保持质量导向
+          branches: 90,
+          functions: 80,
+          lines: 92,
+          statements: 92,
         },
         'src/lib/content-validation.ts': {
-          branches: 85,
-          functions: 90,
-          lines: 90,
-          statements: 90,
+          branches: 90,
+          functions: 92,
+          lines: 92,
+          statements: 92,
         },
+        // seo-metadata.ts branches 降低到 88%，因为部分分支涉及静态 JSON 翻译
+        // 的条件判断（如空 siteName、缺失 keywords），在单元测试中难以通过动态 mock 触发
         'src/lib/seo-metadata.ts': {
-          branches: 85,
-          functions: 90,
-          lines: 90,
-          statements: 90,
+          branches: 88,
+          functions: 92,
+          lines: 92,
+          statements: 92,
         },
         'src/lib/structured-data.ts': {
-          branches: 85,
-          functions: 90,
-          lines: 90,
-          statements: 90,
+          branches: 90,
+          functions: 92,
+          lines: 92,
+          statements: 92,
         },
 
-        // 安全相关 - 基于当前89.9%设置可达成目标
+        // 安全模块 - 90-92% 高标准
         'src/lib/accessibility.ts': {
-          branches: 85, // 降低至可达成水平
-          functions: 90, // 适度降低
-          lines: 90, // 适度降低
-          statements: 90, // 适度降低
+          branches: 90,
+          functions: 92,
+          lines: 92,
+          statements: 92,
         },
         'src/services/url-generator.ts': {
-          branches: 85,
-          functions: 90,
-          lines: 90,
-          statements: 90,
+          branches: 90,
+          functions: 92,
+          lines: 92,
+          statements: 92,
         },
 
-        // 性能监控 - 基于当前71.42%设置可达成目标
+        // 性能监控模块 - 85-88%
         'src/lib/enhanced-web-vitals.ts': {
-          branches: 70, // 基于当前71.42%，略微降低确保通过
-          functions: 80, // 适度降低
-          lines: 80, // 适度降低
-          statements: 80, // 适度降低
+          branches: 85,
+          functions: 88,
+          lines: 88,
+          statements: 88,
         },
         'src/lib/theme-analytics.ts': {
-          branches: 80,
-          functions: 85,
-          lines: 85,
-          statements: 85,
+          branches: 85,
+          functions: 88,
+          lines: 88,
+          statements: 88,
         },
 
-        // 国际化功能 - 适度标准
+        // 国际化模块 - 85-88%
         'src/lib/locale-detection.ts': {
-          branches: 80,
-          functions: 85,
-          lines: 85,
-          statements: 85,
+          branches: 85,
+          functions: 88,
+          lines: 88,
+          statements: 88,
         },
         'src/lib/translation-manager.ts': {
-          branches: 80,
-          functions: 85,
-          lines: 85,
-          statements: 85,
+          branches: 85,
+          functions: 88,
+          lines: 88,
+          statements: 88,
         },
 
-        // UI组件 - 基于当前42.61%设置现实目标
+        // UI组件 - 70% 基础标准
         'src/components/**/*.{ts,tsx}': {
-          branches: 40, // 基于当前实际水平
-          functions: 42, // 基于当前实际水平
-          lines: 42, // 基于当前42.61%，略微降低确保通过
-          statements: 42, // 基于当前42.61%，略微降低确保通过
+          branches: 70,
+          functions: 70,
+          lines: 70,
+          statements: 70,
         },
 
-        // 工具函数 - 已达标，保持高标准
+        // 工具函数 - 92-95% 最高标准
         'src/lib/utils.ts': {
-          branches: 90, // 当前100%，保持高标准
-          functions: 95, // 当前100%，保持高标准
-          lines: 95, // 当前100%，保持高标准
-          statements: 95, // 当前100%，保持高标准
+          branches: 92,
+          functions: 95,
+          lines: 95,
+          statements: 95,
         },
       },
     },
@@ -393,12 +397,18 @@ export default defineConfig({
 
   // 路径别名配置 - 统一使用单一别名符合规则要求
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@messages': resolve(__dirname, './messages'),
+    alias: [
+      // Stub CSS imports to avoid PostCSS processing in tests (must come before @ alias)
+      {
+        find: '@/app/globals.css',
+        replacement: resolve(__dirname, './src/test/css-stub.ts'),
+      },
       // Fix directory import resolution in Vitest for packages that import "next/font/local"
-      'next/font/local': 'next/font/local/index.js',
-    },
+      { find: 'next/font/local', replacement: 'next/font/local/index.js' },
+      // Main path aliases
+      { find: '@messages', replacement: resolve(__dirname, './messages') },
+      { find: '@', replacement: resolve(__dirname, './src') },
+    ],
   },
 
   // 定义全局变量 - React 19 兼容性增强

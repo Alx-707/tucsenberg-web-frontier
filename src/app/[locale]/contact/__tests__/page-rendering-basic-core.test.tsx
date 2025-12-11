@@ -24,6 +24,7 @@ const { mockGetTranslations } = vi.hoisted(() => {
 
 vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
+  setRequestLocale: vi.fn(),
 }));
 
 // 在测试环境中将 cacheLife 处理为 no-op，避免依赖 Next.js cacheComponents 运行时配置

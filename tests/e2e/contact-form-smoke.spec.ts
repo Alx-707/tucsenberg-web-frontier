@@ -508,6 +508,15 @@ test.describe('Contact Form - Smoke Tests (Staging)', () => {
         'This is a test message from E2E tests.',
       );
 
+      // 勾选隐私政策 checkbox（必填字段，与中文版测试保持一致）
+      // 注意：acceptPrivacy 是必填字段，不勾选会导致表单验证失败
+      const privacyCheckbox = page.getByRole('checkbox', {
+        name: /privacy|accept/i,
+      });
+      if (await privacyCheckbox.isVisible()) {
+        await privacyCheckbox.check();
+      }
+
       // 检查提交按钮
       const submitButton = page.getByRole('button', {
         name: /send message|submit/i,

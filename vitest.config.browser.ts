@@ -108,13 +108,13 @@ export default defineConfig({
         '**/__mocks__/**',
         '**/test-utils/**',
       ],
-      // 浏览器测试覆盖率阈值（相对宽松）
+      // 全局覆盖率目标 → 85%（与主配置保持一致）
       thresholds: {
         global: {
-          branches: 40,
-          functions: 50,
-          lines: 50,
-          statements: 50,
+          branches: 85,
+          functions: 85,
+          lines: 85,
+          statements: 85,
         },
       },
     },

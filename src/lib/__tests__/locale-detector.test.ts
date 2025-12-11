@@ -1,5 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { SmartLocaleDetector } from '@/lib/locale-detector';
+// Import factory functions and convenience methods for testing
+import {
+  BaseLocaleDetector,
+  createBaseLocaleDetector,
+  createSmartLocaleDetector,
+  detectCurrentLocale,
+  detectCurrentLocaleSync,
+  SmartLocaleDetector,
+} from '@/lib/locale-detector';
 import type {
   MockGeolocation,
   MockStorageManager,
@@ -604,6 +612,346 @@ describe('SmartLocaleDetector - Error Handling and Performance', () => {
       const result = detector.detectFromBrowser();
 
       expect(result).toBe('en');
+    });
+  });
+});
+
+describe('Factory Functions', () => {
+  beforeEach(() => {
+    setupLocaleDetectorTest();
+  });
+
+  describe('createSmartLocaleDetector', () => {
+    it('should create a SmartLocaleDetector instance', () => {
+      const detector = createSmartLocaleDetector();
+
+      expect(detector).toBeInstanceOf(SmartLocaleDetector);
+    });
+
+    it('should create detector with working methods', () => {
+      const detector = createSmartLocaleDetector();
+
+      // Should have all expected methods
+      expect(typeof detector.detectSmartLocale).toBe('function');
+      expect(typeof detector.detectBestLocale).toBe('function');
+      expect(typeof detector.detectQuickLocale).toBe('function');
+      expect(typeof detector.detectFromBrowser).toBe('function');
+      expect(typeof detector.detectFromTimeZone).toBe('function');
+      expect(typeof detector.getDetectionQuality).toBe('function');
+    });
+  });
+
+  describe('createBaseLocaleDetector', () => {
+    it('should create a BaseLocaleDetector instance', () => {
+      const detector = createBaseLocaleDetector();
+
+      expect(detector).toBeInstanceOf(BaseLocaleDetector);
+    });
+
+    it('should create detector with base methods', () => {
+      const detector = createBaseLocaleDetector();
+
+      expect(typeof detector.detectFromBrowser).toBe('function');
+      expect(typeof detector.detectFromTimeZone).toBe('function');
+      expect(typeof detector.detectFromGeolocation).toBe('function');
+      expect(typeof detector.detectFromIP).toBe('function');
+      expect(typeof detector.getBrowserLanguages).toBe('function');
+      expect(typeof detector.getTimeZoneInfo).toBe('function');
+    });
+  });
+});
+
+describe('Convenience Functions', () => {
+  beforeEach(() => {
+    setupLocaleDetectorTest();
+  });
+
+  describe('detectCurrentLocale', () => {
+    it('should return a detection result', async () => {
+      const result = await detectCurrentLocale();
+
+      expect(result).toHaveProperty('locale');
+      expect(result).toHaveProperty('source');
+      expect(result).toHaveProperty('confidence');
+    });
+
+    it('should use user override when set', async () => {
+      mockStorageManager.getUserOverride.mockReturnValue('zh');
+
+      const result = await detectCurrentLocale();
+
+      expect(result.locale).toBe('zh');
+      expect(result.source).toBe('user');
+    });
+  });
+
+  describe('detectCurrentLocaleSync', () => {
+    it('should return a detection result synchronously', () => {
+      const result = detectCurrentLocaleSync();
+
+      expect(result).toHaveProperty('locale');
+      expect(result).toHaveProperty('source');
+      expect(result).toHaveProperty('confidence');
+    });
+
+    it('should use user override when set', () => {
+      mockStorageManager.getUserOverride.mockReturnValue('zh');
+
+      const result = detectCurrentLocaleSync();
+
+      expect(result.locale).toBe('zh');
+      expect(result.source).toBe('user');
+    });
+
+    it('should detect from browser when no override', () => {
+      mockStorageManager.getUserOverride.mockReturnValue(null);
+      mockNavigator.language = 'zh-CN';
+
+      const result = detectCurrentLocaleSync();
+
+      expect(['zh', 'en']).toContain(result.locale);
+    });
+  });
+});
+
+describe('BaseLocaleDetector - Additional Coverage', () => {
+  let baseDetector: BaseLocaleDetector;
+
+  beforeEach(() => {
+    setupLocaleDetectorTest();
+    baseDetector = new BaseLocaleDetector();
+  });
+
+  describe('getBrowserLanguages', () => {
+    it('should return browser languages array', () => {
+      const languages = baseDetector.getBrowserLanguages();
+
+      expect(Array.isArray(languages)).toBe(true);
+    });
+
+    it('should handle missing navigator.languages', () => {
+      const originalLanguages = navigator.languages;
+      Object.defineProperty(navigator, 'languages', {
+        value: undefined,
+        writable: true,
+      });
+
+      const languages = baseDetector.getBrowserLanguages();
+
+      expect(languages).toEqual([navigator.language]);
+
+      Object.defineProperty(navigator, 'languages', {
+        value: originalLanguages,
+        writable: true,
+      });
+    });
+
+    it('should return empty array when navigator unavailable', () => {
+      const originalNavigator = global.navigator;
+      // @ts-expect-error - testing undefined navigator
+      delete global.navigator;
+
+      const localDetector = new BaseLocaleDetector();
+      const languages = localDetector.getBrowserLanguages();
+
+      expect(languages).toEqual([]);
+
+      Object.defineProperty(global, 'navigator', {
+        value: originalNavigator,
+        writable: true,
+      });
+    });
+  });
+
+  describe('getTimeZoneInfo', () => {
+    it('should return timezone info when Intl is available', () => {
+      // Ensure Intl is properly mocked
+      Object.defineProperty(global, 'Intl', {
+        value: {
+          DateTimeFormat: vi.fn().mockImplementation(() => ({
+            resolvedOptions: vi
+              .fn()
+              .mockReturnValue({ timeZone: 'America/New_York' }),
+          })),
+        },
+        writable: true,
+      });
+
+      const info = baseDetector.getTimeZoneInfo();
+
+      expect(info).not.toBeNull();
+      expect(info).toHaveProperty('timeZone');
+      expect(info).toHaveProperty('offset');
+    });
+
+    it('should return null when Intl unavailable', () => {
+      const originalIntl = global.Intl;
+      // @ts-expect-error - testing undefined Intl
+      delete global.Intl;
+
+      const localDetector = new BaseLocaleDetector();
+      const info = localDetector.getTimeZoneInfo();
+
+      expect(info).toBeNull();
+
+      Object.defineProperty(global, 'Intl', {
+        value: originalIntl,
+        writable: true,
+      });
+    });
+  });
+
+  describe('detectFromIP', () => {
+    it('should handle network errors gracefully', async () => {
+      vi.mocked(global.fetch).mockRejectedValueOnce(new Error('Network error'));
+
+      const result = await baseDetector.detectFromIP();
+
+      expect(result).toBe('en');
+    });
+
+    it('should handle API response with country_code field', async () => {
+      vi.mocked(global.fetch).mockResolvedValueOnce({
+        ok: true,
+        json: vi.fn().mockResolvedValue({ country_code: 'CN' }),
+      } as unknown as Response);
+
+      const result = await baseDetector.detectFromIP();
+
+      expect(result).toBe('zh');
+    });
+  });
+});
+
+describe('SmartLocaleDetector - Additional Methods', () => {
+  let smartDetector: SmartLocaleDetector;
+
+  beforeEach(() => {
+    setupLocaleDetectorTest();
+    smartDetector = new SmartLocaleDetector();
+  });
+
+  describe('getDetectionQuality', () => {
+    it('should return high quality for high confidence', () => {
+      const result = {
+        locale: 'en' as const,
+        source: 'user' as const,
+        confidence: 0.95,
+        details: {},
+      };
+
+      const quality = smartDetector.getDetectionQuality(result);
+
+      expect(quality.quality).toBe('high');
+      expect(quality.reliability).toBeGreaterThanOrEqual(0.95);
+    });
+
+    it('should return medium quality for medium confidence', () => {
+      const result = {
+        locale: 'en' as const,
+        source: 'browser' as const,
+        confidence: 0.6,
+        details: {},
+      };
+
+      const quality = smartDetector.getDetectionQuality(result);
+
+      expect(quality.quality).toBe('medium');
+    });
+
+    it('should return low quality for low confidence', () => {
+      const result = {
+        locale: 'en' as const,
+        source: 'default' as const,
+        confidence: 0.3,
+        details: {},
+      };
+
+      const quality = smartDetector.getDetectionQuality(result);
+
+      expect(quality.quality).toBe('low');
+      expect(quality.recommendations.length).toBeGreaterThan(0);
+    });
+
+    it('should add recommendations for default source', () => {
+      const result = {
+        locale: 'en' as const,
+        source: 'default' as const,
+        confidence: 0.5,
+        details: {},
+      };
+
+      const quality = smartDetector.getDetectionQuality(result);
+
+      expect(quality.recommendations).toContain('检测失败，使用了默认语言');
+    });
+
+    it('should add bonus for combined source', () => {
+      const result = {
+        locale: 'en' as const,
+        source: 'combined' as const,
+        confidence: 0.7,
+        details: {},
+      };
+
+      const quality = smartDetector.getDetectionQuality(result);
+
+      expect(quality.reliability).toBeGreaterThan(0.7);
+    });
+  });
+
+  describe('detectBestLocale', () => {
+    it('should return stored preference first', async () => {
+      mockStorageManager.getUserPreference.mockReturnValue({
+        locale: 'zh',
+        confidence: 0.9,
+      });
+
+      const result = await smartDetector.detectBestLocale();
+
+      expect(result.locale).toBe('zh');
+      expect(result.source).toBe('stored');
+    });
+
+    it('should return user override when no preference', async () => {
+      mockStorageManager.getUserPreference.mockReturnValue(null);
+      mockStorageManager.getUserOverride.mockReturnValue('zh');
+
+      const result = await smartDetector.detectBestLocale();
+
+      expect(result.locale).toBe('zh');
+      expect(result.source).toBe('user');
+    });
+
+    it('should use default locale when all detection fails', async () => {
+      mockStorageManager.getUserPreference.mockReturnValue(null);
+      mockStorageManager.getUserOverride.mockReturnValue(null);
+      mockNavigator.language = 'invalid';
+      vi.spyOn(smartDetector, 'detectFromGeolocation').mockResolvedValue('en');
+
+      const result = await smartDetector.detectBestLocale();
+
+      expect(result.locale).toBeDefined();
+    });
+  });
+
+  describe('detectQuickLocale', () => {
+    it('should return browser locale when no user settings', () => {
+      mockStorageManager.getUserOverride.mockReturnValue(null);
+      mockNavigator.language = 'zh-CN';
+
+      const result = smartDetector.detectQuickLocale();
+
+      expect(['zh', 'en']).toContain(result.locale);
+    });
+
+    it('should try timezone detection when browser fails', () => {
+      mockStorageManager.getUserOverride.mockReturnValue(null);
+      mockNavigator.language = 'invalid';
+
+      const result = smartDetector.detectQuickLocale();
+
+      expect(result.locale).toBeDefined();
     });
   });
 });

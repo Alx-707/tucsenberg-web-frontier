@@ -1,3 +1,22 @@
+<!-- OPENSPEC:START -->
+# OpenSpec Instructions
+
+These instructions are for AI assistants working in this project.
+
+Always open `@/openspec/AGENTS.md` when the request:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
+
+Use `@/openspec/AGENTS.md` to learn:
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
+
+Keep this managed block so 'openspec update' can refresh the instructions.
+
+<!-- OPENSPEC:END -->
+
 # CLAUDE.md
 
 ## Project: B2B Foreign Trade Enterprise Website Template
@@ -43,24 +62,7 @@ pnpm test         # Vitest unit tests
 1. **TypeScript strict** - No `any`, prefer `interface`
 2. **Server Components first** - Use `"use client"` only for interactivity
 3. **i18n required** - All user-facing text must use translation keys
-4. **Complexity limits** - Function ≤120 lines, File ≤500 lines (see `coding-standards.md`)
-
----
-
-## Agent Documentation (Progressive Disclosure)
-
-Read these **only when relevant** to your current task:
-
-| Document | When to Read |
-|----------|--------------|
-| `agent_docs/architecture.md` | Routing, data fetching, Cache Components, RSC boundaries |
-| `agent_docs/coding-standards.md` | Naming, imports, complexity, bundle budgets |
-| `agent_docs/content.md` | MDX content creation, frontmatter schemas, B2B product fields |
-| `agent_docs/testing.md` | Writing tests, vi.hoisted, Mock system |
-| `agent_docs/i18n.md` | Translations, locales, critical/deferred split |
-| `agent_docs/security.md` | Input validation, security rules, sensitive data |
-| `agent_docs/ui-system.md` | Components, styling, design specs |
-| `agent_docs/quality-gates.md` | Complexity exemptions, CI/CD, magic numbers |
+4. **Complexity limits** - Function ≤120 lines, File ≤500 lines
 
 ---
 

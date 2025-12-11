@@ -79,10 +79,11 @@ class QualityGate {
           thresholds: {
             lines: 85,
             functions: 85,
-            branches: 80,
+            branches: 85,
             statements: 85,
           },
-          blocking: false, // 渐进式改进：覆盖率不达标时警告但不阻塞
+          blocking: true, // 启用阻断模式：覆盖率不达标时阻塞构建
+          diffCoverageThreshold: 90, // 增量覆盖率阈值：变更代码需达到90%覆盖率
           diffWarningThreshold: 1.5, // 变更覆盖率较全量下降超过该阈值触发 warning（目标 1-2% 区间）
         },
         codeQuality: {
@@ -212,24 +213,50 @@ class QualityGate {
     if (changedFiles.length === 0) return null;
 
     const entries = this.normalizeCoverageEntries(coverageData);
-    let covered = 0;
-    let total = 0;
+    const fileMetrics = [];
+    let totalCovered = 0;
+    let totalLines = 0;
 
     changedFiles.forEach((file) => {
       const summary = entries.get(file);
       if (summary?.lines?.total) {
-        covered += summary.lines.covered || 0;
-        total += summary.lines.total || 0;
+        const fileCovered = summary.lines.covered || 0;
+        const fileTotal = summary.lines.total || 0;
+        const filePct = fileTotal > 0 ? (fileCovered / fileTotal) * 100 : 0;
+
+        fileMetrics.push({
+          file,
+          covered: fileCovered,
+          total: fileTotal,
+          pct: filePct,
+        });
+
+        totalCovered += fileCovered;
+        totalLines += fileTotal;
       }
     });
 
-    if (total === 0) return { pct: 0, drop: 0 };
+    if (totalLines === 0) {
+      return {
+        pct: 0,
+        drop: 0,
+        fileMetrics,
+        totalCovered,
+        totalLines,
+        changedFilesCount: changedFiles.length,
+      };
+    }
 
-    const pct = (covered / total) * 100;
+    const pct = (totalCovered / totalLines) * 100;
     const overall = coverageData?.total?.lines?.pct || pct;
+
     return {
       pct,
       drop: overall - pct,
+      fileMetrics,
+      totalCovered,
+      totalLines,
+      changedFilesCount: changedFiles.length,
     };
   }
 
@@ -404,16 +431,50 @@ class QualityGate {
           gate.status = 'passed';
         }
 
-        // 变更覆盖率对比（diff coverage）
+        // 增量覆盖率检查（diff coverage）
         const diffCoverage = this.calculateDiffCoverage(coverageData);
-        if (
-          diffCoverage &&
-          diffCoverage.drop > this.config.gates.coverage.diffWarningThreshold
-        ) {
-          gate.status = gate.status === 'passed' ? 'warning' : gate.status;
-          gate.issues.push(
-            `变更覆盖率下降 ${diffCoverage.drop.toFixed(2)}%（变更 ${diffCoverage.pct.toFixed(2)}% vs 全量 ${(coverageData.total?.lines?.pct || 0).toFixed(2)}%）`,
-          );
+        if (diffCoverage) {
+          const threshold = this.config.gates.coverage.diffCoverageThreshold;
+          const warningThreshold =
+            this.config.gates.coverage.diffWarningThreshold;
+
+          // 检查增量覆盖率是否达到阈值
+          if (diffCoverage.pct < threshold) {
+            const shortfall = threshold - diffCoverage.pct;
+            gate.status = gate.blocking ? 'failed' : 'warning';
+            gate.issues.push(
+              `增量覆盖率不达标: ${diffCoverage.pct.toFixed(2)}% < ${threshold}%（差距 ${shortfall.toFixed(2)}%，变更 ${diffCoverage.changedFilesCount} 个文件，${diffCoverage.totalCovered}/${diffCoverage.totalLines} 行覆盖）`,
+            );
+
+            // 列出覆盖率低于阈值的文件
+            const lowCoverageFiles = diffCoverage.fileMetrics.filter(
+              (f) => f.pct < threshold,
+            );
+            if (lowCoverageFiles.length > 0 && lowCoverageFiles.length <= 5) {
+              lowCoverageFiles.forEach((f) => {
+                gate.issues.push(
+                  `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
+                );
+              });
+            } else if (lowCoverageFiles.length > 5) {
+              gate.issues.push(
+                `  共 ${lowCoverageFiles.length} 个文件覆盖率不达标（仅显示前5个）`,
+              );
+              lowCoverageFiles.slice(0, 5).forEach((f) => {
+                gate.issues.push(
+                  `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
+                );
+              });
+            }
+          }
+
+          // 检查增量覆盖率下降幅度
+          if (diffCoverage.drop > warningThreshold) {
+            gate.status = gate.status === 'passed' ? 'warning' : gate.status;
+            gate.issues.push(
+              `增量覆盖率较全量下降 ${diffCoverage.drop.toFixed(2)}%（增量 ${diffCoverage.pct.toFixed(2)}% vs 全量 ${(coverageData.total?.lines?.pct || 0).toFixed(2)}%）`,
+            );
+          }
         }
       } else {
         gate.status = 'error';
@@ -663,6 +724,12 @@ class QualityGate {
           this.results.summary.passed++;
           break;
         case 'failed':
+          this.results.summary.failed++;
+          if (gate.blocking) {
+            this.results.summary.blocked = true;
+          }
+          break;
+        case 'error':
           this.results.summary.failed++;
           if (gate.blocking) {
             this.results.summary.blocked = true;

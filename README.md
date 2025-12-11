@@ -1,5 +1,8 @@
 # 🚀 Tucsenberg Web Frontier
 
+[![Test Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen)](./reports/coverage/)
+[![CI/CD](https://github.com/tucsenberg/tucsenberg-web-frontier/actions/workflows/ci.yml/badge.svg)](https://github.com/tucsenberg/tucsenberg-web-frontier/actions/workflows/ci.yml)
+
 现代化B2B企业网站模板，采用Next.js 16 + React 19 + TypeScript 5.9 + Tailwind CSS
 4技术栈，实现英中双语国际化、主题切换、响应式设计，确保企业级质量标准。
 

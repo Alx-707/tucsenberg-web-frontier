@@ -14,6 +14,7 @@ const { mockGetTranslations, mockGetProductBySlugCached, mockGetAllProducts } =
 
 vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
+  setRequestLocale: vi.fn(),
 }));
 
 vi.mock('@/lib/content/products', () => ({

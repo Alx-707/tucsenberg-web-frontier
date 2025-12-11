@@ -11,6 +11,7 @@ const { mockGetTranslations, mockGetPageBySlug } = vi.hoisted(() => ({
 
 vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
+  setRequestLocale: vi.fn(),
 }));
 
 vi.mock('@/lib/content', () => ({

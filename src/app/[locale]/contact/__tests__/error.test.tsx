@@ -1,0 +1,303 @@
+import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import ContactRouteError from '../error';
+
+// Mock Sentry using vi.hoisted
+const { mockCaptureException } = vi.hoisted(() => ({
+  mockCaptureException: vi.fn(),
+}));
+
+vi.mock('@/lib/sentry-client', () => ({
+  captureException: mockCaptureException,
+}));
+
+// Mock Button component
+vi.mock('@/components/ui/button', () => ({
+  Button: ({
+    children,
+    onClick,
+    variant,
+    asChild,
+    type,
+  }: React.PropsWithChildren<{
+    onClick?: () => void;
+    variant?: string;
+    asChild?: boolean;
+    type?: string;
+  }>) => {
+    if (asChild) {
+      // When asChild is true, render children directly (for Link wrapper)
+      return <>{children}</>;
+    }
+    return (
+      <button
+        data-testid={variant === 'outline' ? 'go-home-button' : 'retry-button'}
+        onClick={onClick}
+        type={type as 'button' | 'submit' | 'reset' | undefined}
+      >
+        {children}
+      </button>
+    );
+  },
+}));
+
+// Mock next/link
+vi.mock('next/link', () => ({
+  default: ({ children, href }: React.PropsWithChildren<{ href: string }>) => (
+    <a
+      href={href}
+      data-testid='home-link'
+    >
+      {children}
+    </a>
+  ),
+}));
+
+describe('ContactRouteError', () => {
+  const mockReset = vi.fn();
+  const mockError = new Error('Contact form submission failed');
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('rendering', () => {
+    it('should render error page structure', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(screen.getByText('联系表单暂时不可用')).toBeInTheDocument();
+    });
+
+    it('should render error description text', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(screen.getByText(/我们的团队会立即查看问题/)).toBeInTheDocument();
+    });
+
+    it('should render retry button', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(screen.getByText('重试')).toBeInTheDocument();
+    });
+
+    it('should render return home link', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(screen.getByText('返回首页')).toBeInTheDocument();
+    });
+
+    it('should have correct home link href', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const homeLink = screen.getByTestId('home-link');
+      expect(homeLink).toHaveAttribute('href', '/');
+    });
+  });
+
+  describe('Sentry integration', () => {
+    it('should capture exception with Sentry on mount', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(mockCaptureException).toHaveBeenCalledWith(mockError);
+    });
+
+    it('should capture exception only once on initial mount', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(mockCaptureException).toHaveBeenCalledTimes(1);
+    });
+
+    it('should capture new error when error prop changes', () => {
+      const { rerender } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const newError = new Error('New contact error');
+      rerender(
+        <ContactRouteError
+          error={newError}
+          reset={mockReset}
+        />,
+      );
+
+      expect(mockCaptureException).toHaveBeenCalledTimes(2);
+      expect(mockCaptureException).toHaveBeenLastCalledWith(newError);
+    });
+  });
+
+  describe('button interactions', () => {
+    it('should call reset when retry button is clicked', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      fireEvent.click(screen.getByTestId('retry-button'));
+
+      expect(mockReset).toHaveBeenCalledTimes(1);
+    });
+
+    it('should have correct button type attribute', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const retryButton = screen.getByTestId('retry-button');
+      expect(retryButton).toHaveAttribute('type', 'button');
+    });
+  });
+
+  describe('error with digest', () => {
+    it('should handle error with digest property', () => {
+      const errorWithDigest = Object.assign(new Error('Digest error'), {
+        digest: 'contact-error-digest-123',
+      });
+
+      render(
+        <ContactRouteError
+          error={errorWithDigest}
+          reset={mockReset}
+        />,
+      );
+
+      expect(mockCaptureException).toHaveBeenCalledWith(errorWithDigest);
+    });
+  });
+
+  describe('styling', () => {
+    it('should have centered layout container', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const mainContainer = container.querySelector('.flex.min-h-\\[60vh\\]');
+      expect(mainContainer).toBeInTheDocument();
+    });
+
+    it('should have flex column layout', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const mainContainer = container.querySelector('.flex-col');
+      expect(mainContainer).toBeInTheDocument();
+    });
+
+    it('should have items-center for centering', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const mainContainer = container.querySelector('.items-center');
+      expect(mainContainer).toBeInTheDocument();
+    });
+
+    it('should have max-width container for content', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const contentContainer = container.querySelector('.max-w-lg');
+      expect(contentContainer).toBeInTheDocument();
+    });
+
+    it('should have button group with gap', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const buttonGroup = container.querySelector('.gap-3');
+      expect(buttonGroup).toBeInTheDocument();
+    });
+  });
+
+  describe('accessibility', () => {
+    it('should have proper heading structure', () => {
+      render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const heading = screen.getByRole('heading', { level: 2 });
+      expect(heading).toBeInTheDocument();
+      expect(heading).toHaveTextContent('联系表单暂时不可用');
+    });
+
+    it('should have descriptive paragraph', () => {
+      const { container } = render(
+        <ContactRouteError
+          error={mockError}
+          reset={mockReset}
+        />,
+      );
+
+      const paragraph = container.querySelector('p');
+      expect(paragraph).toBeInTheDocument();
+    });
+  });
+});

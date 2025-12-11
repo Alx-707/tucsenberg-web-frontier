@@ -400,6 +400,6 @@ A: 参考 README.md 中的"错误监控策略"章节。默认禁用客户端 Sen
 ## 参考文档
 
 - [README.md](./README.md) - 项目概述和快速开始
-- [agent_docs/](./agent_docs/) - AI Agent 开发文档（架构、编码规范、测试等）
+- [.claude/rules/](./.claude/rules/) - AI Agent 开发规则文档（架构、编码规范、测试等）
 - [Next.js 16 文档](https://nextjs.org/docs)
 - [next-intl 文档](https://next-intl-docs.vercel.app/)

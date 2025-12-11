@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "Kiro-tucsenberg": {
+      "type": "http",
+      "url": "http://localhost:8000/mcp/Kiro-tucsenberg"
+    },
+    "codexmcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/GuDaStudio/codexmcp.git",
+        "codexmcp"
+      ],
+      "env": {},
+      "autoApprove": ["codex"]
+    },
+    "geminimcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/GuDaStudio/geminimcp.git",
+        "geminimcp"
+      ],
+      "env": {}
+    }
+  }
+}
