@@ -10,6 +10,7 @@ import path from 'path';
 import type { Locale, Product, ProductDetail, ProductMetadata } from '@/types/content';
 import { parseContentFile } from '@/lib/content-parser';
 import { PRODUCTS_DIR } from '@/lib/content-utils';
+import { routing } from '@/i18n/routing';
 
 /**
  * Get all MDX files in a specific locale directory.
@@ -114,6 +115,15 @@ export function getProductListing(locale: Locale, category?: string): ProductDet
  * Get a single product by slug.
  */
 export function getProductDetail(locale: Locale, slug: string): ProductDetail {
+  const supportedLocales = routing.locales as readonly string[];
+  if (!supportedLocales.includes(locale)) {
+    throw new Error(
+      `Invalid locale "${locale}" for product lookup. ` +
+        `Supported locales: ${supportedLocales.join(', ')}. ` +
+        `This may indicate a routing issue (e.g., static file path being parsed as locale).`,
+    );
+  }
+
   const files = getProductFilesInLocale(locale);
 
   const matchingFile = files.find((file) => {
@@ -122,7 +132,7 @@ export function getProductDetail(locale: Locale, slug: string): ProductDetail {
   });
 
   if (matchingFile === undefined) {
-    throw new Error(`Product not found: ${slug}`);
+    throw new Error(`Product not found: slug="${slug}", locale="${locale}"`);
   }
 
   const product = parseContentFile<ProductMetadata>(matchingFile, 'products');

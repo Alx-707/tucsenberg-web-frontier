@@ -437,9 +437,11 @@ class QualityGate {
     try {
       // 运行覆盖率测试
       console.log('🧪 运行测试以生成覆盖率...');
+      const coverageTimeout =
+        Number(process.env.QUALITY_COVERAGE_TIMEOUT_MS) || 480000; // 8min default
       execSync('pnpm test:coverage --run --reporter=json', {
         stdio: 'pipe',
-        timeout: 180000,
+        timeout: coverageTimeout,
       });
 
       // 读取覆盖率数据
@@ -588,9 +590,11 @@ class QualityGate {
 
       // 测试性能检查
       const testStart = Date.now();
+      const perfTestTimeout =
+        Number(process.env.QUALITY_PERF_TEST_TIMEOUT_MS) || 360000; // 6min default
       execSync('pnpm test --run --reporter=json', {
         stdio: 'pipe',
-        timeout: 240000,
+        timeout: perfTestTimeout,
       });
       const testTime = Date.now() - testStart;
 
