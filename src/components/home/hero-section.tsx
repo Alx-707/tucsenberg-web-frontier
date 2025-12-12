@@ -48,6 +48,7 @@ function HeroTitle({
   return (
     <h1
       className='mb-6 text-4xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl'
+      data-testid='home-hero-title'
       {...(id ? { id } : {})}
     >
       <span className='block'>{line1}</span>

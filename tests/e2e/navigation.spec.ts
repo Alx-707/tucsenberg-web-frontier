@@ -121,11 +121,9 @@ test.describe('Navigation System', () => {
       await homeLink.click();
 
       // More robust: wait for home page key elements instead of just URL
-      await expect(page.getByRole('heading', { name: /welcome/i })).toBeVisible(
-        {
-          timeout: 30_000,
-        },
-      );
+      await expect(page.getByTestId('home-hero-title')).toBeVisible({
+        timeout: 30_000,
+      });
       await expect(page.getByTestId('hero-section').first()).toBeVisible({
         timeout: 30_000,
       });

@@ -342,6 +342,31 @@ describe('LanguageToggle Integration Tests', () => {
   });
 
   describe('Navigation Integration', () => {
+    it('should normalize pathnames with locale prefixes', async () => {
+      // Test locale prefix stripping behavior
+      const testCases = [
+        { input: '/en', expected: '/' },
+        { input: '/zh', expected: '/' },
+        { input: '/en/', expected: '/' },
+        { input: '/en/about', expected: '/about' },
+        { input: '/zh/blog/abc', expected: '/blog/abc' },
+        { input: '/foo/en/bar', expected: '/foo/en/bar' }, // Should not strip middle segments
+      ];
+
+      for (const { input, expected } of testCases) {
+        mockUsePathname.mockReturnValue(input);
+
+        const { unmount } = render(<LanguageToggle />);
+
+        const links = screen.getAllByTestId(/language-link-/);
+        links.forEach((link) => {
+          expect(link).toHaveAttribute('href', expected);
+        });
+
+        unmount();
+      }
+    });
+
     it('should preserve current pathname during language switch', async () => {
       const testPaths = ['/about', '/contact', '/products/item-1'];
 
@@ -428,7 +453,8 @@ describe('LanguageToggle Integration Tests', () => {
 
       const links = screen.getAllByTestId(/language-link-/);
       links.forEach((link) => {
-        expect(link).toHaveAttribute('href', '');
+        // Empty pathname should be normalized to '/' for safe navigation
+        expect(link).toHaveAttribute('href', '/');
       });
     });
 

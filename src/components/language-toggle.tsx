@@ -47,14 +47,31 @@ const DYNAMIC_ROUTE_PATTERNS = [
   },
 ] as const;
 
+// NOTE: When adding new locales, update this regex pattern to include them
+const LOCALE_PREFIX_RE = /^\/(en|zh)(?=\/|$)/;
+
+/**
+ * Normalizes pathname by stripping locale prefix and handling edge cases
+ * Ensures consistent pathname format for Link href construction
+ *
+ * @param pathname - Pathname from usePathname() (no query/hash, may have locale prefix)
+ * @returns Normalized pathname without locale prefix (guaranteed to start with '/' or be '/')
+ */
+function normalizePathnameForLink(pathname: string): string {
+  const normalized = pathname === '' ? '/' : pathname;
+  const stripped = normalized.replace(LOCALE_PREFIX_RE, '');
+  return stripped === '' ? '/' : stripped;
+}
+
 /**
  * Parses current pathname to build the appropriate href for Link
  * Handles both static routes (returns pathname string) and dynamic routes
  * (returns object with pathname pattern and params)
  */
 function parsePathnameForLink(currentPathname: string): LinkHref {
+  const pathname = normalizePathnameForLink(currentPathname);
   for (const { pattern, buildHref } of DYNAMIC_ROUTE_PATTERNS) {
-    const match = currentPathname.match(pattern);
+    const match = pathname.match(pattern);
     if (match?.[1]) {
       return buildHref(match[1]);
     }
@@ -62,7 +79,7 @@ function parsePathnameForLink(currentPathname: string): LinkHref {
 
   // Static routes - cast required because usePathname returns runtime string
   // Safe because usePathname only returns valid configured pathnames
-  return currentPathname as LinkHref;
+  return pathname as LinkHref;
 }
 
 // Custom hook for language switching logic
@@ -231,7 +248,10 @@ export const LanguageToggle = memo(({ locale }: { locale?: 'en' | 'zh' }) => {
                 'transition-all duration-150 ease-in-out',
                 'cursor-pointer',
               )}
-              onClick={() => handleLanguageSwitch('en')}
+              onClick={() => {
+                setIsOpen(false);
+                handleLanguageSwitch('en');
+              }}
               data-testid='language-link-en'
               data-locale='en'
               role='menuitem'
@@ -267,7 +287,10 @@ export const LanguageToggle = memo(({ locale }: { locale?: 'en' | 'zh' }) => {
                 'transition-all duration-150 ease-in-out',
                 'cursor-pointer',
               )}
-              onClick={() => handleLanguageSwitch('zh')}
+              onClick={() => {
+                setIsOpen(false);
+                handleLanguageSwitch('zh');
+              }}
               data-testid='language-link-zh'
               data-locale='zh'
               role='menuitem'
