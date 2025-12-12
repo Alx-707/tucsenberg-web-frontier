@@ -12,12 +12,56 @@ import {
   TEST_COUNT_CONSTANTS,
 } from '@/constants/test-constants';
 
-// SEO validation constants (values used directly in validation functions)
+// Known content types for validation
+const KNOWN_CONTENT_TYPES: ContentType[] = ['posts', 'pages', 'products'];
+
+/**
+ * Validation configuration loaded from content.json
+ */
+export interface ValidationConfig {
+  strictMode?: boolean;
+  requireSlug?: boolean;
+  requireLocale?: boolean;
+  requireAuthor?: boolean;
+  requireDescription?: boolean;
+  requireTags?: boolean;
+  requireCategories?: boolean;
+  maxTitleLength?: number;
+  maxDescriptionLength?: number;
+  maxExcerptLength?: number;
+  products?: {
+    requireCoverImage?: boolean;
+    requireCategory?: boolean;
+    requirePrice?: boolean;
+  };
+}
+
+// Default validation config (fallback when content.json not available)
+const DEFAULT_VALIDATION_CONFIG: ValidationConfig = {
+  strictMode: false,
+  requireSlug: true,
+  requireLocale: false,
+  requireAuthor: false,
+  requireDescription: false,
+  requireTags: false,
+  requireCategories: false,
+  maxTitleLength: TEST_CONTENT_LIMITS.TITLE_MAX,
+  maxDescriptionLength: TEST_CONTENT_LIMITS.DESCRIPTION_MAX,
+  maxExcerptLength: TEST_CONTENT_LIMITS.DESCRIPTION_MAX,
+  products: {
+    requireCoverImage: true,
+    requireCategory: true,
+    requirePrice: false,
+  },
+};
 
 /**
  * Validate required fields in content metadata
  */
-function validateRequiredFields(metadata: Record<string, unknown>): string[] {
+function validateRequiredFields(
+  metadata: Record<string, unknown>,
+  config: ValidationConfig,
+): string[] {
   const errors: string[] = [];
 
   // Check title - must exist, be a string, and not be empty/whitespace
@@ -33,7 +77,16 @@ function validateRequiredFields(metadata: Record<string, unknown>): string[] {
     errors.push('Published date is required');
   }
 
-  // updatedAt is optional - only validate if present
+  // Validate slug (required by default for production safety)
+  if (config.requireSlug !== false) {
+    if (
+      !metadata['slug'] ||
+      typeof metadata['slug'] !== 'string' ||
+      (metadata['slug'] as string).trim() === ''
+    ) {
+      errors.push('Slug is required');
+    }
+  }
 
   return errors;
 }
@@ -79,8 +132,12 @@ function validateDates(metadata: Record<string, unknown>): string[] {
 /**
  * Validate title field
  */
-function validateTitle(metadata: Record<string, unknown>): string[] {
+function validateTitle(
+  metadata: Record<string, unknown>,
+  config: ValidationConfig,
+): string[] {
   const errors: string[] = [];
+  const maxLength = config.maxTitleLength ?? TEST_CONTENT_LIMITS.TITLE_MAX;
 
   if (metadata['title'] && typeof metadata['title'] !== 'string') {
     errors.push('Title must be a string');
@@ -88,10 +145,8 @@ function validateTitle(metadata: Record<string, unknown>): string[] {
 
   if (metadata['title'] && typeof metadata['title'] === 'string') {
     const title = metadata['title'] as string;
-    if (title.length > TEST_CONTENT_LIMITS.TITLE_MAX) {
-      errors.push(
-        `Title must be less than ${TEST_CONTENT_LIMITS.TITLE_MAX} characters`,
-      );
+    if (title.length > maxLength) {
+      errors.push(`Title must be less than ${maxLength} characters`);
     }
   }
 
@@ -121,8 +176,13 @@ function validateTags(metadata: Record<string, unknown>): string[] {
 /**
  * Validate excerpt field
  */
-function validateExcerpt(metadata: Record<string, unknown>): string[] {
+function validateExcerpt(
+  metadata: Record<string, unknown>,
+  config: ValidationConfig,
+): string[] {
   const errors: string[] = [];
+  const maxLength =
+    config.maxExcerptLength ?? TEST_CONTENT_LIMITS.DESCRIPTION_MAX;
 
   if (metadata['excerpt'] && typeof metadata['excerpt'] !== 'string') {
     errors.push('Excerpt must be a string');
@@ -130,10 +190,8 @@ function validateExcerpt(metadata: Record<string, unknown>): string[] {
 
   if (metadata['excerpt'] && typeof metadata['excerpt'] === 'string') {
     const excerpt = metadata['excerpt'] as string;
-    if (excerpt.length > TEST_CONTENT_LIMITS.DESCRIPTION_MAX) {
-      errors.push(
-        `Excerpt must be less than ${TEST_CONTENT_LIMITS.DESCRIPTION_MAX} characters`,
-      );
+    if (excerpt.length > maxLength) {
+      errors.push(`Excerpt must be less than ${maxLength} characters`);
     }
   }
 
@@ -143,12 +201,62 @@ function validateExcerpt(metadata: Record<string, unknown>): string[] {
 /**
  * Validate data types in content metadata
  */
-function validateDataTypes(metadata: Record<string, unknown>): string[] {
+function validateDataTypes(
+  metadata: Record<string, unknown>,
+  config: ValidationConfig,
+): string[] {
   return [
-    ...validateTitle(metadata),
+    ...validateTitle(metadata, config),
     ...validateTags(metadata),
-    ...validateExcerpt(metadata),
+    ...validateExcerpt(metadata, config),
   ];
+}
+
+/**
+ * Validate products-specific requirements
+ */
+function validateProductsSpecific(
+  metadata: Record<string, unknown>,
+  config: ValidationConfig,
+): { errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+  const productConfig = config.products ?? DEFAULT_VALIDATION_CONFIG.products;
+
+  // Validate coverImage (required for products)
+  if (productConfig?.requireCoverImage !== false) {
+    if (
+      !metadata['coverImage'] ||
+      typeof metadata['coverImage'] !== 'string' ||
+      (metadata['coverImage'] as string).trim() === ''
+    ) {
+      errors.push('Products require a coverImage');
+    }
+  }
+
+  // Validate category (required for products)
+  if (productConfig?.requireCategory !== false) {
+    if (
+      !metadata['category'] ||
+      typeof metadata['category'] !== 'string' ||
+      (metadata['category'] as string).trim() === ''
+    ) {
+      errors.push('Products require a category');
+    }
+  }
+
+  // Validate optional product fields
+  if (!metadata['description']) {
+    warnings.push('Products should have a description for better SEO');
+  }
+
+  if (!metadata['moq'] && !metadata['leadTime']) {
+    warnings.push(
+      'B2B products should include MOQ or lead time for buyer reference',
+    );
+  }
+
+  return { errors, warnings };
 }
 
 /**
@@ -157,7 +265,9 @@ function validateDataTypes(metadata: Record<string, unknown>): string[] {
 function validateTypeSpecific(
   metadata: Record<string, unknown>,
   type: ContentType,
-): string[] {
+  config: ValidationConfig,
+): { errors: string[]; warnings: string[] } {
+  const errors: string[] = [];
   const warnings: string[] = [];
 
   if (type === 'posts') {
@@ -172,6 +282,12 @@ function validateTypeSpecific(
     }
   }
 
+  if (type === 'products') {
+    const productValidation = validateProductsSpecific(metadata, config);
+    errors.push(...productValidation.errors);
+    warnings.push(...productValidation.warnings);
+  }
+
   // Check for too many tags (applies to all content types)
   if (metadata['tags'] && Array.isArray(metadata['tags'])) {
     const tags = metadata['tags'] as unknown[];
@@ -183,12 +299,11 @@ function validateTypeSpecific(
   }
 
   // Handle unknown content types
-  const knownTypes: ContentType[] = ['posts', 'pages'];
-  if (!knownTypes.includes(type)) {
+  if (!KNOWN_CONTENT_TYPES.includes(type)) {
     warnings.push(`Unknown content type: ${type}`);
   }
 
-  return warnings;
+  return { errors, warnings };
 }
 
 /**
@@ -253,38 +368,53 @@ function validateSEO(metadata: Record<string, unknown>): string[] {
 }
 
 /**
- * Validate edge cases and performance considerations
- */
-function validateEdgeCases(_metadata: Record<string, unknown>): string[] {
-  const warnings: string[] = [];
-
-  // This function is for general edge cases that apply to all content types
-  // Tag validation is handled in type-specific validation
-
-  return warnings;
-}
-
-/**
- * Validate content metadata
+ * Validate content metadata with optional configuration
  */
 export function validateContentMetadata(
   metadata: Record<string, unknown>,
   type: ContentType,
+  config: ValidationConfig = DEFAULT_VALIDATION_CONFIG,
 ): ContentValidationResult {
   // Collect all validation errors and warnings
-  const requiredFieldErrors = validateRequiredFields(metadata);
+  const requiredFieldErrors = validateRequiredFields(metadata, config);
   const dateErrors = validateDates(metadata);
-  const dataTypeErrors = validateDataTypes(metadata);
-  const typeWarnings = validateTypeSpecific(metadata, type);
+  const dataTypeErrors = validateDataTypes(metadata, config);
+  const typeValidation = validateTypeSpecific(metadata, type, config);
   const seoWarnings = validateSEO(metadata);
-  const edgeCaseWarnings = validateEdgeCases(metadata);
 
-  const errors = [...requiredFieldErrors, ...dateErrors, ...dataTypeErrors];
-  const warnings = [...typeWarnings, ...seoWarnings, ...edgeCaseWarnings];
+  const errors = [
+    ...requiredFieldErrors,
+    ...dateErrors,
+    ...dataTypeErrors,
+    ...typeValidation.errors,
+  ];
+  const warnings = [...typeValidation.warnings, ...seoWarnings];
 
   return {
     isValid: errors.length === ZERO,
     errors,
     warnings,
   };
+}
+
+/**
+ * Validate content metadata in strict mode (errors for warnings)
+ */
+export function validateContentMetadataStrict(
+  metadata: Record<string, unknown>,
+  type: ContentType,
+  config: ValidationConfig = DEFAULT_VALIDATION_CONFIG,
+): ContentValidationResult {
+  const result = validateContentMetadata(metadata, type, config);
+
+  if (config.strictMode) {
+    // In strict mode, promote warnings to errors
+    return {
+      isValid: result.errors.length === ZERO && result.warnings.length === ZERO,
+      errors: [...result.errors, ...result.warnings],
+      warnings: [],
+    };
+  }
+
+  return result;
 }

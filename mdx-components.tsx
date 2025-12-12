@@ -1,6 +1,7 @@
 import React from 'react';
 import Image, { type ImageProps } from 'next/image';
 import type { MDXComponents } from 'mdx/types';
+import { getBlurPlaceholder } from '@/lib/image';
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -86,6 +87,7 @@ const mediaComponents = {
         style={{ width: '100%', height: 'auto', ...style }}
         className={`rounded-lg shadow-md ${className || ''}`}
         {...safeProps}
+        {...getBlurPlaceholder('neutral')}
         alt={alt || ''} // 确保 alt 属性始终存在且不能被覆盖
       />
     );

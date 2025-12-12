@@ -21,11 +21,11 @@ export const AnimatedProgress = ({
       />
     </div>
     <div className='flex justify-between text-xs text-muted-foreground'>
-      <span className='animate-in fade-in duration-500'>开始</span>
-      <span className='animate-in fade-in font-medium text-primary duration-700'>
+      <span className='duration-500 animate-in fade-in'>开始</span>
+      <span className='font-medium text-primary duration-700 animate-in fade-in'>
         {value}%
       </span>
-      <span className='animate-in fade-in duration-500'>完成</span>
+      <span className='duration-500 animate-in fade-in'>完成</span>
     </div>
   </div>
 );
@@ -99,8 +99,8 @@ export const AnimatedInput = ({
 
 // 7. 成功状态动画
 export const AnimatedSuccess = ({ message }: { message: string }) => (
-  <div className='animate-in fade-in slide-in-from-bottom-2 flex items-center justify-center gap-2 text-green-600 duration-500'>
-    <CheckCircle className='animate-in zoom-in h-5 w-5 delay-200 duration-300' />
-    <span className='animate-in fade-in delay-300 duration-500'>{message}</span>
+  <div className='flex items-center justify-center gap-2 text-green-600 duration-500 animate-in fade-in slide-in-from-bottom-2'>
+    <CheckCircle className='h-5 w-5 delay-200 duration-300 animate-in zoom-in' />
+    <span className='delay-300 duration-500 animate-in fade-in'>{message}</span>
   </div>
 );

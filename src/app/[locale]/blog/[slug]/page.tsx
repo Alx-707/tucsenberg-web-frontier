@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, Calendar, Clock, Tag, User } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale, PostDetail } from '@/types/content';
-import { getAllPostsCached, getPostBySlugCached } from '@/lib/content/blog';
+import { getStaticParamsForType } from '@/lib/content-manifest';
+import { getPostBySlugCached } from '@/lib/content/blog';
+import { MDXContent } from '@/components/mdx';
 import { Badge } from '@/components/ui/badge';
 
 interface BlogDetailPageProps {
@@ -15,17 +17,7 @@ interface BlogDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  const locales: Locale[] = ['en', 'zh'];
-  const params: { locale: string; slug: string }[] = [];
-
-  for (const locale of locales) {
-    const posts = await getAllPostsCached(locale);
-    for (const post of posts) {
-      params.push({ locale, slug: post.slug });
-    }
-  }
-
-  return params;
+  return getStaticParamsForType('posts');
 }
 
 function buildPostMetadata(post: PostDetail): Metadata {
@@ -172,9 +164,11 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
           />
         </header>
 
-        <div
-          className='prose prose-neutral dark:prose-invert max-w-none'
-          dangerouslySetInnerHTML={{ __html: post.content }}
+        <MDXContent
+          type='posts'
+          locale={locale}
+          slug={slug}
+          className='prose max-w-none prose-neutral dark:prose-invert'
         />
 
         {post.tags !== undefined && post.tags.length > 0 && (

@@ -1,156 +1,161 @@
-'use client';
+import { type ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
-import { useEffect, useState, type ReactNode } from 'react';
-import { useBreakpoint } from '@/hooks/use-breakpoint';
-
-// 自定义hook处理hydration
-function useMounted() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // ✅ Fixed: Use queueMicrotask to avoid synchronous setState in effect
-    // hydration模式需要在客户端渲染时设置mounted状态
-    queueMicrotask(() => setMounted(true));
-  }, []);
-
-  return mounted;
-}
+/**
+ * CSS-First Responsive Layout Component
+ *
+ * This component uses Tailwind CSS responsive classes for layout decisions,
+ * eliminating the need for JavaScript hydration for basic responsive behavior.
+ *
+ * ## CSS-First Design Principles:
+ * - Layout responds to viewport width via CSS media queries (no JS required)
+ * - No layout shift during hydration
+ * - Interactive behavior (touch/mouse events) still handled in React
+ *
+ * ## Approved JavaScript Use Cases:
+ * - Touch/mouse event handlers (onTouchStart, onMouseEnter, etc.)
+ * - Layout change callbacks for analytics/tracking
+ * - Accessibility attributes
+ *
+ * @see openspec/changes/p2-responsive-css-first for full specification
+ */
 
 interface ResponsiveLayoutProps {
+  /** Main content (always rendered) */
   'children': ReactNode;
+  /** Additional CSS classes */
   'className'?: string;
+  /** Content shown only on mobile (< md breakpoint) */
+  'mobileContent'?: ReactNode;
+  /** Content shown only on tablet (md - lg breakpoints) */
+  'tabletContent'?: ReactNode;
+  /** Content shown only on desktop (>= lg breakpoint) */
+  'desktopContent'?: ReactNode;
+  // Legacy props for backwards compatibility
+  /** @deprecated Use mobileContent instead */
   'mobileLayout'?: ReactNode;
+  /** @deprecated Use tabletContent instead */
   'tabletLayout'?: ReactNode;
+  /** @deprecated Use desktopContent instead */
   'desktopLayout'?: ReactNode;
-  // Additional props for testing and flexibility
+  /** @deprecated Use mobileContent instead */
   'mobileNavigation'?: ReactNode;
+  /** @deprecated Use tabletContent instead */
   'tabletSidebar'?: ReactNode;
+  /** @deprecated Use desktopContent instead */
   'desktopSidebar'?: ReactNode;
+  // Event handlers (JS-required use cases)
   'onTouchStart'?: () => void;
   'onTouchEnd'?: () => void;
   'onMouseEnter'?: () => void;
   'onMouseLeave'?: () => void;
+  /** @deprecated Layout detection is now CSS-based; callback provided for migration period */
   'onLayoutChange'?: (_layout: string) => void;
+  // Accessibility
   'role'?: string;
   'aria-label'?: string;
   'data-testid'?: string;
   'tabIndex'?: number;
 }
 
-// 获取当前布局类型的辅助函数
-function getCurrentLayoutType(
-  isMobile: boolean,
-  isTablet: boolean,
-): 'mobile' | 'tablet' | 'desktop' {
-  if (isMobile) return 'mobile';
-  if (isTablet) return 'tablet';
-  return 'desktop';
-}
-
-// 布局内容配置接口
-interface LayoutContentConfig {
-  mobileLayout?: ReactNode;
-  mobileNavigation?: ReactNode;
-  tabletLayout?: ReactNode;
-  tabletSidebar?: ReactNode;
-  desktopLayout?: ReactNode;
-  desktopSidebar?: ReactNode;
-}
-
-// 获取特定布局内容的辅助函数
-function getSpecificLayoutContent(
-  layoutType: 'mobile' | 'tablet' | 'desktop',
-  config: LayoutContentConfig,
-): ReactNode | null {
-  switch (layoutType) {
-    case 'mobile':
-      return config.mobileLayout || config.mobileNavigation || null;
-    case 'tablet':
-      return config.tabletLayout || config.tabletSidebar || null;
-    case 'desktop':
-      return config.desktopLayout || config.desktopSidebar || null;
-    default:
-      return null;
+/**
+ * Responsive content slot that shows/hides based on breakpoint.
+ * Uses CSS display utilities for zero-JS responsive behavior.
+ */
+function ResponsiveSlot({
+  children,
+  show,
+}: {
+  children: ReactNode;
+  show: 'mobile' | 'tablet' | 'desktop';
+}) {
+  if (!children) {
+    return null;
   }
-}
 
-// 生成响应式CSS类名的辅助函数
-function generateResponsiveClasses(
-  className: string,
-  flags: { isMobile: boolean; isTablet: boolean; isDesktop: boolean },
-): string {
-  const classes = [className];
+  // Static class mapping to avoid dynamic object injection
+  let visibilityClass: string;
+  switch (show) {
+    case 'mobile':
+      visibilityClass = 'block md:hidden';
+      break;
+    case 'tablet':
+      visibilityClass = 'hidden md:block lg:hidden';
+      break;
+    case 'desktop':
+      visibilityClass = 'hidden lg:block';
+      break;
+    default:
+      visibilityClass = '';
+  }
 
-  if (flags.isMobile) classes.push('responsive-mobile');
-  if (flags.isTablet) classes.push('responsive-tablet');
-  if (flags.isDesktop) classes.push('responsive-desktop');
-
-  return classes.filter(Boolean).join(' ').trim();
+  return <div className={visibilityClass}>{children}</div>;
 }
 
 export function ResponsiveLayout({
   children,
   className = '',
+  mobileContent,
+  tabletContent,
+  desktopContent,
+  // Legacy props mapping
   mobileLayout,
   tabletLayout,
   desktopLayout,
   mobileNavigation,
   tabletSidebar,
   desktopSidebar,
+  // Event handlers
   onTouchStart,
   onTouchEnd,
   onMouseEnter,
   onMouseLeave,
-  onLayoutChange,
+  'onLayoutChange': _onLayoutChange,
+  // Accessibility
   role,
   'aria-label': ariaLabel,
   'data-testid': dataTestId,
   tabIndex,
 }: ResponsiveLayoutProps) {
-  const { currentBreakpoint, isBelow, isAbove } = useBreakpoint();
+  // Resolve legacy props to new props
+  const resolvedMobile = mobileContent ?? mobileLayout ?? mobileNavigation;
+  const resolvedTablet = tabletContent ?? tabletLayout ?? tabletSidebar;
+  const resolvedDesktop = desktopContent ?? desktopLayout ?? desktopSidebar;
 
-  // 使用自定义hook处理hydration
-  const mounted = useMounted();
+  const hasSlottedContent = resolvedMobile || resolvedTablet || resolvedDesktop;
 
-  // Prevent hydration mismatch
-  if (!mounted) {
-    return <div className={className}>{children}</div>;
+  // If specific layouts are provided, render slot-based layout
+  if (hasSlottedContent) {
+    return (
+      <div
+        className={className}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        role={role}
+        aria-label={ariaLabel}
+        data-testid={dataTestId}
+        tabIndex={tabIndex}
+      >
+        <ResponsiveSlot show='mobile'>{resolvedMobile}</ResponsiveSlot>
+        <ResponsiveSlot show='tablet'>{resolvedTablet}</ResponsiveSlot>
+        <ResponsiveSlot show='desktop'>{resolvedDesktop}</ResponsiveSlot>
+        {/* Fallback to children if no slot matches */}
+        {!resolvedMobile && !resolvedTablet && !resolvedDesktop && children}
+      </div>
+    );
   }
 
-  const isMobile = isBelow('md');
-  const isTablet = currentBreakpoint === 'md' || currentBreakpoint === 'lg';
-  const isDesktop = isAbove('lg');
-
-  const layoutType = getCurrentLayoutType(isMobile, isTablet);
-  const specificContent = getSpecificLayoutContent(layoutType, {
-    mobileLayout,
-    mobileNavigation,
-    tabletLayout,
-    tabletSidebar,
-    desktopLayout,
-    desktopSidebar,
-  });
-
-  // Use specific layouts if provided
-  if (specificContent) {
-    return <div className={className}>{specificContent}</div>;
-  }
-
-  // Notify layout change
-  if (onLayoutChange) {
-    onLayoutChange(layoutType);
-  }
-
-  // Default responsive behavior
-  const responsiveClasses = generateResponsiveClasses(className, {
-    isMobile,
-    isTablet,
-    isDesktop,
-  });
-
+  // Default: render children with responsive utility classes
+  // CSS classes handle responsive behavior without JS
   return (
     <div
-      className={responsiveClasses}
+      className={cn(
+        // Base responsive classes for CSS-based layout detection
+        // These replace the JS-based responsive-mobile/tablet/desktop classes
+        className,
+      )}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       onMouseEnter={onMouseEnter}

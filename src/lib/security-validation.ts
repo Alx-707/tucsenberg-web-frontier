@@ -15,9 +15,12 @@ const VALIDATION_CONSTANTS = {
 } as const;
 
 /**
- * Sanitize user input to prevent XSS attacks
+ * Sanitize plain text input for general use
+ * Removes XSS vectors while preserving safe text content
+ *
+ * Use this for: names, messages, company names, requirements, etc.
  */
-export function sanitizeInput(input: string): string {
+export function sanitizePlainText(input: string): string {
   if (typeof input !== 'string') {
     return '';
   }
@@ -28,6 +31,62 @@ export function sanitizeInput(input: string): string {
     .replace(/on\w+=/gi, '') // Remove event handlers
     .replace(/data:/gi, '') // Remove data: protocol
     .trim();
+}
+
+/**
+ * Sanitize URL input
+ * Validates protocol and removes dangerous patterns
+ *
+ * Use this for: website URLs, redirect targets, external links
+ *
+ * @param url - URL string to sanitize
+ * @param allowedProtocols - Protocols to allow (default: http, https)
+ * @returns Sanitized URL or empty string if invalid
+ */
+export function sanitizeUrl(
+  url: string,
+  allowedProtocols: readonly string[] = ['http:', 'https:'],
+): string {
+  if (typeof url !== 'string') {
+    return '';
+  }
+
+  const trimmed = url.trim();
+
+  // Empty string is valid (optional URL fields)
+  if (!trimmed) {
+    return '';
+  }
+
+  try {
+    const urlObj = new URL(trimmed);
+
+    // Check protocol is allowed
+    if (!allowedProtocols.includes(urlObj.protocol)) {
+      return '';
+    }
+
+    // Remove javascript: in any part
+    if (/javascript:/i.test(trimmed)) {
+      return '';
+    }
+
+    return trimmed;
+  } catch {
+    // Not a valid URL - return empty
+    return '';
+  }
+}
+
+/**
+ * Sanitize user input to prevent XSS attacks
+ *
+ * @deprecated Use sanitizePlainText for text fields, sanitizeUrl for URLs,
+ *             or sanitizeFilePath for file paths. This function is kept for
+ *             backward compatibility and delegates to sanitizePlainText.
+ */
+export function sanitizeInput(input: string): string {
+  return sanitizePlainText(input);
 }
 
 /**

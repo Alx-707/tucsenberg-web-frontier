@@ -122,6 +122,7 @@ async function createFallbackResponse(locale: string, startTime: number) {
     messages: (await import(`../../messages/${locale}.json`)).default,
     timeZone: locale === 'zh' ? 'Asia/Shanghai' : 'UTC',
     formats: getFormats(locale),
+    strictMessageTypeSafety: true,
     metadata: {
       loadTime: performance.now() - startTime,
       cacheUsed: false,

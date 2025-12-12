@@ -114,12 +114,9 @@ jobs:
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
-      - name: 运行单元测试（必须通过）
-        run: pnpm test
-
-      - name: 覆盖率检查（硬门禁）
+      - name: 运行单元测试（带覆盖率）
         run: pnpm test:coverage
-        # 覆盖率检查已启用阻断模式，不达标将失败
+        # 覆盖率数据由 quality-gate.js 统一检查，此处仅生成报告
 
       - name: 上传覆盖率报告
         if: always()
@@ -264,7 +261,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: basic-checks
 
-    timeout-minutes: 12
+    timeout-minutes: 15
 
     steps:
       - name: 检出代码
@@ -272,6 +269,7 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
+          fetch-depth: 0
 
       - name: 设置pnpm
         uses: pnpm/action-setup@v4
@@ -299,6 +297,34 @@ jobs:
 
       - name: 安全审计
         run: pnpm security:audit
+
+      - name: 安装 Semgrep CLI
+        run: |
+          python3 -m pip install --user "semgrep<2"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Semgrep 安全扫描（PR baseline 模式）
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          git fetch origin "$GITHUB_BASE_REF" --depth=1
+          BASELINE_COMMIT=$(git merge-base HEAD "origin/${GITHUB_BASE_REF}")
+          echo "Using Semgrep baseline commit: ${BASELINE_COMMIT}"
+
+          # ERROR 级规则作为硬门禁，仅检测新增问题
+          semgrep scan \
+            --config semgrep.yml \
+            --severity ERROR \
+            --error \
+            --baseline-commit "${BASELINE_COMMIT}" \
+            src/
+
+          # WARNING 级规则仅记录
+          semgrep scan \
+            --config semgrep.yml \
+            --severity WARNING \
+            --baseline-commit "${BASELINE_COMMIT}" \
+            src/ || true
 
   # 翻译质量检查
   translation-quality:
@@ -360,11 +386,12 @@ jobs:
           if-no-files-found: ignore
 
           # 架构检查作业
+          # 依赖 tests job 以获取覆盖率报告（确保 coverage 只执行一次）
 
   architecture:
     name: 架构检查
     runs-on: ubuntu-latest
-    needs: basic-checks
+    needs: [basic-checks, tests]
     timeout-minutes: 10
 
     steps:
@@ -373,6 +400,7 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
+          fetch-depth: 0
 
       - name: 设置pnpm
         uses: pnpm/action-setup@v4
@@ -398,8 +426,17 @@ jobs:
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
 
+      - name: 下载覆盖率报告
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: reports/coverage/
+
       - name: 质量门禁
         run: pnpm quality:gate
+        # CI 模式自动检测（CI=true），仅读取已有覆盖率报告，不重复执行测试
+        env:
+          QUALITY_DIFF_BASE: ${{ github.event.pull_request.base.sha || 'origin/main' }}
 
       - name: 依赖关系检查
         run: pnpm arch:check

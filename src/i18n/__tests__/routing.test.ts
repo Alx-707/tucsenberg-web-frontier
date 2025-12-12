@@ -28,10 +28,10 @@ describe('i18n Routing Configuration', () => {
       '/about': '/about',
       '/contact': '/contact',
       '/products': '/products',
+      '/products/[slug]': '/products/[slug]',
       '/blog': '/blog',
-      '/diagnostics': '/diagnostics',
-      '/pricing': '/pricing',
-      '/support': '/support',
+      '/blog/[slug]': '/blog/[slug]',
+      '/faq': '/faq',
       '/privacy': '/privacy',
       '/terms': '/terms',
     },
@@ -82,10 +82,10 @@ describe('i18n Routing Configuration', () => {
         '/about',
         '/contact',
         '/products',
+        '/products/[slug]',
         '/blog',
-        '/diagnostics',
-        '/pricing',
-        '/support',
+        '/blog/[slug]',
+        '/faq',
         '/privacy',
         '/terms',
       ];
@@ -181,9 +181,19 @@ describe('i18n Routing Configuration', () => {
       const config = mockDefineRouting.mock.calls[0]?.[0];
       const pathnames = config.pathnames;
 
-      const featurePages = ['/diagnostics', '/pricing', '/support'];
+      const featurePages = ['/faq'];
       featurePages.forEach((page) => {
         expect(pathnames).toHaveProperty(page);
+      });
+    });
+
+    it('应该包含动态路由模式', () => {
+      const config = mockDefineRouting.mock.calls[0]?.[0];
+      const pathnames = config.pathnames;
+
+      const dynamicRoutes = ['/blog/[slug]', '/products/[slug]'];
+      dynamicRoutes.forEach((route) => {
+        expect(pathnames).toHaveProperty(route);
       });
     });
 

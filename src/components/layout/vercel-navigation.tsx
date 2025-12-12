@@ -26,11 +26,19 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { Link, routing } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { DropdownContent } from './vercel-dropdown-content';
 
-// Type for valid pathnames from routing configuration
-type ValidPathname = keyof typeof routing.pathnames;
+// Type for static pathnames (excludes dynamic route patterns)
+type StaticPathname =
+  | '/'
+  | '/about'
+  | '/contact'
+  | '/blog'
+  | '/products'
+  | '/faq'
+  | '/privacy'
+  | '/terms';
 
 interface VercelNavigationProps {
   className?: string;
@@ -126,7 +134,7 @@ function renderLinkItem(item: NavigationItem, t: (key: string) => string) {
     <NavigationMenuItem key={item.key}>
       <NavigationMenuLink asChild>
         <Link
-          href={item.href as ValidPathname}
+          href={item.href as StaticPathname}
           className={cn(
             'relative inline-flex items-center rounded-full bg-transparent px-3 py-2 text-sm font-medium tracking-[0.01em]',
             'text-muted-foreground hover:text-foreground',

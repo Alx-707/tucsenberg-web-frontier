@@ -1,56 +1,40 @@
 /**
- * WhatsApp Business API 核心服务类
- * 整合消息发送和媒体处理功能
+ * WhatsApp Business API Core Service
+ *
+ * Unified service class that provides a high-level API for WhatsApp operations.
+ * Uses dependency injection for client selection (real vs mock).
  */
 
 import type {
   SendMessageRequest,
   WhatsAppServiceResponse,
 } from '@/types/whatsapp';
-import { WhatsAppMediaService } from '@/lib/whatsapp-media';
-import { WhatsAppMessageService } from '@/lib/whatsapp-messages';
 import { WhatsAppUtils } from '@/lib/whatsapp-utils';
+import { getWhatsAppClient } from '@/lib/whatsapp/client-factory';
+import type { WhatsAppClient } from '@/lib/whatsapp/client-interface';
 
 /**
- * WhatsApp 核心服务类
+ * WhatsApp Core Service
+ *
+ * Provides a unified interface for WhatsApp operations with automatic
+ * environment-based client selection (real in production, mock in dev/test).
  */
 export class WhatsAppService {
-  private messageService!: WhatsAppMessageService;
-  private mediaService!: WhatsAppMediaService;
-  private readonly accessToken: string;
-  private readonly phoneNumberId: string;
+  private readonly client: WhatsAppClient;
 
-  constructor(accessToken?: string, phoneNumberId?: string) {
-    this.accessToken = accessToken || process.env.WHATSAPP_ACCESS_TOKEN || '';
-    this.phoneNumberId =
-      phoneNumberId || process.env.WHATSAPP_PHONE_NUMBER_ID || '';
-
-    // 只在运行时检查，构建时跳过验证
-    if (
-      process.env.NODE_ENV !== 'production' &&
-      typeof window === 'undefined'
-    ) {
-      // 构建时跳过验证
-      return;
-    }
-
-    if (!this.accessToken || !this.phoneNumberId) {
-      throw new Error('WhatsApp access token and phone number ID are required');
-    }
-
-    this.messageService = new WhatsAppMessageService(
-      this.accessToken,
-      this.phoneNumberId,
-    );
-    this.mediaService = new WhatsAppMediaService(
-      this.accessToken,
-      this.phoneNumberId,
-    );
+  /**
+   * Create a new WhatsAppService instance
+   *
+   * @param client - Optional client to inject (for testing)
+   */
+  constructor(client?: WhatsAppClient) {
+    this.client = client || getWhatsAppClient();
   }
 
-  // 消息发送方法代理
+  // ==================== Message Methods ====================
+
   sendMessage(message: SendMessageRequest): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendMessage(message);
+    return this.client.sendMessage(message);
   }
 
   sendTextMessage(
@@ -58,7 +42,7 @@ export class WhatsAppService {
     text: string,
     previewUrl?: boolean,
   ): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendTextMessage(to, text, previewUrl);
+    return this.client.sendTextMessage(to, text, previewUrl);
   }
 
   sendImageMessage(
@@ -66,7 +50,7 @@ export class WhatsAppService {
     imageUrl: string,
     caption?: string,
   ): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendImageMessage(to, imageUrl, caption);
+    return this.client.sendImageMessage(to, imageUrl, caption);
   }
 
   sendTemplateMessage(args: {
@@ -75,7 +59,7 @@ export class WhatsAppService {
     languageCode: string;
     parameters?: string[];
   }): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendTemplateMessage(args);
+    return this.client.sendTemplateMessage(args);
   }
 
   sendButtonMessage(args: {
@@ -85,7 +69,7 @@ export class WhatsAppService {
     headerText?: string;
     footerText?: string;
   }): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendButtonMessage(args);
+    return this.client.sendButtonMessage(args);
   }
 
   sendListMessage(args: {
@@ -98,16 +82,17 @@ export class WhatsAppService {
     }>;
     options?: { headerText?: string; footerText?: string };
   }): Promise<WhatsAppServiceResponse> {
-    return this.messageService.sendListMessage(args);
+    return this.client.sendListMessage(args);
   }
 
-  // 媒体处理方法代理
+  // ==================== Media Methods ====================
+
   getMediaUrl(mediaId: string): Promise<string | null> {
-    return this.mediaService.getMediaUrl(mediaId);
+    return this.client.getMediaUrl(mediaId);
   }
 
   downloadMedia(mediaId: string): Promise<Buffer | null> {
-    return this.mediaService.downloadMedia(mediaId);
+    return this.client.downloadMedia(mediaId);
   }
 
   uploadMedia(
@@ -115,28 +100,34 @@ export class WhatsAppService {
     type: 'image' | 'document' | 'audio' | 'video' | 'sticker',
     filename?: string,
   ): Promise<string | null> {
-    return this.mediaService.uploadMedia(file, type, filename);
+    return this.client.uploadMedia(file, type, filename);
   }
 
-  // 工具方法代理
+  // ==================== Utility Methods ====================
+
+  /**
+   * Check if the service is ready to send messages
+   */
+  isReady(): boolean {
+    return this.client.isReady();
+  }
+
+  /**
+   * Get client information for debugging
+   */
+  getClientInfo() {
+    return this.client.getClientInfo();
+  }
+
+  /**
+   * Get the underlying client (for advanced use cases)
+   */
+  getClient(): WhatsAppClient {
+    return this.client;
+  }
+
+  // Static utility methods (proxy to WhatsAppUtils)
   static validatePhoneNumber = WhatsAppUtils.validatePhoneNumber;
   static formatPhoneNumber = WhatsAppUtils.formatPhoneNumber;
   static validateMessageLength = WhatsAppUtils.validateMessageLength;
-
-  // 获取服务实例
-  getMessageService(): WhatsAppMessageService {
-    return this.messageService;
-  }
-
-  getMediaService(): WhatsAppMediaService {
-    return this.mediaService;
-  }
-
-  // 配置信息
-  getConfig(): { accessToken: string; phoneNumberId: string } {
-    return {
-      accessToken: this.accessToken,
-      phoneNumberId: this.phoneNumberId,
-    };
-  }
 }

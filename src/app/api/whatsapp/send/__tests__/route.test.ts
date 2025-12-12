@@ -7,6 +7,11 @@ const mockSendWhatsAppMessage = vi.hoisted(() => vi.fn());
 
 vi.mock('@/lib/whatsapp-service', () => ({
   sendWhatsAppMessage: mockSendWhatsAppMessage,
+  getClientEnvironmentInfo: vi.fn(() => ({
+    environment: 'test',
+    clientType: 'mock',
+    hasCredentials: false,
+  })),
 }));
 
 vi.mock('@/lib/logger', () => ({
@@ -110,7 +115,7 @@ describe('WhatsApp Send Route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data._error).toBe('Text message requires "body" in content');
+      expect(data.error).toBe('Text message requires "body" in content');
     });
   });
 
@@ -195,7 +200,7 @@ describe('WhatsApp Send Route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data._error).toBe(
+      expect(data.error).toBe(
         'Template message requires "templateName" in content',
       );
     });
@@ -284,7 +289,7 @@ describe('WhatsApp Send Route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data._error).toBe('Failed to send message');
+      expect(data.error).toBe('Failed to send message');
     });
 
     it('should return 503 when WhatsApp service is not configured', async () => {
@@ -302,7 +307,7 @@ describe('WhatsApp Send Route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(503);
-      expect(data._error).toBe('WhatsApp service not configured');
+      expect(data.error).toBe('WhatsApp service not configured');
     });
 
     it('should return 500 for unexpected errors', async () => {
@@ -318,7 +323,7 @@ describe('WhatsApp Send Route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data._error).toBe('Failed to send message');
+      expect(data.error).toBe('Failed to send message');
     });
   });
 

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Calendar, Clock } from 'lucide-react';
 import type { PostSummary } from '@/types/content';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -45,6 +46,7 @@ function CoverImage({ src, alt }: CoverImageProps) {
         fill
         sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
         className='object-cover transition-transform duration-300 group-hover:scale-105'
+        {...getBlurPlaceholder('neutral')}
       />
     </div>
   );

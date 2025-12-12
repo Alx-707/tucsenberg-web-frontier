@@ -226,6 +226,35 @@ export default [
     },
   },
 
+  // CSS-First Responsive Design - Discourage useBreakpoint for layout
+  {
+    name: 'css-first-responsive-design',
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    ignores: [
+      // Allow useBreakpoint in its own file and tests
+      '**/hooks/use-breakpoint.ts',
+      '**/hooks/__tests__/use-breakpoint.test.ts',
+      // Legacy ResponsiveLayout tests during migration
+      '**/components/__tests__/responsive-layout.test.tsx',
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'warn',
+        {
+          paths: [
+            {
+              name: '@/hooks/use-breakpoint',
+              message:
+                '⚠️ CSS-First Responsive: Prefer Tailwind responsive classes (sm:, md:, lg:) for layout. ' +
+                'useBreakpoint is approved only for: (1) interaction logic requiring width detection, ' +
+                '(2) analytics/tracking. See openspec/changes/p2-responsive-css-first for details.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Node.js Security configuration (补充规则 - 仅保留 eslint-plugin-security 未覆盖的功能)
   {
     name: 'security-node-supplementary-config',

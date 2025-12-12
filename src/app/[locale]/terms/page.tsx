@@ -6,7 +6,7 @@ import {
   renderLegalContent,
   slugifyHeading,
 } from '@/lib/content/render-legal-content';
-import { generateJSONLD } from '@/lib/structured-data';
+import { JsonLdScript } from '@/components/seo';
 import {
   generateLocaleStaticParams,
   type LocaleParam,
@@ -142,13 +142,7 @@ export default async function TermsPage({ params }: TermsPageProps) {
 
   return (
     <>
-      {/* JSON-LD structured data for SEO - no nonce needed as it's data-only */}
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: generateJSONLD(termsSchema),
-        }}
-      />
+      <JsonLdScript data={termsSchema} />
 
       <main className='container mx-auto px-4 py-8 md:py-12'>
         <header className='mb-6 md:mb-8'>

@@ -1,6 +1,5 @@
-import { COUNT_PAIR, MAGIC_15, MAGIC_16 } from '../constants/count';
+import { COUNT_PAIR, MAGIC_16 } from '../constants/count';
 import { ZERO } from '../constants/magic-numbers';
-import { ALERT_SYSTEM_CONSTANTS } from '../constants/performance-constants';
 
 export type SecurityHeader = {
   key: string;
@@ -69,14 +68,14 @@ export function generateCSP(nonce?: string): string {
       'https://api.resend.com',
     ],
     'frame-src': [
-      "'none'",
-      // Cloudflare Turnstile
+      // Cloudflare Turnstile (removed 'none' - conflicts with allowlist)
       'https://challenges.cloudflare.com',
     ],
     'object-src': ["'none'"],
     'base-uri': ["'self'"],
     'form-action': ["'self'"],
     'frame-ancestors': ["'none'"],
+    'report-uri': ['/api/csp-report'],
     'upgrade-insecure-requests': isProduction ? [] : undefined,
   };
 
@@ -125,6 +124,11 @@ export function getSecurityHeaders(
     return [];
   }
 
+  const securityConfig = getSecurityConfig(testMode);
+  const cspHeaderKey = securityConfig.cspReportOnly
+    ? 'Content-Security-Policy-Report-Only'
+    : 'Content-Security-Policy';
+
   return [
     // Prevent clickjacking
     {
@@ -146,9 +150,9 @@ export function getSecurityHeaders(
       key: 'Strict-Transport-Security',
       value: 'max-age=63072000; includeSubDomains; preload',
     },
-    // Content Security Policy
+    // Content Security Policy (enforced or report-only based on security mode)
     {
-      key: 'Content-Security-Policy',
+      key: cspHeaderKey,
       value: generateCSP(nonce),
     },
     // Permissions Policy (formerly Feature Policy)
@@ -181,16 +185,18 @@ export function getSecurityHeaders(
 
 /**
  * Generate a cryptographically secure nonce for CSP
+ *
+ * Requirements:
+ * - Minimum 16 characters for security
+ * - Alphanumeric only for CSP compatibility
+ * - Must pass isValidNonce validation
  */
-// Constants for nonce generation
-const NONCE_CONSTANTS = {
-  RADIX_36: ALERT_SYSTEM_CONSTANTS.RANDOM_ID_BASE,
-  SUBSTRING_START: COUNT_PAIR,
-  SUBSTRING_END: MAGIC_15,
-} as const;
+const NONCE_BYTE_LENGTH = MAGIC_16;
+const NONCE_HEX_PAD = COUNT_PAIR;
 
 export function generateNonce(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    // randomUUID returns 36 chars with hyphens, removing hyphens gives 32 hex chars
     return crypto.randomUUID().replace(/-/g, '');
   }
 
@@ -198,16 +204,12 @@ export function generateNonce(): string {
     typeof crypto !== 'undefined' &&
     typeof crypto.getRandomValues === 'function'
   ) {
-    const bytes = new Uint8Array(MAGIC_16);
+    const bytes = new Uint8Array(NONCE_BYTE_LENGTH);
     crypto.getRandomValues(bytes);
+    // Convert to hex: 16 bytes = 32 hex characters
     return Array.from(bytes, (value) =>
-      value.toString(NONCE_CONSTANTS.RADIX_36).padStart(COUNT_PAIR, '0'),
-    )
-      .join('')
-      .substring(
-        NONCE_CONSTANTS.SUBSTRING_START,
-        NONCE_CONSTANTS.SUBSTRING_END,
-      );
+      value.toString(MAGIC_16).padStart(NONCE_HEX_PAD, '0'),
+    ).join('');
   }
 
   throw new Error('Secure nonce generation unavailable');

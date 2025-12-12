@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -42,6 +43,7 @@ function CertificationBadgeItem({
             width={64}
             height={64}
             className='mx-auto mb-4 h-16 w-16 object-contain'
+            {...getBlurPlaceholder('neutral')}
           />
         ) : (
           <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10'>

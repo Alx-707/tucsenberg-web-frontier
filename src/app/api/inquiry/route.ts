@@ -4,12 +4,16 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createCorsPreflightResponse } from '@/lib/api/cors-utils';
 import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { processLead, type LeadResult } from '@/lib/lead-pipeline';
 import { LEAD_TYPES } from '@/lib/lead-pipeline/lead-schema';
 import { logger } from '@/lib/logger';
 import {
-  checkRateLimit,
+  checkDistributedRateLimit,
+  createRateLimitHeaders,
+} from '@/lib/security/distributed-rate-limit';
+import {
   getClientIP,
   verifyTurnstile,
 } from '@/app/api/contact/contact-api-utils';
@@ -19,14 +23,18 @@ const HTTP_BAD_REQUEST = 400;
 const HTTP_TOO_MANY_REQUESTS = 429;
 const HTTP_INTERNAL_ERROR = 500;
 
+interface SuccessResponseOptions {
+  result: LeadResult;
+  clientIP: string;
+  processingTime: number;
+  headers?: Headers;
+}
+
 /**
  * Create success response for product inquiry
  */
-function createSuccessResponse(
-  result: LeadResult,
-  clientIP: string,
-  processingTime: number,
-): NextResponse {
+function createSuccessResponse(options: SuccessResponseOptions): NextResponse {
+  const { result, clientIP, processingTime, headers } = options;
   logger.info('Product inquiry submitted successfully', {
     referenceId: result.referenceId,
     ip: clientIP,
@@ -35,11 +43,14 @@ function createSuccessResponse(
     recordCreated: result.recordCreated,
   });
 
-  return NextResponse.json({
-    success: true,
-    message: 'Thank you for your inquiry. We will contact you shortly.',
-    referenceId: result.referenceId,
-  });
+  return NextResponse.json(
+    {
+      success: true,
+      message: 'Thank you for your inquiry. We will contact you shortly.',
+      referenceId: result.referenceId,
+    },
+    ...(headers ? [{ headers }] : []),
+  );
 }
 
 /**
@@ -109,11 +120,20 @@ export async function POST(request: NextRequest) {
   const clientIP = getClientIP(request);
 
   try {
-    if (!checkRateLimit(clientIP)) {
-      logger.warn('Product inquiry rate limit exceeded', { ip: clientIP });
+    // Check distributed rate limit
+    const rateLimitResult = await checkDistributedRateLimit(
+      clientIP,
+      'inquiry',
+    );
+    if (!rateLimitResult.allowed) {
+      logger.warn('Product inquiry rate limit exceeded', {
+        ip: clientIP,
+        retryAfter: rateLimitResult.retryAfter,
+      });
+      const headers = createRateLimitHeaders(rateLimitResult);
       return NextResponse.json(
         { success: false, error: 'Too many requests. Please try again later.' },
-        { status: HTTP_TOO_MANY_REQUESTS },
+        { status: HTTP_TOO_MANY_REQUESTS, headers },
       );
     }
 
@@ -139,8 +159,9 @@ export async function POST(request: NextRequest) {
     const result = await processLead({ type: LEAD_TYPES.PRODUCT, ...leadData });
     const processingTime = Date.now() - startTime;
 
+    const headers = createRateLimitHeaders(rateLimitResult);
     return result.success
-      ? createSuccessResponse(result, clientIP, processingTime)
+      ? createSuccessResponse({ result, clientIP, processingTime, headers })
       : createErrorResponse(result, clientIP, processingTime);
   } catch (error) {
     logger.error('Product inquiry submission failed unexpectedly', {
@@ -163,13 +184,6 @@ export async function POST(request: NextRequest) {
  * OPTIONS /api/inquiry
  * Handle CORS preflight requests
  */
-export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
+export function OPTIONS(request: NextRequest) {
+  return createCorsPreflightResponse(request);
 }

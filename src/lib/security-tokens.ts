@@ -132,10 +132,11 @@ export function generateCsrfToken(): string {
 
 /**
  * Generate a secure nonce for CSP
+ *
+ * Re-exported from @/config/security to maintain single source of truth.
+ * @see src/config/security.ts for implementation details
  */
-export function generateNonce(): string {
-  return generateSecureToken(MAGIC_16);
-}
+export { generateNonce } from '@/config/security';
 
 /**
  * Generate a secure one-time password (OTP)

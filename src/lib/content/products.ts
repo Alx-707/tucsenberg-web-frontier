@@ -8,9 +8,12 @@
  * - expose view-oriented domain models (ProductSummary, ProductDetail)
  * - accept only explicit, serializable arguments (locale, category, slug)
  * - intentionally do NOT use request-scoped APIs (headers, cookies, etc.)
+ * - use "use cache" + cacheLife() + cacheTag() for Cache Components integration
+ *
+ * @see src/lib/cache/cache-tags.ts - Cache tag naming conventions
  */
 
-import { cacheLife } from 'next/cache';
+import { cacheLife, cacheTag } from 'next/cache';
 import type {
   GetAllProductsCachedFn,
   GetProductBySlugCachedFn,
@@ -25,6 +28,7 @@ import {
   getProductCategories,
   getFeaturedProducts,
 } from '@/lib/content/products-source';
+import { productTags } from '@/lib/cache/cache-tags';
 
 /**
  * Map a ProductDetail to a ProductSummary (list view).
@@ -57,10 +61,14 @@ function mapProductDetailToSummary(product: ProductDetail): ProductSummary {
 
 /**
  * Get all products as ProductSummary list for a given locale.
+ *
+ * Cache tags enable selective invalidation:
+ * - `product:list:{category|all}:{locale}` - Invalidate product list
  */
 export const getAllProductsCached: GetAllProductsCachedFn = async (locale, options = {}) => {
   'use cache';
   cacheLife('days');
+  cacheTag(productTags.list(locale, options.category));
 
   const products = await Promise.resolve(getProductListing(locale, options.category));
 
@@ -94,10 +102,16 @@ export const getAllProductsCached: GetAllProductsCachedFn = async (locale, optio
 
 /**
  * Get a single product by slug as a ProductDetail model.
+ *
+ * Cache tags enable selective invalidation:
+ * - `product:detail:{slug}:{locale}` - Invalidate this specific product
+ * - `product:list:all:{locale}` - Also tagged for list invalidation cascade
  */
 export const getProductBySlugCached: GetProductBySlugCachedFn = async (locale, slug) => {
   'use cache';
   cacheLife('days');
+  cacheTag(productTags.detail(slug, locale));
+  cacheTag(productTags.list(locale));
 
   const product = await Promise.resolve(getProductDetail(locale, slug));
   return product;
@@ -105,10 +119,14 @@ export const getProductBySlugCached: GetProductBySlugCachedFn = async (locale, s
 
 /**
  * Get all unique product categories for a locale.
+ *
+ * Cache tags enable selective invalidation:
+ * - `product:category:{locale}` - Invalidate categories for this locale
  */
 export const getProductCategoriesCached: GetProductCategoriesCachedFn = async (locale) => {
   'use cache';
   cacheLife('days');
+  cacheTag(productTags.categories(locale));
 
   const categories = await Promise.resolve(getProductCategories(locale));
   return categories;
@@ -116,6 +134,9 @@ export const getProductCategoriesCached: GetProductCategoriesCachedFn = async (l
 
 /**
  * Get featured products for homepage or highlight sections.
+ *
+ * Cache tags enable selective invalidation:
+ * - `product:featured:{locale}` - Invalidate featured products for this locale
  */
 export async function getFeaturedProductsCached(
   locale: Locale,
@@ -123,6 +144,7 @@ export async function getFeaturedProductsCached(
 ): Promise<ProductSummary[]> {
   'use cache';
   cacheLife('days');
+  cacheTag(productTags.featured(locale));
 
   const products = await Promise.resolve(getFeaturedProducts(locale, limit));
   return products.map((product) => mapProductDetailToSummary(product));

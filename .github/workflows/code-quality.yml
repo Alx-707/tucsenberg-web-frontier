@@ -1,22 +1,29 @@
-name: 企业级代码质量检查
+name: 深度安全扫描
+
+# ============================================================================
+# 职责：深度安全扫描（Semgrep full scan）
+# 触发：仅在 main 分支推送或定时任务运行，不阻塞 PR
+# 依赖：基础质量检查由 ci.yml 负责
+# ============================================================================
 
 on:
   push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
+    branches: [main]
+  schedule:
+    # 每日 UTC 02:00（北京时间 10:00）执行深度扫描
+    - cron: "0 2 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: read
   actions: read
-  checks: write
-  pull-requests: write
+  security-events: write
 
 jobs:
-  code-quality:
-    name: 代码质量门禁
+  semgrep-full-scan:
+    name: Semgrep 深度安全扫描
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
 
     steps:
       - name: 检出代码
@@ -24,282 +31,66 @@ jobs:
         with:
           submodules: false
           persist-credentials: false
-
-      - name: 安装pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-
-      - name: 设置Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: 安装依赖
-        run: pnpm install --frozen-lockfile
-
-      - name: TypeScript类型检查
-        run: pnpm run type-check
-
-      - name: 测试文件类型检查
-        run: pnpm run type-check:tests
-
-      - name: ESLint代码检查
-        run: pnpm run lint:check
-
-      - name: 复制翻译资源到 public
-        run: node scripts/copy-translations.js
-
-      - name: i18n 形状等价检查
-        run: pnpm i18n:shape:check
-
-      - name: 上传 i18n 形状报告
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: i18n-shape-report.json
-          path: reports/i18n-shape-report.json
-          if-no-files-found: ignore
-
-      - name: 企业级质量门禁
-        run: pnpm run quality:gate
-
-      - name: 上传质量报告
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: quality-reports
-          path: reports/quality/
-          retention-days: 30
-
-      - name: 质量趋势分析
-        if: github.event_name == 'push'
-        run: |
-          echo "📊 质量趋势分析"
-          if [ -f "reports/quality/latest-quality-summary.json" ]; then
-            echo "当前质量分数: $(cat reports/quality/latest-quality-summary.json | jq '.qualityScore')"
-            echo "错误数量: $(cat reports/quality/latest-quality-summary.json | jq '.totalErrors')"
-            echo "警告数量: $(cat reports/quality/latest-quality-summary.json | jq '.totalWarnings')"
-          fi
-
-      - name: 质量门禁失败通知
-        if: failure()
-        run: |
-          echo "❌ 代码质量门禁未通过"
-          echo "请检查以下问题："
-          echo "1. 确保没有TypeScript类型错误"
-          echo "2. 修复所有ESLint错误"
-          echo "3. 将警告数量控制在500个以下"
-          echo "4. 严格禁止使用any类型"
-          exit 1
-
-  security-audit:
-    name: 安全审计
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-
-    steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-
-          submodules: false
-
-      - name: 安装pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-
-      - name: 设置Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: 安装依赖
-        run: pnpm install --frozen-lockfile
-
-      - name: 依赖安全审计
-        run: pnpm run security:audit
 
       - name: 安装 Semgrep CLI
         run: |
           python3 -m pip install --user "semgrep<2"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
-      - name: Semgrep 安全扫描（ERROR fail，PR 使用 baseline）
-        if: github.event_name == 'pull_request'
+      - name: Semgrep 完整安全扫描
         run: |
           set -euo pipefail
-          # 为当前 PR 获取基线分支最新提交（通常是 main 或 develop）
-          git fetch origin "$GITHUB_BASE_REF" --depth=1
-          BASELINE_COMMIT=$(git merge-base HEAD "origin/${GITHUB_BASE_REF}")
-          echo "Using Semgrep baseline commit: ${BASELINE_COMMIT}"
+          echo "🔍 Running Semgrep full security scan..."
 
-          # 1) 只运行 ERROR 级规则，作为 CI 的硬门禁；仅对相对于 baseline 的新增问题报错
+          # ERROR 级规则：硬门禁
           semgrep scan \
             --config semgrep.yml \
             --severity ERROR \
             --error \
-            --baseline-commit "${BASELINE_COMMIT}" \
+            --sarif --sarif-output semgrep-error.sarif \
             src/
 
-          # 2) 运行 WARNING 级规则：只输出日志，不影响退出码，同样只关注新增告警
+          # WARNING 级规则：仅记录，不阻塞
           semgrep scan \
             --config semgrep.yml \
             --severity WARNING \
-            --baseline-commit "${BASELINE_COMMIT}" \
-            src/
+            --sarif --sarif-output semgrep-warning.sarif \
+            src/ || true
 
-      - name: Semgrep 安全扫描（ERROR fail，主干完整扫描）
-        if: github.event_name != 'pull_request'
-        run: |
-          set -euo pipefail
+          echo "✅ Semgrep scan completed"
 
-          # 主干 / 非 PR 场景：对 ERROR 级规则做完整扫描
-          semgrep scan \
-            --config semgrep.yml \
-            --severity ERROR \
-            --error \
-            src/
-
-          # WARNING 级规则只作信息提示，不阻塞 CI
-          semgrep scan \
-            --config semgrep.yml \
-            --severity WARNING \
-            src/
-
-      - name: 架构依赖检查
-        run: pnpm run arch:check
-
-      - name: 循环依赖检查
-        run: pnpm run circular:check
-
-  test-quality:
-    name: 测试质量检查
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-
-    steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
+      - name: 上传 SARIF 到 GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          submodules: false
-          persist-credentials: false
-
-      - name: 安装pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-
-      - name: 设置Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: 安装依赖
-        run: pnpm install --frozen-lockfile
-
-      - name: 运行测试
-        run: pnpm run test
-
-      - name: 测试覆盖率检查
-        run: pnpm run test:coverage
+          sarif_file: semgrep-error.sarif
+          category: semgrep-security
         continue-on-error: true
 
-      - name: 上传覆盖率报告
+      - name: 上传扫描报告
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-reports
-          path: coverage/
+          name: semgrep-reports
+          path: |
+            semgrep-error.sarif
+            semgrep-warning.sarif
           retention-days: 30
+          if-no-files-found: ignore
 
-  quality-summary:
-    name: 质量总结
+  scan-summary:
+    name: 扫描总结
     runs-on: ubuntu-latest
-    needs: [code-quality, security-audit, test-quality]
+    needs: [semgrep-full-scan]
     if: always()
-    timeout-minutes: 6
-    permissions:
-      contents: read
-      actions: read
-      checks: write
-      pull-requests: write
+    timeout-minutes: 5
 
     steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-        with:
-          submodules: false
-          persist-credentials: false
-
-      - name: 下载质量报告
-        uses: actions/download-artifact@v4
-        with:
-          name: quality-reports
-          path: reports/quality/
-        continue-on-error: true
-
-      - name: 检查依赖 Job 状态
-        id: check-status
+      - name: 生成扫描总结
         run: |
-          echo "code_quality=${{ needs.code-quality.result }}" >> $GITHUB_OUTPUT
-          echo "security_audit=${{ needs.security-audit.result }}" >> $GITHUB_OUTPUT
-          echo "test_quality=${{ needs.test-quality.result }}" >> $GITHUB_OUTPUT
-
-      - name: 生成质量总结
-        run: |
-          echo "## 🎯 企业级代码质量检查总结" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔒 深度安全扫描总结" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          # 显示各 Job 状态
-          echo "### 📋 检查状态" >> $GITHUB_STEP_SUMMARY
-          echo "- **代码质量门禁**: ${{ needs.code-quality.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **安全审计**: ${{ needs.security-audit.result }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **测试质量检查**: ${{ needs.test-quality.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Semgrep 扫描**: ${{ needs.semgrep-full-scan.result }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-
-          if [ -f "reports/quality/latest-quality-summary.json" ]; then
-            QUALITY_SCORE=$(cat reports/quality/latest-quality-summary.json | jq '.qualityScore')
-            TOTAL_ERRORS=$(cat reports/quality/latest-quality-summary.json | jq '.totalErrors')
-            TOTAL_WARNINGS=$(cat reports/quality/latest-quality-summary.json | jq '.totalWarnings')
-
-            echo "### 📊 质量指标" >> $GITHUB_STEP_SUMMARY
-            echo "- **质量分数**: ${QUALITY_SCORE}/100" >> $GITHUB_STEP_SUMMARY
-            echo "- **错误数量**: ${TOTAL_ERRORS}" >> $GITHUB_STEP_SUMMARY
-            echo "- **警告数量**: ${TOTAL_WARNINGS}" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-
-            if [ "$TOTAL_ERRORS" -eq 0 ] && [ "$TOTAL_WARNINGS" -le 500 ]; then
-              echo "✅ **质量门禁**: 通过" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "❌ **质量门禁**: 未通过" >> $GITHUB_STEP_SUMMARY
-            fi
-          else
-            echo "⚠️ 质量报告文件未找到，但所有检查已完成" >> $GITHUB_STEP_SUMMARY
-          fi
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🔍 检查项目" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] TypeScript类型检查" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] ESLint代码规范检查" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] 安全漏洞扫描" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] 架构依赖分析" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] 循环依赖检测" >> $GITHUB_STEP_SUMMARY
-          echo "- [x] 单元测试执行" >> $GITHUB_STEP_SUMMARY
-
-      - name: 设置最终状态
-        if: needs.code-quality.result == 'success' && needs.security-audit.result == 'success' && needs.test-quality.result == 'success'
-        run: |
-          echo "✅ 所有质量检查通过"
-          exit 0
-
-      - name: 报告失败
-        if: needs.code-quality.result != 'success' || needs.security-audit.result != 'success' || needs.test-quality.result != 'success'
-        run: |
-          echo "❌ 部分质量检查失败"
-          exit 1
+          echo "> **Note**: 基础质量检查（type-check, lint, test）由 ci.yml 统一处理" >> $GITHUB_STEP_SUMMARY
+          echo "> PR 级别的 Semgrep baseline 扫描已移至 ci.yml" >> $GITHUB_STEP_SUMMARY

@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from 'react';
 import {
+  BREAKPOINT_2XL,
+  BREAKPOINT_LG,
   BREAKPOINT_MD,
   BREAKPOINT_SM,
   BREAKPOINT_XL,
-  BYTES_PER_KB,
-  ZERO,
-} from '@/constants';
-import { COUNT_1536 } from '@/constants/count';
+} from '@/constants/breakpoints';
+
+/** Zero constant for SSR fallback */
+const ZERO = 0;
 
 export type Breakpoint = 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -23,9 +25,9 @@ export interface BreakpointConfig {
 const defaultBreakpoints: BreakpointConfig = {
   'sm': BREAKPOINT_SM,
   'md': BREAKPOINT_MD,
-  'lg': BYTES_PER_KB,
+  'lg': BREAKPOINT_LG,
   'xl': BREAKPOINT_XL,
-  '2xl': COUNT_1536,
+  '2xl': BREAKPOINT_2XL,
 };
 
 function createBreakpointConfig(

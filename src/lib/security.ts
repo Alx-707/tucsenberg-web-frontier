@@ -14,6 +14,8 @@ export {
   isValidEmail,
   isValidUrl,
   sanitizeFilePath,
+  sanitizePlainText,
+  sanitizeUrl,
   validateInputLength,
   validateCharacters,
   isValidPhoneNumber,
@@ -108,19 +110,5 @@ export {
 // 向后兼容性：保留一些常用的直接导出
 // Backward compatibility: keep some commonly used direct exports
 
-/**
- * @deprecated 请使用 security-validation 模块中的 sanitizeInput
- * @deprecated Please use sanitizeInput from security-validation module
- */
-export function sanitizeInput(input: string): string {
-  if (typeof input !== 'string') {
-    return '';
-  }
-
-  return input
-    .replace(/[<>]/g, '') // Remove angle brackets
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers
-    .replace(/data:/gi, '') // Remove data: protocol
-    .trim();
-}
+// Re-export sanitizeInput as deprecated alias from security-validation
+export { sanitizeInput } from '@/lib/security-validation';

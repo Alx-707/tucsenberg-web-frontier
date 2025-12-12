@@ -18,7 +18,8 @@ import type {
 import { env } from '@/lib/env';
 import { LEAD_TYPES, type LeadType } from '@/lib/lead-pipeline/lead-schema';
 import { logger } from '@/lib/logger';
-import { airtableRecordSchema, validationHelpers } from '@/lib/validations';
+import { sanitizePlainText } from '@/lib/security-validation';
+import { airtableRecordSchema } from '@/lib/validations';
 import {
   ANIMATION_DURATION_VERY_SLOW,
   ONE,
@@ -130,16 +131,14 @@ export class AirtableService {
    */
   private sanitizeFormData(formData: ContactFormData): ContactFormData {
     return {
-      firstName: validationHelpers.sanitizeInput(formData.firstName),
-      lastName: validationHelpers.sanitizeInput(formData.lastName),
+      firstName: sanitizePlainText(formData.firstName),
+      lastName: sanitizePlainText(formData.lastName),
       email: formData.email.toLowerCase().trim(),
-      company: validationHelpers.sanitizeInput(formData.company),
-      message: validationHelpers.sanitizeInput(formData.message),
-      phone: formData.phone
-        ? validationHelpers.sanitizeInput(formData.phone)
-        : undefined,
+      company: sanitizePlainText(formData.company),
+      message: sanitizePlainText(formData.message),
+      phone: formData.phone ? sanitizePlainText(formData.phone) : undefined,
       subject: formData.subject
-        ? validationHelpers.sanitizeInput(formData.subject)
+        ? sanitizePlainText(formData.subject)
         : undefined,
       acceptPrivacy: formData.acceptPrivacy,
       marketingConsent: formData.marketingConsent,
@@ -267,34 +266,22 @@ export class AirtableService {
       // Add type-specific fields
       if (type === LEAD_TYPES.CONTACT) {
         const contactData = data as ContactLeadData;
-        baseFields['First Name'] = validationHelpers.sanitizeInput(
-          contactData.firstName,
-        );
-        baseFields['Last Name'] = validationHelpers.sanitizeInput(
-          contactData.lastName,
-        );
+        baseFields['First Name'] = sanitizePlainText(contactData.firstName);
+        baseFields['Last Name'] = sanitizePlainText(contactData.lastName);
         baseFields['Company'] = contactData.company
-          ? validationHelpers.sanitizeInput(contactData.company)
+          ? sanitizePlainText(contactData.company)
           : '';
         baseFields['Subject'] = contactData.subject || '';
-        baseFields['Message'] = validationHelpers.sanitizeInput(
-          contactData.message,
-        );
+        baseFields['Message'] = sanitizePlainText(contactData.message);
         baseFields['Marketing Consent'] = contactData.marketingConsent || false;
       } else if (type === LEAD_TYPES.PRODUCT) {
         const productData = data as ProductLeadData;
-        baseFields['First Name'] = validationHelpers.sanitizeInput(
-          productData.firstName,
-        );
-        baseFields['Last Name'] = validationHelpers.sanitizeInput(
-          productData.lastName,
-        );
+        baseFields['First Name'] = sanitizePlainText(productData.firstName);
+        baseFields['Last Name'] = sanitizePlainText(productData.lastName);
         baseFields['Company'] = productData.company
-          ? validationHelpers.sanitizeInput(productData.company)
+          ? sanitizePlainText(productData.company)
           : '';
-        baseFields['Message'] = validationHelpers.sanitizeInput(
-          productData.message,
-        );
+        baseFields['Message'] = sanitizePlainText(productData.message);
         baseFields['Product Name'] = productData.productName;
         baseFields['Product Slug'] = productData.productSlug;
         baseFields['Quantity'] =
@@ -302,7 +289,7 @@ export class AirtableService {
             ? productData.quantity.toString()
             : productData.quantity;
         if (productData.requirements) {
-          baseFields['Requirements'] = validationHelpers.sanitizeInput(
+          baseFields['Requirements'] = sanitizePlainText(
             productData.requirements,
           );
         }

@@ -2,7 +2,12 @@
  * 核心路径配置
  */
 
-import type { LocalizedPath, PageType } from '@/config/paths/types';
+import type {
+  DynamicPageType,
+  DynamicRoutePattern,
+  LocalizedPath,
+  PageType,
+} from '@/config/paths/types';
 
 // 核心路径配置 - 使用标准路径方案
 export const PATHS_CONFIG = Object.freeze({
@@ -60,4 +65,17 @@ export const PATHS_CONFIG = Object.freeze({
   }),
 } as const satisfies Record<PageType, LocalizedPath>);
 
+// 动态路由配置 - 用于 next-intl 路由和语言切换
+export const DYNAMIC_PATHS_CONFIG = Object.freeze({
+  blogDetail: Object.freeze({
+    pattern: '/blog/[slug]',
+    paramName: 'slug',
+  }),
+  productDetail: Object.freeze({
+    pattern: '/products/[slug]',
+    paramName: 'slug',
+  }),
+} as const satisfies Record<DynamicPageType, DynamicRoutePattern>);
+
 export type PathsConfig = typeof PATHS_CONFIG;
+export type DynamicPathsConfig = typeof DYNAMIC_PATHS_CONFIG;

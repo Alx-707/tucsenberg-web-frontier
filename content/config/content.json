@@ -2,7 +2,7 @@
   "defaultLocale": "en",
   "supportedLocales": ["en", "zh"],
   "postsPerPage": 12,
-  "enableDrafts": true,
+  "enableDrafts": false,
   "enableSearch": true,
   "autoGenerateExcerpt": true,
   "excerptLength": 160,
@@ -35,17 +35,30 @@
       "enableToc": true,
       "enableLastModified": true,
       "enableBreadcrumbs": true
+    },
+    "products": {
+      "enableRelatedProducts": true,
+      "maxRelatedProducts": 4,
+      "enableSpecs": true,
+      "enableCertifications": true
     }
   },
   "validation": {
     "strictMode": false,
+    "requireSlug": true,
+    "requireLocale": false,
     "requireAuthor": true,
     "requireDescription": true,
     "requireTags": false,
     "requireCategories": false,
     "maxTitleLength": 100,
     "maxDescriptionLength": 200,
-    "maxExcerptLength": 300
+    "maxExcerptLength": 300,
+    "products": {
+      "requireCoverImage": true,
+      "requireCategory": true,
+      "requirePrice": false
+    }
   },
   "performance": {
     "enableCache": true,

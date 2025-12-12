@@ -15,6 +15,13 @@ import {
   type ProductLeadInput,
 } from '@/lib/lead-pipeline/lead-schema';
 import {
+  categorizeError,
+  createLatencyTimer,
+  leadPipelineMetrics,
+  METRIC_SERVICES,
+  type PipelineSummary,
+} from '@/lib/lead-pipeline/metrics';
+import {
   generateLeadReferenceId,
   generateProductInquiryMessage,
   splitName,
@@ -39,26 +46,35 @@ interface ServiceResult {
   success: boolean;
   id?: string | undefined;
   error?: Error | undefined;
+  latencyMs: number;
 }
 
 /**
- * Timeout wrapper for async operations
+ * Timeout wrapper for async operations with latency tracking
  */
-function withTimeout<T>(
+interface TimedResult<T> {
+  result: T;
+  latencyMs: number;
+}
+
+async function withTimeout<T>(
   promise: Promise<T>,
   timeoutMs: number,
   operationName: string,
-): Promise<T> {
+): Promise<TimedResult<T>> {
+  const timer = createLatencyTimer();
   const timeoutPromise = new Promise<never>((_, reject) => {
     setTimeout(
       () => reject(new Error(`${operationName} timed out`)),
       timeoutMs,
     );
   });
-  return Promise.race([promise, timeoutPromise]);
+  const result = await Promise.race([promise, timeoutPromise]);
+  return { result, latencyMs: timer.stop() };
 }
 
 const OPERATION_TIMEOUT_MS = 10000; // 10 seconds
+const DEFAULT_LATENCY = 0;
 
 /**
  * Process contact lead
@@ -84,7 +100,10 @@ async function processContactLead(
     marketingConsent: lead.marketingConsent,
   };
 
-  const [emailResult, crmResult] = await Promise.allSettled([
+  const emailTimer = createLatencyTimer();
+  const crmTimer = createLatencyTimer();
+
+  const [emailSettled, crmSettled] = await Promise.allSettled([
     withTimeout(
       resendService.sendContactFormEmail(emailData),
       OPERATION_TIMEOUT_MS,
@@ -106,15 +125,36 @@ async function processContactLead(
     ),
   ]);
 
+  const emailLatency =
+    emailSettled.status === 'fulfilled'
+      ? emailSettled.value.latencyMs
+      : emailTimer.stop();
+  const crmLatency =
+    crmSettled.status === 'fulfilled'
+      ? crmSettled.value.latencyMs
+      : crmTimer.stop();
+
   return {
     emailResult:
-      emailResult.status === 'fulfilled'
-        ? { success: true, id: emailResult.value }
-        : { success: false, error: emailResult.reason },
+      emailSettled.status === 'fulfilled'
+        ? {
+            success: true,
+            id: emailSettled.value.result,
+            latencyMs: emailLatency,
+          }
+        : {
+            success: false,
+            error: emailSettled.reason,
+            latencyMs: emailLatency,
+          },
     crmResult:
-      crmResult.status === 'fulfilled'
-        ? { success: true, id: crmResult.value?.id }
-        : { success: false, error: crmResult.reason },
+      crmSettled.status === 'fulfilled'
+        ? {
+            success: true,
+            id: crmSettled.value.result?.id,
+            latencyMs: crmLatency,
+          }
+        : { success: false, error: crmSettled.reason, latencyMs: crmLatency },
   };
 }
 
@@ -136,7 +176,10 @@ async function processProductLead(
   const { resendService } = await import('@/lib/resend');
   const { airtableService } = await import('@/lib/airtable');
 
-  const [emailResult, crmResult] = await Promise.allSettled([
+  const emailTimer = createLatencyTimer();
+  const crmTimer = createLatencyTimer();
+
+  const [emailSettled, crmSettled] = await Promise.allSettled([
     withTimeout(
       resendService.sendProductInquiryEmail({
         firstName,
@@ -171,15 +214,36 @@ async function processProductLead(
     ),
   ]);
 
+  const emailLatency =
+    emailSettled.status === 'fulfilled'
+      ? emailSettled.value.latencyMs
+      : emailTimer.stop();
+  const crmLatency =
+    crmSettled.status === 'fulfilled'
+      ? crmSettled.value.latencyMs
+      : crmTimer.stop();
+
   return {
     emailResult:
-      emailResult.status === 'fulfilled'
-        ? { success: true, id: emailResult.value }
-        : { success: false, error: emailResult.reason },
+      emailSettled.status === 'fulfilled'
+        ? {
+            success: true,
+            id: emailSettled.value.result,
+            latencyMs: emailLatency,
+          }
+        : {
+            success: false,
+            error: emailSettled.reason,
+            latencyMs: emailLatency,
+          },
     crmResult:
-      crmResult.status === 'fulfilled'
-        ? { success: true, id: crmResult.value?.id }
-        : { success: false, error: crmResult.reason },
+      crmSettled.status === 'fulfilled'
+        ? {
+            success: true,
+            id: crmSettled.value.result?.id,
+            latencyMs: crmLatency,
+          }
+        : { success: false, error: crmSettled.reason, latencyMs: crmLatency },
   };
 }
 
@@ -193,8 +257,10 @@ async function processNewsletterLead(
   // Lazy import to avoid circular dependencies
   const { airtableService } = await import('@/lib/airtable');
 
+  const crmTimer = createLatencyTimer();
+
   // Newsletter only creates CRM record, no email notification
-  const [crmResult] = await Promise.allSettled([
+  const [crmSettled] = await Promise.allSettled([
     withTimeout(
       airtableService.createLead(LEAD_TYPES.NEWSLETTER, {
         email: lead.email,
@@ -205,14 +271,111 @@ async function processNewsletterLead(
     ),
   ]);
 
+  const crmLatency =
+    crmSettled.status === 'fulfilled'
+      ? crmSettled.value.latencyMs
+      : crmTimer.stop();
+
   return {
     // Newsletter has no email operation - success depends solely on CRM
-    emailResult: { success: false },
+    emailResult: { success: false, latencyMs: DEFAULT_LATENCY },
     crmResult:
-      crmResult.status === 'fulfilled'
-        ? { success: true, id: crmResult.value?.id }
-        : { success: false, error: crmResult.reason },
+      crmSettled.status === 'fulfilled'
+        ? {
+            success: true,
+            id: crmSettled.value.result?.id,
+            latencyMs: crmLatency,
+          }
+        : { success: false, error: crmSettled.reason, latencyMs: crmLatency },
   };
+}
+
+/**
+ * Emit metrics for service results
+ */
+function emitServiceMetrics(
+  emailResult: ServiceResult,
+  crmResult: ServiceResult,
+  hasEmailOperation: boolean,
+): void {
+  // Emit Resend metrics (only for leads with email operations)
+  if (hasEmailOperation) {
+    if (emailResult.success) {
+      leadPipelineMetrics.recordSuccess(
+        METRIC_SERVICES.RESEND,
+        emailResult.latencyMs,
+      );
+    } else {
+      leadPipelineMetrics.recordFailure(
+        METRIC_SERVICES.RESEND,
+        emailResult.latencyMs,
+        emailResult.error,
+      );
+    }
+  }
+
+  // Emit Airtable metrics
+  if (crmResult.success) {
+    leadPipelineMetrics.recordSuccess(
+      METRIC_SERVICES.AIRTABLE,
+      crmResult.latencyMs,
+    );
+  } else {
+    leadPipelineMetrics.recordFailure(
+      METRIC_SERVICES.AIRTABLE,
+      crmResult.latencyMs,
+      crmResult.error,
+    );
+  }
+}
+
+/**
+ * Parameters for logging pipeline summary
+ */
+interface LogPipelineSummaryParams {
+  referenceId: string;
+  leadType: string;
+  emailResult: ServiceResult;
+  crmResult: ServiceResult;
+  totalLatencyMs: number;
+  overallSuccess: boolean;
+}
+
+/**
+ * Log pipeline processing summary
+ */
+function logPipelineSummary(params: LogPipelineSummaryParams): void {
+  const {
+    referenceId,
+    leadType,
+    emailResult,
+    crmResult,
+    totalLatencyMs,
+    overallSuccess,
+  } = params;
+  const summary: PipelineSummary = {
+    leadId: referenceId,
+    leadType,
+    totalLatencyMs,
+    resend: {
+      success: emailResult.success,
+      latencyMs: emailResult.latencyMs,
+      ...(emailResult.error
+        ? { errorType: categorizeError(emailResult.error) }
+        : {}),
+    },
+    airtable: {
+      success: crmResult.success,
+      latencyMs: crmResult.latencyMs,
+      ...(crmResult.error
+        ? { errorType: categorizeError(crmResult.error) }
+        : {}),
+    },
+    overallSuccess,
+    timestamp: new Date().toISOString(),
+  };
+
+  leadPipelineMetrics.logPipelineSummary(summary);
 }
 
 /**
@@ -224,6 +387,8 @@ async function processNewsletterLead(
  */
 // eslint-disable-next-line complexity, max-statements -- orchestration logic requires branching
 export async function processLead(rawInput: unknown): Promise<LeadResult> {
+  const pipelineTimer = createLatencyTimer();
+
   // Step 1: Validate input
   const validationResult = leadSchema.safeParse(rawInput);
 
@@ -251,6 +416,7 @@ export async function processLead(rawInput: unknown): Promise<LeadResult> {
   try {
     // Step 2: Route to appropriate handler
     let results: { emailResult: ServiceResult; crmResult: ServiceResult };
+    let hasEmailOperation = true;
 
     if (isContactLead(lead)) {
       results = await processContactLead(lead, referenceId);
@@ -258,15 +424,20 @@ export async function processLead(rawInput: unknown): Promise<LeadResult> {
       results = await processProductLead(lead, referenceId);
     } else if (isNewsletterLead(lead)) {
       results = await processNewsletterLead(lead, referenceId);
+      hasEmailOperation = false;
     } else {
       // This should never happen due to discriminated union
       throw new Error('Unknown lead type');
     }
 
     const { emailResult, crmResult } = results;
+    const totalLatencyMs = pipelineTimer.stop();
+
+    // Step 3: Emit metrics for service results
+    emitServiceMetrics(emailResult, crmResult, hasEmailOperation);
 
     // Log individual failures
-    if (!emailResult.success) {
+    if (hasEmailOperation && !emailResult.success) {
       logger.error('Lead email send failed', {
         type: lead.type,
         referenceId,
@@ -282,8 +453,18 @@ export async function processLead(rawInput: unknown): Promise<LeadResult> {
       });
     }
 
-    // Step 3: At least one success = overall success
+    // Step 4: At least one success = overall success
     const success = emailResult.success || crmResult.success;
+
+    // Step 5: Log pipeline summary
+    logPipelineSummary({
+      referenceId,
+      leadType: lead.type,
+      emailResult,
+      crmResult,
+      totalLatencyMs,
+      overallSuccess: success,
+    });
 
     if (success) {
       logger.info('Lead processed successfully', {
@@ -309,10 +490,13 @@ export async function processLead(rawInput: unknown): Promise<LeadResult> {
       error: success ? undefined : 'PROCESSING_FAILED',
     };
   } catch (error) {
+    const totalLatencyMs = pipelineTimer.stop();
+
     logger.error('Lead processing unexpected error', {
       type: lead.type,
       referenceId,
       error: error instanceof Error ? error.message : 'Unknown error',
+      totalLatencyMs,
     });
 
     return {

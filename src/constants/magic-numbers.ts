@@ -13,6 +13,7 @@
  *     - 十六进制：./hex
  *     - 计数相关：./count
  *     - 小数相关：./decimal
+ *     - 断点相关：./breakpoints (CSS-First Responsive)
  *
  * 更新时间: 2025-09-17T16:52:11.363Z
  * 聚合模式: Leaf Constants Aggregation Pattern
@@ -42,10 +43,16 @@ export const HTTP_UNAUTHORIZED = 401;
 export const HTTP_OK_CONST = HTTP_OK;
 export const HTTP_BAD_REQUEST_CONST = HTTP_BAD_REQUEST;
 
-// 响应式断点 - 移动端适配核心 (像素)
-export const BREAKPOINT_SM = 640;
-export const BREAKPOINT_MD = 768;
-export const BREAKPOINT_XL = 1280;
+// 响应式断点 - Re-export from breakpoints.ts for backward compatibility
+// 🔄 CSS-First Responsive: 语义化断点常量现在定义在 ./breakpoints.ts
+export {
+  BREAKPOINT_SM,
+  BREAKPOINT_MD,
+  BREAKPOINT_LG,
+  BREAKPOINT_XL,
+} from './breakpoints';
+
+// Full HD 断点 (不在 Tailwind 默认断点中，保留在此)
 export const BREAKPOINT_FULL_HD = 1920;
 
 // 动画持续时间 - 用户体验相关 (毫秒)
@@ -83,4 +90,8 @@ export const ANGLE_360_DEG = 360;
  *
  * 6. 低频数字 → 局部常量
  *    const RETRY_COUNT = 3;  // 文件内局部常量
+ *
+ * 7. 响应式断点 → 使用 CSS-First 方式
+ *    import { BREAKPOINT_LG } from '@/constants/breakpoints';
+ *    // 优先使用 Tailwind 响应式类: sm:, md:, lg:, xl:, 2xl:
  */

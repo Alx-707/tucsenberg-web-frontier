@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/types/content';
 import { getPageBySlug } from '@/lib/content';
-import { generateFAQSchema, generateJSONLD } from '@/lib/structured-data';
+import { generateFAQSchema } from '@/lib/structured-data';
+import { JsonLdScript } from '@/components/seo';
 import {
   Accordion,
   AccordionContent,
@@ -145,13 +146,7 @@ export default async function FaqPage({ params }: FaqPageProps) {
 
   return (
     <>
-      {/* JSON-LD structured data for SEO - no nonce needed as it's data-only */}
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: generateJSONLD(faqSchema),
-        }}
-      />
+      <JsonLdScript data={faqSchema} />
 
       <main className='container mx-auto px-4 py-8 md:py-12'>
         <header className='mb-8 md:mb-12'>

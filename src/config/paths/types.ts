@@ -10,7 +10,7 @@ export interface LocalizedPath {
   zh: string;
 }
 
-// 页面类型定义
+// 页面类型定义 (静态路由)
 export type PageType =
   | 'home'
   | 'about'
@@ -22,3 +22,12 @@ export type PageType =
   | 'support'
   | 'privacy'
   | 'terms';
+
+// 动态路由类型定义
+export type DynamicPageType = 'blogDetail' | 'productDetail';
+
+// 动态路由路径模式
+export interface DynamicRoutePattern {
+  pattern: string;
+  paramName: string;
+}

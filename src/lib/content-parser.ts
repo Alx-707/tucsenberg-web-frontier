@@ -10,13 +10,21 @@ import matter from 'gray-matter';
 import yaml, { type LoadOptions } from 'js-yaml';
 import {
   ContentError,
+  ContentValidationError,
   type ContentMetadata,
   type ContentType,
   type Locale,
   type ParsedContent,
 } from '@/types/content';
-import { CONTENT_DIR, validateFilePath } from '@/lib/content-utils';
-import { validateContentMetadata } from '@/lib/content-validation';
+import {
+  CONTENT_DIR,
+  shouldFilterDraft,
+  validateFilePath,
+} from '@/lib/content-utils';
+import {
+  validateContentMetadata,
+  type ValidationConfig,
+} from '@/lib/content-validation';
 import { logger } from '@/lib/logger';
 import { CONTENT_LIMITS } from '@/constants/app-constants';
 
@@ -33,12 +41,37 @@ if (!yamlWithSafeLoad.safeLoad) {
 }
 
 /**
+ * Parser options for content file parsing
+ */
+export interface ParseContentOptions {
+  strictMode?: boolean;
+  validationConfig?: ValidationConfig;
+}
+
+/**
+ * Default validation config for production builds
+ */
+const PRODUCTION_VALIDATION_CONFIG: ValidationConfig = {
+  strictMode: process.env.NODE_ENV === 'production',
+  requireSlug: true,
+  requireLocale: false,
+  requireAuthor: false,
+  requireDescription: false,
+  requireTags: false,
+  requireCategories: false,
+};
+
+/**
  * Parse MDX file with frontmatter
  */
 export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
   filePath: string,
   type: ContentType,
+  options: ParseContentOptions = {},
 ): ParsedContent<T> {
+  const validationConfig =
+    options.validationConfig ?? PRODUCTION_VALIDATION_CONFIG;
+
   try {
     // Validate file path for security
     const validatedPath = validateFilePath(filePath, CONTENT_DIR);
@@ -68,18 +101,29 @@ export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
       },
     });
 
-    // Validate metadata
-    const validation = validateContentMetadata(frontmatter, type);
-    if (!validation.isValid) {
-      logger.warn('Content validation failed', {
-        file: filePath,
-        errors: validation.errors,
-        warnings: validation.warnings,
-      });
+    // Validate metadata with config
+    const validation = validateContentMetadata(
+      frontmatter,
+      type,
+      validationConfig,
+    );
+
+    // Log validation issues
+    logValidationResult(filePath, validation, options.strictMode);
+
+    // In strict mode, throw error on validation failure
+    if (options.strictMode && !validation.isValid) {
+      throw new ContentValidationError(
+        `Content validation failed for ${filePath}`,
+        validation.errors,
+        filePath,
+      );
     }
 
-    // Extract slug from filename
-    const slug = path.basename(filePath, path.extname(filePath));
+    // Extract slug from filename (fallback if not in frontmatter)
+    const slug =
+      (frontmatter['slug'] as string) ??
+      path.basename(filePath, path.extname(filePath));
 
     return {
       slug,
@@ -88,7 +132,10 @@ export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
       filePath: validatedPath,
     };
   } catch (error) {
-    if (error instanceof ContentError) {
+    if (
+      error instanceof ContentError ||
+      error instanceof ContentValidationError
+    ) {
       throw error;
     }
     throw new ContentError(
@@ -96,6 +143,53 @@ export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
       'PARSE_ERROR',
     );
   }
+}
+
+/**
+ * Log validation results with appropriate severity
+ */
+function logValidationResult(
+  filePath: string,
+  validation: { isValid: boolean; errors: string[]; warnings: string[] },
+  strictMode?: boolean,
+): void {
+  if (!validation.isValid) {
+    const logMethod = strictMode ? logger.error : logger.warn;
+    logMethod('Content validation failed', {
+      file: filePath,
+      errors: validation.errors,
+      warnings: validation.warnings,
+    });
+  } else if (validation.warnings.length > 0) {
+    logger.info('Content validation warnings', {
+      file: filePath,
+      warnings: validation.warnings,
+    });
+  }
+}
+
+/**
+ * Parse content file with draft filtering
+ */
+export function parseContentFileWithDraftFilter<
+  T extends ContentMetadata = ContentMetadata,
+>(
+  filePath: string,
+  type: ContentType,
+  options: ParseContentOptions = {},
+): ParsedContent<T> | null {
+  const parsed = parseContentFile<T>(filePath, type, options);
+
+  // Filter out drafts based on configuration
+  if (shouldFilterDraft(parsed.metadata.draft)) {
+    logger.info('Filtering draft content', {
+      file: filePath,
+      slug: parsed.slug,
+    });
+    return null;
+  }
+
+  return parsed;
 }
 
 /**

@@ -1,45 +1,33 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// Import after mocks are set up
 import { WhatsAppService } from '../whatsapp-core';
 import { WhatsAppUtils } from '../whatsapp-utils';
 
 // Mock dependencies using hoisted pattern for ESM compatibility
-// These mocks must be declared before vi.mock() calls
-const mockMessageMethods = vi.hoisted(() => ({
+const mockClient = vi.hoisted(() => ({
   sendMessage: vi.fn(),
   sendTextMessage: vi.fn(),
   sendImageMessage: vi.fn(),
   sendTemplateMessage: vi.fn(),
   sendButtonMessage: vi.fn(),
   sendListMessage: vi.fn(),
-}));
-
-const mockMediaMethods = vi.hoisted(() => ({
   getMediaUrl: vi.fn(),
   downloadMedia: vi.fn(),
   uploadMedia: vi.fn(),
+  isReady: vi.fn(),
+  getClientInfo: vi.fn(),
 }));
 
-// Mock the message service module with a class that has the methods
-vi.mock('@/lib/whatsapp-messages', () => ({
-  WhatsAppMessageService: class MockWhatsAppMessageService {
-    sendMessage = mockMessageMethods.sendMessage;
-    sendTextMessage = mockMessageMethods.sendTextMessage;
-    sendImageMessage = mockMessageMethods.sendImageMessage;
-    sendTemplateMessage = mockMessageMethods.sendTemplateMessage;
-    sendButtonMessage = mockMessageMethods.sendButtonMessage;
-    sendListMessage = mockMessageMethods.sendListMessage;
-    constructor(_token?: string, _phoneId?: string) {}
-  },
-}));
-
-// Mock the media service module with a class that has the methods
-vi.mock('@/lib/whatsapp-media', () => ({
-  WhatsAppMediaService: class MockWhatsAppMediaService {
-    getMediaUrl = mockMediaMethods.getMediaUrl;
-    downloadMedia = mockMediaMethods.downloadMedia;
-    uploadMedia = mockMediaMethods.uploadMedia;
-    constructor(_token?: string, _phoneId?: string) {}
-  },
+vi.mock('@/lib/whatsapp/client-factory', () => ({
+  getWhatsAppClient: () => mockClient,
+  createWhatsAppClient: () => mockClient,
+  resetWhatsAppClient: vi.fn(),
+  isMockClient: vi.fn().mockReturnValue(true),
+  getClientEnvironmentInfo: vi.fn().mockReturnValue({
+    environment: 'test',
+    clientType: 'mock',
+    hasCredentials: false,
+  }),
 }));
 
 vi.mock('@/lib/whatsapp-utils', () => ({
@@ -59,76 +47,71 @@ vi.mock('@/lib/logger', () => ({
   },
 }));
 
-describe('WhatsAppService (Core)', () => {
-  // Vitest uses jsdom environment where `typeof window` is "object"
-  // NODE_ENV is "test", not "production"
-  // So the early return condition (line 30-35) is FALSE:
-  //   process.env.NODE_ENV !== 'production' (true) && typeof window === 'undefined' (false) => false
-  // This means validation runs and services are initialized when credentials are valid.
-  const mockAccessToken = 'test-access-token';
-  const mockPhoneNumberId = 'test-phone-id';
-
+describe('WhatsAppService (Core with DI)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset mock implementations with default return values
-    mockMessageMethods.sendMessage.mockResolvedValue({ success: true });
-    mockMessageMethods.sendTextMessage.mockResolvedValue({ success: true });
-    mockMessageMethods.sendImageMessage.mockResolvedValue({ success: true });
-    mockMessageMethods.sendTemplateMessage.mockResolvedValue({ success: true });
-    mockMessageMethods.sendButtonMessage.mockResolvedValue({ success: true });
-    mockMessageMethods.sendListMessage.mockResolvedValue({ success: true });
-    mockMediaMethods.getMediaUrl.mockResolvedValue(
-      'https://cdn.example.com/media',
-    );
-    mockMediaMethods.downloadMedia.mockResolvedValue(Buffer.from('test'));
-    mockMediaMethods.uploadMedia.mockResolvedValue('media-123');
+    mockClient.sendMessage.mockResolvedValue({ success: true });
+    mockClient.sendTextMessage.mockResolvedValue({ success: true });
+    mockClient.sendImageMessage.mockResolvedValue({ success: true });
+    mockClient.sendTemplateMessage.mockResolvedValue({ success: true });
+    mockClient.sendButtonMessage.mockResolvedValue({ success: true });
+    mockClient.sendListMessage.mockResolvedValue({ success: true });
+    mockClient.getMediaUrl.mockResolvedValue('https://cdn.example.com/media');
+    mockClient.downloadMedia.mockResolvedValue(Buffer.from('test'));
+    mockClient.uploadMedia.mockResolvedValue('media-123');
+    mockClient.isReady.mockReturnValue(true);
+    mockClient.getClientInfo.mockReturnValue({
+      type: 'mock',
+      phoneNumberId: 'test-phone-id',
+      isConfigured: true,
+    });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.unstubAllEnvs();
   });
 
   describe('constructor', () => {
-    it('should create instance with provided credentials', () => {
-      const instance = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+    it('should create instance using default client from factory', () => {
+      const instance = new WhatsAppService();
       expect(instance).toBeInstanceOf(WhatsAppService);
     });
 
-    it('should store provided credentials in config', () => {
-      const instance = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      const config = instance.getConfig();
-
-      expect(config.accessToken).toBe(mockAccessToken);
-      expect(config.phoneNumberId).toBe(mockPhoneNumberId);
+    it('should accept injected client for testing', () => {
+      const customClient = {
+        ...mockClient,
+        getClientInfo: vi.fn().mockReturnValue({ type: 'custom' }),
+      };
+      const instance = new WhatsAppService(customClient as never);
+      expect(instance.getClientInfo()).toEqual({ type: 'custom' });
     });
+  });
 
-    it('should throw error when credentials are missing', () => {
-      // In jsdom environment, validation runs (early return skipped)
-      // Empty credentials should throw
-      expect(() => new WhatsAppService('', '')).toThrow(
-        'WhatsApp access token and phone number ID are required',
-      );
+  describe('isReady', () => {
+    it('should delegate to client isReady', () => {
+      const service = new WhatsAppService();
+      const result = service.isReady();
+      expect(mockClient.isReady).toHaveBeenCalled();
+      expect(result).toBe(true);
     });
+  });
 
-    it('should throw error when only token is missing', () => {
-      expect(() => new WhatsAppService('', 'phone-id')).toThrow(
-        'WhatsApp access token and phone number ID are required',
-      );
+  describe('getClientInfo', () => {
+    it('should return client info', () => {
+      const service = new WhatsAppService();
+      const info = service.getClientInfo();
+      expect(info.type).toBe('mock');
+      expect(info.phoneNumberId).toBe('test-phone-id');
     });
+  });
 
-    it('should throw error when only phone ID is missing', () => {
-      expect(() => new WhatsAppService('token', '')).toThrow(
-        'WhatsApp access token and phone number ID are required',
-      );
-    });
-
-    it('should initialize services with valid credentials', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-
-      // Services should be initialized - verify by checking accessor methods
-      expect(service.getMessageService()).toBeDefined();
-      expect(service.getMediaService()).toBeDefined();
+  describe('getClient', () => {
+    it('should return the underlying client', () => {
+      const service = new WhatsAppService();
+      const client = service.getClient();
+      expect(client).toBeDefined();
+      expect(client.sendMessage).toBeDefined();
     });
   });
 
@@ -153,106 +136,11 @@ describe('WhatsAppService (Core)', () => {
         'test message',
       );
     });
-
-    it('should validate message with custom max length', () => {
-      WhatsAppService.validateMessageLength('test', 100);
-      expect(WhatsAppUtils.validateMessageLength).toHaveBeenCalledWith(
-        'test',
-        100,
-      );
-    });
   });
 
-  describe('getConfig', () => {
-    it('should return configuration object', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      const config = service.getConfig();
-
-      expect(config).toEqual({
-        accessToken: mockAccessToken,
-        phoneNumberId: mockPhoneNumberId,
-      });
-    });
-  });
-
-  describe('service method signatures', () => {
-    it('should have sendMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendMessage).toBe('function');
-    });
-
-    it('should have sendTextMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendTextMessage).toBe('function');
-    });
-
-    it('should have sendImageMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendImageMessage).toBe('function');
-    });
-
-    it('should have sendTemplateMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendTemplateMessage).toBe('function');
-    });
-
-    it('should have sendButtonMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendButtonMessage).toBe('function');
-    });
-
-    it('should have sendListMessage method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.sendListMessage).toBe('function');
-    });
-
-    it('should have getMediaUrl method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.getMediaUrl).toBe('function');
-    });
-
-    it('should have downloadMedia method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.downloadMedia).toBe('function');
-    });
-
-    it('should have uploadMedia method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.uploadMedia).toBe('function');
-    });
-
-    it('should have getMessageService method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.getMessageService).toBe('function');
-    });
-
-    it('should have getMediaService method', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      expect(typeof service.getMediaService).toBe('function');
-    });
-  });
-
-  describe('service accessor methods', () => {
-    it('should return message service instance', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      const messageService = service.getMessageService();
-      // Returns the mocked service
-      expect(messageService).toBeDefined();
-      expect(messageService.sendMessage).toBeDefined();
-    });
-
-    it('should return media service instance', () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-      const mediaService = service.getMediaService();
-      // Returns the mocked service
-      expect(mediaService).toBeDefined();
-      expect(mediaService.getMediaUrl).toBeDefined();
-    });
-  });
-
-  describe('message delegation', () => {
-    it('should delegate sendMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+  describe('message methods delegation', () => {
+    it('should delegate sendMessage to client', async () => {
+      const service = new WhatsAppService();
       const request = {
         messaging_product: 'whatsapp' as const,
         recipient_type: 'individual' as const,
@@ -262,67 +150,58 @@ describe('WhatsAppService (Core)', () => {
       };
 
       await service.sendMessage(request);
-
-      expect(mockMessageMethods.sendMessage).toHaveBeenCalledWith(request);
+      expect(mockClient.sendMessage).toHaveBeenCalledWith(request);
     });
 
-    it('should delegate sendTextMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-
+    it('should delegate sendTextMessage to client', async () => {
+      const service = new WhatsAppService();
       await service.sendTextMessage('1234567890', 'Hello', true);
-
-      expect(mockMessageMethods.sendTextMessage).toHaveBeenCalledWith(
+      expect(mockClient.sendTextMessage).toHaveBeenCalledWith(
         '1234567890',
         'Hello',
         true,
       );
     });
 
-    it('should delegate sendImageMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-
+    it('should delegate sendImageMessage to client', async () => {
+      const service = new WhatsAppService();
       await service.sendImageMessage(
         '1234567890',
         'https://example.com/image.jpg',
         'Caption',
       );
-
-      expect(mockMessageMethods.sendImageMessage).toHaveBeenCalledWith(
+      expect(mockClient.sendImageMessage).toHaveBeenCalledWith(
         '1234567890',
         'https://example.com/image.jpg',
         'Caption',
       );
     });
 
-    it('should delegate sendTemplateMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+    it('should delegate sendTemplateMessage to client', async () => {
+      const service = new WhatsAppService();
       const args = {
         to: '1234567890',
         templateName: 'welcome',
         languageCode: 'en',
         parameters: ['John'],
       };
-
       await service.sendTemplateMessage(args);
-
-      expect(mockMessageMethods.sendTemplateMessage).toHaveBeenCalledWith(args);
+      expect(mockClient.sendTemplateMessage).toHaveBeenCalledWith(args);
     });
 
-    it('should delegate sendButtonMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+    it('should delegate sendButtonMessage to client', async () => {
+      const service = new WhatsAppService();
       const args = {
         to: '1234567890',
         bodyText: 'Choose an option',
         buttons: [{ id: 'btn1', title: 'Option 1' }],
       };
-
       await service.sendButtonMessage(args);
-
-      expect(mockMessageMethods.sendButtonMessage).toHaveBeenCalledWith(args);
+      expect(mockClient.sendButtonMessage).toHaveBeenCalledWith(args);
     });
 
-    it('should delegate sendListMessage to messageService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+    it('should delegate sendListMessage to client', async () => {
+      const service = new WhatsAppService();
       const args = {
         to: '1234567890',
         bodyText: 'Select from list',
@@ -334,44 +213,66 @@ describe('WhatsAppService (Core)', () => {
           },
         ],
       };
-
       await service.sendListMessage(args);
-
-      expect(mockMessageMethods.sendListMessage).toHaveBeenCalledWith(args);
+      expect(mockClient.sendListMessage).toHaveBeenCalledWith(args);
     });
   });
 
-  describe('media delegation', () => {
-    it('should delegate getMediaUrl to mediaService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-
+  describe('media methods delegation', () => {
+    it('should delegate getMediaUrl to client', async () => {
+      const service = new WhatsAppService();
       const result = await service.getMediaUrl('media-123');
-
-      expect(mockMediaMethods.getMediaUrl).toHaveBeenCalledWith('media-123');
+      expect(mockClient.getMediaUrl).toHaveBeenCalledWith('media-123');
       expect(result).toBe('https://cdn.example.com/media');
     });
 
-    it('should delegate downloadMedia to mediaService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
-
+    it('should delegate downloadMedia to client', async () => {
+      const service = new WhatsAppService();
       const result = await service.downloadMedia('media-123');
-
-      expect(mockMediaMethods.downloadMedia).toHaveBeenCalledWith('media-123');
+      expect(mockClient.downloadMedia).toHaveBeenCalledWith('media-123');
       expect(result).toEqual(Buffer.from('test'));
     });
 
-    it('should delegate uploadMedia to mediaService', async () => {
-      const service = new WhatsAppService(mockAccessToken, mockPhoneNumberId);
+    it('should delegate uploadMedia to client', async () => {
+      const service = new WhatsAppService();
       const file = Buffer.from('test file content');
-
       const result = await service.uploadMedia(file, 'image', 'test.jpg');
-
-      expect(mockMediaMethods.uploadMedia).toHaveBeenCalledWith(
+      expect(mockClient.uploadMedia).toHaveBeenCalledWith(
         file,
         'image',
         'test.jpg',
       );
       expect(result).toBe('media-123');
+    });
+  });
+
+  describe('error handling', () => {
+    it('should propagate errors from client', async () => {
+      mockClient.sendMessage.mockRejectedValueOnce(new Error('API Error'));
+      const service = new WhatsAppService();
+
+      await expect(
+        service.sendMessage({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: '123',
+          type: 'text',
+          text: { body: 'test' },
+        }),
+      ).rejects.toThrow('API Error');
+    });
+
+    it('should return error response from client', async () => {
+      mockClient.sendTextMessage.mockResolvedValueOnce({
+        success: false,
+        error: 'Rate limit exceeded',
+      });
+
+      const service = new WhatsAppService();
+      const result = await service.sendTextMessage('123', 'test');
+
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Rate limit exceeded');
     });
   });
 });

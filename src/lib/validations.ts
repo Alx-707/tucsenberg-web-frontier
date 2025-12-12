@@ -3,6 +3,7 @@ import {
   contactFormSchema,
   type ContactFormData,
 } from '@/lib/form-schema/contact-form-schema';
+import { sanitizePlainText } from '@/lib/security-validation';
 import { CONTACT_FORM_VALIDATION_CONSTANTS } from '@/config/contact-form-config';
 import { COUNT_FIVE, COUNT_TEN, ZERO } from '@/constants';
 
@@ -141,12 +142,12 @@ export const validationHelpers = {
   /**
    * 清理和标准化输入数据
    * Sanitize and normalize input data
+   *
+   * @deprecated Use sanitizePlainText from security-validation for new code.
+   *             This wrapper is kept for backward compatibility.
    */
   sanitizeInput: (input: string): string => {
-    return input
-      .trim()
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .replace(/[<>]/g, ''); // Remove potential HTML tags
+    return sanitizePlainText(input);
   },
 
   /**

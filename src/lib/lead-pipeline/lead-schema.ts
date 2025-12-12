@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import { sanitizePlainText } from '@/lib/security-validation';
 import {
   COUNT_TEN,
   MAGIC_255,
@@ -47,11 +48,19 @@ export type ContactSubject =
   (typeof CONTACT_SUBJECTS)[keyof typeof CONTACT_SUBJECTS];
 
 /**
+ * Reusable sanitized string field
+ * Applies sanitizePlainText after validation
+ */
+const sanitizedString = () => z.string().transform(sanitizePlainText);
+
+/**
  * Base lead fields shared across all lead types
  */
 const baseLeadFields = {
   email: z.string().email().max(EMAIL_MAX_LENGTH),
-  company: z.string().trim().max(COMPANY_MAX_LENGTH).optional(),
+  company: sanitizedString()
+    .pipe(z.string().max(COMPANY_MAX_LENGTH))
+    .optional(),
   marketingConsent: z.boolean().optional().default(false),
 };
 
@@ -61,14 +70,16 @@ const baseLeadFields = {
  */
 export const contactLeadSchema = z.object({
   type: z.literal(LEAD_TYPES.CONTACT),
-  fullName: z.string().trim().min(ONE).max(NAME_MAX_LENGTH),
+  fullName: sanitizedString().pipe(z.string().min(ONE).max(NAME_MAX_LENGTH)),
   subject: z.enum([
     CONTACT_SUBJECTS.PRODUCT_INQUIRY,
     CONTACT_SUBJECTS.DISTRIBUTOR,
     CONTACT_SUBJECTS.OEM_ODM,
     CONTACT_SUBJECTS.OTHER,
   ]),
-  message: z.string().trim().min(MESSAGE_MIN_LENGTH).max(MESSAGE_MAX_LENGTH),
+  message: sanitizedString().pipe(
+    z.string().min(MESSAGE_MIN_LENGTH).max(MESSAGE_MAX_LENGTH),
+  ),
   turnstileToken: z.string().min(ONE),
   submittedAt: z.string().optional(),
   ...baseLeadFields,
@@ -80,11 +91,15 @@ export const contactLeadSchema = z.object({
  */
 export const productLeadSchema = z.object({
   type: z.literal(LEAD_TYPES.PRODUCT),
-  fullName: z.string().trim().min(ONE).max(NAME_MAX_LENGTH),
+  fullName: sanitizedString().pipe(z.string().min(ONE).max(NAME_MAX_LENGTH)),
   productSlug: z.string().trim().min(ONE),
-  productName: z.string().trim().min(ONE).max(PRODUCT_NAME_MAX_LENGTH),
+  productName: sanitizedString().pipe(
+    z.string().min(ONE).max(PRODUCT_NAME_MAX_LENGTH),
+  ),
   quantity: z.union([z.string().trim().min(ONE), z.coerce.number().positive()]),
-  requirements: z.string().trim().max(REQUIREMENTS_MAX_LENGTH).optional(),
+  requirements: sanitizedString()
+    .pipe(z.string().max(REQUIREMENTS_MAX_LENGTH))
+    .optional(),
   ...baseLeadFields,
 });
 

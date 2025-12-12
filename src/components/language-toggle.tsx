@@ -1,9 +1,11 @@
 'use client';
 
+import type { ComponentProps } from 'react';
 import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useTransition,
@@ -22,6 +24,46 @@ import { MAGIC_2000 } from '@/constants/count';
 import { Link, usePathname } from '@/i18n/routing';
 
 const TRANSITION_TIMEOUT = ANIMATION_DURATION_VERY_SLOW; // 1 second timeout for language switch
+
+// Extract href type from Link component
+type LinkProps = ComponentProps<typeof Link>;
+type LinkHref = LinkProps['href'];
+
+// Dynamic route patterns for matching actual URLs to route patterns
+const DYNAMIC_ROUTE_PATTERNS = [
+  {
+    pattern: /^\/blog\/([^/]+)$/,
+    buildHref: (slug: string): LinkHref => ({
+      pathname: '/blog/[slug]',
+      params: { slug },
+    }),
+  },
+  {
+    pattern: /^\/products\/([^/]+)$/,
+    buildHref: (slug: string): LinkHref => ({
+      pathname: '/products/[slug]',
+      params: { slug },
+    }),
+  },
+] as const;
+
+/**
+ * Parses current pathname to build the appropriate href for Link
+ * Handles both static routes (returns pathname string) and dynamic routes
+ * (returns object with pathname pattern and params)
+ */
+function parsePathnameForLink(currentPathname: string): LinkHref {
+  for (const { pattern, buildHref } of DYNAMIC_ROUTE_PATTERNS) {
+    const match = currentPathname.match(pattern);
+    if (match?.[1]) {
+      return buildHref(match[1]);
+    }
+  }
+
+  // Static routes - cast required because usePathname returns runtime string
+  // Safe because usePathname only returns valid configured pathnames
+  return currentPathname as LinkHref;
+}
 
 // Custom hook for language switching logic
 const useLanguageSwitch = () => {
@@ -99,6 +141,9 @@ export const LanguageToggle = memo(({ locale }: { locale?: 'en' | 'zh' }) => {
   const { switchingTo, isPending, handleLanguageSwitch } = useLanguageSwitch();
   const [isOpen, setIsOpen] = useState(false);
 
+  // Parse pathname once and memoize for performance
+  const linkHref = useMemo(() => parsePathnameForLink(pathname), [pathname]);
+
   // Get current language display name
   const currentLanguageName = effectiveLocale === 'en' ? 'English' : '简体中文';
 
@@ -173,7 +218,7 @@ export const LanguageToggle = memo(({ locale }: { locale?: 'en' | 'zh' }) => {
             className='p-0'
           >
             <Link
-              href={pathname}
+              href={linkHref}
               locale='en'
               className={cn(
                 // 列表项：左对齐，行高24-28px，行间距6-8px
@@ -209,7 +254,7 @@ export const LanguageToggle = memo(({ locale }: { locale?: 'en' | 'zh' }) => {
             className='p-0'
           >
             <Link
-              href={pathname}
+              href={linkHref}
               locale='zh'
               className={cn(
                 // 列表项：左对齐，行高24-28px，行间距6-8px

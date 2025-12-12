@@ -85,7 +85,7 @@ export function WhatsAppChatWindow({
         // Positioning - appears above the button
         'absolute right-0 bottom-full mb-4 w-80',
         // Animation
-        'animate-in fade-in zoom-in-95 slide-in-from-bottom-2 origin-bottom-right duration-200',
+        'origin-bottom-right duration-200 animate-in fade-in slide-in-from-bottom-2 zoom-in-95',
         // Styling
         'rounded-2xl border shadow-2xl backdrop-blur-md',
         'bg-background/95 supports-[backdrop-filter]:bg-background/90',

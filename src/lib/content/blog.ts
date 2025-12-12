@@ -8,10 +8,12 @@
  * - expose view-oriented domain models (PostSummary, PostDetail)
  * - accept only explicit, serializable arguments (locale, slug, options)
  * - intentionally do NOT use request-scoped APIs (headers, cookies, etc.)
- * - are currently implemented without "use cache"; Cache Components integration
- *   will be handled in later phases.
+ * - use "use cache" + cacheLife() + cacheTag() for Cache Components integration
+ *
+ * @see src/lib/cache/cache-tags.ts - Cache tag naming conventions
  */
 
+import { cacheLife, cacheTag } from 'next/cache';
 import type {
   BlogPost,
   ContentQueryOptions,
@@ -23,6 +25,7 @@ import type {
   PostSummary,
 } from '@/types/content';
 import { getAllPosts, getPostBySlug } from '@/lib/content-query';
+import { contentTags } from '@/lib/cache/cache-tags';
 
 /**
  * Assign optional metadata fields to summary
@@ -149,11 +152,18 @@ function toContentQueryOptions(options?: PostListOptions): ContentQueryOptions {
  *
  * This function is designed as a cache-friendly data wrapper: it only depends on
  * its explicit arguments and the underlying content-query implementation.
+ *
+ * Cache tags enable selective invalidation:
+ * - `content:list:blog:{locale}` - Invalidate blog list for this locale
  */
 export const getAllPostsCached: GetAllPostsCachedFn = async (
   locale,
   options,
 ) => {
+  'use cache';
+  cacheLife('days');
+  cacheTag(contentTags.blogList(locale));
+
   const normalizedOptions = toContentQueryOptions(options);
 
   const posts = await Promise.resolve(getAllPosts(locale, normalizedOptions));
@@ -166,11 +176,20 @@ export const getAllPostsCached: GetAllPostsCachedFn = async (
  *
  * Errors from the underlying getPostBySlug call are propagated as-is so that
  * callers can apply their own error handling (e.g. mapping to 404 routes).
+ *
+ * Cache tags enable selective invalidation:
+ * - `content:blog:{slug}:{locale}` - Invalidate this specific post
+ * - `content:list:blog:{locale}` - Also tagged for list invalidation cascade
  */
 export const getPostBySlugCached: GetPostBySlugCachedFn = async (
   locale,
   slug,
 ) => {
+  'use cache';
+  cacheLife('days');
+  cacheTag(contentTags.blogPost(slug, locale));
+  cacheTag(contentTags.blogList(locale));
+
   const post = await Promise.resolve(getPostBySlug(slug, locale));
 
   return mapBlogPostToDetail(post, locale);

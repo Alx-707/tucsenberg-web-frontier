@@ -21,12 +21,35 @@ export const CONFIG_DIR = path.join(CONTENT_DIR, 'config');
 // Allowed file extensions for security
 export const ALLOWED_EXTENSIONS = ['.md', '.mdx', '.json'];
 
+/**
+ * Determine if drafts should be enabled based on environment.
+ *
+ * Priority order:
+ * 1. CONTENT_ENABLE_DRAFTS env var (explicit override)
+ * 2. NODE_ENV === 'development' (default dev behavior)
+ * 3. content.json enableDrafts setting (config file)
+ *
+ * In production builds, drafts are disabled by default unless explicitly enabled.
+ */
+function resolveDraftsEnabled(configValue?: boolean): boolean {
+  const envOverride = process.env.CONTENT_ENABLE_DRAFTS;
+  if (envOverride !== undefined) {
+    return envOverride === 'true';
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    return true;
+  }
+
+  return configValue ?? false;
+}
+
 // Default content configuration
 const DEFAULT_CONFIG: ContentConfig = {
   defaultLocale: 'en',
   supportedLocales: ['en', 'zh'],
   postsPerPage: COUNT_TEN,
-  enableDrafts: process.env.NODE_ENV === 'development',
+  enableDrafts: resolveDraftsEnabled(),
   enableSearch: true,
   enableComments: false,
   autoGenerateExcerpt: true,
@@ -40,7 +63,7 @@ const DEFAULT_CONFIG: ContentConfig = {
  *
  * 这样可以确保：
  * - 只有 ContentConfig 中声明的字段会被覆盖；
- * - content.json 中多出来的键不会静默“注入”到运行时代码；
+ * - content.json 中多出来的键不会静默"注入"到运行时代码；
  * - Semgrep 不再看到宽泛的 "{ ...DEFAULT_CONFIG, ...config }" 合并模式。
  */
 function mergeContentConfig(
@@ -51,7 +74,7 @@ function mergeContentConfig(
     defaultLocale: override.defaultLocale ?? baseConfig.defaultLocale,
     supportedLocales: override.supportedLocales ?? baseConfig.supportedLocales,
     postsPerPage: override.postsPerPage ?? baseConfig.postsPerPage,
-    enableDrafts: override.enableDrafts ?? baseConfig.enableDrafts,
+    enableDrafts: resolveDraftsEnabled(override.enableDrafts),
     enableSearch: override.enableSearch ?? baseConfig.enableSearch,
     autoGenerateExcerpt:
       override.autoGenerateExcerpt ?? baseConfig.autoGenerateExcerpt,
@@ -144,4 +167,28 @@ export function getContentConfig(): ContentConfig {
   }
 
   return DEFAULT_CONFIG;
+}
+
+/**
+ * Check if drafts would be published in production build.
+ * Logs warning during build if drafts are enabled in production mode.
+ */
+export function warnIfDraftsInProduction(): void {
+  const config = getContentConfig();
+
+  if (config.enableDrafts && process.env.NODE_ENV === 'production') {
+    logger.warn(
+      'CONTENT_WARNING: Drafts are enabled in production build. ' +
+        'Draft content may be exposed to users. ' +
+        'Set CONTENT_ENABLE_DRAFTS=false or remove the env var to disable.',
+    );
+  }
+}
+
+/**
+ * Check if content is a draft and whether it should be filtered.
+ */
+export function shouldFilterDraft(isDraft?: boolean): boolean {
+  const config = getContentConfig();
+  return isDraft === true && !config.enableDrafts;
 }

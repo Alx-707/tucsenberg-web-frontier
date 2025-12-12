@@ -189,6 +189,17 @@ export {
   OFFSET_NEGATIVE_MASSIVE,
 } from './decimal';
 
+// 响应式断点常量
+export {
+  BREAKPOINT_SM,
+  BREAKPOINT_MD,
+  BREAKPOINT_LG,
+  BREAKPOINT_XL,
+  BREAKPOINT_2XL,
+  BREAKPOINTS,
+} from './breakpoints';
+export type { BreakpointKey } from './breakpoints';
+
 // 魔法数字常量 - Facade聚合入口
 export {
   ZERO,
@@ -198,9 +209,6 @@ export {
   HTTP_UNAUTHORIZED,
   HTTP_OK_CONST,
   HTTP_BAD_REQUEST_CONST,
-  BREAKPOINT_SM,
-  BREAKPOINT_MD,
-  BREAKPOINT_XL,
   BREAKPOINT_FULL_HD,
   ANIMATION_DURATION_NORMAL,
   ANIMATION_DURATION_SLOW,

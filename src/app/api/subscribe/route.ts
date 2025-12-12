@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createCorsPreflightResponse } from '@/lib/api/cors-utils';
 import { safeParseJson as safeParseJsonHelper } from '@/lib/api/safe-parse-json';
 import { withIdempotency } from '@/lib/idempotency';
 import { processLead, type LeadResult } from '@/lib/lead-pipeline';
 import { LEAD_TYPES } from '@/lib/lead-pipeline/lead-schema';
 import { logger } from '@/lib/logger';
 import {
-  checkRateLimit,
+  checkDistributedRateLimit,
+  createRateLimitHeaders,
+} from '@/lib/security/distributed-rate-limit';
+import {
   getClientIP,
   verifyTurnstile,
 } from '@/app/api/contact/contact-api-utils';
-import { COUNT_TEN, HTTP_BAD_REQUEST_CONST } from '@/constants';
+import { HTTP_BAD_REQUEST_CONST } from '@/constants';
 
 // HTTP status codes as named constants
 const HTTP_INTERNAL_ERROR = 500;
@@ -62,18 +66,26 @@ function createErrorResponse(result: LeadResult): NextResponse {
   );
 }
 
-export function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const clientIP = getClientIP(request);
 
-  // Check rate limit (10 requests per minute for newsletter)
-  if (!checkRateLimit(clientIP, COUNT_TEN)) {
-    logger.warn('Newsletter rate limit exceeded', { ip: clientIP });
+  // Check distributed rate limit (3 requests per minute for newsletter)
+  const rateLimitResult = await checkDistributedRateLimit(
+    clientIP,
+    'subscribe',
+  );
+  if (!rateLimitResult.allowed) {
+    logger.warn('Newsletter rate limit exceeded', {
+      ip: clientIP,
+      retryAfter: rateLimitResult.retryAfter,
+    });
+    const headers = createRateLimitHeaders(rateLimitResult);
     return NextResponse.json(
       {
         success: false,
         message: 'Too many requests. Please try again later.',
       },
-      { status: HTTP_TOO_MANY_REQUESTS },
+      { status: HTTP_TOO_MANY_REQUESTS, headers },
     );
   }
 
@@ -150,13 +162,6 @@ export function POST(request: NextRequest) {
 }
 
 // 处理 OPTIONS 请求 (CORS)
-export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Idempotency-Key',
-    },
-  });
+export function OPTIONS(request: NextRequest) {
+  return createCorsPreflightResponse(request);
 }

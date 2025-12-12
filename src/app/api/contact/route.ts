@@ -4,18 +4,49 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createCorsPreflightResponse } from '@/lib/api/cors-utils';
 import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
 import {
-  checkRateLimit,
-  getClientIP,
-} from '@/app/api/contact/contact-api-utils';
+  checkDistributedRateLimit,
+  createRateLimitHeaders,
+  type RateLimitPreset,
+} from '@/lib/security/distributed-rate-limit';
+import { getClientIP } from '@/app/api/contact/contact-api-utils';
 import {
   getContactFormStats,
   processFormSubmission,
   validateAdminAccess,
   validateFormData,
 } from '@/app/api/contact/contact-api-validation';
+
+/**
+ * Check rate limit and return early response if exceeded
+ */
+async function checkRateLimitOrFail(
+  clientIP: string,
+  preset: RateLimitPreset,
+): Promise<{
+  rateLimitResult: Awaited<ReturnType<typeof checkDistributedRateLimit>>;
+  errorResponse?: NextResponse;
+}> {
+  const rateLimitResult = await checkDistributedRateLimit(clientIP, preset);
+  if (!rateLimitResult.allowed) {
+    logger.warn('Rate limit exceeded', {
+      ip: clientIP,
+      retryAfter: rateLimitResult.retryAfter,
+    });
+    const headers = createRateLimitHeaders(rateLimitResult);
+    return {
+      rateLimitResult,
+      errorResponse: NextResponse.json(
+        { success: false, error: 'Too many requests. Please try again later.' },
+        { status: 429, headers },
+      ),
+    };
+  }
+  return { rateLimitResult };
+}
 
 /**
  * POST /api/contact
@@ -27,70 +58,54 @@ export async function POST(request: NextRequest) {
   const clientIP = getClientIP(request);
 
   try {
-    // 检查速率限制
-    if (!checkRateLimit(clientIP)) {
-      logger.warn('Rate limit exceeded', { ip: clientIP });
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Too many requests. Please try again later.',
-        },
-        { status: 429 },
-      );
-    }
+    const { rateLimitResult, errorResponse } = await checkRateLimitOrFail(
+      clientIP,
+      'contact',
+    );
+    if (errorResponse) return errorResponse;
 
-    // 解析请求体（安全 JSON 解析）
     const parsedBody = await safeParseJson<unknown>(request, {
       route: '/api/contact',
     });
     if (!parsedBody.ok) {
       return NextResponse.json(
-        {
-          success: false,
-          error: parsedBody.error,
-        },
+        { success: false, error: parsedBody.error },
         { status: 400 },
       );
     }
 
-    // 验证表单数据
     const validation = await validateFormData(parsedBody.data, clientIP);
     if (!validation.success || !validation.data) {
       return NextResponse.json(validation, { status: 400 });
     }
 
-    const formData = validation.data;
-
-    // 处理表单提交
-    const submissionResult = await processFormSubmission(formData);
-
-    // 记录成功提交
+    const submissionResult = await processFormSubmission(validation.data);
     const processingTime = Date.now() - startTime;
+
     logger.info('Contact form submitted successfully', {
-      email: formData.email,
-      company: formData.company,
+      email: validation.data.email,
+      company: validation.data.company,
       ip: clientIP,
       processingTime,
       emailSent: submissionResult.emailSent,
       recordCreated: submissionResult.recordCreated,
-      emailMessageId: submissionResult.emailMessageId,
-      airtableRecordId: submissionResult.airtableRecordId,
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Thank you for your message. We will get back to you soon.',
-      messageId: submissionResult.emailMessageId,
-      recordId: submissionResult.airtableRecordId,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Thank you for your message. We will get back to you soon.',
+        messageId: submissionResult.emailMessageId,
+        recordId: submissionResult.airtableRecordId,
+      },
+      { headers: createRateLimitHeaders(rateLimitResult) },
+    );
   } catch (error) {
-    const processingTime = Date.now() - startTime;
-
     logger.error('Contact form submission failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       ip: clientIP,
-      processingTime,
+      processingTime: Date.now() - startTime,
     });
 
     return NextResponse.json(
@@ -142,13 +157,6 @@ export async function GET(request: NextRequest) {
  * 处理CORS预检请求
  * Handle CORS preflight requests
  */
-export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    },
-  });
+export function OPTIONS(request: NextRequest) {
+  return createCorsPreflightResponse(request, ['GET'], ['Authorization']);
 }

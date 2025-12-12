@@ -10,6 +10,7 @@
  * - Provides fallback to file system reads during build time
  * - Supports both critical and deferred translation types
  * - CI/E2E environments bypass cache to prevent empty object caching
+ * - Cache tags follow `domain:entity:identifier` convention for selective invalidation
  *
  * Architecture:
  * - Translation files are copied to public/messages/ during build (prebuild script)
@@ -18,11 +19,13 @@
  *
  * @see scripts/copy-translations.js - Prebuild script that copies files
  * @see docs/i18n-optimization.md - Full architecture documentation
+ * @see src/lib/cache/cache-tags.ts - Cache tag naming conventions
  */
 
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { unstable_cache } from 'next/cache';
+import { i18nTags } from '@/lib/cache/cache-tags';
 import { mergeObjects } from '@/lib/locale-storage-types-utils/object-utils';
 import { logger } from '@/lib/logger';
 import { MONITORING_INTERVALS } from '@/constants/performance-constants';
@@ -209,28 +212,36 @@ async function loadDeferredMessagesCore(locale: Locale): Promise<Messages> {
 }
 
 /**
- * Cached version of critical messages loader
+ * Cached version of critical messages loader.
+ * Uses standardized cache tags for selective invalidation.
+ * Tag format: `i18n:critical:{locale}` (e.g., 'i18n:critical:en')
  */
-const loadCriticalMessagesCached = unstable_cache(
-  loadCriticalMessagesCore,
-  ['i18n-critical'],
-  {
-    revalidate: getRevalidateTime(),
-    tags: ['i18n', 'critical'],
-  },
-);
+function createCriticalMessagesCached(locale: Locale) {
+  return unstable_cache(
+    () => loadCriticalMessagesCore(locale),
+    ['i18n-critical', locale],
+    {
+      revalidate: getRevalidateTime(),
+      tags: [i18nTags.critical(locale), i18nTags.all()],
+    },
+  );
+}
 
 /**
- * Cached version of deferred messages loader
+ * Cached version of deferred messages loader.
+ * Uses standardized cache tags for selective invalidation.
+ * Tag format: `i18n:deferred:{locale}` (e.g., 'i18n:deferred:en')
  */
-const loadDeferredMessagesCached = unstable_cache(
-  loadDeferredMessagesCore,
-  ['i18n-deferred'],
-  {
-    revalidate: getRevalidateTime(),
-    tags: ['i18n', 'deferred'],
-  },
-);
+function createDeferredMessagesCached(locale: Locale) {
+  return unstable_cache(
+    () => loadDeferredMessagesCore(locale),
+    ['i18n-deferred', locale],
+    {
+      revalidate: getRevalidateTime(),
+      tags: [i18nTags.deferred(locale), i18nTags.all()],
+    },
+  );
+}
 
 /**
  * Load critical translation messages (externalized)
@@ -238,13 +249,22 @@ const loadDeferredMessagesCached = unstable_cache(
  * This function loads the critical translation file from the public directory
  * using fetch + unstable_cache for optimal performance.
  *
+ * Cache tags enable selective invalidation:
+ * - `i18n:critical:{locale}` - Invalidate specific locale's critical messages
+ * - `i18n:all` - Invalidate all i18n caches
+ *
  * CI/E2E environments bypass cache to prevent empty object caching issues.
  *
  * @param locale - The locale to load ('en' or 'zh')
  * @returns Promise resolving to the translation messages object
  */
-export const loadCriticalMessages: (locale: Locale) => Promise<Messages> =
-  isCiLikeEnvironment ? loadCriticalMessagesCore : loadCriticalMessagesCached;
+export async function loadCriticalMessages(locale: Locale): Promise<Messages> {
+  if (isCiLikeEnvironment) {
+    return loadCriticalMessagesCore(locale);
+  }
+  const cachedFn = createCriticalMessagesCached(locale);
+  return cachedFn();
+}
 
 /**
  * Load deferred translation messages (externalized)
@@ -252,13 +272,22 @@ export const loadCriticalMessages: (locale: Locale) => Promise<Messages> =
  * This function loads the deferred translation file from the public directory
  * using fetch + unstable_cache for optimal performance.
  *
+ * Cache tags enable selective invalidation:
+ * - `i18n:deferred:{locale}` - Invalidate specific locale's deferred messages
+ * - `i18n:all` - Invalidate all i18n caches
+ *
  * CI/E2E environments bypass cache to prevent empty object caching issues.
  *
  * @param locale - The locale to load ('en' or 'zh')
  * @returns Promise resolving to the translation messages object
  */
-export const loadDeferredMessages: (locale: Locale) => Promise<Messages> =
-  isCiLikeEnvironment ? loadDeferredMessagesCore : loadDeferredMessagesCached;
+export async function loadDeferredMessages(locale: Locale): Promise<Messages> {
+  if (isCiLikeEnvironment) {
+    return loadDeferredMessagesCore(locale);
+  }
+  const cachedFn = createDeferredMessagesCached(locale);
+  return cachedFn();
+}
 
 /**
  * Preload critical messages for a locale

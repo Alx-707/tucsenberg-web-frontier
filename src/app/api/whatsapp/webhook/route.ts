@@ -1,14 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
-import { getWhatsAppService } from '@/lib/whatsapp';
+import {
+  handleIncomingMessage,
+  verifyWebhook,
+  verifyWebhookSignature,
+} from '@/lib/whatsapp-service';
 
 /**
- * WhatsApp Webhook 端点
- * 处理 Meta 发送的 webhook 验证和消息接收
+ * WhatsApp Webhook Endpoint
+ *
+ * Handles Meta webhook verification (GET) and incoming messages (POST).
+ * Uses unified whatsapp-service for all operations.
  */
 
-// GET 请求用于 webhook 验证
+// GET: Webhook verification
 export function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
@@ -23,12 +28,7 @@ export function GET(request: NextRequest) {
       );
     }
 
-    const whatsappService = getWhatsAppService();
-    const verificationResult = whatsappService.verifyWebhook(
-      mode,
-      token,
-      challenge,
-    );
+    const verificationResult = verifyWebhook(mode, token, challenge);
 
     if (verificationResult) {
       return new NextResponse(verificationResult, {
@@ -41,12 +41,11 @@ export function GET(request: NextRequest) {
       { error: 'Webhook verification failed' },
       { status: 403 },
     );
-  } catch (_error) {
-    // 忽略错误变量
+  } catch (error) {
     logger.error(
       'WhatsApp webhook verification error',
       {},
-      _error instanceof Error ? _error : new Error(String(_error)),
+      error instanceof Error ? error : new Error(String(error)),
     );
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -55,30 +54,36 @@ export function GET(request: NextRequest) {
   }
 }
 
-// POST 请求用于接收消息
+// POST: Receive incoming messages
 export async function POST(request: NextRequest) {
   try {
-    const parsedBody = await safeParseJson<unknown>(request, {
-      route: '/api/whatsapp/webhook',
-    });
-    if (!parsedBody.ok) {
-      return NextResponse.json({ error: parsedBody.error }, { status: 400 });
+    // Get raw body for signature verification
+    const rawBody = await request.text();
+    const signature = request.headers.get('x-hub-signature-256');
+
+    // Verify webhook signature
+    if (!verifyWebhookSignature(rawBody, signature)) {
+      logger.warn('[WhatsAppWebhook] Invalid signature');
+      return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
-    const body = parsedBody.data;
 
-    // 验证请求来源（可选：验证 Meta 的签名）
-    // 这里可以添加更严格的安全验证
+    // Parse JSON body
+    let body: unknown;
+    try {
+      body = JSON.parse(rawBody);
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
 
-    const whatsappService = getWhatsAppService();
-    await whatsappService.handleIncomingMessage(body);
+    // Handle incoming message with auto-reply
+    await handleIncomingMessage(body);
 
     return NextResponse.json({ success: true }, { status: 200 });
-  } catch (_error) {
-    // 忽略错误变量
+  } catch (error) {
     logger.error(
       'WhatsApp webhook message handling error',
       {},
-      _error instanceof Error ? _error : new Error(String(_error)),
+      error instanceof Error ? error : new Error(String(error)),
     );
     return NextResponse.json(
       { error: 'Failed to process message' },

@@ -31,3 +31,19 @@ export {
 } from '@/lib/lead-pipeline/utils';
 
 export { processLead, type LeadResult } from '@/lib/lead-pipeline/process-lead';
+
+export {
+  METRIC_SERVICES,
+  METRIC_TYPES,
+  ERROR_TYPES,
+  LeadPipelineMetrics,
+  leadPipelineMetrics,
+  createLatencyTimer,
+  categorizeError,
+  type MetricService,
+  type MetricType,
+  type ErrorType,
+  type ServiceMetric,
+  type PipelineSummary,
+  type AlertConfig,
+} from '@/lib/lead-pipeline/metrics';

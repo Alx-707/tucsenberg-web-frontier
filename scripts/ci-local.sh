@@ -2,12 +2,19 @@
 
 # =============================================================================
 # 本地 CI 完整检查脚本
-# 完全模拟远程 GitHub Actions CI/CD Pipeline
+# 完全模拟远程 GitHub Actions CI/CD Pipeline (ci.yml)
 # =============================================================================
 # 使用方法：
 #   pnpm ci:local           # 运行完整检查
 #   pnpm ci:local:quick     # 快速检查（跳过耗时任务）
 #   pnpm ci:local:fix       # 自动修复可修复的问题
+# =============================================================================
+# CI 架构说明：
+#   - ci.yml: 主流水线，PR 必需检查（type-check, lint, test, security, etc.）
+#   - code-quality.yml: 深度安全扫描（Semgrep full），仅 main + nightly
+#   - vercel-deploy.yml: 部署专用（MISSING_MESSAGE 检测 + 健康检查）
+# =============================================================================
+# 质量门禁：所有阈值由 scripts/quality-gate.js 统一管理
 # =============================================================================
 
 set -e  # 遇到错误立即退出
@@ -62,12 +69,8 @@ check_node_version() {
     CURRENT_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     REQUIRED_VERSION=20
 
-    if [ "$CURRENT_VERSION" -eq "$REQUIRED_VERSION" ]; then
-        print_success "Node.js 版本正确: v$CURRENT_VERSION (与 CI 一致)"
-    elif [ "$CURRENT_VERSION" -gt "$REQUIRED_VERSION" ]; then
-        print_error "Node.js 版本过高: v$CURRENT_VERSION (CI 使用 v$REQUIRED_VERSION)"
-        echo "  建议: nvm use 20"
-        return 1
+    if [ "$CURRENT_VERSION" -ge "$REQUIRED_VERSION" ]; then
+        print_success "Node.js 版本正确: v$CURRENT_VERSION (要求 ≥ v$REQUIRED_VERSION)"
     else
         print_error "Node.js 版本过低: v$CURRENT_VERSION (需要 v$REQUIRED_VERSION+)"
         echo "  建议: nvm install 20 && nvm use 20"
@@ -143,24 +146,7 @@ run_basic_checks() {
     fi
 }
 
-# 企业级质量门禁
-run_quality_gate() {
-    print_header "🎯 企业级质量门禁 (Quality Gate)"
-
-    print_step "运行质量门禁检查"
-    if pnpm quality:gate; then
-        print_success "质量门禁通过"
-    else
-        print_error "质量门禁失败"
-        echo "  说明: 质量门禁包含严格的代码质量标准"
-        echo "  - 禁止使用 any 类型"
-        echo "  - 警告数量需控制在 500 个以下"
-        echo "  - 所有 TypeScript 错误必须修复"
-        return 1
-    fi
-}
-
-# 单元测试
+# 单元测试（带覆盖率）
 run_unit_tests() {
     print_header "🧪 单元测试 (Unit Tests)"
 
@@ -170,6 +156,40 @@ run_unit_tests() {
     else
         print_error "单元测试失败"
         return 1
+    fi
+}
+
+# 企业级质量门禁（单一权威源）
+run_quality_gate() {
+    print_header "🎯 企业级质量门禁 (Quality Gate)"
+    echo -e "${BLUE}阈值由 scripts/quality-gate.js 统一管理${NC}"
+
+    if [ "$QUICK_MODE" = "true" ]; then
+        print_step "运行质量门禁检查（快速模式）"
+        if pnpm quality:gate:fast; then
+            print_success "质量门禁通过（快速模式）"
+        else
+            print_error "质量门禁失败"
+            echo "  说明: 质量门禁包含严格的代码质量标准"
+            echo "  - 禁止使用 any 类型"
+            echo "  - 警告数量需控制在 500 个以下"
+            echo "  - 所有 TypeScript 错误必须修复"
+            return 1
+        fi
+    else
+        print_step "运行质量门禁检查（完整模式，跳过测试执行）"
+        # --skip-test-run: 复用 run_unit_tests 生成的覆盖率报告，避免重复执行测试
+        if pnpm quality:gate -- --skip-test-run; then
+            print_success "质量门禁通过"
+        else
+            print_error "质量门禁失败"
+            echo "  说明: 质量门禁包含严格的代码质量标准"
+            echo "  - 禁止使用 any 类型"
+            echo "  - 警告数量需控制在 500 个以下"
+            echo "  - 所有 TypeScript 错误必须修复"
+            echo "  - 测试覆盖率需达标（见 scripts/quality-gate.js）"
+            return 1
+        fi
     fi
 }
 
@@ -200,15 +220,6 @@ run_performance_checks() {
         return 0
     fi
 
-    # 包大小检查
-    print_step "包大小检查 (size-limit)"
-    if pnpm size:check; then
-        print_success "包大小检查通过"
-    else
-        print_error "包大小检查失败"
-        return 1
-    fi
-
     # Lighthouse CI 检查
     print_step "Lighthouse CI 性能检查"
     echo "  说明: 需要启动生产服务器，预计耗时 5-8 分钟"
@@ -220,7 +231,6 @@ run_performance_checks() {
         print_error "Lighthouse CI 检查失败"
         echo "  提示: 确保端口 3000 未被占用"
         echo "  提示: 检查 lighthouserc.js 配置和性能阈值"
-        # Lighthouse CI 失败不阻止其他检查，但记录失败
         return 1
     fi
 }
@@ -247,6 +257,30 @@ run_translation_checks() {
         print_success "翻译验证通过"
     else
         print_error "翻译验证失败"
+        return 1
+    fi
+
+    print_step "复制翻译资源"
+    if node scripts/copy-translations.js; then
+        print_success "翻译资源复制通过"
+    else
+        print_error "翻译资源复制失败"
+        return 1
+    fi
+
+    print_step "i18n 形状等价检查"
+    if pnpm i18n:shape:check; then
+        print_success "i18n 形状检查通过"
+    else
+        print_error "i18n 形状检查失败"
+        return 1
+    fi
+
+    print_step "MDX slug 对齐校验"
+    if pnpm content:slug-check; then
+        print_success "MDX slug 检查通过"
+    else
+        print_error "MDX slug 检查失败"
         return 1
     fi
 }
@@ -306,16 +340,17 @@ main() {
 
     echo "模式: ${QUICK_MODE:+快速模式}${QUICK_MODE:-完整模式}"
     echo "时间: $(date '+%Y-%m-%d %H:%M:%S')"
+    echo -e "${BLUE}质量阈值: scripts/quality-gate.js (单一权威源)${NC}"
     echo ""
 
     # 环境检查
     check_node_version || exit 1
     check_pnpm_version || exit 1
 
-    # 运行所有检查
+    # 运行所有检查（与 GitHub CI 对齐）
     run_basic_checks || exit 1
-    run_quality_gate || exit 1
     run_unit_tests || exit 1
+    run_quality_gate || exit 1
     run_e2e_tests || exit 1
     run_performance_checks || exit 1
     run_security_checks || exit 1

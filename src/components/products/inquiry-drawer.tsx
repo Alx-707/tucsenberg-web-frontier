@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { ProductInquiryForm } from '@/components/products/product-inquiry-form';
 import {
@@ -51,6 +52,7 @@ function DrawerProductHeader({
             fill
             className='object-cover'
             sizes='64px'
+            {...getBlurPlaceholder('neutral')}
           />
         </div>
       )}

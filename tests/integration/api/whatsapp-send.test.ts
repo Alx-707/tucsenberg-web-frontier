@@ -7,6 +7,11 @@ vi.mock('@/lib/whatsapp-service', () => ({
     success: true,
     data: { messages: [{ id: 'mid-1' }] },
   })),
+  getClientEnvironmentInfo: vi.fn(() => ({
+    environment: 'test',
+    clientType: 'mock',
+    hasCredentials: false,
+  })),
 }));
 
 describe('api/whatsapp/send', () => {

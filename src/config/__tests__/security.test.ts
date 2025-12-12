@@ -109,6 +109,52 @@ describe('Security Configuration', () => {
         'max-age=63072000; includeSubDomains; preload',
       );
     });
+
+    it('should output Content-Security-Policy in strict mode', () => {
+      vi.stubEnv('SECURITY_HEADERS_ENABLED', 'true');
+      vi.stubEnv('NEXT_PUBLIC_SECURITY_MODE', 'strict');
+
+      const headers = getSecurityHeaders(undefined, true);
+      const headerKeys = headers.map((h) => h.key);
+
+      expect(headerKeys).toContain('Content-Security-Policy');
+      expect(headerKeys).not.toContain('Content-Security-Policy-Report-Only');
+    });
+
+    it('should output Content-Security-Policy-Report-Only in relaxed mode', () => {
+      vi.stubEnv('SECURITY_HEADERS_ENABLED', 'true');
+      vi.stubEnv('NEXT_PUBLIC_SECURITY_MODE', 'relaxed');
+
+      const headers = getSecurityHeaders(undefined, true);
+      const headerKeys = headers.map((h) => h.key);
+
+      expect(headerKeys).toContain('Content-Security-Policy-Report-Only');
+      expect(headerKeys).not.toContain('Content-Security-Policy');
+    });
+
+    it('should output Content-Security-Policy in moderate mode', () => {
+      vi.stubEnv('SECURITY_HEADERS_ENABLED', 'true');
+      vi.stubEnv('NEXT_PUBLIC_SECURITY_MODE', 'moderate');
+
+      const headers = getSecurityHeaders(undefined, true);
+      const headerKeys = headers.map((h) => h.key);
+
+      expect(headerKeys).toContain('Content-Security-Policy');
+      expect(headerKeys).not.toContain('Content-Security-Policy-Report-Only');
+    });
+
+    it('should include report-uri directive in CSP', () => {
+      vi.stubEnv('SECURITY_HEADERS_ENABLED', 'true');
+
+      const headers = getSecurityHeaders(undefined, true);
+      const cspHeader = headers.find(
+        (h) =>
+          h.key === 'Content-Security-Policy' ||
+          h.key === 'Content-Security-Policy-Report-Only',
+      );
+
+      expect(cspHeader?.value).toContain('report-uri /api/csp-report');
+    });
   });
 
   describe('generateNonce', () => {

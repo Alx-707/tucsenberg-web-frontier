@@ -3,14 +3,24 @@ import { z } from 'zod';
 import type { SendMessageRequest, TemplateComponent } from '@/types/whatsapp';
 import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
-import { sendWhatsAppMessage } from '@/lib/whatsapp-service';
+import {
+  getClientEnvironmentInfo,
+  sendWhatsAppMessage,
+} from '@/lib/whatsapp-service';
+import { COUNT_THREE } from '@/constants/count';
+import {
+  FIVE_SECONDS_MS,
+  ONE_SECOND_MS,
+  TWO_SECONDS_MS,
+} from '@/constants/time';
 
 /**
- * WhatsApp 消息发送 API 端点
- * 支持发送文本消息和模板消息
+ * WhatsApp Send Message API Endpoint
+ *
+ * Supports text messages and template messages with retry logic.
  */
 
-// 请求体验证 schema
+// Request body validation schema
 const SendMessageSchema = z.object({
   to: z.string().min(1, 'Recipient phone number is required'),
   type: z.enum(['text', 'template'], {
@@ -78,8 +88,36 @@ const SendMessageSchema = z.object({
   }),
 });
 
+// Retry configuration
+const RETRY_DELAYS = [ONE_SECOND_MS, TWO_SECONDS_MS, FIVE_SECONDS_MS] as const;
+const MAX_RETRIES = COUNT_THREE;
+
 /**
- * 验证消息内容
+ * Sleep helper for retry delays
+ */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Check if error is retryable (network issues, rate limits)
+ */
+function isRetryableError(error: unknown): boolean {
+  if (error instanceof Error) {
+    const message = error.message.toLowerCase();
+    return (
+      message.includes('network') ||
+      message.includes('timeout') ||
+      message.includes('rate limit') ||
+      message.includes('429') ||
+      message.includes('503')
+    );
+  }
+  return false;
+}
+
+/**
+ * Validate message content
  */
 function validateMessageContent(
   type: string,
@@ -87,14 +125,14 @@ function validateMessageContent(
 ): NextResponse | null {
   if (type === 'text' && !content.body) {
     return NextResponse.json(
-      { _error: 'Text message requires "body" in content' },
+      { error: 'Text message requires "body" in content' },
       { status: 400 },
     );
   }
 
   if (type === 'template' && !content.templateName) {
     return NextResponse.json(
-      { _error: 'Template message requires "templateName" in content' },
+      { error: 'Template message requires "templateName" in content' },
       { status: 400 },
     );
   }
@@ -103,7 +141,7 @@ function validateMessageContent(
 }
 
 /**
- * 构建WhatsApp消息对象
+ * Build WhatsApp message object
  */
 function buildWhatsAppMessage(
   to: string,
@@ -137,7 +175,6 @@ function buildWhatsAppMessage(
       },
     };
 
-    // 只有当 components 存在时才添加，避免 exactOptionalPropertyTypes 问题
     if (content.components) {
       templateMessage.template!.components =
         content.components as TemplateComponent[];
@@ -163,7 +200,7 @@ async function parseSendMessageRequest(
   });
   if (!parsedBody.ok) {
     return {
-      error: NextResponse.json({ _error: parsedBody.error }, { status: 400 }),
+      error: NextResponse.json({ error: parsedBody.error }, { status: 400 }),
     };
   }
   const body = parsedBody.data;
@@ -172,7 +209,7 @@ async function parseSendMessageRequest(
     return {
       error: NextResponse.json(
         {
-          _error: 'Invalid request body',
+          error: 'Invalid request body',
           details: validationResult.error.issues,
         },
         { status: 400 },
@@ -198,6 +235,52 @@ function extractMessageId(
   return messages.at(0)?.id;
 }
 
+/**
+ * Send message with retry logic
+ */
+async function sendMessageWithRetry(
+  message: SendMessageRequest,
+): Promise<Awaited<ReturnType<typeof sendWhatsAppMessage>>> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const result = await sendWhatsAppMessage(message);
+
+      if (result.success) {
+        return result;
+      }
+
+      // Check if error is retryable
+      if (!isRetryableError(new Error(result.error || 'Unknown error'))) {
+        return result;
+      }
+
+      lastError = new Error(result.error || 'Unknown error');
+    } catch (error) {
+      lastError = error;
+
+      // Don't retry non-retryable errors
+      if (!isRetryableError(error)) {
+        throw error;
+      }
+    }
+
+    // Wait before next retry (if not last attempt)
+    if (attempt < MAX_RETRIES) {
+      // eslint-disable-next-line security/detect-object-injection -- attempt is loop-controlled integer
+      const delay = RETRY_DELAYS[attempt] ?? FIVE_SECONDS_MS;
+      logger.info(
+        `[WhatsAppSend] Retry ${attempt + 1}/${MAX_RETRIES} after ${delay}ms`,
+      );
+      await sleep(delay);
+    }
+  }
+
+  // All retries failed
+  throw lastError;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const parsed = await parseSendMessageRequest(request);
@@ -207,51 +290,56 @@ export async function POST(request: NextRequest) {
     const { to, type, content } = parsed.data!;
 
     const message = buildWhatsAppMessage(to, type, content);
-    const result = await sendWhatsAppMessage(message);
+    const result = await sendMessageWithRetry(message);
 
     if (!result.success) {
       throw new Error(result.error || 'Failed to send message');
     }
 
     const messageId = extractMessageId(result);
+    const clientInfo = getClientEnvironmentInfo();
 
     return NextResponse.json(
       {
         success: true,
         messageId,
         data: result,
+        environment: clientInfo.environment,
+        clientType: clientInfo.clientType,
       },
       { status: 200 },
     );
-  } catch (_error) {
-    // 忽略错误变量
+  } catch (error) {
     logger.error(
-      'WhatsApp send message _error',
+      'WhatsApp send message error',
       {},
-      _error instanceof Error ? _error : new Error(String(_error)),
+      error instanceof Error ? error : new Error(String(error)),
     );
 
-    // 根据错误类型返回不同的响应
-    if (_error instanceof Error) {
-      if (_error.message.includes('WHATSAPP_ACCESS_TOKEN')) {
+    if (error instanceof Error) {
+      if (error.message.includes('WHATSAPP_ACCESS_TOKEN')) {
         return NextResponse.json(
-          { _error: 'WhatsApp service not configured' },
+          { error: 'WhatsApp service not configured' },
           { status: 503 },
         );
       }
     }
 
     return NextResponse.json(
-      { _error: 'Failed to send message' },
+      { error: 'Failed to send message' },
       { status: 500 },
     );
   }
 }
 
-// GET 请求返回 API 使用说明
+// GET: Return API usage info
 export function GET() {
+  const clientInfo = getClientEnvironmentInfo();
+
   return NextResponse.json({
     message: 'WhatsApp Send Message API',
+    environment: clientInfo.environment,
+    clientType: clientInfo.clientType,
     usage: {
       method: 'POST',
       endpoint: '/api/whatsapp/send',

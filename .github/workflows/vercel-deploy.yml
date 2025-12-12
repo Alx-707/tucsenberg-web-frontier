@@ -1,7 +1,10 @@
-name: Vercel 部署增强
+name: Vercel 部署
 
-# 此 workflow 作为 Verc尔 GitHub 集成的补充
-# 主要用于部署前的额外质量检查和部署后的验证
+# ============================================================================
+# 职责：Vercel 部署 + MISSING_MESSAGE 检测 + 健康检查
+# 触发：main 分支推送、PR、手动触发
+# 依赖：质量检查由 ci.yml 统一负责，此 workflow 仅关注部署
+# ============================================================================
 
 on:
   push:
@@ -15,53 +18,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 部署前质量检查
-  pre-deployment-checks:
-    name: 部署前质量检查
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    steps:
-      - name: 检出代码
-        uses: actions/checkout@v4
-        with:
-          submodules: false
-          persist-credentials: false
-
-      - name: 设置 pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.13.1
-
-      - name: 设置 Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: "pnpm"
-
-      - name: 安装依赖
-        run: pnpm install --frozen-lockfile
-
-      - name: 类型检查
-        run: pnpm type-check
-
-      - name: 代码质量检查
-        run: pnpm lint:check
-
-      - name: 构建验证
-        run: pnpm build:check
-
-      - name: 翻译验证
-        run: pnpm validate:translations
-
-      - name: 质量门禁
-        run: pnpm quality:gate
-
   # 基于 Token 的 Vercel 部署
   deploy-to-vercel:
     name: 部署到 Vercel（token）
     runs-on: ubuntu-latest
-    needs: pre-deployment-checks
     timeout-minutes: 15
     if: github.event_name != 'workflow_dispatch'
 
@@ -175,7 +135,6 @@ jobs:
   deploy-to-vercel-prod:
     name: 部署到 Production（--prod）
     runs-on: ubuntu-latest
-    needs: pre-deployment-checks
     timeout-minutes: 15
     if: github.event_name == 'workflow_dispatch'
 
@@ -519,7 +478,7 @@ jobs:
   deployment-summary:
     name: 部署总结
     runs-on: ubuntu-latest
-    needs: [pre-deployment-checks, deploy-to-vercel]
+    needs: [deploy-to-vercel]
     if: always()
     timeout-minutes: 5
 
@@ -533,15 +492,15 @@ jobs:
           echo "- **触发者**: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "- **部署 URL**: ${{ needs.deploy-to-vercel.outputs.preview_url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> **Note**: 质量检查由 ci.yml 统一负责" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ needs.pre-deployment-checks.conclusion }}" == "success" ] && \
-             [ "${{ needs.deploy-to-vercel.conclusion }}" == "success" ]; then
-            echo "✅ **状态**: 部署成功并通过所有验证" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.deploy-to-vercel.conclusion }}" == "success" ]; then
+            echo "✅ **状态**: 部署成功" >> $GITHUB_STEP_SUMMARY
           else
-            echo "❌ **状态**: 部署失败或验证未通过" >> $GITHUB_STEP_SUMMARY
+            echo "❌ **状态**: 部署失败" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### 📋 任务状态" >> $GITHUB_STEP_SUMMARY
-            echo "- 部署前检查: ${{ needs.pre-deployment-checks.conclusion }}" >> $GITHUB_STEP_SUMMARY
             echo "- Vercel 部署: ${{ needs.deploy-to-vercel.conclusion }}" >> $GITHUB_STEP_SUMMARY
             if [ -n "${{ needs.deploy-to-vercel.outputs.preview_url }}" ]; then
               echo "- 部署后验证: (参考运行记录)" >> $GITHUB_STEP_SUMMARY

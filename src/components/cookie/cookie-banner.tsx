@@ -101,7 +101,7 @@ export function CookieBanner({ className }: CookieBannerProps) {
       aria-modal='false'
       aria-label={t('title')}
       className={cn(
-        'animate-in slide-in-from-bottom fixed inset-x-0 bottom-0 z-[100] duration-300',
+        'fixed inset-x-0 bottom-0 z-[100] duration-300 animate-in slide-in-from-bottom',
         'border-t bg-background/95 backdrop-blur-sm supports-[backdrop-filter]:bg-background/80',
         'shadow-lg',
         className,

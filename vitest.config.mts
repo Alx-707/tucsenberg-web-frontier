@@ -230,10 +230,8 @@ export default defineConfig({
         'reports/**',
         'docs/**',
         'test-results/**',
-        // 排除配置目录
+        // 排除根级配置目录（非 src 下的）
         'config/**',
-        'src/config/**',
-        'src/constants/**',
         // 排除开发工具 - 仅开发环境使用，不需要测试覆盖率
         'src/components/dev-tools/**',
         'src/app/**/dev-tools/**',
@@ -250,13 +248,17 @@ export default defineConfig({
         // 排除复杂监控组件 - React 19 兼容性问题，非核心业务功能
         'src/components/monitoring/enterprise-analytics.tsx',
         // 排除尚未纳入测试的后端适配层，避免拖低覆盖率
-        'src/services/**',
         'src/templates/**',
-        'src/types/**',
+        // 排除纯类型定义文件（无运行时代码）
+        'src/types/**/*.d.ts',
+        'src/types/i18n.ts',
+        'src/types/mdx.ts',
+        'src/types/content.ts',
+        'src/types/whatsapp*.ts',
+        // 注意：src/types/index.ts, test-types.ts, react19.ts 包含运行时函数，不排除
       ],
-      // 覆盖率阈值暂时禁用，仅作为警告显示
-      // 目标：全局 85%，后续通过专项任务逐步提升
-      // thresholds: { ... }  // TODO: 覆盖率达标后重新启用
+      // 覆盖率阈值由 scripts/quality-gate.js 统一管理
+      // Vitest 仅生成报告数据，不执行阈值检查
     },
 
     // 测试超时设置 - 适应 CI 环境

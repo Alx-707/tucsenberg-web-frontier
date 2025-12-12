@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Quote } from 'lucide-react';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -44,6 +45,7 @@ function Avatar({ src, name }: { src: string | undefined; name: string }) {
         width={48}
         height={48}
         className='h-12 w-12 rounded-full object-cover'
+        {...getBlurPlaceholder('neutral')}
       />
     );
   }

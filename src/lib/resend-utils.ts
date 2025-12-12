@@ -3,10 +3,10 @@
  * Resend email service utilities
  */
 
+import { sanitizePlainText } from '@/lib/security-validation';
 import {
   emailTemplateDataSchema,
   productInquiryEmailDataSchema,
-  validationHelpers,
   type EmailTemplateData,
   type ProductInquiryEmailData,
 } from '@/lib/validations';
@@ -40,17 +40,13 @@ export class ResendUtils {
    */
   static sanitizeEmailData(data: EmailTemplateData): EmailTemplateData {
     return {
-      firstName: validationHelpers.sanitizeInput(data.firstName),
-      lastName: validationHelpers.sanitizeInput(data.lastName),
+      firstName: sanitizePlainText(data.firstName),
+      lastName: sanitizePlainText(data.lastName),
       email: data.email.toLowerCase().trim(),
-      company: validationHelpers.sanitizeInput(data.company),
-      message: validationHelpers.sanitizeInput(data.message),
-      phone: data.phone
-        ? validationHelpers.sanitizeInput(data.phone)
-        : undefined,
-      subject: data.subject
-        ? validationHelpers.sanitizeInput(data.subject)
-        : undefined,
+      company: sanitizePlainText(data.company),
+      message: sanitizePlainText(data.message),
+      phone: data.phone ? sanitizePlainText(data.phone) : undefined,
+      subject: data.subject ? sanitizePlainText(data.subject) : undefined,
       submittedAt: data.submittedAt,
       marketingConsent: data.marketingConsent,
     };
@@ -120,17 +116,15 @@ export class ResendUtils {
     data: ProductInquiryEmailData,
   ): ProductInquiryEmailData {
     return {
-      firstName: validationHelpers.sanitizeInput(data.firstName),
-      lastName: validationHelpers.sanitizeInput(data.lastName),
+      firstName: sanitizePlainText(data.firstName),
+      lastName: sanitizePlainText(data.lastName),
       email: data.email.toLowerCase().trim(),
-      company: data.company
-        ? validationHelpers.sanitizeInput(data.company)
-        : undefined,
-      productName: validationHelpers.sanitizeInput(data.productName),
+      company: data.company ? sanitizePlainText(data.company) : undefined,
+      productName: sanitizePlainText(data.productName),
       productSlug: data.productSlug.trim(),
       quantity: data.quantity,
       requirements: data.requirements
-        ? validationHelpers.sanitizeInput(data.requirements)
+        ? sanitizePlainText(data.requirements)
         : undefined,
       marketingConsent: data.marketingConsent,
     };

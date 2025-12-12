@@ -213,6 +213,13 @@ describe('paths configuration', () => {
       expect(pathnames['/products']).toBe('/products');
     });
 
+    it('should include dynamic route patterns', () => {
+      const pathnames = getPathnames();
+
+      expect(pathnames['/blog/[slug]']).toBe('/blog/[slug]');
+      expect(pathnames['/products/[slug]']).toBe('/products/[slug]');
+    });
+
     it('should have consistent paths', () => {
       const pathnames = getPathnames();
 

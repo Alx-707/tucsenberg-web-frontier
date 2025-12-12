@@ -302,12 +302,4 @@ export interface TranslationQuality {
   score: number;
 }
 
-// 声明模块扩展以支持类型检查
-declare global {
-  interface IntlMessages extends Messages {
-    // This interface extends Messages to provide type safety for next-intl
-    [key: string]: unknown;
-  }
-}
-
 export {};

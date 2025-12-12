@@ -5,7 +5,10 @@
 /* eslint-disable security/detect-object-injection -- 路径配置工具需要动态访问配置对象，所有访问都通过hasOwnProperty安全检查 */
 
 import { LOCALES_CONFIG } from '@/config/paths/locales-config';
-import { PATHS_CONFIG } from '@/config/paths/paths-config';
+import {
+  DYNAMIC_PATHS_CONFIG,
+  PATHS_CONFIG,
+} from '@/config/paths/paths-config';
 import { SITE_CONFIG } from '@/config/paths/site-config';
 import type { Locale, LocalizedPath, PageType } from '@/config/paths/types';
 import { ZERO } from '@/constants';
@@ -36,6 +39,7 @@ export function getLocalizedPath(pageType: PageType, locale: Locale): string {
  * 获取所有页面的路径映射（用于next-intl routing）
  *
  * 使用标准路径方案，所有语言使用相同路径
+ * 包含静态路径和动态路由模式
  */
 export function getPathnames(): Record<string, string> {
   return {
@@ -43,13 +47,28 @@ export function getPathnames(): Record<string, string> {
     '/about': '/about',
     '/contact': '/contact',
     '/blog': '/blog',
+    '/blog/[slug]': '/blog/[slug]',
     '/products': '/products',
+    '/products/[slug]': '/products/[slug]',
     '/services': '/services',
     '/pricing': '/pricing',
     '/support': '/support',
     '/privacy': '/privacy',
     '/terms': '/terms',
+    '/faq': '/faq',
   };
+}
+
+/**
+ * 获取动态路由模式配置
+ */
+export function getDynamicPathnames(): Record<string, string> {
+  return Object.fromEntries(
+    Object.values(DYNAMIC_PATHS_CONFIG).map((config) => [
+      config.pattern,
+      config.pattern,
+    ]),
+  );
 }
 
 /**

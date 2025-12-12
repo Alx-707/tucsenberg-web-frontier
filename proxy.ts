@@ -15,7 +15,6 @@ function addSecurityHeaders(response: NextResponse, nonce: string): void {
   securityHeaders.forEach(({ key, value }) => {
     response.headers.set(key, value);
   });
-  response.headers.set('x-csp-nonce', nonce);
 }
 
 function extractLocaleCandidate(pathname: string): string | undefined {

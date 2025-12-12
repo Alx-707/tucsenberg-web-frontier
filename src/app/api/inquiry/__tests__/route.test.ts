@@ -44,6 +44,24 @@ vi.mock('@/app/api/contact/contact-api-utils', () => ({
   verifyTurnstile: vi.fn(() => Promise.resolve(true)),
 }));
 
+// Mock CORS utilities
+vi.mock('@/lib/api/cors-utils', () => ({
+  createCorsPreflightResponse: vi.fn((request: NextRequest) => {
+    const origin = request.headers.get('origin');
+    const headers: Record<string, string> = {
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Idempotency-Key',
+    };
+    if (origin) {
+      headers['Access-Control-Allow-Origin'] = origin;
+    }
+    return new (require('next/server').NextResponse)(null, {
+      status: 200,
+      headers,
+    });
+  }),
+}));
+
 describe('/api/inquiry route', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -239,21 +257,33 @@ describe('/api/inquiry route', () => {
   });
 
   describe('OPTIONS', () => {
-    it('should return 200 with CORS headers', async () => {
-      const response = OPTIONS();
+    it('should return 200 with CORS headers for allowed origin', async () => {
+      const request = new NextRequest('http://localhost:3000/api/inquiry', {
+        method: 'OPTIONS',
+        headers: {
+          Origin: 'http://localhost:3000',
+          Host: 'localhost:3000',
+        },
+      });
+
+      const response = OPTIONS(request);
 
       expect(response.status).toBe(200);
-      expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
-      expect(response.headers.get('Access-Control-Allow-Methods')).toBe(
-        'POST, OPTIONS',
+      expect(response.headers.get('Access-Control-Allow-Origin')).toBe(
+        'http://localhost:3000',
       );
-      expect(response.headers.get('Access-Control-Allow-Headers')).toBe(
-        'Content-Type',
+      expect(response.headers.get('Access-Control-Allow-Methods')).toContain(
+        'POST',
       );
     });
 
     it('should return empty body', async () => {
-      const response = OPTIONS();
+      const request = new NextRequest('http://localhost:3000/api/inquiry', {
+        method: 'OPTIONS',
+        headers: { Host: 'localhost:3000' },
+      });
+
+      const response = OPTIONS(request);
       const body = await response.text();
 
       expect(body).toBe('');

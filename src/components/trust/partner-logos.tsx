@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 
 export interface Partner {
@@ -32,6 +33,7 @@ function PartnerLogoItem({ partner }: { partner: Partner }) {
       width={120}
       height={48}
       className='h-12 max-w-[120px] object-contain grayscale transition-all hover:grayscale-0'
+      {...getBlurPlaceholder('neutral')}
     />
   );
 

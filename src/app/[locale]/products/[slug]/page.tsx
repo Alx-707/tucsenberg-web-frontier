@@ -4,10 +4,9 @@ import { notFound } from 'next/navigation';
 import { ArrowLeft, Download, MessageSquare } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale, ProductDetail } from '@/types/content';
-import {
-  getAllProductsCached,
-  getProductBySlugCached,
-} from '@/lib/content/products';
+import { getStaticParamsForType } from '@/lib/content-manifest';
+import { getProductBySlugCached } from '@/lib/content/products';
+import { MDXContent } from '@/components/mdx';
 import {
   ProductCertifications,
   ProductGallery,
@@ -27,17 +26,7 @@ interface ProductDetailPageProps {
 
 // Generate static params for all products
 export async function generateStaticParams() {
-  const locales: Locale[] = ['en', 'zh'];
-  const params: { locale: string; slug: string }[] = [];
-
-  for (const locale of locales) {
-    const products = await getAllProductsCached(locale);
-    for (const product of products) {
-      params.push({ locale, slug: product.slug });
-    }
-  }
-
-  return params;
+  return getStaticParamsForType('products');
 }
 
 export async function generateMetadata({
@@ -271,8 +260,12 @@ export default async function ProductDetailPage({
       </div>
 
       {product.content !== '' && (
-        <article className='prose prose-neutral dark:prose-invert mt-12 max-w-none'>
-          <div dangerouslySetInnerHTML={{ __html: product.content }} />
+        <article className='prose mt-12 max-w-none prose-neutral dark:prose-invert'>
+          <MDXContent
+            type='products'
+            locale={locale}
+            slug={slug}
+          />
         </article>
       )}
 

@@ -8,12 +8,112 @@ import {
   sanitizeForDatabase,
   sanitizeHtml,
   sanitizeInput,
+  sanitizePlainText,
+  sanitizeUrl,
   validateCharacters,
   validateInputLength,
 } from '../security-validation';
 
 describe('security-validation', () => {
-  describe('sanitizeInput', () => {
+  describe('sanitizePlainText', () => {
+    it('should remove angle brackets', () => {
+      expect(sanitizePlainText('<script>')).toBe('script');
+      expect(sanitizePlainText('test<div>content</div>')).toBe(
+        'testdivcontent/div',
+      );
+    });
+
+    it('should remove javascript: protocol', () => {
+      expect(sanitizePlainText('javascript:alert(1)')).toBe('alert(1)');
+      expect(sanitizePlainText('JAVASCRIPT:void(0)')).toBe('void(0)');
+    });
+
+    it('should remove event handlers', () => {
+      expect(sanitizePlainText('onclick=alert(1)')).toBe('alert(1)');
+      expect(sanitizePlainText('onmouseover="evil()"')).toBe('"evil()"');
+      expect(sanitizePlainText('ONERROR=hack')).toBe('hack');
+    });
+
+    it('should remove data: protocol', () => {
+      expect(sanitizePlainText('data:text/html')).toBe('text/html');
+      expect(sanitizePlainText('DATA:image/png')).toBe('image/png');
+    });
+
+    it('should trim whitespace', () => {
+      expect(sanitizePlainText('  test  ')).toBe('test');
+    });
+
+    it('should return empty string for non-string input', () => {
+      expect(sanitizePlainText(123 as unknown as string)).toBe('');
+      expect(sanitizePlainText(null as unknown as string)).toBe('');
+      expect(sanitizePlainText(undefined as unknown as string)).toBe('');
+    });
+
+    it('should handle combined malicious input', () => {
+      expect(
+        sanitizePlainText('<script>javascript:onclick=alert(1)</script>'),
+      ).toBe('scriptalert(1)/script');
+    });
+  });
+
+  describe('sanitizeUrl', () => {
+    it('should return valid https URL unchanged', () => {
+      expect(sanitizeUrl('https://example.com')).toBe('https://example.com');
+      expect(sanitizeUrl('https://example.com/path?query=value')).toBe(
+        'https://example.com/path?query=value',
+      );
+    });
+
+    it('should return valid http URL unchanged', () => {
+      expect(sanitizeUrl('http://example.com')).toBe('http://example.com');
+    });
+
+    it('should return empty string for javascript: protocol', () => {
+      expect(sanitizeUrl('javascript:alert(1)')).toBe('');
+      expect(sanitizeUrl('JAVASCRIPT:void(0)')).toBe('');
+    });
+
+    it('should return empty string for data: protocol', () => {
+      expect(sanitizeUrl('data:text/html,<script>alert(1)</script>')).toBe('');
+    });
+
+    it('should return empty string for file: protocol', () => {
+      expect(sanitizeUrl('file:///etc/passwd')).toBe('');
+    });
+
+    it('should return empty string for invalid URLs', () => {
+      expect(sanitizeUrl('not-a-url')).toBe('');
+      expect(sanitizeUrl('://missing-protocol.com')).toBe('');
+    });
+
+    it('should return empty string for non-string input', () => {
+      expect(sanitizeUrl(123 as unknown as string)).toBe('');
+      expect(sanitizeUrl(null as unknown as string)).toBe('');
+      expect(sanitizeUrl(undefined as unknown as string)).toBe('');
+    });
+
+    it('should allow empty string (for optional URL fields)', () => {
+      expect(sanitizeUrl('')).toBe('');
+      expect(sanitizeUrl('   ')).toBe('');
+    });
+
+    it('should trim whitespace from valid URLs', () => {
+      expect(sanitizeUrl('  https://example.com  ')).toBe(
+        'https://example.com',
+      );
+    });
+
+    it('should support custom allowed protocols', () => {
+      expect(sanitizeUrl('ftp://example.com', ['ftp:'])).toBe(
+        'ftp://example.com',
+      );
+      expect(sanitizeUrl('mailto:test@example.com', ['mailto:'])).toBe(
+        'mailto:test@example.com',
+      );
+    });
+  });
+
+  describe('sanitizeInput (deprecated alias)', () => {
     it('should remove angle brackets', () => {
       expect(sanitizeInput('<script>')).toBe('script');
       expect(sanitizeInput('test<div>content</div>')).toBe(

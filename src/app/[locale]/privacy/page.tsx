@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/types/content';
 import { getPageBySlug } from '@/lib/content';
-import { generateJSONLD } from '@/lib/structured-data';
+import { JsonLdScript } from '@/components/seo';
 import {
   generateLocaleStaticParams,
   type LocaleParam,
@@ -266,13 +266,7 @@ export default async function PrivacyPage({ params }: PrivacyPageProps) {
 
   return (
     <>
-      {/* JSON-LD structured data for SEO - no nonce needed as it's data-only */}
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: generateJSONLD(privacySchema),
-        }}
-      />
+      <JsonLdScript data={privacySchema} />
 
       <main className='container mx-auto px-4 py-8 md:py-12'>
         <header className='mb-6 md:mb-8'>

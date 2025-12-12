@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { getBlurPlaceholder } from '@/lib/image';
 import { cn } from '@/lib/utils';
 
 export interface ProductGalleryProps {
@@ -46,6 +47,7 @@ export function ProductGallery({
           sizes='(max-width: 768px) 100vw, 50vw'
           className='object-cover'
           priority={selectedIndex === 0}
+          {...getBlurPlaceholder('shimmer')}
         />
       </div>
 
@@ -73,6 +75,7 @@ export function ProductGallery({
                 fill
                 sizes='64px'
                 className='object-cover'
+                {...getBlurPlaceholder('neutral')}
               />
             </button>
           ))}

@@ -3,46 +3,17 @@ import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
 import {
-  getAllowedTurnstileHosts,
-  getExpectedTurnstileAction,
-  isAllowedTurnstileAction,
-  isAllowedTurnstileHostname,
-} from '@/lib/security/turnstile-config';
+  getClientIP,
+  verifyTurnstile,
+} from '@/app/api/contact/contact-api-utils';
 
 interface TurnstileVerificationRequest {
   token: string;
   remoteip?: string;
 }
 
-interface TurnstileVerificationResponse {
-  'success': boolean;
-  'error-codes'?: string[];
-  'challenge_ts'?: string;
-  'hostname'?: string;
-  'action'?: string;
-  'cdata'?: string;
-}
-
 /**
- * 验证 Turnstile 配置
- */
-function validateTurnstileConfig() {
-  const secretKey = env.TURNSTILE_SECRET_KEY;
-  if (!secretKey) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Turnstile not configured',
-        message: 'Bot protection is not properly configured on the server',
-      },
-      { status: 500 },
-    );
-  }
-  return secretKey;
-}
-
-/**
- * 验证请求体
+ * Validate request body
  */
 function validateRequestBody(body: TurnstileVerificationRequest) {
   if (!body.token) {
@@ -59,162 +30,24 @@ function validateRequestBody(body: TurnstileVerificationRequest) {
 }
 
 /**
- * 获取客户端 IP
- */
-function getClientIP(request: NextRequest): string {
-  return (
-    request.headers.get('x-forwarded-for') ||
-    request.headers.get('x-real-ip') ||
-    'unknown'
-  );
-}
-
-/**
- * 调用 Cloudflare Turnstile 验证 API
- */
-interface VerifyParams {
-  secretKey: string;
-  token: string;
-  clientIP: string;
-  remoteip?: string;
-}
-async function verifyWithCloudflare({
-  secretKey,
-  token,
-  clientIP,
-  remoteip,
-}: VerifyParams) {
-  const verificationData = new URLSearchParams({
-    secret: secretKey,
-    response: token,
-  });
-
-  const ipAddress = remoteip || clientIP;
-  if (ipAddress && ipAddress !== 'unknown') {
-    verificationData.set('remoteip', ipAddress);
-  }
-
-  const verificationResponse = await fetch(
-    'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: verificationData,
-    },
-  );
-
-  if (!verificationResponse.ok) {
-    logger.error('Turnstile verification request failed', {
-      status: verificationResponse.status,
-    });
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Verification request failed',
-        message: 'Failed to verify with Turnstile service',
-      },
-      { status: 500 },
-    );
-  }
-
-  return verificationResponse.json();
-}
-
-/**
- * 处理验证结果
- */
-function handleVerificationResult(
-  result: TurnstileVerificationResponse,
-  clientIP: string,
-) {
-  // Log verification attempt (for monitoring)
-  logger.info('Turnstile verification attempt', {
-    success: result.success,
-    hostname: result.hostname,
-    challenge_ts: result.challenge_ts,
-    action: result.action,
-    clientIP,
-    timestamp: new Date().toISOString(),
-  });
-
-  if (!result.success) {
-    logger.warn('Turnstile verification failed:', {
-      errorCodes: result['error-codes'],
-      clientIP,
-      timestamp: new Date().toISOString(),
-    });
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Verification failed',
-        message: 'Bot protection challenge failed',
-        errorCodes: result['error-codes'],
-      },
-      { status: 400 },
-    );
-  }
-
-  if (!isAllowedTurnstileHostname(result.hostname)) {
-    logger.warn('Turnstile verification failed due to unexpected hostname', {
-      hostname: result.hostname,
-      allowed: getAllowedTurnstileHosts(),
-      clientIP,
-    });
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Verification failed',
-        message: 'Bot protection challenge failed (hostname mismatch)',
-      },
-      { status: 400 },
-    );
-  }
-
-  if (!isAllowedTurnstileAction(result.action)) {
-    logger.warn('Turnstile verification failed due to action mismatch', {
-      action: result.action,
-      expectedAction: getExpectedTurnstileAction(),
-      clientIP,
-    });
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Verification failed',
-        message: 'Bot protection challenge failed (action mismatch)',
-      },
-      { status: 400 },
-    );
-  }
-
-  // Verification successful
-  return NextResponse.json(
-    {
-      success: true,
-      message: 'Verification successful',
-      challenge_ts: result.challenge_ts,
-      hostname: result.hostname,
-    },
-    { status: 200 },
-  );
-}
-
-/**
  * Verify Cloudflare Turnstile token
  *
  * This endpoint verifies the Turnstile token on the server side
  * to ensure the user has passed the bot protection challenge.
+ * Uses the shared verifyTurnstile function for consistency.
  */
 export async function POST(request: NextRequest) {
   try {
     // Check if Turnstile is configured
-    const secretKey = validateTurnstileConfig();
-    if (secretKey instanceof NextResponse) {
-      return secretKey;
+    if (!env.TURNSTILE_SECRET_KEY) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Turnstile not configured',
+          message: 'Bot protection is not properly configured on the server',
+        },
+        { status: 500 },
+      );
     }
 
     // Parse request body (safe JSON parse)
@@ -241,20 +74,31 @@ export async function POST(request: NextRequest) {
       return validationError;
     }
 
-    // Get client IP
-    const clientIP = getClientIP(request);
+    // Get client IP (prefer remoteip from body if provided)
+    const clientIP = body.remoteip || getClientIP(request);
 
-    // Verify with Cloudflare
-    const payload: VerifyParams = { secretKey, token: body.token, clientIP };
-    if (body.remoteip) payload.remoteip = body.remoteip;
-    const result = await verifyWithCloudflare(payload);
+    // Use shared verifyTurnstile function
+    const isValid = await verifyTurnstile(body.token, clientIP);
 
-    if (result instanceof NextResponse) {
-      return result;
+    if (!isValid) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Verification failed',
+          message: 'Bot protection challenge failed',
+        },
+        { status: 400 },
+      );
     }
 
-    // Handle verification result
-    return handleVerificationResult(result, clientIP);
+    // Verification successful
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Verification successful',
+      },
+      { status: 200 },
+    );
   } catch (error) {
     logger.error('Error verifying Turnstile token', { error: error as Error });
 
