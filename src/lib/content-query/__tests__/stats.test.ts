@@ -19,7 +19,7 @@ import { getContentStats } from '@/lib/content-query/stats';
 // Mocks setup via vi.hoisted for ESM compatibility
 const mockGetAllPosts = vi.hoisted(() => vi.fn());
 const mockGetAllPages = vi.hoisted(() => vi.fn());
-const mockGetContentConfig = vi.hoisted(() => vi.fn<[], ContentConfig>());
+const mockGetContentConfig = vi.hoisted(() => vi.fn<() => ContentConfig>());
 
 vi.mock('@/lib/content-query/queries', () => ({
   getAllPosts: mockGetAllPosts,

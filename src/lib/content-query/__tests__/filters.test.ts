@@ -27,7 +27,7 @@ import {
 } from '@/lib/content-query/filters';
 
 // Mock getContentConfig before importing filters
-const mockGetContentConfig = vi.fn<[], ContentConfig>();
+const mockGetContentConfig = vi.fn<() => ContentConfig>();
 vi.mock('@/lib/content-utils', () => ({
   getContentConfig: () => mockGetContentConfig(),
 }));
@@ -267,9 +267,10 @@ describe('content-query/filters', () => {
     });
 
     it('should return false when post has no tags and filter is specified', () => {
-      const post = createMockParsedContent({
-        metadata: { tags: undefined } as BlogPostMetadata,
-      });
+      // Create post with no tags property (simulating missing tags)
+      const metadata = createMockBlogPostMetadata();
+      delete (metadata as Partial<BlogPostMetadata>).tags;
+      const post = createMockParsedContent({ metadata });
 
       expect(matchesTags(post, ['javascript'])).toBe(false);
     });
@@ -278,7 +279,7 @@ describe('content-query/filters', () => {
       // Empty array is truthy, some() on empty array returns false
       // so the condition becomes: if ([] && !false) => if (true) => return false
       const post = createMockParsedContent({
-        metadata: { tags: [] } as BlogPostMetadata,
+        metadata: createMockBlogPostMetadata({ tags: [] }),
       });
 
       expect(matchesTags(post, [])).toBe(false);
@@ -286,7 +287,7 @@ describe('content-query/filters', () => {
 
     it('should return false when post has empty tags array and filter is specified', () => {
       const post = createMockParsedContent({
-        metadata: { tags: [] } as BlogPostMetadata,
+        metadata: createMockBlogPostMetadata({ tags: [] }),
       });
 
       expect(matchesTags(post, ['javascript'])).toBe(false);
@@ -329,9 +330,10 @@ describe('content-query/filters', () => {
     });
 
     it('should return false when post has no categories and filter is specified', () => {
-      const post = createMockParsedContent({
-        metadata: { categories: undefined } as BlogPostMetadata,
-      });
+      // Create post with no categories property (simulating missing categories)
+      const metadata = createMockBlogPostMetadata();
+      delete (metadata as Partial<BlogPostMetadata>).categories;
+      const post = createMockParsedContent({ metadata });
 
       expect(matchesCategories(post, ['tech'])).toBe(false);
     });
@@ -340,7 +342,7 @@ describe('content-query/filters', () => {
       // Empty array is truthy, some() on empty array returns false
       // so the condition becomes: if ([] && !false) => if (true) => return false
       const post = createMockParsedContent({
-        metadata: { categories: [] } as BlogPostMetadata,
+        metadata: createMockBlogPostMetadata({ categories: [] }),
       });
 
       expect(matchesCategories(post, [])).toBe(false);
@@ -348,7 +350,7 @@ describe('content-query/filters', () => {
 
     it('should return false when post has empty categories and filter is specified', () => {
       const post = createMockParsedContent({
-        metadata: { categories: [] } as BlogPostMetadata,
+        metadata: createMockBlogPostMetadata({ categories: [] }),
       });
 
       expect(matchesCategories(post, ['tech'])).toBe(false);
@@ -388,7 +390,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('published');
+      expect(result[0]!.slug).toBe('published');
     });
 
     it('should filter by featured status', () => {
@@ -407,7 +409,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('featured');
+      expect(result[0]!.slug).toBe('featured');
     });
 
     it('should filter by tags', () => {
@@ -426,7 +428,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('react-post');
+      expect(result[0]!.slug).toBe('react-post');
     });
 
     it('should filter by categories', () => {
@@ -445,7 +447,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('tech-post');
+      expect(result[0]!.slug).toBe('tech-post');
     });
 
     it('should apply multiple filters together (AND logic)', () => {
@@ -499,7 +501,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('match-all');
+      expect(result[0]!.slug).toBe('match-all');
     });
 
     it('should return empty array when no posts match', () => {
@@ -548,7 +550,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('published');
+      expect(result[0]!.slug).toBe('published');
     });
 
     it('should filter only drafts when requesting draft: true', () => {
@@ -570,7 +572,7 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('draft');
+      expect(result[0]!.slug).toBe('draft');
     });
 
     it('should cast result to BlogPost array', () => {
@@ -580,10 +582,10 @@ describe('content-query/filters', () => {
       const result = filterPosts(posts, options);
 
       // Verify the result is typed as BlogPost[]
-      expect(result[0]).toHaveProperty('metadata');
-      expect(result[0]).toHaveProperty('content');
-      expect(result[0]).toHaveProperty('slug');
-      expect(result[0]).toHaveProperty('filePath');
+      expect(result[0]!).toHaveProperty('metadata');
+      expect(result[0]!).toHaveProperty('content');
+      expect(result[0]!).toHaveProperty('slug');
+      expect(result[0]!).toHaveProperty('filePath');
     });
   });
 });

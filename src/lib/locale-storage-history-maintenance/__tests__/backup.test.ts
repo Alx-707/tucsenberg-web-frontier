@@ -3,6 +3,12 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Locale } from '@/types/i18n';
+import type {
+  LocaleDetectionHistory,
+  LocaleDetectionRecord,
+  LocaleSource,
+} from '@/lib/locale-storage-types';
 import { createBackup, restoreFromBackup } from '../backup';
 
 // Mock dependencies
@@ -14,17 +20,20 @@ vi.mock('@/lib/locale-storage-history-maintenance/import-export', () => ({
   importHistory: (data: unknown) => mockImportHistory(data),
 }));
 
-function createValidHistory() {
+function createValidHistory(): LocaleDetectionHistory {
+  const detections: LocaleDetectionRecord[] = [
+    {
+      locale: 'en' as Locale,
+      source: 'browser' as LocaleSource,
+      timestamp: Date.now() - 1000,
+      confidence: 0.9,
+    },
+  ];
   return {
-    history: [
-      {
-        locale: 'en',
-        source: 'browser',
-        timestamp: Date.now() - 1000,
-        confidence: 0.9,
-      },
-    ],
+    detections,
+    history: detections,
     lastUpdated: Date.now() - 500,
+    totalDetections: detections.length,
   };
 }
 

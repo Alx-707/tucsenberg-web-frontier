@@ -167,10 +167,14 @@ describe('validatePreference', () => {
 
   describe('metadata validation', () => {
     it('should add error for non-object metadata', () => {
-      const preference = createValidPreference({
+      const preference = {
+        locale: 'en' as const,
+        source: 'user' as const,
+        timestamp: Date.now() - 1000,
+        confidence: 0.95,
         metadata: 'invalid' as unknown as UserLocalePreference['metadata'],
-      });
-      const result = validatePreference(preference);
+      };
+      const result = validatePreference(preference as UserLocalePreference);
 
       expect(result.isValid).toBe(false);
       expect(result.errors).toContain('Metadata must be an object');

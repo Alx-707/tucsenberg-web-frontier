@@ -5,6 +5,34 @@ import { LocaleMaintenanceOperationsManager } from '../locale-storage-maintenanc
 import { LocaleValidationManager } from '../locale-storage-maintenance-validation';
 import { STORAGE_KEYS } from '../locale-storage-types';
 
+// Type definitions for result.data access
+interface CompactResult {
+  compactedItems: number;
+}
+
+interface OptimizeResult {
+  removedCount: number;
+  remainingCount: number;
+}
+
+interface RebuildResult {
+  rebuiltItems: number;
+  actions: string[];
+}
+
+interface MaintenanceResult {
+  totalOperations: number;
+  successfulOperations: number;
+  results: string[];
+}
+
+interface CleanupStats {
+  totalItems: number;
+  expiredDetections: number;
+  invalidPreferences: number;
+  duplicateDetections: number;
+}
+
 // Mock all dependencies
 vi.mock('../locale-storage-local', () => ({
   LocalStorageManager: {
@@ -209,7 +237,9 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.compactStorage();
 
       expect(result.success).toBe(true);
-      expect(result.data?.compactedItems).toBe(2);
+      expect((result.data as CompactResult | undefined)?.compactedItems).toBe(
+        2,
+      );
       expect(LocalStorageManager.set).toHaveBeenCalledTimes(2);
     });
 
@@ -219,7 +249,9 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.compactStorage();
 
       expect(result.success).toBe(true);
-      expect(result.data?.compactedItems).toBe(0);
+      expect((result.data as CompactResult | undefined)?.compactedItems).toBe(
+        0,
+      );
     });
 
     it('should handle exceptions gracefully', () => {
@@ -265,8 +297,10 @@ describe('LocaleMaintenanceOperationsManager', () => {
         LocaleMaintenanceOperationsManager.optimizeDetectionHistory();
 
       expect(result.success).toBe(true);
-      expect(result.data?.removedCount).toBe(0);
-      expect(result.data?.remainingCount).toBe(50);
+      expect((result.data as OptimizeResult | undefined)?.removedCount).toBe(0);
+      expect((result.data as OptimizeResult | undefined)?.remainingCount).toBe(
+        50,
+      );
     });
 
     it('should trim history to 100 records when exceeding limit', () => {
@@ -277,8 +311,12 @@ describe('LocaleMaintenanceOperationsManager', () => {
         LocaleMaintenanceOperationsManager.optimizeDetectionHistory();
 
       expect(result.success).toBe(true);
-      expect(result.data?.removedCount).toBe(50);
-      expect(result.data?.remainingCount).toBe(100);
+      expect((result.data as OptimizeResult | undefined)?.removedCount).toBe(
+        50,
+      );
+      expect((result.data as OptimizeResult | undefined)?.remainingCount).toBe(
+        100,
+      );
       expect(LocalStorageManager.set).toHaveBeenCalled();
     });
 
@@ -291,14 +329,14 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const setCalls = vi.mocked(LocalStorageManager.set).mock.calls;
       expect(setCalls.length).toBeGreaterThan(0);
 
-      const savedHistory = setCalls[0][1] as {
+      const savedHistory = setCalls[0]![1] as {
         detections: Array<{ timestamp: number }>;
       };
       // Check that detections are sorted by timestamp descending
       for (let i = 1; i < savedHistory.detections.length; i++) {
-        expect(savedHistory.detections[i - 1].timestamp).toBeGreaterThanOrEqual(
-          savedHistory.detections[i].timestamp,
-        );
+        expect(
+          savedHistory.detections[i - 1]!.timestamp,
+        ).toBeGreaterThanOrEqual(savedHistory.detections[i]!.timestamp);
       }
     });
 
@@ -326,8 +364,10 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.rebuildStorageIndex();
 
       expect(result.success).toBe(true);
-      expect(result.data?.rebuiltItems).toBe(1);
-      expect(result.data?.actions).toContain('重建偏好数据索引');
+      expect((result.data as RebuildResult | undefined)?.rebuiltItems).toBe(1);
+      expect((result.data as RebuildResult | undefined)?.actions).toContain(
+        '重建偏好数据索引',
+      );
     });
 
     it('should rebuild history data index', () => {
@@ -340,8 +380,10 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.rebuildStorageIndex();
 
       expect(result.success).toBe(true);
-      expect(result.data?.rebuiltItems).toBe(1);
-      expect(result.data?.actions).toContain('重建历史数据索引');
+      expect((result.data as RebuildResult | undefined)?.rebuiltItems).toBe(1);
+      expect((result.data as RebuildResult | undefined)?.actions).toContain(
+        '重建历史数据索引',
+      );
     });
 
     it('should rebuild both preference and history', () => {
@@ -360,7 +402,7 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.rebuildStorageIndex();
 
       expect(result.success).toBe(true);
-      expect(result.data?.rebuiltItems).toBe(2);
+      expect((result.data as RebuildResult | undefined)?.rebuiltItems).toBe(2);
     });
 
     it('should filter out invalid detections', () => {
@@ -402,7 +444,7 @@ describe('LocaleMaintenanceOperationsManager', () => {
       LocaleMaintenanceOperationsManager.rebuildStorageIndex();
 
       const setCalls = vi.mocked(LocalStorageManager.set).mock.calls;
-      const savedHistory = setCalls[0][1] as { detections: Array<unknown> };
+      const savedHistory = setCalls[0]![1] as { detections: Array<unknown> };
       expect(savedHistory.detections.length).toBe(2); // Only valid detections
     });
 
@@ -412,7 +454,7 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result = LocaleMaintenanceOperationsManager.rebuildStorageIndex();
 
       expect(result.success).toBe(true);
-      expect(result.data?.rebuiltItems).toBe(0);
+      expect((result.data as RebuildResult | undefined)?.rebuiltItems).toBe(0);
     });
 
     it('should handle exceptions gracefully', () => {
@@ -435,8 +477,12 @@ describe('LocaleMaintenanceOperationsManager', () => {
         LocaleMaintenanceOperationsManager.performDeepMaintenance();
 
       expect(result.success).toBe(true);
-      expect(result.data?.totalOperations).toBe(3);
-      expect(result.data?.successfulOperations).toBe(3);
+      expect(
+        (result.data as MaintenanceResult | undefined)?.totalOperations,
+      ).toBe(3);
+      expect(
+        (result.data as MaintenanceResult | undefined)?.successfulOperations,
+      ).toBe(3);
     });
 
     it('should handle partial task failures', () => {
@@ -452,7 +498,9 @@ describe('LocaleMaintenanceOperationsManager', () => {
         LocaleMaintenanceOperationsManager.performDeepMaintenance();
 
       expect(result.success).toBe(false);
-      expect(result.data?.successfulOperations).toBeLessThan(3);
+      expect(
+        (result.data as MaintenanceResult | undefined)?.successfulOperations,
+      ).toBeLessThan(3);
     });
 
     it('should include result messages for each task', () => {
@@ -461,19 +509,26 @@ describe('LocaleMaintenanceOperationsManager', () => {
       const result =
         LocaleMaintenanceOperationsManager.performDeepMaintenance();
 
-      expect(result.data?.results).toContain('标准维护完成');
-      expect(result.data?.results).toContain('优化历史完成');
-      expect(result.data?.results).toContain('重建索引完成');
+      expect((result.data as MaintenanceResult | undefined)?.results).toContain(
+        '标准维护完成',
+      );
+      expect((result.data as MaintenanceResult | undefined)?.results).toContain(
+        '优化历史完成',
+      );
+      expect((result.data as MaintenanceResult | undefined)?.results).toContain(
+        '重建索引完成',
+      );
     });
   });
 
   describe('getMaintenanceRecommendations', () => {
     it('should return good status when no issues', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 0,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -492,10 +547,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should recommend cleanup for expired detections', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 60,
         expiredDetections: 60, // > 50
         duplicateDetections: 0,
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -516,10 +572,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should recommend cleanup for duplicate detections', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 15,
         expiredDetections: 0,
         duplicateDetections: 15, // > 10
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -539,10 +596,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should set high priority for invalid preferences', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 3,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 3,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -563,10 +621,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should recommend fixing invalid keys', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 0,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 4,
@@ -587,10 +646,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should recommend fixing sync issues', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 0,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -610,10 +670,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should recommend history optimization when records exceed limit', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 0,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 0,
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,
@@ -638,10 +699,11 @@ describe('LocaleMaintenanceOperationsManager', () => {
 
     it('should estimate time based on priority', () => {
       vi.mocked(LocaleCleanupManager.getCleanupStats).mockReturnValue({
+        totalItems: 5,
         expiredDetections: 0,
         duplicateDetections: 0,
         invalidPreferences: 5, // High priority trigger
-      });
+      } as CleanupStats);
       vi.mocked(LocaleValidationManager.getValidationSummary).mockReturnValue({
         totalKeys: 6,
         validKeys: 6,

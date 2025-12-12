@@ -57,24 +57,24 @@ describe('content-query/sorting', () => {
         const posts = [
           createMockBlogPost({
             slug: 'oldest',
-            metadata: { publishedAt: '2024-01-01' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-01' }),
           }),
           createMockBlogPost({
             slug: 'newest',
-            metadata: { publishedAt: '2024-03-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-03-15' }),
           }),
           createMockBlogPost({
             slug: 'middle',
-            metadata: { publishedAt: '2024-02-10' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-02-10' }),
           }),
         ];
         const options: ContentQueryOptions = {};
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('newest');
-        expect(result[1].slug).toBe('middle');
-        expect(result[2].slug).toBe('oldest');
+        expect(result[0]!.slug).toBe('newest');
+        expect(result[1]!.slug).toBe('middle');
+        expect(result[2]!.slug).toBe('oldest');
       });
     });
 
@@ -83,15 +83,15 @@ describe('content-query/sorting', () => {
         const posts = [
           createMockBlogPost({
             slug: 'newest',
-            metadata: { publishedAt: '2024-03-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-03-15' }),
           }),
           createMockBlogPost({
             slug: 'oldest',
-            metadata: { publishedAt: '2024-01-01' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-01' }),
           }),
           createMockBlogPost({
             slug: 'middle',
-            metadata: { publishedAt: '2024-02-10' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-02-10' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -101,20 +101,20 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('oldest');
-        expect(result[1].slug).toBe('middle');
-        expect(result[2].slug).toBe('newest');
+        expect(result[0]!.slug).toBe('oldest');
+        expect(result[1]!.slug).toBe('middle');
+        expect(result[2]!.slug).toBe('newest');
       });
 
       it('should sort by publishedAt descending', () => {
         const posts = [
           createMockBlogPost({
             slug: 'oldest',
-            metadata: { publishedAt: '2024-01-01' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-01' }),
           }),
           createMockBlogPost({
             slug: 'newest',
-            metadata: { publishedAt: '2024-03-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-03-15' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -124,19 +124,19 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('newest');
-        expect(result[1].slug).toBe('oldest');
+        expect(result[0]!.slug).toBe('newest');
+        expect(result[1]!.slug).toBe('oldest');
       });
 
       it('should handle posts with same publishedAt date', () => {
         const posts = [
           createMockBlogPost({
             slug: 'post-a',
-            metadata: { publishedAt: '2024-01-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-15' }),
           }),
           createMockBlogPost({
             slug: 'post-b',
-            metadata: { publishedAt: '2024-01-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-15' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -154,11 +154,11 @@ describe('content-query/sorting', () => {
         const posts = [
           createMockBlogPost({
             slug: 'with-date',
-            metadata: { publishedAt: '2024-01-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-15' }),
           }),
           createMockBlogPost({
             slug: 'no-date',
-            metadata: { publishedAt: '' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -168,8 +168,8 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('with-date');
-        expect(result[1].slug).toBe('no-date');
+        expect(result[0]!.slug).toBe('with-date');
+        expect(result[1]!.slug).toBe('no-date');
       });
     });
 
@@ -178,15 +178,15 @@ describe('content-query/sorting', () => {
         const posts = [
           createMockBlogPost({
             slug: 'recently-updated',
-            metadata: { updatedAt: '2024-03-20' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ updatedAt: '2024-03-20' }),
           }),
           createMockBlogPost({
             slug: 'old-update',
-            metadata: { updatedAt: '2024-01-05' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ updatedAt: '2024-01-05' }),
           }),
           createMockBlogPost({
             slug: 'middle-update',
-            metadata: { updatedAt: '2024-02-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ updatedAt: '2024-02-15' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -196,20 +196,20 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('old-update');
-        expect(result[1].slug).toBe('middle-update');
-        expect(result[2].slug).toBe('recently-updated');
+        expect(result[0]!.slug).toBe('old-update');
+        expect(result[1]!.slug).toBe('middle-update');
+        expect(result[2]!.slug).toBe('recently-updated');
       });
 
       it('should sort by updatedAt descending', () => {
         const posts = [
           createMockBlogPost({
             slug: 'old-update',
-            metadata: { updatedAt: '2024-01-05' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ updatedAt: '2024-01-05' }),
           }),
           createMockBlogPost({
             slug: 'recently-updated',
-            metadata: { updatedAt: '2024-03-20' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ updatedAt: '2024-03-20' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -219,19 +219,26 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('recently-updated');
-        expect(result[1].slug).toBe('old-update');
+        expect(result[0]!.slug).toBe('recently-updated');
+        expect(result[1]!.slug).toBe('old-update');
       });
 
       it('should handle undefined updatedAt by treating as empty string', () => {
+        // Create post without updatedAt to simulate missing property
+        const withUpdateMetadata = createMockBlogPostMetadata({
+          updatedAt: '2024-01-15',
+        });
+        const noUpdateMetadata = createMockBlogPostMetadata();
+        delete (noUpdateMetadata as Partial<BlogPostMetadata>).updatedAt;
+
         const posts = [
           createMockBlogPost({
             slug: 'with-update',
-            metadata: { updatedAt: '2024-01-15' } as BlogPostMetadata,
+            metadata: withUpdateMetadata,
           }),
           createMockBlogPost({
             slug: 'no-update',
-            metadata: { updatedAt: undefined } as BlogPostMetadata,
+            metadata: noUpdateMetadata,
           }),
         ];
         const options: ContentQueryOptions = {
@@ -241,8 +248,8 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('with-update');
-        expect(result[1].slug).toBe('no-update');
+        expect(result[0]!.slug).toBe('with-update');
+        expect(result[1]!.slug).toBe('no-update');
       });
     });
 
@@ -251,15 +258,15 @@ describe('content-query/sorting', () => {
         const posts = [
           createMockBlogPost({
             slug: 'zebra',
-            metadata: { title: 'Zebra Post' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Zebra Post' }),
           }),
           createMockBlogPost({
             slug: 'apple',
-            metadata: { title: 'Apple Post' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Apple Post' }),
           }),
           createMockBlogPost({
             slug: 'mango',
-            metadata: { title: 'Mango Post' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Mango Post' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -269,20 +276,20 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('apple');
-        expect(result[1].slug).toBe('mango');
-        expect(result[2].slug).toBe('zebra');
+        expect(result[0]!.slug).toBe('apple');
+        expect(result[1]!.slug).toBe('mango');
+        expect(result[2]!.slug).toBe('zebra');
       });
 
       it('should sort by title descending', () => {
         const posts = [
           createMockBlogPost({
             slug: 'apple',
-            metadata: { title: 'Apple Post' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Apple Post' }),
           }),
           createMockBlogPost({
             slug: 'zebra',
-            metadata: { title: 'Zebra Post' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Zebra Post' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -292,19 +299,19 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('zebra');
-        expect(result[1].slug).toBe('apple');
+        expect(result[0]!.slug).toBe('zebra');
+        expect(result[1]!.slug).toBe('apple');
       });
 
       it('should handle undefined title by treating as empty string', () => {
         const posts = [
           createMockBlogPost({
             slug: 'with-title',
-            metadata: { title: 'Some Title' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Some Title' }),
           }),
           createMockBlogPost({
             slug: 'no-title',
-            metadata: { title: '' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: '' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -314,23 +321,23 @@ describe('content-query/sorting', () => {
 
         const result = sortPosts(posts, options);
 
-        expect(result[0].slug).toBe('no-title');
-        expect(result[1].slug).toBe('with-title');
+        expect(result[0]!.slug).toBe('no-title');
+        expect(result[1]!.slug).toBe('with-title');
       });
 
       it('should handle case-sensitive title comparison via localeCompare', () => {
         const posts = [
           createMockBlogPost({
             slug: 'lower-a',
-            metadata: { title: 'apple' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'apple' }),
           }),
           createMockBlogPost({
             slug: 'upper-a',
-            metadata: { title: 'Apple' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Apple' }),
           }),
           createMockBlogPost({
             slug: 'banana',
-            metadata: { title: 'Banana' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ title: 'Banana' }),
           }),
         ];
         const options: ContentQueryOptions = {
@@ -393,18 +400,18 @@ describe('content-query/sorting', () => {
         const result = sortPosts(posts, options);
 
         expect(result).toHaveLength(1);
-        expect(result[0].slug).toBe('only-one');
+        expect(result[0]!.slug).toBe('only-one');
       });
 
       it('should mutate original array (sort in place)', () => {
         const posts = [
           createMockBlogPost({
             slug: 'older',
-            metadata: { publishedAt: '2024-01-01' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-01-01' }),
           }),
           createMockBlogPost({
             slug: 'newer',
-            metadata: { publishedAt: '2024-03-15' } as BlogPostMetadata,
+            metadata: createMockBlogPostMetadata({ publishedAt: '2024-03-15' }),
           }),
         ];
         const options: ContentQueryOptions = {};
@@ -412,7 +419,7 @@ describe('content-query/sorting', () => {
         const result = sortPosts(posts, options);
 
         // Check that original array is modified
-        expect(posts[0].slug).toBe('newer');
+        expect(posts[0]!.slug).toBe('newer');
         expect(result).toBe(posts);
       });
     });
@@ -423,7 +430,7 @@ describe('content-query/sorting', () => {
       Array.from({ length: count }, (_, i) =>
         createMockBlogPost({
           slug: `post-${i + 1}`,
-          metadata: { title: `Post ${i + 1}` } as BlogPostMetadata,
+          metadata: createMockBlogPostMetadata({ title: `Post ${i + 1}` }),
         }),
       );
 
@@ -447,8 +454,8 @@ describe('content-query/sorting', () => {
         const result = paginatePosts(posts, options);
 
         expect(result).toHaveLength(3);
-        expect(result[0].slug).toBe('post-1');
-        expect(result[2].slug).toBe('post-3');
+        expect(result[0]!.slug).toBe('post-1');
+        expect(result[2]!.slug).toBe('post-3');
       });
 
       it('should return all posts when limit exceeds post count', () => {
@@ -480,7 +487,7 @@ describe('content-query/sorting', () => {
         const result = paginatePosts(posts, options);
 
         expect(result).toHaveLength(7);
-        expect(result[0].slug).toBe('post-4');
+        expect(result[0]!.slug).toBe('post-4');
       });
 
       it('should return empty array when offset exceeds post count', () => {
@@ -512,9 +519,9 @@ describe('content-query/sorting', () => {
         const result = paginatePosts(posts, options);
 
         expect(result).toHaveLength(3);
-        expect(result[0].slug).toBe('post-3');
-        expect(result[1].slug).toBe('post-4');
-        expect(result[2].slug).toBe('post-5');
+        expect(result[0]!.slug).toBe('post-3');
+        expect(result[1]!.slug).toBe('post-4');
+        expect(result[2]!.slug).toBe('post-5');
       });
 
       it('should handle offset at end with small limit', () => {
@@ -524,8 +531,8 @@ describe('content-query/sorting', () => {
         const result = paginatePosts(posts, options);
 
         expect(result).toHaveLength(2);
-        expect(result[0].slug).toBe('post-9');
-        expect(result[1].slug).toBe('post-10');
+        expect(result[0]!.slug).toBe('post-9');
+        expect(result[1]!.slug).toBe('post-10');
       });
 
       it('should handle first page pagination (offset: 0, limit: N)', () => {
@@ -536,7 +543,7 @@ describe('content-query/sorting', () => {
 
         // offset 0 is falsy, so limit alone triggers slice(0, 5)
         expect(result).toHaveLength(5);
-        expect(result[0].slug).toBe('post-1');
+        expect(result[0]!.slug).toBe('post-1');
       });
 
       it('should handle page-style pagination', () => {
@@ -546,17 +553,17 @@ describe('content-query/sorting', () => {
         // Page 1
         const page1 = paginatePosts(posts, { offset: 0, limit: pageSize });
         expect(page1).toHaveLength(10);
-        expect(page1[0].slug).toBe('post-1');
+        expect(page1[0]!.slug).toBe('post-1');
 
         // Page 2
         const page2 = paginatePosts(posts, { offset: 10, limit: pageSize });
         expect(page2).toHaveLength(10);
-        expect(page2[0].slug).toBe('post-11');
+        expect(page2[0]!.slug).toBe('post-11');
 
         // Page 3 (partial)
         const page3 = paginatePosts(posts, { offset: 20, limit: pageSize });
         expect(page3).toHaveLength(5);
-        expect(page3[0].slug).toBe('post-21');
+        expect(page3[0]!.slug).toBe('post-21');
       });
     });
 

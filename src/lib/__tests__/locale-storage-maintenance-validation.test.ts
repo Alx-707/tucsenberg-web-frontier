@@ -1,8 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Locale } from '@/types/i18n';
 import { CookieManager } from '../locale-storage-cookie';
 import { LocalStorageManager } from '../locale-storage-local';
 import { LocaleValidationManager } from '../locale-storage-maintenance-validation';
-import { STORAGE_KEYS } from '../locale-storage-types';
+import type {
+  LocaleDetectionHistory,
+  LocaleSource,
+  UserLocalePreference,
+} from '../locale-storage-types';
+import { STORAGE_KEYS } from '../locale-storage-types-constants';
+
+// Helper type for result.data with issues/warnings
+interface ValidationResultData {
+  issues?: string[];
+  warnings?: string[];
+}
+
+// Type for fixSyncIssues result data
+interface SyncFixResultData {
+  fixedIssues: number;
+  actions: string[];
+}
 
 // Mock dependencies
 vi.mock('../locale-storage-local', () => ({
@@ -22,28 +40,35 @@ vi.mock('../locale-storage-cookie', () => ({
 }));
 
 // Helper factories
-function createValidPreference(overrides = {}) {
+function createValidPreference(
+  overrides: Partial<UserLocalePreference> = {},
+): UserLocalePreference {
   return {
-    locale: 'en',
-    source: 'user',
+    locale: 'en' as Locale,
+    source: 'user' as LocaleSource,
     timestamp: Date.now() - 1000,
     confidence: 0.9,
     ...overrides,
   };
 }
 
-function createValidHistory(overrides = {}) {
+function createValidHistory(
+  overrides: Partial<LocaleDetectionHistory> = {},
+): LocaleDetectionHistory {
+  const now = Date.now();
+  const defaultDetections = [
+    {
+      locale: 'en' as Locale,
+      source: 'browser' as LocaleSource,
+      timestamp: now - 1000,
+      confidence: 0.8,
+    },
+  ];
   return {
-    detections: [
-      {
-        locale: 'en',
-        source: 'browser',
-        timestamp: Date.now() - 1000,
-        confidence: 0.8,
-      },
-    ],
-    lastUpdated: Date.now() - 500,
-    ...overrides,
+    detections: overrides.detections ?? defaultDetections,
+    history: overrides.history ?? defaultDetections,
+    lastUpdated: overrides.lastUpdated ?? now - 500,
+    totalDetections: overrides.totalDetections ?? 1,
   };
 }
 
@@ -86,28 +111,36 @@ describe('LocaleValidationManager', () => {
     });
 
     it('should return false when locale is not a string', () => {
-      const invalid = createValidPreference({ locale: 123 });
+      const invalid = createValidPreference();
+      // Override locale with invalid type for testing
+      (invalid as unknown as Record<string, unknown>).locale = 123;
       expect(
         LocaleValidationManager.validatePreferenceData(invalid as never),
       ).toBe(false);
     });
 
     it('should return false when source is not a string', () => {
-      const invalid = createValidPreference({ source: null });
+      const invalid = createValidPreference();
+      // Override source with invalid type for testing
+      (invalid as unknown as Record<string, unknown>).source = null;
       expect(
         LocaleValidationManager.validatePreferenceData(invalid as never),
       ).toBe(false);
     });
 
     it('should return false when timestamp is not a number', () => {
-      const invalid = createValidPreference({ timestamp: 'invalid' });
+      const invalid = createValidPreference();
+      // Override timestamp with invalid type for testing
+      (invalid as unknown as Record<string, unknown>).timestamp = 'invalid';
       expect(
         LocaleValidationManager.validatePreferenceData(invalid as never),
       ).toBe(false);
     });
 
     it('should return false when confidence is not a number', () => {
-      const invalid = createValidPreference({ confidence: 'high' });
+      const invalid = createValidPreference();
+      // Override confidence with invalid type for testing
+      (invalid as unknown as Record<string, unknown>).confidence = 'high';
       expect(
         LocaleValidationManager.validatePreferenceData(invalid as never),
       ).toBe(false);
@@ -175,32 +208,20 @@ describe('LocaleValidationManager', () => {
     });
 
     it('should return false when detection has invalid locale', () => {
-      const invalid = createValidHistory({
-        detections: [
-          {
-            locale: 123,
-            source: 'browser',
-            timestamp: Date.now(),
-            confidence: 0.8,
-          },
-        ],
-      });
+      const invalid = createValidHistory();
+      // Override first detection's locale with invalid type
+      (invalid.detections[0] as unknown as Record<string, unknown>).locale =
+        123;
       expect(
         LocaleValidationManager.validateHistoryData(invalid as never),
       ).toBe(false);
     });
 
     it('should return false when detection has invalid source', () => {
-      const invalid = createValidHistory({
-        detections: [
-          {
-            locale: 'en',
-            source: null,
-            timestamp: Date.now(),
-            confidence: 0.8,
-          },
-        ],
-      });
+      const invalid = createValidHistory();
+      // Override first detection's source with invalid type
+      (invalid.detections[0] as unknown as Record<string, unknown>).source =
+        null;
       expect(
         LocaleValidationManager.validateHistoryData(invalid as never),
       ).toBe(false);
@@ -235,7 +256,7 @@ describe('LocaleValidationManager', () => {
     });
 
     it('should return true for empty detections array', () => {
-      const valid = { detections: [], lastUpdated: Date.now() };
+      const valid = createValidHistory({ detections: [], history: [] });
       expect(LocaleValidationManager.validateHistoryData(valid)).toBe(true);
     });
   });
@@ -247,7 +268,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.validateStorageIntegrity();
 
       expect(result.success).toBe(true);
-      expect(result.data?.issues).toEqual([]);
+      expect((result.data as ValidationResultData | undefined)?.issues).toEqual(
+        [],
+      );
     });
 
     it('should return success when all data is valid', () => {
@@ -280,7 +303,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.validateStorageIntegrity();
 
       expect(result.success).toBe(false);
-      expect(result.data?.issues).toContain('用户偏好数据格式无效');
+      expect(
+        (result.data as ValidationResultData | undefined)?.issues,
+      ).toContain('用户偏好数据格式无效');
     });
 
     it('should report invalid history data', () => {
@@ -295,7 +320,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.validateStorageIntegrity();
 
       expect(result.success).toBe(false);
-      expect(result.data?.issues).toContain('检测历史数据格式无效');
+      expect(
+        (result.data as ValidationResultData | undefined)?.issues,
+      ).toContain('检测历史数据格式无效');
     });
 
     it('should handle exceptions gracefully', () => {
@@ -522,9 +549,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.checkDataConsistency();
 
       expect(result.success).toBe(false);
-      expect(result.data?.issues).toContain(
-        'localStorage和Cookie中的语言偏好不一致',
-      );
+      expect(
+        (result.data as ValidationResultData | undefined)?.issues,
+      ).toContain('localStorage和Cookie中的语言偏好不一致');
     });
 
     it('should warn about large timestamp difference', () => {
@@ -546,9 +573,9 @@ describe('LocaleValidationManager', () => {
 
       const result = LocaleValidationManager.checkDataConsistency();
 
-      expect(result.data?.warnings).toContain(
-        'localStorage和Cookie中的偏好时间戳差异较大',
-      );
+      expect(
+        (result.data as ValidationResultData | undefined)?.warnings,
+      ).toContain('localStorage和Cookie中的偏好时间戳差异较大');
     });
 
     it('should detect override mismatch', () => {
@@ -564,9 +591,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.checkDataConsistency();
 
       expect(result.success).toBe(false);
-      expect(result.data?.issues).toContain(
-        'localStorage和Cookie中的语言覆盖设置不一致',
-      );
+      expect(
+        (result.data as ValidationResultData | undefined)?.issues,
+      ).toContain('localStorage和Cookie中的语言覆盖设置不一致');
     });
 
     it('should report cookie JSON parse error', () => {
@@ -583,7 +610,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.checkDataConsistency();
 
       expect(result.success).toBe(false);
-      expect(result.data?.issues).toContain('Cookie中的偏好数据格式错误');
+      expect(
+        (result.data as ValidationResultData | undefined)?.issues,
+      ).toContain('Cookie中的偏好数据格式错误');
     });
 
     it('should handle exceptions gracefully', () => {
@@ -666,8 +695,12 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.fixSyncIssues();
 
       expect(result.success).toBe(true);
-      expect(result.data?.fixedIssues).toBe(1);
-      expect(result.data?.actions).toContain('已同步偏好数据到Cookie');
+      expect((result.data as SyncFixResultData | undefined)?.fixedIssues).toBe(
+        1,
+      );
+      expect((result.data as SyncFixResultData | undefined)?.actions).toContain(
+        '已同步偏好数据到Cookie',
+      );
       expect(CookieManager.set).toHaveBeenCalledWith(
         STORAGE_KEYS.LOCALE_PREFERENCE,
         JSON.stringify(preference),
@@ -684,8 +717,12 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.fixSyncIssues();
 
       expect(result.success).toBe(true);
-      expect(result.data?.fixedIssues).toBe(1);
-      expect(result.data?.actions).toContain('已同步覆盖设置到Cookie');
+      expect((result.data as SyncFixResultData | undefined)?.fixedIssues).toBe(
+        1,
+      );
+      expect((result.data as SyncFixResultData | undefined)?.actions).toContain(
+        '已同步覆盖设置到Cookie',
+      );
       expect(CookieManager.set).toHaveBeenCalledWith(
         STORAGE_KEYS.USER_LOCALE_OVERRIDE,
         'zh',
@@ -704,7 +741,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.fixSyncIssues();
 
       expect(result.success).toBe(true);
-      expect(result.data?.fixedIssues).toBe(2);
+      expect((result.data as SyncFixResultData | undefined)?.fixedIssues).toBe(
+        2,
+      );
     });
 
     it('should do nothing when no sync issues exist', () => {
@@ -714,7 +753,9 @@ describe('LocaleValidationManager', () => {
       const result = LocaleValidationManager.fixSyncIssues();
 
       expect(result.success).toBe(true);
-      expect(result.data?.fixedIssues).toBe(0);
+      expect((result.data as SyncFixResultData | undefined)?.fixedIssues).toBe(
+        0,
+      );
       expect(CookieManager.set).not.toHaveBeenCalled();
     });
 

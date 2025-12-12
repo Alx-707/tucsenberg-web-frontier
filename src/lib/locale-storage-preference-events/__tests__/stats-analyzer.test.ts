@@ -481,7 +481,7 @@ describe('stats-analyzer', () => {
         },
         {
           locale: 'zh',
-          source: 'url',
+          source: 'auto',
           confidence: 0.6,
           timestamp: Date.now() - 3000,
         },
@@ -500,7 +500,7 @@ describe('stats-analyzer', () => {
       expect(stats.sourceChanges['user']).toBe(1);
       expect(stats.sourceChanges['browser']).toBe(1);
       expect(stats.sourceChanges['geo']).toBe(1);
-      expect(stats.sourceChanges['url']).toBe(1);
+      expect(stats.sourceChanges['auto']).toBe(1);
       expect(stats.sourceChanges['default']).toBe(1);
     });
 

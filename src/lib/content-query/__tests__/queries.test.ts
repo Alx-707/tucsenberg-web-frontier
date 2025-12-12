@@ -28,10 +28,10 @@ import {
 
 // Mocks setup via vi.hoisted for ESM compatibility
 const mockGetContentFiles = vi.hoisted(() =>
-  vi.fn<[string, string?], string[]>(),
+  vi.fn<(dir: string, locale?: string) => string[]>(),
 );
 const mockParseContentFile = vi.hoisted(() => vi.fn());
-const mockGetContentConfig = vi.hoisted(() => vi.fn<[], ContentConfig>());
+const mockGetContentConfig = vi.hoisted(() => vi.fn<() => ContentConfig>());
 const mockFilterPosts = vi.hoisted(() => vi.fn());
 const mockSortPosts = vi.hoisted(() => vi.fn());
 const mockPaginatePosts = vi.hoisted(() => vi.fn());
@@ -305,11 +305,11 @@ describe('content-query/queries', () => {
       ];
       const publishedPage = createMockParsedPage({
         slug: 'published',
-        metadata: { draft: false } as PageMetadata,
+        metadata: createMockPageMetadata({ draft: false }),
       });
       const draftPage = createMockParsedPage({
         slug: 'draft',
-        metadata: { draft: true } as PageMetadata,
+        metadata: createMockPageMetadata({ draft: true }),
       });
 
       mockGetContentFiles.mockReturnValue(mockFiles);
@@ -320,7 +320,7 @@ describe('content-query/queries', () => {
       const result = getAllPages();
 
       expect(result).toHaveLength(1);
-      expect(result[0].slug).toBe('published');
+      expect(result[0]!.slug).toBe('published');
     });
 
     it('should include draft pages when enableDrafts is true', () => {
@@ -334,11 +334,11 @@ describe('content-query/queries', () => {
       ];
       const publishedPage = createMockParsedPage({
         slug: 'published',
-        metadata: { draft: false } as PageMetadata,
+        metadata: createMockPageMetadata({ draft: false }),
       });
       const draftPage = createMockParsedPage({
         slug: 'draft',
-        metadata: { draft: true } as PageMetadata,
+        metadata: createMockPageMetadata({ draft: true }),
       });
 
       mockGetContentFiles.mockReturnValue(mockFiles);
@@ -506,7 +506,7 @@ describe('content-query/queries', () => {
       const mockFiles = ['/mock/content/posts/en/test-post.mdx'];
       const mockParsedPost = createMockParsedBlogPost({
         slug: 'test-post',
-        metadata: { title: 'Test Post Title' } as BlogPostMetadata,
+        metadata: createMockBlogPostMetadata({ title: 'Test Post Title' }),
       });
 
       mockGetContentFiles.mockReturnValue(mockFiles);
@@ -559,7 +559,10 @@ describe('content-query/queries', () => {
       const mockFiles = ['/mock/content/pages/en/about.mdx'];
       const mockParsedPage = createMockParsedPage({
         slug: 'about',
-        metadata: { title: 'About Us', layout: 'default' } as PageMetadata,
+        metadata: createMockPageMetadata({
+          title: 'About Us',
+          layout: 'default',
+        }),
       });
 
       mockGetContentFiles.mockReturnValue(mockFiles);
@@ -611,7 +614,7 @@ describe('content-query/queries', () => {
       const mockFiles = ['/mock/content/pages/en/landing.mdx'];
       const mockParsedPage = createMockParsedPage({
         slug: 'landing',
-        metadata: { layout: 'landing' } as PageMetadata,
+        metadata: createMockPageMetadata({ layout: 'landing' }),
       });
 
       mockGetContentFiles.mockReturnValue(mockFiles);

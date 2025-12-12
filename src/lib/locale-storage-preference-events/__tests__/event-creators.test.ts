@@ -136,7 +136,7 @@ describe('event-creators', () => {
     it('should correctly use different storage sources', () => {
       const preference: UserLocalePreference = {
         locale: 'en',
-        source: 'url',
+        source: 'auto',
         confidence: 0.85,
         timestamp: Date.now(),
       };

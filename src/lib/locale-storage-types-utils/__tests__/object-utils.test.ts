@@ -185,7 +185,7 @@ describe('deepClone', () => {
 
       expect(cloned).toEqual(original);
       expect(cloned.users[0]).not.toBe(original.users[0]);
-      expect(cloned.users[0].tags).not.toBe(original.users[0].tags);
+      expect(cloned.users[0]!.tags).not.toBe(original.users[0]!.tags);
     });
   });
 });
@@ -211,7 +211,10 @@ describe('mergeObjects', () => {
     it('should return new object', () => {
       const target = { a: 1 };
       const source = { b: 2 };
-      const result = mergeObjects(target, source);
+      const result = mergeObjects(
+        target,
+        source as unknown as Partial<typeof target>,
+      );
 
       expect(result).not.toBe(target);
       expect(result).not.toBe(source);
@@ -247,7 +250,10 @@ describe('mergeObjects', () => {
           c: 4,
         },
       };
-      const result = mergeObjects(target, source);
+      const result = mergeObjects(
+        target,
+        source as unknown as Partial<typeof target>,
+      );
 
       expect(result).toEqual({
         outer: {
@@ -275,7 +281,10 @@ describe('mergeObjects', () => {
           },
         },
       };
-      const result = mergeObjects(target, source);
+      const result = mergeObjects(
+        target,
+        source as unknown as Partial<typeof target>,
+      );
 
       expect(result.level1.level2).toEqual({ a: 1, b: 3, c: 4 });
     });
@@ -305,16 +314,26 @@ describe('mergeObjects', () => {
   describe('undefined handling', () => {
     it('should skip undefined source values', () => {
       const target = { a: 1, b: 2 };
-      const source = { a: undefined, c: 3 };
-      const result = mergeObjects(target, source);
+      // Test with undefined value - use Record type to allow undefined assignment
+      const source: Record<string, unknown> = { c: 3 };
+      source['a'] = undefined; // a is explicitly undefined
+      const result = mergeObjects(
+        target,
+        source as unknown as Partial<typeof target>,
+      );
 
       expect(result).toEqual({ a: 1, b: 2, c: 3 });
     });
 
     it('should preserve target value when source is undefined', () => {
       const target = { existing: 'value' };
-      const source: Partial<typeof target> = { existing: undefined };
-      const result = mergeObjects(target, source);
+      // Test with undefined value - use Record type to allow undefined assignment
+      const source: Record<string, unknown> = {};
+      source['existing'] = undefined; // existing is explicitly undefined
+      const result = mergeObjects(
+        target,
+        source as unknown as Partial<typeof target>,
+      );
 
       expect(result.existing).toBe('value');
     });
@@ -361,7 +380,10 @@ describe('mergeObjects', () => {
         enabled: true,
         options: { debug: true },
       };
-      const result = mergeObjects(target, source);
+      const result = mergeObjects(
+        target as unknown as Record<string, unknown>,
+        source as unknown as Record<string, unknown>,
+      ) as unknown as Config;
 
       expect(result.enabled).toBe(true);
       expect(result.maxItems).toBe(10);

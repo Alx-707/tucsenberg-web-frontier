@@ -22,29 +22,36 @@ vi.mock('@/lib/logger', () => ({
 
 vi.mock('../locale-storage-analytics-core', () => ({
   calculateStorageStats: vi.fn(() => ({
+    totalEntries: 10,
     totalSize: 1024,
-    usedSize: 512,
-    availableSize: 512,
-    itemCount: 10,
+    lastAccessed: Date.now(),
+    lastModified: Date.now(),
+    accessCount: 50,
+    errorCount: 2,
     freshness: 0.8,
+    hasOverride: false,
+    historyStats: {
+      totalEntries: 5,
+      uniqueLocales: 2,
+      oldestEntry: Date.now() - 86400000,
+      newestEntry: Date.now(),
+    },
   })),
 }));
 
 // Helper to create access log entries
-function createAccessEntry(
-  overrides: {
-    key?: string;
-    operation?: string;
-    timestamp?: number;
-    success?: boolean;
-    responseTime?: number;
-  } = {},
-) {
+function createAccessEntry(overrides?: {
+  key?: string;
+  operation?: string;
+  timestamp?: number;
+  success?: boolean;
+  responseTime?: number;
+}) {
   return {
-    key: overrides.key ?? 'testKey',
-    operation: overrides.operation ?? 'read',
-    success: overrides.success ?? true,
-    responseTime: overrides.responseTime ?? 10,
+    key: overrides?.key ?? 'testKey',
+    operation: overrides?.operation ?? 'read',
+    success: overrides?.success ?? true,
+    responseTime: overrides?.responseTime ?? 10,
   };
 }
 
@@ -73,10 +80,12 @@ function populateAccessLog(
     vi.setSystemTime(entryDate);
     AccessLogger.logAccess(
       createAccessEntry({
-        key: entry.key,
-        operation: entry.operation,
-        success: entry.success,
-        responseTime: entry.responseTime,
+        ...(entry.key !== undefined && { key: entry.key }),
+        ...(entry.operation !== undefined && { operation: entry.operation }),
+        ...(entry.success !== undefined && { success: entry.success }),
+        ...(entry.responseTime !== undefined && {
+          responseTime: entry.responseTime,
+        }),
       }),
     );
   }
@@ -421,11 +430,20 @@ describe('locale-storage-analytics-performance', () => {
 
         // Mock low freshness
         vi.mocked(analyticsCore.calculateStorageStats).mockReturnValueOnce({
+          totalEntries: 10,
           totalSize: 1024,
-          usedSize: 512,
-          availableSize: 512,
-          itemCount: 10,
+          lastAccessed: Date.now(),
+          lastModified: Date.now(),
+          accessCount: 50,
+          errorCount: 2,
           freshness: 0.1,
+          hasOverride: false,
+          historyStats: {
+            totalEntries: 5,
+            uniqueLocales: 2,
+            oldestEntry: Date.now() - 86400000,
+            newestEntry: Date.now(),
+          },
         });
 
         const metrics = getPerformanceMetrics();

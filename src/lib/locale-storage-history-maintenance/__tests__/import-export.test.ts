@@ -3,6 +3,12 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Locale } from '@/types/i18n';
+import type {
+  LocaleDetectionHistory,
+  LocaleDetectionRecord,
+  LocaleSource,
+} from '@/lib/locale-storage-types';
 import {
   exportHistory,
   exportHistoryAsJson,
@@ -30,17 +36,20 @@ vi.mock('@/lib/locale-storage-local', () => ({
   },
 }));
 
-function createValidHistory() {
+function createValidHistory(): LocaleDetectionHistory {
+  const detections: LocaleDetectionRecord[] = [
+    {
+      locale: 'en' as Locale,
+      source: 'browser' as LocaleSource,
+      timestamp: Date.now() - 1000,
+      confidence: 0.9,
+    },
+  ];
   return {
-    history: [
-      {
-        locale: 'en',
-        source: 'browser',
-        timestamp: Date.now() - 1000,
-        confidence: 0.9,
-      },
-    ],
+    detections,
+    history: detections,
     lastUpdated: Date.now() - 500,
+    totalDetections: detections.length,
   };
 }
 
@@ -143,7 +152,12 @@ describe('import-export', () => {
     it('should reject invalid history data', () => {
       mockValidateHistoryData.mockReturnValue(false);
 
-      const result = importHistory({ history: [], lastUpdated: 0 });
+      const result = importHistory({
+        detections: [],
+        history: [],
+        lastUpdated: 0,
+        totalDetections: 0,
+      });
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Invalid history data format');

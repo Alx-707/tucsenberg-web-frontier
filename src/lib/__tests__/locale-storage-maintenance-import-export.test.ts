@@ -1,4 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { Locale } from '@/types/i18n';
+import type {
+  LocaleDetectionHistory,
+  LocaleDetectionRecord,
+  UserLocalePreference,
+} from '@/lib/locale-storage-types';
 import { CookieManager } from '../locale-storage-cookie';
 import { LocalStorageManager } from '../locale-storage-local';
 import {
@@ -7,6 +13,25 @@ import {
 } from '../locale-storage-maintenance-import-export';
 import { LocaleValidationManager } from '../locale-storage-maintenance-validation';
 import { STORAGE_KEYS } from '../locale-storage-types';
+
+// Result data types for type-safe assertions
+interface ImportResultData {
+  importedItems: number;
+  errors: string[];
+}
+
+interface BackupResultData {
+  backupKey: string;
+  backupData: ExportData;
+}
+
+interface DeleteBackupResultData {
+  deletedKey: string;
+}
+
+interface CleanupResultData {
+  deletedCount: number;
+}
 
 // Mock dependencies
 vi.mock('../locale-storage-local', () => ({
@@ -42,27 +67,34 @@ vi.mock('@/lib/logger', () => ({
 }));
 
 // Helper factories
-function createValidPreference() {
+function createValidPreference(): UserLocalePreference {
+  const locale: Locale = 'en';
   return {
-    locale: 'en',
+    locale,
     source: 'user',
     timestamp: Date.now() - 1000,
     confidence: 0.9,
-  };
+  } satisfies UserLocalePreference;
 }
 
-function createValidHistory() {
+function createValidDetectionRecord(): LocaleDetectionRecord {
+  const locale: Locale = 'en';
   return {
-    detections: [
-      {
-        locale: 'en',
-        source: 'browser',
-        timestamp: Date.now() - 1000,
-        confidence: 0.8,
-      },
-    ],
+    locale,
+    source: 'browser',
+    timestamp: Date.now() - 1000,
+    confidence: 0.8,
+  } satisfies LocaleDetectionRecord;
+}
+
+function createValidHistory(): LocaleDetectionHistory {
+  const detectionRecord = createValidDetectionRecord();
+  return {
+    detections: [detectionRecord],
+    history: [detectionRecord],
     lastUpdated: Date.now() - 500,
-  };
+    totalDetections: 1,
+  } satisfies LocaleDetectionHistory;
 }
 
 function createValidExportData(
@@ -172,7 +204,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(true);
-      expect(result.data?.importedItems).toBe(1);
+      expect((result.data as ImportResultData | undefined)?.importedItems).toBe(
+        1,
+      );
       expect(LocalStorageManager.set).toHaveBeenCalledWith(
         STORAGE_KEYS.LOCALE_PREFERENCE,
         preference,
@@ -189,7 +223,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(true);
-      expect(result.data?.importedItems).toBe(1);
+      expect((result.data as ImportResultData | undefined)?.importedItems).toBe(
+        1,
+      );
       expect(LocalStorageManager.set).toHaveBeenCalledWith(
         STORAGE_KEYS.USER_LOCALE_OVERRIDE,
         'zh',
@@ -203,7 +239,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(true);
-      expect(result.data?.importedItems).toBe(1);
+      expect((result.data as ImportResultData | undefined)?.importedItems).toBe(
+        1,
+      );
       expect(LocalStorageManager.set).toHaveBeenCalledWith(
         STORAGE_KEYS.LOCALE_DETECTION_HISTORY,
         history,
@@ -221,7 +259,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(false);
-      expect(result.data?.errors).toContain('用户偏好数据格式无效');
+      expect((result.data as ImportResultData | undefined)?.errors).toContain(
+        '用户偏好数据格式无效',
+      );
     });
 
     it('should report invalid override data', () => {
@@ -230,7 +270,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(false);
-      expect(result.data?.errors).toContain('用户覆盖设置格式无效');
+      expect((result.data as ImportResultData | undefined)?.errors).toContain(
+        '用户覆盖设置格式无效',
+      );
     });
 
     it('should report invalid history data', () => {
@@ -244,7 +286,9 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.importData(data);
 
       expect(result.success).toBe(false);
-      expect(result.data?.errors).toContain('检测历史数据格式无效');
+      expect((result.data as ImportResultData | undefined)?.errors).toContain(
+        '检测历史数据格式无效',
+      );
     });
 
     it('should handle exceptions gracefully', () => {
@@ -304,15 +348,17 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.createBackup();
 
       expect(result.success).toBe(true);
-      expect(result.data?.backupKey).toMatch(/^locale_backup_\d+$/);
+      const backupData = result.data as BackupResultData | undefined;
+      expect(backupData?.backupKey).toMatch(/^locale_backup_\d+$/);
       expect(LocalStorageManager.set).toHaveBeenCalled();
     });
 
     it('should include backup data in result', () => {
       const result = LocaleImportExportManager.createBackup();
 
-      expect(result.data?.backupData).toBeDefined();
-      expect(result.data?.backupData.version).toBe('1.0.0');
+      const backupData = result.data as BackupResultData | undefined;
+      expect(backupData?.backupData).toBeDefined();
+      expect(backupData?.backupData.version).toBe('1.0.0');
     });
 
     it('should handle exceptions gracefully', () => {
@@ -416,7 +462,8 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.listBackups();
 
       expect(result.length).toBe(2);
-      expect(result[0].timestamp).toBe(2000); // Newest first
+      const firstBackup = result[0];
+      expect(firstBackup?.timestamp).toBe(2000); // Newest first
     });
 
     it('should handle invalid backup data', () => {
@@ -435,7 +482,8 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.listBackups();
 
       expect(result.length).toBe(1);
-      expect(result[0].isValid).toBe(false);
+      const firstBackup = result[0];
+      expect(firstBackup?.isValid).toBe(false);
     });
   });
 
@@ -445,7 +493,8 @@ describe('LocaleImportExportManager', () => {
         LocaleImportExportManager.deleteBackup('locale_backup_123');
 
       expect(result.success).toBe(true);
-      expect(result.data?.deletedKey).toBe('locale_backup_123');
+      const deleteData = result.data as DeleteBackupResultData | undefined;
+      expect(deleteData?.deletedKey).toBe('locale_backup_123');
       expect(LocalStorageManager.remove).toHaveBeenCalledWith(
         'locale_backup_123',
       );
@@ -530,7 +579,8 @@ describe('LocaleImportExportManager', () => {
       const result = LocaleImportExportManager.cleanupOldBackups(3);
 
       expect(result.success).toBe(true);
-      expect(result.data?.deletedCount).toBe(3);
+      const cleanupData = result.data as CleanupResultData | undefined;
+      expect(cleanupData?.deletedCount).toBe(3);
       expect(LocalStorageManager.remove).toHaveBeenCalledTimes(3);
     });
 

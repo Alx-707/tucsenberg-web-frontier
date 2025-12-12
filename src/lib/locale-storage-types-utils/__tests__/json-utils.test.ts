@@ -363,7 +363,7 @@ describe('safeJsonParse and safeJsonStringify roundtrip', () => {
 
     for (let i = 0; i < 10; i++) {
       const json = safeJsonStringify(current);
-      current = safeJsonParse(json, {});
+      current = safeJsonParse(json, { data: [] as number[] });
     }
 
     expect(current).toEqual(original);
