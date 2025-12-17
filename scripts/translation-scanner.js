@@ -16,12 +16,14 @@ console.log('🔍 开始翻译键扫描...\n');
 // 配置
 const CONFIG = {
   // 扫描的文件模式
-  SCAN_PATTERNS: [
-    'src/**/*.{ts,tsx,js,jsx}',
-    'app/**/*.{ts,tsx,js,jsx}',
-    '!src/**/*.test.{ts,tsx,js,jsx}',
-    '!src/**/*.spec.{ts,tsx,js,jsx}',
-    '!**/*.d.ts',
+  SCAN_PATTERNS: ['src/**/*.{ts,tsx,js,jsx}', 'app/**/*.{ts,tsx,js,jsx}'],
+
+  // 排除的文件模式（传递给 glob ignore 选项）
+  IGNORE_PATTERNS: [
+    '**/*.test.{ts,tsx,js,jsx}',
+    '**/*.spec.{ts,tsx,js,jsx}',
+    '**/*.d.ts',
+    '**/_templates/**',
   ],
 
   // 翻译函数名
@@ -334,6 +336,61 @@ function scanFile(filePath) {
       }
     }
 
+    function extractDefaultValueFromBinding(binding) {
+      if (!binding || !binding.path) {
+        return undefined;
+      }
+
+      const bindingPath = binding.path;
+      const identifierName = binding.identifier?.name;
+
+      if (bindingPath.isAssignmentPattern()) {
+        const right = bindingPath.node.right;
+        if (right && right.type === 'StringLiteral') {
+          return right.value;
+        }
+
+        const left = bindingPath.node.left;
+        if (left && left.type === 'ObjectPattern' && identifierName) {
+          for (const prop of left.properties) {
+            if (
+              prop.type === 'ObjectProperty' &&
+              prop.key.type === 'Identifier' &&
+              prop.key.name === identifierName &&
+              prop.value.type === 'AssignmentPattern' &&
+              prop.value.right?.type === 'StringLiteral'
+            ) {
+              return prop.value.right.value;
+            }
+          }
+        }
+      }
+
+      if (
+        bindingPath.isIdentifier() &&
+        bindingPath.parentPath &&
+        bindingPath.parentPath.isAssignmentPattern()
+      ) {
+        const right = bindingPath.parentPath.node.right;
+        if (right && right.type === 'StringLiteral') {
+          return right.value;
+        }
+      }
+
+      if (
+        bindingPath.isObjectProperty() &&
+        bindingPath.node.value &&
+        bindingPath.node.value.type === 'AssignmentPattern'
+      ) {
+        const right = bindingPath.node.value.right;
+        if (right && right.type === 'StringLiteral') {
+          return right.value;
+        }
+      }
+
+      return undefined;
+    }
+
     function captureNamespaceBindings(nodePath) {
       const { node } = nodePath;
 
@@ -344,6 +401,21 @@ function scanFile(filePath) {
         node.arguments[0].type === 'StringLiteral'
       ) {
         recordNamespace(nodePath, node.arguments[0].value);
+        return;
+      }
+
+      if (
+        node.callee.type === 'Identifier' &&
+        node.callee.name === 'useTranslations' &&
+        node.arguments.length > 0 &&
+        node.arguments[0].type === 'Identifier'
+      ) {
+        const argName = node.arguments[0].name;
+        const binding = nodePath.scope.getBinding(argName);
+        const defaultValue = extractDefaultValueFromBinding(binding);
+        if (defaultValue) {
+          recordNamespace(nodePath, defaultValue);
+        }
         return;
       }
 
@@ -833,7 +905,10 @@ async function main() {
     // 获取要扫描的文件
     const files = [];
     for (const pattern of CONFIG.SCAN_PATTERNS) {
-      const matchedFiles = glob.sync(pattern, { cwd: process.cwd() });
+      const matchedFiles = glob.sync(pattern, {
+        cwd: process.cwd(),
+        ignore: CONFIG.IGNORE_PATTERNS,
+      });
       files.push(...matchedFiles);
     }
 
