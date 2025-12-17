@@ -58,10 +58,18 @@ describe('withRateLimit', () => {
     url = 'http://localhost/api/test',
     options: RequestInit = {},
   ): NextRequest {
+    const { headers, signal, ...rest } = options;
+    const mergedHeaders = new Headers({ 'Content-Type': 'application/json' });
+    if (headers) {
+      new Headers(headers as HeadersInit).forEach((value, key) => {
+        mergedHeaders.set(key, value);
+      });
+    }
     return new NextRequest(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      ...options,
+      headers: mergedHeaders,
+      ...rest,
+      ...(signal ? { signal } : {}),
     });
   }
 
@@ -214,8 +222,17 @@ describe('withRateLimit', () => {
         }),
       );
       // Verify key prefix is truncated to 8 chars for privacy
-      const logCall = mockLoggerWarn.mock.calls[0];
-      expect(logCall[1].keyPrefix.length).toBeLessThanOrEqual(8);
+      const [logCall] = mockLoggerWarn.mock.calls;
+      if (!logCall) {
+        throw new Error('Expected logger.warn to be called at least once');
+      }
+      const details = logCall[1];
+      if (!details || typeof details !== 'object') {
+        throw new Error('Expected logger.warn second arg to be an object');
+      }
+      expect(
+        (details as { keyPrefix: string }).keyPrefix.length,
+      ).toBeLessThanOrEqual(8);
     });
   });
 

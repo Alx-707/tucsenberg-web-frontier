@@ -2,6 +2,19 @@ import { NextRequest } from 'next/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getClientIP, getIPChain } from '../client-ip';
 
+/**
+ * Type-safe environment variable helper for tests.
+ * Bypasses TypeScript's read-only process.env constraint.
+ */
+function setEnv(key: string, value: string | undefined): void {
+  const env = process.env as Record<string, string | undefined>;
+  if (value === undefined) {
+    delete env[key];
+  } else {
+    env[key] = value;
+  }
+}
+
 describe('client-ip', () => {
   const originalEnv = process.env;
 
@@ -9,10 +22,10 @@ describe('client-ip', () => {
     vi.clearAllMocks();
     // Reset environment
     process.env = { ...originalEnv };
-    delete process.env.DEPLOYMENT_PLATFORM;
-    delete process.env.VERCEL;
-    delete process.env.CF_PAGES;
-    delete process.env.NODE_ENV;
+    setEnv('DEPLOYMENT_PLATFORM', undefined);
+    setEnv('VERCEL', undefined);
+    setEnv('CF_PAGES', undefined);
+    setEnv('NODE_ENV', undefined);
   });
 
   afterEach(() => {
@@ -68,7 +81,7 @@ describe('client-ip', () => {
 
     describe('Vercel platform', () => {
       beforeEach(() => {
-        process.env.VERCEL = '1';
+        setEnv('VERCEL', '1');
       });
 
       it('should extract IP from x-real-ip header', () => {
@@ -107,7 +120,7 @@ describe('client-ip', () => {
 
     describe('Cloudflare platform', () => {
       beforeEach(() => {
-        process.env.CF_PAGES = '1';
+        setEnv('CF_PAGES', '1');
       });
 
       it('should extract IP from cf-connecting-ip header', () => {
@@ -132,7 +145,7 @@ describe('client-ip', () => {
 
     describe('development platform', () => {
       beforeEach(() => {
-        process.env.NODE_ENV = 'development';
+        setEnv('NODE_ENV', 'development');
       });
 
       it('should trust x-forwarded-for in development', () => {
@@ -152,8 +165,8 @@ describe('client-ip', () => {
 
     describe('explicit DEPLOYMENT_PLATFORM', () => {
       it('should respect explicit platform over auto-detection', () => {
-        process.env.DEPLOYMENT_PLATFORM = 'cloudflare';
-        process.env.VERCEL = '1'; // Would normally trigger Vercel
+        setEnv('DEPLOYMENT_PLATFORM', 'cloudflare');
+        setEnv('VERCEL', '1'); // Would normally trigger Vercel
 
         const request = createMockRequest({
           headers: {
@@ -169,7 +182,7 @@ describe('client-ip', () => {
 
     describe('IP validation and normalization', () => {
       beforeEach(() => {
-        process.env.VERCEL = '1';
+        setEnv('VERCEL', '1');
       });
 
       it('should reject invalid IP addresses', () => {
@@ -228,7 +241,7 @@ describe('client-ip', () => {
 
     describe('x-forwarded-for parsing', () => {
       beforeEach(() => {
-        process.env.VERCEL = '1';
+        setEnv('VERCEL', '1');
       });
 
       it('should extract first IP from comma-separated list', () => {
@@ -259,7 +272,7 @@ describe('client-ip', () => {
 
   describe('getIPChain', () => {
     beforeEach(() => {
-      process.env.VERCEL = '1';
+      setEnv('VERCEL', '1');
     });
 
     it('should return empty array when no IPs', () => {
@@ -330,7 +343,7 @@ describe('client-ip', () => {
 
   describe('edge cases', () => {
     it('should handle empty string IP', () => {
-      process.env.VERCEL = '1';
+      setEnv('VERCEL', '1');
       const request = createMockRequest({
         headers: { 'x-real-ip': '' },
         ip: '10.0.0.1',
@@ -340,7 +353,7 @@ describe('client-ip', () => {
     });
 
     it('should handle whitespace-only IP', () => {
-      process.env.VERCEL = '1';
+      setEnv('VERCEL', '1');
       const request = createMockRequest({
         headers: { 'x-forwarded-for': '   ' },
         ip: '10.0.0.1',
@@ -350,7 +363,7 @@ describe('client-ip', () => {
     });
 
     it('should handle empty x-forwarded-for list', () => {
-      process.env.VERCEL = '1';
+      setEnv('VERCEL', '1');
       const request = createMockRequest({
         headers: { 'x-forwarded-for': ',,' },
         ip: '10.0.0.1',

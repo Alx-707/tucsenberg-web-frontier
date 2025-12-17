@@ -26,6 +26,19 @@ vi.mock('@/lib/logger', () => ({
   },
 }));
 
+/**
+ * Type-safe environment variable helper for tests.
+ * Bypasses TypeScript's read-only process.env constraint.
+ */
+function setEnv(key: string, value: string | undefined): void {
+  const env = process.env as Record<string, string | undefined>;
+  if (value === undefined) {
+    delete env[key];
+  } else {
+    env[key] = value;
+  }
+}
+
 describe('rate-limit-key-strategies', () => {
   const originalEnv = process.env;
 
@@ -34,9 +47,9 @@ describe('rate-limit-key-strategies', () => {
     resetPepperWarning();
     // Reset environment
     process.env = { ...originalEnv };
-    delete process.env.RATE_LIMIT_PEPPER;
-    delete process.env.RATE_LIMIT_PEPPER_PREVIOUS;
-    delete process.env.NODE_ENV;
+    setEnv('RATE_LIMIT_PEPPER', undefined);
+    setEnv('RATE_LIMIT_PEPPER_PREVIOUS', undefined);
+    setEnv('NODE_ENV', undefined);
   });
 
   afterEach(() => {
@@ -72,7 +85,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('hmacKey', () => {
     it('should generate consistent hash for same input', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       const key1 = hmacKey('192.168.1.1');
       const key2 = hmacKey('192.168.1.1');
@@ -81,7 +94,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should generate different hash for different inputs', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       const key1 = hmacKey('192.168.1.1');
       const key2 = hmacKey('192.168.1.2');
@@ -90,7 +103,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should return 16 character hex string (64-bit)', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       const key = hmacKey('test-input');
 
@@ -99,7 +112,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should use development fallback pepper when not configured', () => {
-      process.env.NODE_ENV = 'development';
+      setEnv('NODE_ENV', 'development');
 
       const key = hmacKey('test-input');
 
@@ -110,7 +123,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should warn only once about missing pepper', () => {
-      process.env.NODE_ENV = 'development';
+      setEnv('NODE_ENV', 'development');
 
       hmacKey('input1');
       hmacKey('input2');
@@ -120,7 +133,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should throw error in production without pepper', () => {
-      process.env.NODE_ENV = 'production';
+      setEnv('NODE_ENV', 'production');
 
       expect(() => hmacKey('test-input')).toThrow(
         /RATE_LIMIT_PEPPER is required in production/,
@@ -128,8 +141,8 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should throw error in production with short pepper', () => {
-      process.env.NODE_ENV = 'production';
-      process.env.RATE_LIMIT_PEPPER = 'tooshort';
+      setEnv('NODE_ENV', 'production');
+      setEnv('RATE_LIMIT_PEPPER', 'tooshort');
 
       expect(() => hmacKey('test-input')).toThrow(
         /RATE_LIMIT_PEPPER is too short/,
@@ -137,8 +150,8 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should warn about weak pepper in development', () => {
-      process.env.NODE_ENV = 'development';
-      process.env.RATE_LIMIT_PEPPER = 'short';
+      setEnv('NODE_ENV', 'development');
+      setEnv('RATE_LIMIT_PEPPER', 'short');
 
       hmacKey('test-input');
 
@@ -150,7 +163,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('hmacKeyWithRotation', () => {
     it('should return single key when no previous pepper', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       const keys = hmacKeyWithRotation('test-input');
 
@@ -158,8 +171,8 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should return two keys during pepper rotation', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
-      process.env.RATE_LIMIT_PEPPER_PREVIOUS = 'b'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
+      setEnv('RATE_LIMIT_PEPPER_PREVIOUS', 'b'.repeat(32));
 
       const keys = hmacKeyWithRotation('test-input');
 
@@ -168,8 +181,8 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should have current key as first element', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
-      process.env.RATE_LIMIT_PEPPER_PREVIOUS = 'b'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
+      setEnv('RATE_LIMIT_PEPPER_PREVIOUS', 'b'.repeat(32));
 
       const currentKey = hmacKey('test-input');
       const keys = hmacKeyWithRotation('test-input');
@@ -180,7 +193,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('getIPKey', () => {
     it('should return IP-based key with prefix', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
       mockGetClientIP.mockReturnValue('192.168.1.100');
 
       const request = createMockRequest();
@@ -190,7 +203,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should call getClientIP with request', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
       mockGetClientIP.mockReturnValue('10.0.0.1');
 
       const request = createMockRequest();
@@ -200,7 +213,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should produce different keys for different IPs', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       mockGetClientIP.mockReturnValue('192.168.1.1');
       const key1 = getIPKey(createMockRequest());
@@ -214,7 +227,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('getSessionPriorityKey', () => {
     beforeEach(() => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
       mockGetClientIP.mockReturnValue('192.168.1.100');
     });
 
@@ -266,7 +279,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('getApiKeyPriorityKey', () => {
     beforeEach(() => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
       mockGetClientIP.mockReturnValue('192.168.1.100');
     });
 
@@ -311,7 +324,7 @@ describe('rate-limit-key-strategies', () => {
     });
 
     it('should produce different keys for different API keys', () => {
-      process.env.RATE_LIMIT_PEPPER = 'a'.repeat(32);
+      setEnv('RATE_LIMIT_PEPPER', 'a'.repeat(32));
 
       const request1 = createMockRequest({
         headers: { Authorization: 'Bearer api-key-1' },
@@ -329,7 +342,7 @@ describe('rate-limit-key-strategies', () => {
 
   describe('resetPepperWarning', () => {
     it('should allow warning to be logged again after reset', () => {
-      process.env.NODE_ENV = 'development';
+      setEnv('NODE_ENV', 'development');
 
       hmacKey('input1');
       expect(mockLoggerWarn).toHaveBeenCalledTimes(1);
