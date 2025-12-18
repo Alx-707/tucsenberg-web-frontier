@@ -203,12 +203,14 @@ class QualityGate {
     }
   }
 
-  getChangedFiles(filter = 'ACM') {
+  getChangedFiles(filter = 'ACM', options = {}) {
+    const { includeStatus = false } = options;
     const base = this.getMergeBase();
     const range = base ? `${base}...HEAD` : '';
+    const nameFlag = includeStatus ? '--name-status' : '--name-only';
     const cmd = base
-      ? `git diff --name-only --diff-filter=${filter} ${range}`
-      : `git diff --name-only --diff-filter=${filter}`;
+      ? `git diff ${nameFlag} --diff-filter=${filter} ${range}`
+      : `git diff ${nameFlag} --diff-filter=${filter}`;
     try {
       const output = execSync(cmd, {
         encoding: 'utf8',
@@ -217,7 +219,17 @@ class QualityGate {
         .toString()
         .trim();
       if (!output) return [];
-      return output.split('\n');
+      if (!includeStatus) return output.split('\n');
+      return output
+        .split('\n')
+        .map((line) => {
+          const parts = line.split('\t');
+          const status = (parts[0] || '')[0] || '';
+          const file = parts[parts.length - 1] || '';
+          if (!status || !file) return null;
+          return { status, file };
+        })
+        .filter(Boolean);
     } catch {
       return [];
     }
@@ -244,21 +256,32 @@ class QualityGate {
   }
 
   calculateDiffCoverage(coverageData) {
-    const changedFiles = this.getChangedFiles('ACM').filter((file) =>
-      file.match(/\.(js|jsx|ts|tsx)$/),
-    );
-    if (changedFiles.length === 0) return null;
+    // Include R (renamed) files - treat as modified
+    const changedEntries = this.getChangedFiles('ACMR', {
+      includeStatus: true,
+    }).filter((entry) => entry.file.match(/\.(js|jsx|ts|tsx)$/));
+
+    const addedFiles = changedEntries
+      .filter((e) => e.status === 'A' || e.status === 'C')
+      .map((e) => e.file);
+    // R (renamed) files are treated as modified
+    const modifiedFiles = changedEntries
+      .filter((e) => e.status === 'M' || e.status === 'R')
+      .map((e) => e.file);
+
+    if (addedFiles.length === 0 && modifiedFiles.length === 0) return null;
 
     const entries = this.normalizeCoverageEntries(coverageData);
-    const fileMetrics = [];
-    let totalCovered = 0;
-    let totalLines = 0;
 
-    changedFiles.forEach((file) => {
-      const summary = entries.get(file);
-      if (summary?.lines?.total) {
-        const fileCovered = summary.lines.covered || 0;
-        const fileTotal = summary.lines.total || 0;
+    const calculateForFiles = (files) => {
+      const fileMetrics = [];
+      let totalCovered = 0;
+      let totalLines = 0;
+
+      files.forEach((file) => {
+        const summary = entries.get(file);
+        const fileCovered = summary?.lines?.covered || 0;
+        const fileTotal = summary?.lines?.total || 0;
         const filePct = fileTotal > 0 ? (fileCovered / fileTotal) * 100 : 0;
 
         fileMetrics.push({
@@ -267,34 +290,27 @@ class QualityGate {
           total: fileTotal,
           pct: filePct,
         });
-
         totalCovered += fileCovered;
         totalLines += fileTotal;
-      }
-    });
+      });
 
-    if (totalLines === 0) {
+      const pct = totalLines > 0 ? (totalCovered / totalLines) * 100 : 0;
       return {
-        pct: 0,
-        drop: 0,
+        pct,
         fileMetrics,
         totalCovered,
         totalLines,
-        changedFilesCount: changedFiles.length,
+        filesCount: files.length,
       };
-    }
-
-    const pct = (totalCovered / totalLines) * 100;
-    const overall = coverageData?.total?.lines?.pct || pct;
-
-    return {
-      pct,
-      drop: overall - pct,
-      fileMetrics,
-      totalCovered,
-      totalLines,
-      changedFilesCount: changedFiles.length,
     };
+
+    const added = calculateForFiles(addedFiles);
+    const modified = calculateForFiles(modifiedFiles);
+    const allFiles = [...new Set([...addedFiles, ...modifiedFiles])];
+    const total = calculateForFiles(allFiles);
+    const overall = coverageData?.total?.lines?.pct || total.pct;
+
+    return { overall, drop: overall - total.pct, added, modified, total };
   }
 
   getAddedPilotDomainFiles() {
@@ -518,47 +534,60 @@ class QualityGate {
         }
 
         // 增量覆盖率检查（diff coverage）
+        // 策略：新增文件强制阻断，修改文件仅警告
         const diffCoverage = this.calculateDiffCoverage(coverageData);
         if (diffCoverage) {
           const threshold = this.config.gates.coverage.diffCoverageThreshold;
           const warningThreshold =
             this.config.gates.coverage.diffWarningThreshold;
 
-          // 检查增量覆盖率是否达到阈值
-          if (diffCoverage.pct < threshold) {
-            const shortfall = threshold - diffCoverage.pct;
+          // 新增文件：强制 90% 覆盖率（阻断）
+          const lowAddedFiles = diffCoverage.added.fileMetrics.filter(
+            (f) => f.pct < threshold,
+          );
+          if (lowAddedFiles.length > 0) {
             gate.status = gate.blocking ? 'failed' : 'warning';
             gate.issues.push(
-              `增量覆盖率不达标: ${diffCoverage.pct.toFixed(2)}% < ${threshold}%（差距 ${shortfall.toFixed(2)}%，变更 ${diffCoverage.changedFilesCount} 个文件，${diffCoverage.totalCovered}/${diffCoverage.totalLines} 行覆盖）`,
+              `新增文件覆盖率不达标: ${lowAddedFiles.length}/${diffCoverage.added.filesCount} 个新增文件 < ${threshold}%（加权覆盖率 ${diffCoverage.added.pct.toFixed(2)}%，${diffCoverage.added.totalCovered}/${diffCoverage.added.totalLines} 行覆盖）`,
             );
-
-            // 列出覆盖率低于阈值的文件
-            const lowCoverageFiles = diffCoverage.fileMetrics.filter(
-              (f) => f.pct < threshold,
-            );
-            if (lowCoverageFiles.length > 0 && lowCoverageFiles.length <= 5) {
-              lowCoverageFiles.forEach((f) => {
-                gate.issues.push(
-                  `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
-                );
-              });
-            } else if (lowCoverageFiles.length > 5) {
+            if (lowAddedFiles.length > 5) {
               gate.issues.push(
-                `  共 ${lowCoverageFiles.length} 个文件覆盖率不达标（仅显示前5个）`,
+                `  共 ${lowAddedFiles.length} 个新增文件覆盖率不达标（仅显示前5个）`,
               );
-              lowCoverageFiles.slice(0, 5).forEach((f) => {
-                gate.issues.push(
-                  `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
-                );
-              });
             }
+            lowAddedFiles.slice(0, 5).forEach((f) => {
+              gate.issues.push(
+                `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
+              );
+            });
+          }
+
+          // 修改文件：仅警告，不阻断（避免历史债务阻断）
+          const lowModifiedFiles = diffCoverage.modified.fileMetrics.filter(
+            (f) => f.pct < threshold,
+          );
+          if (lowModifiedFiles.length > 0) {
+            gate.status = gate.status === 'passed' ? 'warning' : gate.status;
+            gate.issues.push(
+              `修改文件覆盖率低于阈值（仅警告，不阻断）: ${lowModifiedFiles.length}/${diffCoverage.modified.filesCount} 个文件 < ${threshold}%（加权覆盖率 ${diffCoverage.modified.pct.toFixed(2)}%，${diffCoverage.modified.totalCovered}/${diffCoverage.modified.totalLines} 行覆盖）`,
+            );
+            if (lowModifiedFiles.length > 5) {
+              gate.issues.push(
+                `  共 ${lowModifiedFiles.length} 个修改文件覆盖率低于阈值（仅显示前5个）`,
+              );
+            }
+            lowModifiedFiles.slice(0, 5).forEach((f) => {
+              gate.issues.push(
+                `  - ${f.file}: ${f.pct.toFixed(2)}% (${f.covered}/${f.total})`,
+              );
+            });
           }
 
           // 检查增量覆盖率下降幅度
           if (diffCoverage.drop > warningThreshold) {
             gate.status = gate.status === 'passed' ? 'warning' : gate.status;
             gate.issues.push(
-              `增量覆盖率较全量下降 ${diffCoverage.drop.toFixed(2)}%（增量 ${diffCoverage.pct.toFixed(2)}% vs 全量 ${(coverageData.total?.lines?.pct || 0).toFixed(2)}%）`,
+              `增量覆盖率较全量下降 ${diffCoverage.drop.toFixed(2)}%（增量 ${diffCoverage.total.pct.toFixed(2)}% vs 全量 ${(coverageData.total?.lines?.pct || 0).toFixed(2)}%）`,
             );
           }
         }
