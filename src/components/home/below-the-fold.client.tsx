@@ -10,19 +10,21 @@ import {
 
 // Dynamic imports use leaf module paths directly to ensure optimal code splitting
 // Importing from barrel (@/components/blocks) risks chunk size bloat
+// ssr:false prevents hydration mismatch from Radix UI useId() divergence
 const TechStackSection = dynamic(
   () =>
     import('@/components/blocks/tech/tech-tabs-block').then(
       (m) => m.TechTabsBlock,
     ),
-  { loading: () => <TechStackSkeleton /> },
+  { ssr: false, loading: () => <TechStackSkeleton /> },
 );
+// ssr:false prevents hydration mismatch from Radix UI Tabs useId()
 const ComponentShowcase = dynamic(
   () =>
     import('@/components/home/component-showcase').then(
       (m) => m.ComponentShowcase,
     ),
-  { loading: () => <ComponentShowcaseSkeleton /> },
+  { ssr: false, loading: () => <ComponentShowcaseSkeleton /> },
 );
 const ProjectOverview = dynamic(
   () =>
