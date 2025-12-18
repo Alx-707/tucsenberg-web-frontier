@@ -47,6 +47,14 @@ const resolvedBaseUrl = ensureLocaleInUrl(
   process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
 );
 
+// HTML reporter may start a local server and wait for Ctrl+C when open is enabled.
+// In non-interactive runners (e.g. ClaudeCode/CI logs), this causes the process to hang.
+const isInteractiveTerminal = Boolean(
+  process.stdout.isTTY && process.stdin.isTTY,
+);
+const htmlReportOpen: 'always' | 'never' | 'on-failure' =
+  isCI || !isInteractiveTerminal ? 'never' : 'on-failure';
+
 // 基于是否为每日全量任务，动态裁剪浏览器矩阵，加速常规CI
 const baseProjects = [
   {
@@ -87,7 +95,10 @@ export default defineConfig({
   workers: isCI ? 2 : 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ['html', { outputFolder: 'reports/playwright-report' }],
+    [
+      'html',
+      { outputFolder: 'reports/playwright-report', open: htmlReportOpen },
+    ],
     ['json', { outputFile: 'reports/playwright-results.json' }],
     ['junit', { outputFile: 'reports/playwright-results.xml' }],
   ],
