@@ -73,3 +73,21 @@
 - Build: ✅ Production build succeeded
 - Code Review: ✅ Codex + Gemini confirmed correct
 - Visual Testing: ✅ All 6 viewport widths verified via dev-browser
+- E2E Tests: ✅ Fixed tablet viewport test (768x1024) in follow-up commit
+
+### Lesson Learned: E2E Test Synchronization for Responsive Changes
+
+**Issue**: CI E2E tests failed after breakpoint change (md→lg) because `homepage.spec.ts` tablet viewport test (768x1024) expected desktop navigation to be visible at 768px.
+
+**Root Cause**: When changing responsive breakpoints, E2E tests that specify viewport dimensions may still expect the old behavior.
+
+**Resolution**: Updated `tests/e2e/homepage.spec.ts` to check for mobile menu button instead of desktop navigation at 768px viewport.
+
+**Recommendation**: For any responsive breakpoint changes, add a verification step:
+```bash
+# Find E2E tests that may be affected by breakpoint changes
+grep -rn "setViewportSize.*768\|width: 768\|tablet" tests/e2e/
+grep -rn "setViewportSize.*1024\|width: 1024" tests/e2e/
+```
+
+This has been added to `quality-gates.md` as a standard practice.
