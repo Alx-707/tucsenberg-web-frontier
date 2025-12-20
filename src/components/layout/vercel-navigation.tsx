@@ -13,7 +13,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import {
-  isActivePath,
   mainNavigation,
   NAVIGATION_ARIA,
   type NavigationItem,
@@ -27,7 +26,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { Link, usePathname } from '@/i18n/routing';
+import { Link } from '@/i18n/routing';
 import { DropdownContent } from './vercel-dropdown-content';
 
 // Type for static pathnames (excludes dynamic route patterns)
@@ -48,12 +47,8 @@ interface VercelNavigationProps {
 // Hook for hover delay interaction
 function useHoverDelay() {
   const [openItem, setOpenItem] = useState<string | null>(null);
-  const openTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined,
-  );
+  const openTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const closeTimerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const handleMouseEnter = useCallback((key: string) => {
     if (closeTimerRef.current) {
@@ -112,18 +107,11 @@ function renderDropdownItem({ item, t, hoverState }: RenderDropdownItemProps) {
       <NavigationMenuTrigger
         className={cn(
           'relative inline-flex items-center rounded-full px-3 py-2 text-sm font-medium tracking-[0.01em]',
-          // Default state - Vercel exact colors
-          'text-vercel-nav-light-default dark:text-vercel-nav-dark-default',
-          // Hover state - Vercel exact colors
-          'hover:bg-vercel-nav-light-bg-hover hover:text-vercel-nav-light-hover',
-          'dark:hover:bg-vercel-nav-dark-bg-hover dark:hover:text-vercel-nav-dark-hover',
-          // Open state - same as hover (Vercel behavior)
-          'data-[state=open]:bg-vercel-nav-light-bg-hover data-[state=open]:text-vercel-nav-light-hover',
-          'dark:data-[state=open]:bg-vercel-nav-dark-bg-hover dark:data-[state=open]:text-vercel-nav-dark-hover',
-          // Keyboard focus - single layer blue ring (2px)
-          'focus-visible:ring-2 focus-visible:ring-[rgb(82,168,255)] focus-visible:outline-hidden',
-          // Vercel timing: 90ms with ease (not ease-out)
-          'transition-[color,background-color] duration-[90ms]',
+          'text-muted-foreground hover:text-foreground data-[state=open]:text-foreground',
+          'hover:bg-muted/40 data-[state=open]:bg-muted/60',
+          'dark:hover:bg-foreground/10 dark:data-[state=open]:bg-foreground/15',
+          'shadow-none',
+          'transition-colors duration-150 ease-out',
         )}
         onClick={() => hoverState.handleClick(item.key)}
         aria-expanded={isOpen}
@@ -141,28 +129,19 @@ function renderDropdownItem({ item, t, hoverState }: RenderDropdownItemProps) {
 }
 
 // Render link navigation item
-function renderLinkItem(
-  item: NavigationItem,
-  t: (key: string) => string,
-  isActive: boolean,
-) {
+function renderLinkItem(item: NavigationItem, t: (key: string) => string) {
   return (
     <NavigationMenuItem key={item.key}>
       <NavigationMenuLink asChild>
         <Link
           href={item.href as StaticPathname}
-          aria-current={isActive ? 'page' : undefined}
           className={cn(
             'relative inline-flex items-center rounded-full bg-transparent px-3 py-2 text-sm font-medium tracking-[0.01em]',
-            // Default state - Vercel exact colors
-            'text-vercel-nav-light-default dark:text-vercel-nav-dark-default',
-            // Hover state - Vercel exact colors
-            'hover:bg-vercel-nav-light-bg-hover hover:text-vercel-nav-light-hover',
-            'dark:hover:bg-vercel-nav-dark-bg-hover dark:hover:text-vercel-nav-dark-hover',
-            // Keyboard focus - single layer blue ring (2px)
-            'focus-visible:ring-2 focus-visible:ring-[rgb(82,168,255)] focus-visible:outline-hidden',
-            // Vercel timing: 90ms with ease (not ease-out)
-            'transition-[color,background-color] duration-[90ms]',
+            'text-muted-foreground hover:text-foreground',
+            'hover:bg-muted/40 data-[state=open]:bg-muted/60',
+            'dark:hover:bg-foreground/10 dark:data-[state=open]:bg-foreground/15',
+            'shadow-none',
+            'transition-colors duration-150 ease-out',
           )}
         >
           {t(item.translationKey)}
@@ -174,22 +153,24 @@ function renderLinkItem(
 
 export function VercelNavigation({ className }: VercelNavigationProps) {
   const t = useTranslations();
-  const pathname = usePathname();
   const hoverState = useHoverDelay();
 
   return (
     <nav
-      className={cn('hidden lg:flex', className)}
+      className={cn('hidden md:flex', className)}
       aria-label={NAVIGATION_ARIA.mainNav}
     >
       <NavigationMenu>
         <NavigationMenuList>
           {mainNavigation.map((item) => {
             if (item.children && item.children.length > 0) {
-              return renderDropdownItem({ item, t, hoverState });
+              return renderDropdownItem({
+                item,
+                t,
+                hoverState,
+              });
             }
-            const itemIsActive = isActivePath(pathname, item.href);
-            return renderLinkItem(item, t, itemIsActive);
+            return renderLinkItem(item, t);
           })}
         </NavigationMenuList>
       </NavigationMenu>

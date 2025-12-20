@@ -196,10 +196,9 @@ test.describe('Homepage Core Functionality', () => {
       const heroTitle = page.getByRole('heading', { level: 1 });
       await expect(heroTitle).toBeVisible();
 
-      // At 768px (below lg:1024px breakpoint), mobile navigation is shown
-      // Verify mobile menu button is visible (hamburger menu)
-      const mobileMenuButton = page.getByTestId('mobile-menu-button');
-      await expect(mobileMenuButton).toBeVisible();
+      // Check that content is still accessible
+      const navigation = getNav(page);
+      await expect(navigation).toBeVisible();
     });
 
     test('should display correctly on mobile (375x667)', async ({ page }) => {

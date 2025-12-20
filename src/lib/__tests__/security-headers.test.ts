@@ -95,8 +95,7 @@ describe('security-headers', () => {
       expect(headers['Access-Control-Allow-Credentials']).toBe('true');
     });
 
-    it('should include origin for site URL from env', () => {
-      vi.stubEnv('NEXT_PUBLIC_SITE_URL', 'https://tucsenberg.com');
+    it('should include origin for tucsenberg.com', () => {
       const headers = getCORSHeaders('https://tucsenberg.com');
 
       expect(headers['Access-Control-Allow-Origin']).toBe(

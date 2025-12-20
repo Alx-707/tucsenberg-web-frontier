@@ -7,10 +7,7 @@ import type {
   ProductData,
   WebSiteData,
 } from '@/lib/structured-data-types';
-import { siteFacts } from '@/config/site-facts';
 import { routing } from '@/i18n/routing';
-
-const BASE_URL_FALLBACK = 'https://example.com';
 
 /**
  * 生成组织结构化数据
@@ -19,44 +16,44 @@ export function generateOrganizationData(
   t: Awaited<ReturnType<typeof getTranslations>>,
   data: OrganizationData = {},
 ) {
-  const baseUrl =
-    process.env['NEXT_PUBLIC_BASE_URL'] ||
-    process.env['NEXT_PUBLIC_SITE_URL'] ||
-    BASE_URL_FALLBACK;
-
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name':
       data.name ||
-      t('organization.name', { defaultValue: siteFacts.company.name }),
+      t('organization.name', { defaultValue: 'Tucsenberg Web Frontier' }),
     'description':
       data.description ||
       t('organization.description', {
         defaultValue: 'Modern B2B Enterprise Web Platform',
       }),
-    'url': data.url || baseUrl,
-    'logo': data.logo || `${baseUrl}/logo.png`,
+    'url':
+      data.url ||
+      process.env['NEXT_PUBLIC_BASE_URL'] ||
+      process.env['NEXT_PUBLIC_SITE_URL'] ||
+      'https://tucsenberg.com',
+    'logo':
+      data.logo ||
+      `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/logo.png`,
     'contactPoint': {
       '@type': 'ContactPoint',
       'telephone':
-        data.phone ||
-        t('organization.phone', { defaultValue: siteFacts.contact.phone }),
+        data.phone || t('organization.phone', { defaultValue: '+1-555-0123' }),
       'contactType': 'customer service',
       'availableLanguage': routing.locales,
     },
     'sameAs': [
       t('organization.social.twitter', {
-        defaultValue: siteFacts.social.twitter ?? 'https://twitter.com/company',
+        defaultValue: 'https://twitter.com/tucsenberg',
       }),
       t('organization.social.linkedin', {
-        defaultValue:
-          siteFacts.social.linkedin ?? 'https://linkedin.com/company/example',
+        defaultValue: 'https://linkedin.com/company/tucsenberg',
       }),
       t('organization.social.github', {
-        defaultValue: 'https://github.com/company',
+        defaultValue: 'https://github.com/tucsenberg',
       }),
     ],
+    // 移除 ...data 扩展运算符，只使用已验证的属性
   };
 }
 
@@ -67,28 +64,31 @@ export function generateWebSiteData(
   t: Awaited<ReturnType<typeof getTranslations>>,
   data: WebSiteData = {},
 ) {
-  const baseUrl =
-    process.env['NEXT_PUBLIC_BASE_URL'] ||
-    process.env['NEXT_PUBLIC_SITE_URL'] ||
-    BASE_URL_FALLBACK;
-
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     'name':
-      data.name || t('website.name', { defaultValue: siteFacts.company.name }),
+      data.name ||
+      t('website.name', { defaultValue: 'Tucsenberg Web Frontier' }),
     'description':
       data.description ||
       t('website.description', {
-        defaultValue: 'Modern B2B Enterprise Web Platform',
+        defaultValue: 'Modern B2B Enterprise Web Platform with Next.js 15',
       }),
-    'url': data.url || baseUrl,
+    'url':
+      data.url ||
+      process.env['NEXT_PUBLIC_BASE_URL'] ||
+      process.env['NEXT_PUBLIC_SITE_URL'] ||
+      'https://tucsenberg.com',
     'potentialAction': {
       '@type': 'SearchAction',
-      'target': data.searchUrl || `${baseUrl}/search?q={search_term_string}`,
+      'target':
+        data.searchUrl ||
+        `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/search?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
     'inLanguage': routing.locales,
+    // 移除 ...data 扩展运算符，只使用已验证的属性
   };
 }
 
@@ -100,11 +100,6 @@ export function generateArticleData(
   locale: Locale,
   data: ArticleData,
 ) {
-  const baseUrl =
-    process.env['NEXT_PUBLIC_BASE_URL'] ||
-    process.env['NEXT_PUBLIC_SITE_URL'] ||
-    BASE_URL_FALLBACK;
-
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -114,18 +109,16 @@ export function generateArticleData(
       '@type': 'Person',
       'name':
         data.author ||
-        t('article.defaultAuthor', {
-          defaultValue: `${siteFacts.company.name} Team`,
-        }),
+        t('article.defaultAuthor', { defaultValue: 'Tucsenberg Team' }),
     },
     'publisher': {
       '@type': 'Organization',
       'name': t('organization.name', {
-        defaultValue: siteFacts.company.name,
+        defaultValue: 'Tucsenberg Web Frontier',
       }),
       'logo': {
         '@type': 'ImageObject',
-        'url': `${baseUrl}/logo.png`,
+        'url': `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/logo.png`,
       },
     },
     'datePublished': data.publishedTime,
@@ -142,6 +135,7 @@ export function generateArticleData(
       : undefined,
     'inLanguage': locale,
     'section': data.section,
+    // 移除 ...data 扩展运算符，只使用已验证的属性
   };
 }
 
@@ -162,7 +156,7 @@ export function generateProductData(
       'name':
         data.brand ||
         t('organization.name', {
-          defaultValue: siteFacts.company.name,
+          defaultValue: 'Tucsenberg Web Frontier',
         }),
     },
     'manufacturer': {
@@ -170,7 +164,7 @@ export function generateProductData(
       'name':
         data.manufacturer ||
         t('organization.name', {
-          defaultValue: siteFacts.company.name,
+          defaultValue: 'Tucsenberg Web Frontier',
         }),
     },
     'image': data.image ? [data.image] : undefined,
@@ -183,6 +177,7 @@ export function generateProductData(
         }
       : undefined,
     'sku': data.sku,
+    // 移除 ...data 扩展运算符，只使用已验证的属性
   };
 }
 

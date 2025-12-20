@@ -35,7 +35,7 @@ export async function MDXContent({
 }
 
 interface MDXRendererProps {
-  Component: ComponentType;
+  Component: ComponentType<Record<string, never>>;
   className?: string;
 }
 

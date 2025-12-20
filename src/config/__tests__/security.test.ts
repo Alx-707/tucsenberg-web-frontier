@@ -178,15 +178,19 @@ describe('Security Configuration', () => {
   });
 
   describe('isValidNonce', () => {
-    it('should validate correct nonces', () => {
-      expect(isValidNonce('abcdef1234567890')).toBe(true);
+    it('should validate correct nonces (32+ chars for 128-bit entropy)', () => {
       expect(isValidNonce('1234567890abcdef1234567890abcdef')).toBe(true);
+      expect(isValidNonce('abcdef1234567890abcdef1234567890extra')).toBe(true);
+    });
+
+    it('should reject nonces shorter than 32 characters', () => {
+      expect(isValidNonce('abcdef1234567890')).toBe(false); // 16 chars - too short
+      expect(isValidNonce('short')).toBe(false);
     });
 
     it('should reject invalid nonces', () => {
-      expect(isValidNonce('short')).toBe(false);
-      expect(isValidNonce('contains-special-chars!')).toBe(false);
-      expect(isValidNonce('contains spaces')).toBe(false);
+      expect(isValidNonce('contains-special-chars!1234567890')).toBe(false);
+      expect(isValidNonce('contains spaces 1234567890abcdef')).toBe(false);
       expect(isValidNonce('')).toBe(false);
     });
   });

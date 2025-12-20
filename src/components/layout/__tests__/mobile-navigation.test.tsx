@@ -215,7 +215,7 @@ describe('MobileNavigation Component', () => {
     it('renders mobile navigation trigger', () => {
       renderWithIntl(<MobileNavigation />);
 
-      expect(screen.getByTestId('mobile-menu-button')).toBeInTheDocument();
+      expect(screen.getByTestId('sheet-trigger')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /menu/i })).toBeInTheDocument();
       expect(screen.getByTestId('menu-icon')).toBeInTheDocument();
     });
@@ -225,7 +225,7 @@ describe('MobileNavigation Component', () => {
 
       const container = screen.getByTestId('sheet').parentElement;
       // Should have mobile-only classes
-      expect(container).toHaveClass('lg:hidden');
+      expect(container).toHaveClass('md:hidden');
     });
 
     it('applies custom className when provided', () => {
@@ -385,7 +385,7 @@ describe('MobileNavigation Component', () => {
       renderWithIntl(<MobileNavigation />);
 
       const container = screen.getByTestId('sheet').parentElement;
-      expect(container).toHaveClass('lg:hidden');
+      expect(container).toHaveClass('md:hidden');
     });
 
     it('adapts to different screen orientations', () => {

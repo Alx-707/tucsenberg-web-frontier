@@ -245,10 +245,10 @@ describe('Mobile Navigation - Core Tests', () => {
     it('should be hidden on desktop screens', () => {
       render(<MobileNavigation />);
 
-      // The lg:hidden class is on the container div, not the button
+      // The md:hidden class is on the container div, not the button
       const toggleButton = screen.getByRole('button', { name: /menu/i });
       const container = toggleButton.closest('div');
-      expect(container).toHaveClass('lg:hidden');
+      expect(container).toHaveClass('md:hidden');
     });
 
     it('should handle viewport changes', async () => {

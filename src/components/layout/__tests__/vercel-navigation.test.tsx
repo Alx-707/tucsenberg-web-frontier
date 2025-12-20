@@ -17,7 +17,7 @@ vi.mock('next-intl', () => ({
   useTranslations: mockUseTranslations,
 }));
 
-// Mock i18n Link and usePathname
+// Mock i18n Link
 vi.mock('@/i18n/routing', () => ({
   Link: ({
     href,
@@ -36,7 +36,6 @@ vi.mock('@/i18n/routing', () => ({
       {children}
     </a>
   ),
-  usePathname: () => '/',
   routing: {
     pathnames: {
       '/': '/',
@@ -84,8 +83,6 @@ vi.mock('@/lib/navigation', () => ({
     mainNav: 'Main navigation',
     mobileMenuButton: 'Toggle mobile menu',
   },
-  isActivePath: (currentPath: string, itemPath: string) =>
-    currentPath === itemPath,
 }));
 
 // Mock NavigationMenu components
@@ -228,12 +225,12 @@ describe('VercelNavigation', () => {
       expect(items.length).toBe(3); // home, products (dropdown), blog
     });
 
-    it('has hidden lg:flex classes for responsive display', () => {
+    it('has hidden md:flex classes for responsive display', () => {
       render(<VercelNavigation />);
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveClass('hidden');
-      expect(nav).toHaveClass('lg:flex');
+      expect(nav).toHaveClass('md:flex');
     });
   });
 
@@ -392,7 +389,7 @@ describe('VercelNavigation', () => {
 
       const nav = screen.getByRole('navigation');
       expect(nav).toHaveClass('hidden');
-      expect(nav).toHaveClass('lg:flex');
+      expect(nav).toHaveClass('md:flex');
       expect(nav).toHaveClass('my-custom');
     });
   });

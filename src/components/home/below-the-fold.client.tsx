@@ -15,14 +15,14 @@ const TechStackSection = dynamic(
     import('@/components/blocks/tech/tech-tabs-block').then(
       (m) => m.TechTabsBlock,
     ),
-  { loading: () => <TechStackSkeleton />, ssr: false },
+  { loading: () => <TechStackSkeleton /> },
 );
 const ComponentShowcase = dynamic(
   () =>
     import('@/components/home/component-showcase').then(
       (m) => m.ComponentShowcase,
     ),
-  { loading: () => <ComponentShowcaseSkeleton />, ssr: false },
+  { loading: () => <ComponentShowcaseSkeleton /> },
 );
 const ProjectOverview = dynamic(
   () =>

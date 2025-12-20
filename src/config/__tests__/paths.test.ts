@@ -149,8 +149,8 @@ describe('paths configuration', () => {
     });
 
     it('should have basic site information', () => {
-      expect(SITE_CONFIG.name).toBe('Tucsenberg');
-      expect(SITE_CONFIG.description).toBeTruthy();
+      expect(SITE_CONFIG.name).toBe('Tucsenberg Web Frontier');
+      expect(SITE_CONFIG.description).toContain('Modern B2B Enterprise');
     });
 
     it('should use environment variable for baseUrl', () => {
@@ -438,8 +438,9 @@ describe('paths configuration', () => {
     });
 
     it('should have valid phone format in contact', () => {
-      // Phone can be a placeholder (with 'x') or actual number
-      expect(SITE_CONFIG.contact.phone).toMatch(/^\+[\d\-x]+$/i);
+      expect(SITE_CONFIG.contact.phone).toMatch(
+        /^\+\d{1,3}[-\s]?\d{1,4}[-\s]?\d{1,4}[-\s]?\d{1,9}$/,
+      );
     });
   });
 

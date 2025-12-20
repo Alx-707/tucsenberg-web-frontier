@@ -156,9 +156,9 @@ describe('security-tokens', () => {
   });
 
   describe('generateNonce', () => {
-    it('should generate 16 character nonce', () => {
+    it('should generate 32 character nonce (128-bit entropy)', () => {
       const nonce = generateNonce();
-      expect(nonce.length).toBe(16);
+      expect(nonce.length).toBe(32);
     });
 
     it('should be valid hex string', () => {

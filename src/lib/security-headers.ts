@@ -36,16 +36,13 @@ export function getWebSecurityHeaders(nonce?: string): Record<string, string> {
 
 /**
  * CORS headers configuration
- *
- * Production origins should be configured via NEXT_PUBLIC_SITE_URL env var.
  */
 export function getCORSHeaders(origin?: string): Record<string, string> {
-  const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'] ?? 'https://example.com';
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
-    siteUrl,
-    siteUrl.replace('https://', 'https://www.'),
+    'https://tucsenberg.com',
+    'https://www.tucsenberg.com',
   ];
 
   const headers: Record<string, string> = {

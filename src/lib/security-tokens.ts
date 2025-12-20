@@ -139,6 +139,14 @@ export function generateCsrfToken(): string {
 export { generateNonce } from '@/config/security';
 
 /**
+ * Validate CSP nonce format
+ *
+ * Re-exported from @/config/security for consistent validation.
+ * @see src/config/security.ts for implementation details
+ */
+export { isValidNonce } from '@/config/security';
+
+/**
  * Generate a secure one-time password (OTP)
  */
 export function generateOTP(length: number = MAGIC_6): string {

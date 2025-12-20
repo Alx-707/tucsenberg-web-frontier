@@ -118,9 +118,9 @@ describe('Mobile Navigation Responsive - Main Tests', () => {
       render(<MobileNavigation />);
 
       const trigger = screen.getByRole('button');
-      // lg:hidden 类在外层容器上，不在 button 上
+      // md:hidden 类在外层容器上，不在 button 上
       const container = trigger.closest('div');
-      expect(container).toHaveClass('lg:hidden');
+      expect(container).toHaveClass('md:hidden');
     });
 
     it('adapts to different screen sizes', () => {

@@ -6,7 +6,6 @@ import { getTranslationsCached } from '@/lib/i18n/server/getTranslationsCached';
 import { ContactForm } from '@/components/contact/contact-form';
 import { Card } from '@/components/ui/card';
 import { generateLocaleStaticParams } from '@/app/[locale]/generate-static-params';
-import { siteFacts } from '@/config/site-facts';
 import { COUNT_PAIR } from '@/constants';
 
 interface ContactPageProps {
@@ -101,7 +100,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                       {copy.panel.contact.emailLabel}
                     </p>
                     <p className='text-muted-foreground'>
-                      {siteFacts.contact.email}
+                      contact@tucsenberg.com
                     </p>
                   </div>
                 </div>
@@ -126,9 +125,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
                     <p className='font-medium'>
                       {copy.panel.contact.phoneLabel}
                     </p>
-                    <p className='text-muted-foreground'>
-                      {siteFacts.contact.phone}
-                    </p>
+                    <p className='text-muted-foreground'>+1-555-0123</p>
                   </div>
                 </div>
               </div>

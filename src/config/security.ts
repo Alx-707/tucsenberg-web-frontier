@@ -1,4 +1,4 @@
-import { COUNT_PAIR, MAGIC_8, MAGIC_16 } from '../constants/count';
+import { COUNT_PAIR, MAGIC_16 } from '../constants/count';
 import { ZERO } from '../constants/magic-numbers';
 
 export type SecurityHeader = {
@@ -189,18 +189,18 @@ export function getSecurityHeaders(
  * Generate a cryptographically secure nonce for CSP
  *
  * Requirements:
- * - Minimum 16 characters for security
- * - Alphanumeric only for CSP compatibility
+ * - Minimum 128 bits (16 bytes) entropy per OWASP best practices
+ * - 32 hex characters output for CSP compatibility
  * - Must pass isValidNonce validation
  */
-const NONCE_BYTE_LENGTH = MAGIC_8; // 8 bytes = 16 hex characters
+const NONCE_BYTE_LENGTH = MAGIC_16; // 16 bytes = 128 bits = 32 hex characters
 const NONCE_HEX_PAD = COUNT_PAIR;
 
 export function generateNonce(): string {
   if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     // randomUUID returns 36 chars with hyphens, removing hyphens gives 32 hex chars
-    // Take first 16 chars to match expected nonce length
-    return crypto.randomUUID().replace(/-/g, '').substring(0, 16);
+    // Use full 32 chars for 128-bit entropy
+    return crypto.randomUUID().replace(/-/g, '');
   }
 
   if (
@@ -209,7 +209,7 @@ export function generateNonce(): string {
   ) {
     const bytes = new Uint8Array(NONCE_BYTE_LENGTH);
     crypto.getRandomValues(bytes);
-    // Convert to hex: 16 bytes = 32 hex characters
+    // Convert to hex: 16 bytes = 32 hex characters = 128 bits
     return Array.from(bytes, (value) =>
       value.toString(MAGIC_16).padStart(NONCE_HEX_PAD, '0'),
     ).join('');
@@ -273,11 +273,11 @@ export function getSecurityConfig(testMode = false) {
 }
 
 /**
- * Validate CSP nonce
+ * Validate CSP nonce (128-bit minimum entropy)
  */
 export function isValidNonce(nonce: string): boolean {
-  // Nonce should be at least 16 characters and contain only alphanumeric characters
-  return /^[a-zA-Z0-9]{16,}$/.test(nonce);
+  // Nonce should be at least 32 characters (128 bits) and contain only alphanumeric characters
+  return /^[a-zA-Z0-9]{32,}$/.test(nonce);
 }
 
 /**
