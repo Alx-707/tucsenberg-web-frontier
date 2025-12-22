@@ -18,6 +18,7 @@ import {
 } from '@/types/content';
 import {
   CONTENT_DIR,
+  getValidationConfig,
   shouldFilterDraft,
   validateFilePath,
 } from '@/lib/content-utils';
@@ -49,17 +50,32 @@ export interface ParseContentOptions {
 }
 
 /**
- * Default validation config for production builds
+ * Get validation config with production strictMode override.
+ * Reads from content.json, then applies production strictMode if in production.
  */
-const PRODUCTION_VALIDATION_CONFIG: ValidationConfig = {
-  strictMode: process.env.NODE_ENV === 'production',
-  requireSlug: true,
-  requireLocale: false,
-  requireAuthor: false,
-  requireDescription: false,
-  requireTags: false,
-  requireCategories: false,
-};
+function getProductionValidationConfig(): ValidationConfig {
+  const config = getValidationConfig();
+  const isProduction = process.env.NODE_ENV === 'production';
+  return {
+    strictMode: isProduction || (config.strictMode ?? false),
+    requireSlug: config.requireSlug ?? true,
+    requireLocale: config.requireLocale ?? false,
+    requireAuthor: config.requireAuthor ?? false,
+    requireDescription: config.requireDescription ?? false,
+    requireTags: config.requireTags ?? false,
+    requireCategories: config.requireCategories ?? false,
+    ...(config.maxTitleLength !== undefined
+      ? { maxTitleLength: config.maxTitleLength }
+      : {}),
+    ...(config.maxDescriptionLength !== undefined
+      ? { maxDescriptionLength: config.maxDescriptionLength }
+      : {}),
+    ...(config.maxExcerptLength !== undefined
+      ? { maxExcerptLength: config.maxExcerptLength }
+      : {}),
+    ...(config.products !== undefined ? { products: config.products } : {}),
+  };
+}
 
 /**
  * Parse MDX file with frontmatter
@@ -70,7 +86,7 @@ export function parseContentFile<T extends ContentMetadata = ContentMetadata>(
   options: ParseContentOptions = {},
 ): ParsedContent<T> {
   const validationConfig =
-    options.validationConfig ?? PRODUCTION_VALIDATION_CONFIG;
+    options.validationConfig ?? getProductionValidationConfig();
 
   try {
     // Validate file path for security
