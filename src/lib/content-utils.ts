@@ -7,6 +7,7 @@
 import fs from 'fs';
 import path from 'path';
 import { ContentError, type ContentConfig } from '@/types/content';
+import type { ValidationConfig } from '@/lib/content-validation';
 import { logger } from '@/lib/logger';
 import { COUNT_TEN } from '@/constants';
 import { COUNT_160 } from '@/constants/count';
@@ -191,4 +192,61 @@ export function warnIfDraftsInProduction(): void {
 export function shouldFilterDraft(isDraft?: boolean): boolean {
   const config = getContentConfig();
   return isDraft === true && !config.enableDrafts;
+}
+
+/**
+ * Get validation configuration from content.json.
+ * Falls back to sensible defaults if config file is unavailable.
+ */
+export function getValidationConfig(): ValidationConfig {
+  try {
+    const configPath = path.join(CONFIG_DIR, 'content.json');
+    const validatedConfigPath = validateFilePath(configPath, CONTENT_DIR);
+
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    if (fs.existsSync(validatedConfigPath)) {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      const configContent = fs.readFileSync(validatedConfigPath, 'utf-8');
+      const config = JSON.parse(configContent) as Record<string, unknown>;
+      const validation = config['validation'] as
+        | Partial<ValidationConfig>
+        | undefined;
+
+      if (validation) {
+        return {
+          strictMode: validation.strictMode ?? false,
+          requireSlug: validation.requireSlug ?? true,
+          requireLocale: validation.requireLocale ?? false,
+          requireAuthor: validation.requireAuthor ?? false,
+          requireDescription: validation.requireDescription ?? false,
+          requireTags: validation.requireTags ?? false,
+          requireCategories: validation.requireCategories ?? false,
+          ...(validation.maxTitleLength !== undefined
+            ? { maxTitleLength: validation.maxTitleLength }
+            : {}),
+          ...(validation.maxDescriptionLength !== undefined
+            ? { maxDescriptionLength: validation.maxDescriptionLength }
+            : {}),
+          ...(validation.maxExcerptLength !== undefined
+            ? { maxExcerptLength: validation.maxExcerptLength }
+            : {}),
+          ...(validation.products !== undefined
+            ? { products: validation.products }
+            : {}),
+        };
+      }
+    }
+  } catch (error) {
+    logger.warn('Failed to load validation config, using defaults', { error });
+  }
+
+  return {
+    strictMode: false,
+    requireSlug: true,
+    requireLocale: false,
+    requireAuthor: false,
+    requireDescription: false,
+    requireTags: false,
+    requireCategories: false,
+  };
 }

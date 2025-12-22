@@ -28,6 +28,16 @@ vi.mock('@/lib/content-utils', () => ({
     }
     return path.join(baseDir, path.basename(filePath));
   }),
+  getValidationConfig: vi.fn(() => ({
+    strictMode: false,
+    requireSlug: true,
+    requireLocale: false,
+    requireAuthor: false,
+    requireDescription: false,
+    requireTags: false,
+    requireCategories: false,
+  })),
+  shouldFilterDraft: vi.fn(() => false),
 }));
 vi.mock('@/lib/content-validation', () => ({
   validateContentMetadata: vi.fn(() => ({
