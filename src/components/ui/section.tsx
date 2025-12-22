@@ -23,7 +23,8 @@ const sectionVariants = cva('scroll-mt-20', {
 });
 
 interface SectionProps
-  extends React.HTMLAttributes<HTMLElement>,
+  extends
+    React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof sectionVariants> {}
 
 function Section({ className, spacing, background, ...props }: SectionProps) {

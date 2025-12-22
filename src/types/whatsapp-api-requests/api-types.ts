@@ -97,11 +97,11 @@ export function isSendMessageRequest(
 ): request is SendMessageRequest {
   return Boolean(
     request &&
-      typeof request === 'object' &&
-      (request as Record<string, unknown>).messaging_product === 'whatsapp' &&
-      (request as Record<string, unknown>).recipient_type === 'individual' &&
-      typeof (request as Record<string, unknown>).to === 'string' &&
-      typeof (request as Record<string, unknown>).type === 'string',
+    typeof request === 'object' &&
+    (request as Record<string, unknown>).messaging_product === 'whatsapp' &&
+    (request as Record<string, unknown>).recipient_type === 'individual' &&
+    typeof (request as Record<string, unknown>).to === 'string' &&
+    typeof (request as Record<string, unknown>).type === 'string',
   );
 }
 
@@ -110,10 +110,10 @@ export function isMediaUploadRequest(
 ): request is MediaUploadRequest {
   return Boolean(
     request &&
-      typeof request === 'object' &&
-      (request as Record<string, unknown>).messaging_product === 'whatsapp' &&
-      (request as Record<string, unknown>).file &&
-      typeof (request as Record<string, unknown>).type === 'string',
+    typeof request === 'object' &&
+    (request as Record<string, unknown>).messaging_product === 'whatsapp' &&
+    (request as Record<string, unknown>).file &&
+    typeof (request as Record<string, unknown>).type === 'string',
   );
 }
 
@@ -122,17 +122,17 @@ export function isAnalyticsRequest(
 ): request is AnalyticsRequest {
   return Boolean(
     request &&
-      typeof request === 'object' &&
-      typeof (request as Record<string, unknown>).start === 'string' &&
-      typeof (request as Record<string, unknown>).end === 'string' &&
-      typeof (request as Record<string, unknown>).granularity === 'string',
+    typeof request === 'object' &&
+    typeof (request as Record<string, unknown>).start === 'string' &&
+    typeof (request as Record<string, unknown>).end === 'string' &&
+    typeof (request as Record<string, unknown>).granularity === 'string',
   );
 }
 
 export function isBatchRequest(request: unknown): request is BatchRequest {
   return Boolean(
     request &&
-      typeof request === 'object' &&
-      Array.isArray((request as Record<string, unknown>).requests),
+    typeof request === 'object' &&
+    Array.isArray((request as Record<string, unknown>).requests),
   );
 }

@@ -386,11 +386,11 @@ export function isWhatsAppService(
 
   return Boolean(
     typeof service.initialize === 'function' &&
-      typeof service.getStatus === 'function' &&
-      typeof service.getHealth === 'function' &&
-      typeof service.sendMessage === 'function' &&
-      typeof service.on === 'function' &&
-      typeof service.off === 'function',
+    typeof service.getStatus === 'function' &&
+    typeof service.getHealth === 'function' &&
+    typeof service.sendMessage === 'function' &&
+    typeof service.on === 'function' &&
+    typeof service.off === 'function',
   );
 }
 

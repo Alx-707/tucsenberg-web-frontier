@@ -543,11 +543,11 @@ export class PerformanceMetricsManager {
     const m = metric as PerformanceMetrics;
     return Boolean(
       m.type &&
-        m.source &&
-        typeof m.timestamp === 'number' &&
-        m.timestamp > ZERO &&
-        m.data &&
-        typeof m.data === 'object',
+      m.source &&
+      typeof m.timestamp === 'number' &&
+      m.timestamp > ZERO &&
+      m.data &&
+      typeof m.data === 'object',
     );
   }
 

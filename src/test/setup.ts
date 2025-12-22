@@ -176,8 +176,10 @@ declare module 'vitest' {
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface Assertion<T = any> extends TestingLibraryMatchers<T, void> {}
   // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface AsymmetricMatchersContaining
-    extends TestingLibraryMatchers<any, void> {}
+  interface AsymmetricMatchersContaining extends TestingLibraryMatchers<
+    any,
+    void
+  > {}
 }
 
 // Mock Next.js router

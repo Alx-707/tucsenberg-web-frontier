@@ -135,9 +135,8 @@ describe('Contact API Route', () => {
 
     it('应该成功处理有效的表单提交', async () => {
       // Mock successful validation
-      const { validateFormData } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateFormData } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateFormData).mockResolvedValue({
         success: true,
         error: null,
@@ -146,9 +145,8 @@ describe('Contact API Route', () => {
       });
 
       // Ensure submission processing is mocked to succeed under Vitest v4
-      const { processFormSubmission } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { processFormSubmission } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(processFormSubmission).mockResolvedValue({
         success: true,
         emailSent: true,
@@ -189,9 +187,8 @@ describe('Contact API Route', () => {
 
     it('应该处理无效的表单数据', async () => {
       // Mock validation failure
-      const { validateFormData } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateFormData } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateFormData).mockResolvedValue({
         success: false,
         error: 'Invalid form data',
@@ -270,9 +267,8 @@ describe('Contact API Route', () => {
 
     it('应该处理Turnstile验证失败', async () => {
       // Mock validation failure due to Turnstile
-      const { validateFormData } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateFormData } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateFormData).mockResolvedValue({
         success: false,
         error: 'Security verification failed. Please try again.',
@@ -314,9 +310,8 @@ describe('Contact API Route', () => {
       mockResendService.isReady.mockReturnValue(false);
 
       // Mock successful validation
-      const { validateFormData, processFormSubmission } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateFormData, processFormSubmission } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateFormData).mockResolvedValue({
         success: true,
         error: null,
@@ -385,9 +380,8 @@ describe('Contact API Route', () => {
       };
 
       // Mock admin validation and stats
-      const { validateAdminAccess, getContactFormStats } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateAdminAccess, getContactFormStats } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateAdminAccess).mockReturnValue(true);
       vi.mocked(getContactFormStats).mockResolvedValue({
         success: true,
@@ -442,9 +436,8 @@ describe('Contact API Route', () => {
       mockAirtableService.isReady.mockReturnValue(false);
 
       // Mock admin validation and stats
-      const { validateAdminAccess, getContactFormStats } = await import(
-        '@/app/api/contact/contact-api-validation'
-      );
+      const { validateAdminAccess, getContactFormStats } =
+        await import('@/app/api/contact/contact-api-validation');
       vi.mocked(validateAdminAccess).mockReturnValue(true);
       vi.mocked(getContactFormStats).mockResolvedValue({
         success: true,

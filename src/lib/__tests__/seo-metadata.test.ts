@@ -447,9 +447,8 @@ describe('SEO Metadata', () => {
       }));
 
       // Re-import to get updated mock
-      const { generateLocalizedMetadata: gen } = await import(
-        '../seo-metadata'
-      );
+      const { generateLocalizedMetadata: gen } =
+        await import('../seo-metadata');
 
       // The siteName fallback branch may use the module cache
       // This test ensures the branch exists but may not fully execute in isolation

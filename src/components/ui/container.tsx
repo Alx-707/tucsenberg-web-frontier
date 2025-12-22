@@ -20,7 +20,8 @@ const containerVariants = cva('mx-auto px-4', {
 });
 
 interface ContainerProps
-  extends React.HTMLAttributes<HTMLDivElement>,
+  extends
+    React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof containerVariants> {
   asChild?: boolean;
 }

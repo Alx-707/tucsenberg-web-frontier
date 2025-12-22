@@ -391,10 +391,10 @@ export function isSendMessageResponse(
 ): response is SendMessageResponse {
   return Boolean(
     response &&
-      typeof response === 'object' &&
-      (response as Record<string, unknown>).messaging_product === 'whatsapp' &&
-      Array.isArray((response as Record<string, unknown>).contacts) &&
-      Array.isArray((response as Record<string, unknown>).messages),
+    typeof response === 'object' &&
+    (response as Record<string, unknown>).messaging_product === 'whatsapp' &&
+    Array.isArray((response as Record<string, unknown>).contacts) &&
+    Array.isArray((response as Record<string, unknown>).messages),
   );
 }
 
@@ -403,22 +403,22 @@ export function isMediaUploadResponse(
 ): response is MediaUploadResponse {
   return Boolean(
     response &&
-      typeof response === 'object' &&
-      typeof (response as Record<string, unknown>).id === 'string',
+    typeof response === 'object' &&
+    typeof (response as Record<string, unknown>).id === 'string',
   );
 }
 
 export function isWhatsAppApiError(error: unknown): error is WhatsAppApiError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      typeof (error as Record<string, unknown>).error === 'object' &&
-      'message' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>) &&
-      'type' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>) &&
-      'code' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>),
+    typeof error === 'object' &&
+    typeof (error as Record<string, unknown>).error === 'object' &&
+    'message' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>) &&
+    'type' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>) &&
+    'code' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>),
   );
 }
 

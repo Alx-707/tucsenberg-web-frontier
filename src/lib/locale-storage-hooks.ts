@@ -253,9 +253,8 @@ export function useStorageAvailability() {
     const checkAvailability = async () => {
       try {
         // 动态导入以避免 SSR 问题
-        const { LocalStorageManager } = await import(
-          '@/lib/locale-storage-local'
-        );
+        const { LocalStorageManager } =
+          await import('@/lib/locale-storage-local');
         const { CookieManager } = await import('@/lib/locale-storage-cookie');
 
         setIsLocalStorageAvailable(LocalStorageManager.isAvailable());

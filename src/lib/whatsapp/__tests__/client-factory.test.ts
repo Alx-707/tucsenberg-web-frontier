@@ -90,9 +90,8 @@ describe('WhatsApp Client Factory', () => {
     it('should return singleton instance', async () => {
       vi.stubEnv('NODE_ENV', 'test');
 
-      const { getWhatsAppClient, resetWhatsAppClient } = await import(
-        '../client-factory'
-      );
+      const { getWhatsAppClient, resetWhatsAppClient } =
+        await import('../client-factory');
 
       resetWhatsAppClient();
       const client1 = getWhatsAppClient();
@@ -106,9 +105,8 @@ describe('WhatsApp Client Factory', () => {
     it('should create new instance after reset', async () => {
       vi.stubEnv('NODE_ENV', 'test');
 
-      const { getWhatsAppClient, resetWhatsAppClient } = await import(
-        '../client-factory'
-      );
+      const { getWhatsAppClient, resetWhatsAppClient } =
+        await import('../client-factory');
 
       const client1 = getWhatsAppClient();
       resetWhatsAppClient();
@@ -123,9 +121,8 @@ describe('WhatsApp Client Factory', () => {
     it('should return true for mock client', async () => {
       vi.stubEnv('NODE_ENV', 'test');
 
-      const { isMockClient, resetWhatsAppClient } = await import(
-        '../client-factory'
-      );
+      const { isMockClient, resetWhatsAppClient } =
+        await import('../client-factory');
 
       resetWhatsAppClient();
       expect(isMockClient()).toBe(true);

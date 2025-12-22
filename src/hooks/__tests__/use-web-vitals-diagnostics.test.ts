@@ -56,9 +56,8 @@ const { mockLocalStorage, _mockLogger } = vi.hoisted(() => ({
 }));
 
 const getCollectorMock = async () => {
-  const { enhancedWebVitalsCollector } = await import(
-    '@/lib/enhanced-web-vitals'
-  );
+  const { enhancedWebVitalsCollector } =
+    await import('@/lib/enhanced-web-vitals');
   return vi.mocked(enhancedWebVitalsCollector);
 };
 
@@ -98,9 +97,8 @@ Object.defineProperty(global, 'window', {
 
 // Mock验证函数
 const verifyMockSetup = async () => {
-  const { enhancedWebVitalsCollector } = await import(
-    '@/lib/enhanced-web-vitals'
-  );
+  const { enhancedWebVitalsCollector } =
+    await import('@/lib/enhanced-web-vitals');
 
   // 验证Mock函数是否正确设置
   expect(
@@ -319,9 +317,8 @@ describe('useWebVitalsDiagnostics', () => {
       });
 
       // 验证Mock被调用 - refreshDiagnostics调用getDetailedMetrics而不是generateDiagnosticReport
-      const { enhancedWebVitalsCollector } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { enhancedWebVitalsCollector } =
+        await import('@/lib/enhanced-web-vitals');
       expect(enhancedWebVitalsCollector.getDetailedMetrics).toHaveBeenCalled();
 
       // 验证结果

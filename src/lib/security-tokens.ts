@@ -156,7 +156,7 @@ export function generateOTP(length: number = MAGIC_6): string {
   const array = secureRandomBytes(length);
   const dv = new DataView(array.buffer);
   for (let i = ZERO; i < length; i++) {
-    const idx = dv.getUint8(i) % digits.length >>> 0;
+    const idx = (dv.getUint8(i) % digits.length) >>> 0;
     result += digits.charAt(idx);
   }
 
@@ -173,7 +173,7 @@ export function generateVerificationCode(length: number = MAGIC_8): string {
   const array = secureRandomBytes(length);
   const dv = new DataView(array.buffer);
   for (let i = ZERO; i < length; i++) {
-    const idx = dv.getUint8(i) % chars.length >>> 0;
+    const idx = (dv.getUint8(i) % chars.length) >>> 0;
     result += chars.charAt(idx);
   }
 

@@ -444,9 +444,8 @@ describe('enhanced-web-vitals', () => {
 
   describe('async operations', () => {
     it('should handle async initialization', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       const analyzer = new AsyncCollector();
 
@@ -457,9 +456,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle async data collection', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       // Create collector instance which should set up observers
       const analyzer = new AsyncCollector();
@@ -476,9 +474,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle timeout scenarios', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       const analyzer = new AsyncCollector();
 
@@ -495,9 +492,8 @@ describe('enhanced-web-vitals', () => {
         throw new Error('PerformanceObserver error');
       });
 
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       expect(() => new AsyncCollector()).not.toThrow();
     });
@@ -510,9 +506,8 @@ describe('enhanced-web-vitals', () => {
         writable: true,
       });
 
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       expect(() => new AsyncCollector()).not.toThrow();
     });
@@ -521,9 +516,8 @@ describe('enhanced-web-vitals', () => {
       // Mock performance API to return empty array instead of throwing
       mockPerformance.getEntriesByType.mockReturnValue([]);
 
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       // Should not throw when performance API returns empty results
       expect(() => new AsyncCollector()).not.toThrow();
@@ -539,9 +533,8 @@ describe('enhanced-web-vitals', () => {
 
   describe('Web Vitals Integration', () => {
     it('should call web-vitals functions when collecting metrics', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       // Create a new collector instance to trigger metric collection
       const collector = new AsyncCollector();
@@ -557,9 +550,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should handle web vitals callbacks correctly', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       // Create collector and verify it doesn't throw
       expect(() => new AsyncCollector()).not.toThrow();
@@ -574,9 +566,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should log metrics when received', async () => {
-      const { EnhancedWebVitalsCollector: AsyncCollector } = await import(
-        '../web-vitals'
-      );
+      const { EnhancedWebVitalsCollector: AsyncCollector } =
+        await import('../web-vitals');
 
       // Create collector instance
       const collector = new AsyncCollector();
@@ -611,9 +602,8 @@ describe('enhanced-web-vitals', () => {
 
   describe('Convenience Functions', () => {
     it('should test initializePerformanceMonitoring with default config', async () => {
-      const { initializePerformanceMonitoring } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { initializePerformanceMonitoring } =
+        await import('@/lib/enhanced-web-vitals');
 
       const result = initializePerformanceMonitoring();
 
@@ -622,9 +612,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should test initializePerformanceMonitoring with custom config', async () => {
-      const { initializePerformanceMonitoring } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { initializePerformanceMonitoring } =
+        await import('@/lib/enhanced-web-vitals');
 
       const config = {
         enableAlerts: true,
@@ -641,9 +630,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should test generatePerformanceDiagnostics', async () => {
-      const { generatePerformanceDiagnostics } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { generatePerformanceDiagnostics } =
+        await import('@/lib/enhanced-web-vitals');
 
       const diagnostics = generatePerformanceDiagnostics();
 
@@ -653,9 +641,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should test performFullPerformanceMonitoring without buildInfo', async () => {
-      const { performFullPerformanceMonitoring } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { performFullPerformanceMonitoring } =
+        await import('@/lib/enhanced-web-vitals');
 
       const result = performFullPerformanceMonitoring();
 
@@ -663,9 +650,8 @@ describe('enhanced-web-vitals', () => {
     });
 
     it('should test performFullPerformanceMonitoring with buildInfo', async () => {
-      const { performFullPerformanceMonitoring } = await import(
-        '@/lib/enhanced-web-vitals'
-      );
+      const { performFullPerformanceMonitoring } =
+        await import('@/lib/enhanced-web-vitals');
 
       const buildInfo = {
         version: '1.0.0',

@@ -177,9 +177,8 @@ describe('contact-api-utils', () => {
     });
 
     it('should return false for invalid action', async () => {
-      const { isAllowedTurnstileAction } = await import(
-        '@/lib/security/turnstile-config'
-      );
+      const { isAllowedTurnstileAction } =
+        await import('@/lib/security/turnstile-config');
       vi.mocked(isAllowedTurnstileAction).mockReturnValueOnce(false);
 
       mockFetch.mockResolvedValueOnce({
@@ -228,9 +227,8 @@ describe('contact-api-utils', () => {
 
       // Re-import module with new env mock
       vi.resetModules();
-      const { verifyTurnstile: testVerify } = await import(
-        '../contact-api-utils'
-      );
+      const { verifyTurnstile: testVerify } =
+        await import('../contact-api-utils');
 
       const result = await testVerify('token', '192.168.1.1');
 

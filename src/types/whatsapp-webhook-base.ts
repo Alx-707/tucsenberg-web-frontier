@@ -325,18 +325,18 @@ export type WebhookChangeField = (typeof WEBHOOK_CHANGE_FIELDS)[number];
 export function isWebhookPayload(obj: unknown): obj is WebhookPayload {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      (obj as Record<string, unknown>).object === 'whatsapp_business_account' &&
-      Array.isArray((obj as Record<string, unknown>).entry),
+    typeof obj === 'object' &&
+    (obj as Record<string, unknown>).object === 'whatsapp_business_account' &&
+    Array.isArray((obj as Record<string, unknown>).entry),
   );
 }
 
 export function isWebhookEntry(obj: unknown): obj is WebhookEntry {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      typeof (obj as Record<string, unknown>).id === 'string' &&
-      Array.isArray((obj as Record<string, unknown>).changes),
+    typeof obj === 'object' &&
+    typeof (obj as Record<string, unknown>).id === 'string' &&
+    Array.isArray((obj as Record<string, unknown>).changes),
   );
 }
 
@@ -345,21 +345,21 @@ export function isMessageStatusUpdate(
 ): obj is MessageStatusUpdate {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      typeof (obj as Record<string, unknown>).id === 'string' &&
-      typeof (obj as Record<string, unknown>).status === 'string' &&
-      typeof (obj as Record<string, unknown>).timestamp === 'string' &&
-      typeof (obj as Record<string, unknown>).recipient_id === 'string',
+    typeof obj === 'object' &&
+    typeof (obj as Record<string, unknown>).id === 'string' &&
+    typeof (obj as Record<string, unknown>).status === 'string' &&
+    typeof (obj as Record<string, unknown>).timestamp === 'string' &&
+    typeof (obj as Record<string, unknown>).recipient_id === 'string',
   );
 }
 
 export function isWebhookError(obj: unknown): obj is WebhookError {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      typeof (obj as Record<string, unknown>).code === 'number' &&
-      typeof (obj as Record<string, unknown>).title === 'string' &&
-      typeof (obj as Record<string, unknown>).message === 'string',
+    typeof obj === 'object' &&
+    typeof (obj as Record<string, unknown>).code === 'number' &&
+    typeof (obj as Record<string, unknown>).title === 'string' &&
+    typeof (obj as Record<string, unknown>).message === 'string',
   );
 }
 
@@ -368,10 +368,10 @@ export function isWebhookVerificationRequest(
 ): query is WebhookVerificationRequest {
   return Boolean(
     query &&
-      typeof query === 'object' &&
-      'hub.mode' in query &&
-      'hub.challenge' in query &&
-      'hub.verify_token' in query &&
-      (query as Record<string, unknown>)['hub.mode'] === 'subscribe',
+    typeof query === 'object' &&
+    'hub.mode' in query &&
+    'hub.challenge' in query &&
+    'hub.verify_token' in query &&
+    (query as Record<string, unknown>)['hub.mode'] === 'subscribe',
   );
 }

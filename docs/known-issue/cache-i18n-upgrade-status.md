@@ -1,5 +1,19 @@
 # Next.js 16 + next-intl 4 + Cache Components：PPR / dynamicIO / i18n 路由未来升级入口点清单
 
+## 〇、当前实现状态摘要
+
+| 特性 | 状态 | 说明 |
+|------|------|------|
+| **Cache Components** | ✅ 已启用 | `cacheComponents: true` |
+| **`"use cache"` + `cacheLife()`** | ✅ 已使用 | 首页 hero、联系页文案等数据函数 |
+| **显式 locale 传参** | ✅ 已规范 | 避免隐式 request 依赖 |
+| **`setRequestLocale`** | ✅ 已调用 | `[locale]/layout.tsx` |
+| **PPR** | ❌ 暂未启用 | 等待 next-intl 官方支持 |
+| **dynamicIO** | ❌ 暂未启用 | 等待 next-intl 官方支持 |
+| **`cacheTag()` / `revalidateTag()`** | ❌ 未实现 | 当前场景不需要细粒度失效 |
+
+---
+
 ## 一、背景说明
 
 ### 1. 当前技术组合
@@ -310,8 +324,4 @@ export const getTranslationsCached = cache(getTranslations);
     - https://nextjs.org/docs/app/building-your-application/rendering/partial-prerendering
   - dynamicIO 与异步请求 API：
     - https://nextjs.org/docs/app/building-your-application/upgrading/version-15#async-request-apis-breaking-change
-- **项目内部文档**：
-  - `docs/cache-components-plan.md`
-    - 详细记录了阶段 0–5 的 Cache Components 启用与 next-intl 兼容方案规划；
-    - 本文档可视为该规划在“未来 PPR / dynamicIO 升级路径”上的补充索引。
 

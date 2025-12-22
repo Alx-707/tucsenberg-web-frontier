@@ -4,7 +4,7 @@ Enterprise B2B website template built with Next.js 16 + React 19 + TypeScript 5 
 
 ## Project Overview
 
-**Stack**: Next.js 16.0.8 (App Router, Turbopack) + React 19.1.1 + TypeScript 5.9.3 + Tailwind CSS 4.1.17 + next-intl
+**Stack**: Next.js 16.1.0 (App Router, Turbopack) + React 19.2.3 + TypeScript 5.9.3 + Tailwind CSS 4.1.18 + next-intl
 
 **Core Features**:
 - Internationalization: English/Chinese (en/zh) via next-intl
@@ -46,7 +46,7 @@ pnpm ci:local         # Full CI pipeline locally
 ```
 
 **Package Manager**: pnpm only (npm/yarn forbidden)
-**Node Version**: 20.x (use fnm to switch)
+**Node Version**: >=20 <23 (use fnm to switch)
 
 ---
 

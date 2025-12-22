@@ -22,11 +22,11 @@ export function isWebhookVerificationRequest(
 ): query is WebhookVerificationRequest {
   return Boolean(
     query &&
-      typeof query === 'object' &&
-      'hub.mode' in query &&
-      'hub.challenge' in query &&
-      'hub.verify_token' in query &&
-      (query as Record<string, unknown>)['hub.mode'] === 'subscribe',
+    typeof query === 'object' &&
+    'hub.mode' in query &&
+    'hub.challenge' in query &&
+    'hub.verify_token' in query &&
+    (query as Record<string, unknown>)['hub.mode'] === 'subscribe',
   );
 }
 

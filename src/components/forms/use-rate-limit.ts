@@ -39,7 +39,7 @@ export function useRateLimit() {
   // 计算是否处于速率限制状态
   const isRateLimited = Boolean(
     lastSubmissionTime &&
-      currentTime - lastSubmissionTime.getTime() < RATE_LIMIT_WINDOW,
+    currentTime - lastSubmissionTime.getTime() < RATE_LIMIT_WINDOW,
   );
 
   // 管理速率限制重置定时器

@@ -3,10 +3,10 @@
 ## 1. 核心框架
 
 ### 前端框架
-- **Next.js 16.0.8** - React 全栈框架，App Router 架构
-- **React 19.1.1** - 用户界面库，支持服务器组件
+- **Next.js 16.1.0** - React 全栈框架，App Router 架构
+- **React 19.2.3** - 用户界面库，支持服务器组件
 - **TypeScript 5.9.3** - 类型安全的 JavaScript 超集
-- **Tailwind CSS 4.1.17** - 原子化 CSS 框架
+- **Tailwind CSS 4.1.18** - 原子化 CSS 框架
 
 ### 渲染策略
 - **SSG + ISR** - 静态生成 + 增量静态再生
@@ -16,7 +16,7 @@
 ## 2. 内容管理系统
 
 ### MDX 内容管理
-- **@next/mdx 16.0.8** - Next.js 原生 MDX 支持
+- **@next/mdx 16.1.0** - Next.js 原生 MDX 支持
 - **@mdx-js/loader 3.1.1** - MDX 文件加载器
 - **@mdx-js/react 3.1.1** - React 组件嵌入支持
 - **gray-matter 4.0.3** - Front Matter 解析
@@ -97,14 +97,14 @@ content/
 - **typescript-eslint 8.46.4** - TypeScript 专用规则
 - **eslint-plugin-react 7.37.5** - React 组件规则
 - **eslint-plugin-react-hooks 5.2.0** - React Hooks 最佳实践
-- **eslint-plugin-react-you-might-not-need-an-effect 0.7.0** - useEffect 优化
-- **@next/eslint-plugin-next 16.0.8** - Next.js 专用规则
+- **eslint-plugin-react-you-might-not-need-an-effect 0.8.1** - useEffect 优化
+- **@next/eslint-plugin-next 16.1.0** - Next.js 专用规则
 - **eslint-plugin-import 2.32.0** - 导入语句规则
 - **eslint-plugin-promise 7.2.1** - Promise 最佳实践
 - **eslint-config-prettier 10.1.8** - Prettier 冲突解决
 - **eslint-plugin-security 3.0.1** - 安全规则检查
 - **eslint-plugin-security-node 1.1.4** - Node.js 安全规则
-- **eslint-config-next 16.0.8** - Next.js ESLint 配置预设
+- **eslint-config-next 16.1.0** - Next.js ESLint 配置预设
 
 ### 代码格式化
 - **prettier 3.6.2** - 代码格式化核心
@@ -112,7 +112,7 @@ content/
 - **prettier-plugin-tailwindcss 0.7.2** - Tailwind CSS 类名排序
 
 ### 构建工具
-- **@next/bundle-analyzer 16.0.8** - 包大小分析
+- **@next/bundle-analyzer 16.1.0** - 包大小分析
 - **Turbopack** - 开发环境构建（`next dev --turbo`）
 - **Webpack 5 + SWC** - 生产环境构建
 - **pnpm 10.13.1** - 包管理器
@@ -130,7 +130,7 @@ content/
 - **concurrently 9.2.1** - 并行执行多个命令
 - **dotenv 17.2.3** - 环境变量加载工具
 - **glob 11.1.0** - 文件匹配模式工具
-- **@tailwindcss/postcss 4.1.17** - Tailwind CSS PostCSS 插件
+- **@tailwindcss/postcss 4.1.18** - Tailwind CSS PostCSS 插件
 - **postcss 8.5.6** - CSS 处理工具
 - **cssnano 7.1.2** - CSS 压缩工具
 - **tsx 4.20.6** - TypeScript 执行工具
@@ -142,14 +142,14 @@ content/
   - 可视化性能瓶颈识别
 
 ### Git 工作流
-- **lefthook 1.12.2** - Git hooks 管理
+- **lefthook 2.0.12** - Git hooks 管理
 - **@commitlint/cli 19.8.1** - 提交信息规范
 - **@commitlint/config-conventional 19.8.1** - 约定式提交
 - **husky 9.1.7** - Git hooks 备用方案
 
 ### TypeScript 类型定义
 - **@types/node 20.19.9** - Node.js 类型定义
-- **@types/react 19.2.4** - React 19 类型定义
+- **@types/react 19.2.7** - React 19 类型定义
 - **@types/react-dom 19.2.3** - React DOM 类型定义
 - **@types/js-yaml 4.0.9** - JS-YAML 类型定义
 

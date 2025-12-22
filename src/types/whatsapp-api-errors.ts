@@ -263,30 +263,30 @@ export interface ErrorHandlingConfig {
 export function isWhatsAppApiError(error: unknown): error is WhatsAppApiError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      typeof (error as Record<string, unknown>).error === 'object' &&
-      'message' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>) &&
-      'type' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>) &&
-      'code' in
-        ((error as Record<string, unknown>).error as Record<string, unknown>),
+    typeof error === 'object' &&
+    typeof (error as Record<string, unknown>).error === 'object' &&
+    'message' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>) &&
+    'type' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>) &&
+    'code' in
+      ((error as Record<string, unknown>).error as Record<string, unknown>),
   );
 }
 
 export function isNetworkError(error: unknown): error is NetworkError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'NetworkError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'NetworkError',
   );
 }
 
 export function isValidationError(error: unknown): error is ValidationError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'ValidationError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'ValidationError',
   );
 }
 
@@ -295,16 +295,16 @@ export function isAuthenticationError(
 ): error is AuthenticationError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'AuthenticationError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'AuthenticationError',
   );
 }
 
 export function isRateLimitError(error: unknown): error is RateLimitError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'RateLimitError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'RateLimitError',
   );
 }
 
@@ -313,16 +313,16 @@ export function isBusinessLogicError(
 ): error is BusinessLogicError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'BusinessLogicError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'BusinessLogicError',
   );
 }
 
 export function isServerError(error: unknown): error is ServerError {
   return Boolean(
     error &&
-      typeof error === 'object' &&
-      (error as Record<string, unknown>).name === 'ServerError',
+    typeof error === 'object' &&
+    (error as Record<string, unknown>).name === 'ServerError',
   );
 }
 

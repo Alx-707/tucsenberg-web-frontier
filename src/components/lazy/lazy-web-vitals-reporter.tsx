@@ -57,9 +57,8 @@ export function LazyWebVitalsReporter({
     // 使用 requestIdleCallback 在浏览器空闲时加载
     const loadReporter = async () => {
       try {
-        const mod = await import(
-          '@/components/performance/web-vitals-reporter'
-        );
+        const mod =
+          await import('@/components/performance/web-vitals-reporter');
         setReporter(() => mod.WebVitalsReporter);
       } catch {
         // 静默失败，不影响用户体验

@@ -1,7 +1,7 @@
 # AI Agent 开发指南（与当前仓库对齐）
 
 ## 项目概述
-- 类型：Next.js 16 App Router + React 19 + TypeScript 5.9.3 + Tailwind CSS 4.1.17
+- 类型：Next.js 16 App Router + React 19 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
 - 主要特性：英中双语（next-intl）、主题切换（next-themes）、MDX 内容、企业级质量/安全检查
 - 依赖基线：见 `package.json`，新增依赖需评审（遵循 pnpm 10.13.1、Node 20）
 

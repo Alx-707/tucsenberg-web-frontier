@@ -109,9 +109,8 @@ async function loadTranslations(
   if (isTestEnvironment) {
     try {
       // 动态导入Mock翻译数据
-      const { getMockTranslation } = await import(
-        './__tests__/mocks/translations'
-      );
+      const { getMockTranslation } =
+        await import('./__tests__/mocks/translations');
 
       for (const locale of routing.locales) {
         processMockTranslation({

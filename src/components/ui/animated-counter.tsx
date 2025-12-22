@@ -67,8 +67,7 @@ export const formatters = {
 /**
  * 动画计数器组件属性
  */
-export interface AnimatedCounterProps
-  extends React.HTMLAttributes<HTMLSpanElement> {
+export interface AnimatedCounterProps extends React.HTMLAttributes<HTMLSpanElement> {
   /** 起始值 */
   from?: number;
   /** 结束值 */

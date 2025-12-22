@@ -73,7 +73,6 @@ export default [
       'react-you-might-not-need-an-effect/no-pass-live-state-to-parent':
         'error',
       'react-you-might-not-need-an-effect/no-pass-data-to-parent': 'error',
-      'react-you-might-not-need-an-effect/no-manage-parent': 'error',
       'react-you-might-not-need-an-effect/no-initialize-state': 'error',
       'react-you-might-not-need-an-effect/no-chain-state-updates': 'error',
       'react-you-might-not-need-an-effect/no-derived-state': 'error',
@@ -90,6 +89,19 @@ export default [
     rules: {
       // next-themes 推荐的 SSR 水合模式需要在 useEffect 中初始化 mounted 状态
       'react-you-might-not-need-an-effect/no-initialize-state': 'off',
+    },
+  },
+
+  // Mobile navigation route change handler exception
+  {
+    name: 'mobile-navigation-route-exception',
+    files: ['**/mobile-navigation.tsx'],
+    plugins: {
+      'react-you-might-not-need-an-effect': reactYouMightNotNeedAnEffect,
+    },
+    rules: {
+      // Next.js 路由变化时关闭菜单是合理的 useEffect 用例
+      'react-you-might-not-need-an-effect/no-event-handler': 'off',
     },
   },
 

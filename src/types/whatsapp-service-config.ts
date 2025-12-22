@@ -322,11 +322,11 @@ export function validateWhatsAppConfig(
 ): config is WhatsAppConfig {
   return Boolean(
     config.accessToken &&
-      config.phoneNumberId &&
-      config.verifyToken &&
-      typeof config.accessToken === 'string' &&
-      typeof config.phoneNumberId === 'string' &&
-      typeof config.verifyToken === 'string',
+    config.phoneNumberId &&
+    config.verifyToken &&
+    typeof config.accessToken === 'string' &&
+    typeof config.phoneNumberId === 'string' &&
+    typeof config.verifyToken === 'string',
   );
 }
 

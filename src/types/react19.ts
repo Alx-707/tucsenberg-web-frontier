@@ -150,8 +150,7 @@ export interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
 /**
  * 按钮组件Props扩展（支持formAction）
  */
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   formAction?: FormAction;
 }
 
