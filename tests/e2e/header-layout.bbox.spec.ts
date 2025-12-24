@@ -51,9 +51,10 @@ const VIEWPORTS = [
     expectMobileHeader: true,
   },
   {
+    // Desktop navigation requires more horizontal room; keep mobile header at 1024 to prevent overlaps.
     name: 'desktop-1024',
     viewport: { width: 1024, height: 800 },
-    expectMobileHeader: false,
+    expectMobileHeader: true,
   },
   {
     name: 'desktop-1280',
