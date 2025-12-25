@@ -4,6 +4,8 @@ const MAIN_NAV_ROLE_OPTIONS = {
   name: /main navigation/i,
 } as const;
 
+const HEADER_MOBILE_MENU_BUTTON_TESTID = 'header-mobile-menu-button';
+
 /**
  * Wait for the html[lang] attribute to be updated after hydration.
  * In PPR mode, the initial HTML has lang="en" (default), and LangUpdater
@@ -39,6 +41,38 @@ export async function expectHtmlLang(
 export function getNav(page: Page): Locator {
   const nav = page.getByRole('navigation', MAIN_NAV_ROLE_OPTIONS);
   return nav.first();
+}
+
+/**
+ * Header mobile menu trigger (visible below desktop breakpoint).
+ * Uses a stable data-testid to avoid coupling to translated labels.
+ */
+export function getHeaderMobileMenuButton(page: Page): Locator {
+  return page.getByTestId(HEADER_MOBILE_MENU_BUTTON_TESTID).first();
+}
+
+/**
+ * Determine whether the header is currently in "mobile/tablet" mode
+ * based on which controls are actually visible.
+ *
+ * This avoids hardcoding breakpoint numbers in tests.
+ */
+export async function isHeaderInMobileMode(page: Page): Promise<boolean> {
+  const button = getHeaderMobileMenuButton(page);
+  try {
+    return await button.isVisible();
+  } catch {
+    return false;
+  }
+}
+
+export async function isHeaderInDesktopMode(page: Page): Promise<boolean> {
+  const nav = getNav(page);
+  try {
+    return await nav.isVisible();
+  } catch {
+    return false;
+  }
 }
 
 /**

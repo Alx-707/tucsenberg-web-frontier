@@ -138,9 +138,9 @@ describe('Mobile Navigation - Basic Core Tests', () => {
     it('applies default styling classes', () => {
       render(<MobileNavigation />);
 
-      // 检查容器div有md:hidden类
+      // 检查容器div有 header-mobile-only 类
       const container = screen.getByRole('button').closest('div');
-      expect(container).toHaveClass('md:hidden');
+      expect(container).toHaveClass('header-mobile-only');
     });
 
     it('supports custom className', () => {

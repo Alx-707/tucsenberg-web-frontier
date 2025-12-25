@@ -433,7 +433,7 @@ jobs:
           path: reports/coverage/
 
       - name: 质量门禁
-        run: pnpm quality:gate
+        run: pnpm quality:gate:ci
         # CI 模式自动检测（CI=true），仅读取已有覆盖率报告，不重复执行测试
         env:
           QUALITY_DIFF_BASE: ${{ github.event.pull_request.base.sha || 'origin/main' }}

@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { checkA11y, injectAxe } from './helpers/axe';
-import { getNav } from './helpers/navigation';
+import {
+  getHeaderMobileMenuButton,
+  getNav,
+  isHeaderInMobileMode,
+} from './helpers/navigation';
 import {
   removeInterferingElements,
   waitForLoadWithFallback,
@@ -42,15 +46,10 @@ test.describe('Homepage Core Functionality', () => {
 
     // Verify navigation is present (desktop or mobile)
     const nav = getNav(page);
-    const mobileMenuButton = page.getByRole('button', {
-      name: /open.*menu|menu/i,
-    });
+    const mobileMenuButton = getHeaderMobileMenuButton(page);
 
-    // On mobile, check for hamburger menu; on desktop, check for nav
-    const isMobile = page.viewportSize()?.width
-      ? page.viewportSize()!.width < 768
-      : false;
-    if (isMobile) {
+    // Determine mode by visible controls (avoids hardcoded breakpoints)
+    if (await isHeaderInMobileMode(page)) {
       await expect(mobileMenuButton).toBeVisible();
     } else {
       await expect(nav).toBeVisible();
@@ -196,9 +195,8 @@ test.describe('Homepage Core Functionality', () => {
       const heroTitle = page.getByRole('heading', { level: 1 });
       await expect(heroTitle).toBeVisible();
 
-      // Check that content is still accessible
-      const navigation = getNav(page);
-      await expect(navigation).toBeVisible();
+      // Tablet uses mobile navigation per header responsive contract
+      await expect(getHeaderMobileMenuButton(page)).toBeVisible();
     });
 
     test('should display correctly on mobile (375x667)', async ({ page }) => {
@@ -416,15 +414,9 @@ test.describe('Homepage Core Functionality', () => {
 
       // Verify navigation has proper structure (desktop or mobile)
       const nav = getNav(page);
-      const mobileMenuButton = page.getByRole('button', {
-        name: /open.*menu|menu/i,
-      });
+      const mobileMenuButton = getHeaderMobileMenuButton(page);
 
-      // On mobile, check for hamburger menu; on desktop, check for nav
-      const isMobile = page.viewportSize()?.width
-        ? page.viewportSize()!.width < 768
-        : false;
-      if (isMobile) {
+      if (await isHeaderInMobileMode(page)) {
         await expect(mobileMenuButton).toBeVisible();
       } else {
         await expect(nav).toBeVisible();
@@ -464,15 +456,9 @@ test.describe('Homepage Core Functionality', () => {
 
       // Verify content is accessible without animations (desktop or mobile)
       const nav = getNav(page);
-      const mobileMenuButton = page.getByRole('button', {
-        name: /open.*menu|menu/i,
-      });
+      const mobileMenuButton = getHeaderMobileMenuButton(page);
 
-      // On mobile, check for hamburger menu; on desktop, check for nav
-      const isMobile = page.viewportSize()?.width
-        ? page.viewportSize()!.width < 768
-        : false;
-      if (isMobile) {
+      if (await isHeaderInMobileMode(page)) {
         await expect(mobileMenuButton).toBeVisible();
       } else {
         await expect(nav).toBeVisible();

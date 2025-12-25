@@ -2,13 +2,13 @@ import { generateLocaleMetadata } from '@/app/[locale]/layout-metadata';
 import { generatePageStructuredData } from '@/app/[locale]/layout-structured-data';
 import '@/app/globals.css';
 import { Suspense, type ReactNode } from 'react';
-import nextDynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { loadCriticalMessages } from '@/lib/load-messages';
 import { generateJSONLD } from '@/lib/structured-data';
+import { LazyCookieBanner } from '@/components/cookie/lazy-cookie-banner';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { LangUpdater } from '@/components/i18n/lang-updater';
@@ -32,14 +32,6 @@ import { routing } from '@/i18n/routing';
 
 // 重新导出元数据生成函数
 export const generateMetadata = generateLocaleMetadata;
-
-const LazyCookieBanner = nextDynamic(
-  () =>
-    import('@/components/cookie/cookie-banner').then((mod) => mod.CookieBanner),
-  {
-    loading: () => null,
-  },
-);
 
 interface LocaleLayoutProps {
   children: ReactNode;

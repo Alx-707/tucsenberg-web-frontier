@@ -188,7 +188,8 @@ export default defineConfig({
       include: ['src/**/*.{js,jsx,ts,tsx}'],
       // 将覆盖率输出目录统一至 reports/coverage，便于与其它报告汇总
       reportsDirectory: './reports/coverage',
-      reporter: ['text', 'html', 'json-summary'],
+      // json: 提供逐行命中数据，供 CI diff-line coverage 使用
+      reporter: ['text', 'html', 'json-summary', 'json'],
       exclude: [
         'node_modules/',
         '.next/',

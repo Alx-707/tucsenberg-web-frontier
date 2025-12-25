@@ -225,12 +225,11 @@ describe('VercelNavigation', () => {
       expect(items.length).toBe(3); // home, products (dropdown), blog
     });
 
-    it('has hidden md:flex classes for responsive display', () => {
+    it('uses semantic desktop-only class for responsive display', () => {
       render(<VercelNavigation />);
 
       const nav = screen.getByRole('navigation');
-      expect(nav).toHaveClass('hidden');
-      expect(nav).toHaveClass('md:flex');
+      expect(nav).toHaveClass('header-desktop-only');
     });
   });
 
@@ -388,8 +387,7 @@ describe('VercelNavigation', () => {
       render(<VercelNavigation className='my-custom' />);
 
       const nav = screen.getByRole('navigation');
-      expect(nav).toHaveClass('hidden');
-      expect(nav).toHaveClass('md:flex');
+      expect(nav).toHaveClass('header-desktop-only');
       expect(nav).toHaveClass('my-custom');
     });
   });

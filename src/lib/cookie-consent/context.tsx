@@ -37,13 +37,17 @@ type ConsentListener = () => void;
 let consentListeners: ConsentListener[] = [];
 let cachedConsent: CookieConsent = DEFAULT_CONSENT;
 let cachedHasConsented = false;
+let cachedReady = false;
 // Cached snapshot object to maintain referential stability for useSyncExternalStore
 let cachedSnapshot = {
   consent: cachedConsent,
   hasConsented: cachedHasConsented,
+  ready: cachedReady,
 };
 // Track if client-side initialization has occurred (for hydration safety)
 let isClientInitialized = false;
+// Track if hydration is complete - critical for avoiding hydration mismatch
+let isHydrated = false;
 
 function emitChange() {
   for (const listener of consentListeners) {
@@ -62,10 +66,21 @@ function subscribeToConsent(listener: ConsentListener): () => void {
       cachedSnapshot = {
         consent: cachedConsent,
         hasConsented: cachedHasConsented,
+        ready: cachedReady,
       };
-      // Defer emit to next tick to avoid state update during render
-      queueMicrotask(emitChange);
     }
+    // Mark hydration complete and notify after microtask to ensure
+    // first render uses SERVER_SNAPSHOT for hydration consistency
+    queueMicrotask(() => {
+      cachedReady = true;
+      cachedSnapshot = {
+        consent: cachedConsent,
+        hasConsented: cachedHasConsented,
+        ready: cachedReady,
+      };
+      isHydrated = true;
+      emitChange();
+    });
   }
   consentListeners = [...consentListeners, listener];
   return () => {
@@ -76,22 +91,28 @@ function subscribeToConsent(listener: ConsentListener): () => void {
 function getConsentSnapshot(): {
   consent: CookieConsent;
   hasConsented: boolean;
+  ready: boolean;
 } {
-  return cachedSnapshot;
+  // During hydration, return server snapshot to ensure consistency
+  // After hydration (isHydrated=true), return actual cached state
+  return isHydrated ? cachedSnapshot : SERVER_SNAPSHOT;
 }
 
 // Server snapshot is constant - prevents hydration mismatches
 const SERVER_SNAPSHOT: {
   consent: CookieConsent;
   hasConsented: boolean;
+  ready: boolean;
 } = {
   consent: DEFAULT_CONSENT,
   hasConsented: false,
+  ready: false,
 };
 
 function getServerSnapshot(): {
   consent: CookieConsent;
   hasConsented: boolean;
+  ready: boolean;
 } {
   return SERVER_SNAPSHOT;
 }
@@ -102,9 +123,11 @@ function updateConsentStore(
 ) {
   cachedConsent = newConsent;
   cachedHasConsented = newHasConsented;
+  cachedReady = true;
   cachedSnapshot = {
     consent: cachedConsent,
     hasConsented: cachedHasConsented,
+    ready: cachedReady,
   };
   emitChange();
 }
@@ -116,7 +139,7 @@ interface CookieConsentProviderProps {
 export function CookieConsentProvider({
   children,
 }: CookieConsentProviderProps) {
-  const { consent, hasConsented } = useSyncExternalStore(
+  const { consent, hasConsented, ready } = useSyncExternalStore(
     subscribeToConsent,
     getConsentSnapshot,
     getServerSnapshot,
@@ -165,7 +188,7 @@ export function CookieConsentProvider({
     () => ({
       consent,
       hasConsented,
-      ready: true, // Always ready with useSyncExternalStore
+      ready,
       acceptAll,
       rejectAll,
       updateConsent,
@@ -175,6 +198,7 @@ export function CookieConsentProvider({
     [
       consent,
       hasConsented,
+      ready,
       acceptAll,
       rejectAll,
       updateConsent,

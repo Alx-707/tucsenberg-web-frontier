@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { checkA11y, injectAxe } from './helpers/axe';
-import { getNav } from './helpers/navigation';
+import {
+  getHeaderMobileMenuButton,
+  getNav,
+  isHeaderInMobileMode,
+} from './helpers/navigation';
 import {
   removeInterferingElements,
   waitForLoadWithFallback,
@@ -70,13 +74,9 @@ test.describe('Navigation System', () => {
 
   test.describe('Desktop Navigation', () => {
     test('should display all main navigation links', async ({ page }) => {
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
-      if (isMobile) {
-        // On mobile projects, verify mobile toggle instead of desktop nav
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+      if (await isHeaderInMobileMode(page)) {
+        // On mobile/tablet, verify mobile toggle instead of desktop nav
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         return;
       }
@@ -106,13 +106,9 @@ test.describe('Navigation System', () => {
         }
       }
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
-      if (isMobile) {
+      if (await isHeaderInMobileMode(page)) {
         // Covered in Mobile Navigation suite; basic presence check to avoid false failures here
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         return;
       }
@@ -153,13 +149,9 @@ test.describe('Navigation System', () => {
     });
 
     test('should support keyboard navigation', async ({ page }) => {
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
-      if (isMobile) {
+      if (await isHeaderInMobileMode(page)) {
         // Keyboard focus path differs on mobile; validated in mobile suite
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         return;
       }
@@ -364,12 +356,8 @@ test.describe('Navigation System', () => {
     }) => {
       await page.goto('/en?utm_source=test&utm_medium=e2e');
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
-      if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+      if (await isHeaderInMobileMode(page)) {
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         await mobileMenuButton.click();
         const mobileNavSheet = page.getByRole('dialog', {
@@ -404,14 +392,11 @@ test.describe('Navigation System', () => {
         }
       }
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
 
       // Navigate to About page
       if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         await mobileMenuButton.click();
         const mobileNavSheet = page.getByRole('dialog', {
@@ -450,13 +435,10 @@ test.describe('Navigation System', () => {
     test('should pass navigation accessibility checks', async ({ page }) => {
       await injectAxe(page);
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
 
       if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         await mobileMenuButton.click();
 
@@ -488,12 +470,9 @@ test.describe('Navigation System', () => {
     });
 
     test('should have proper ARIA attributes', async ({ page }) => {
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
       if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         await expect(mobileMenuButton).toHaveAttribute(
           'aria-label',
@@ -516,14 +495,11 @@ test.describe('Navigation System', () => {
     });
 
     test('should support screen reader navigation', async ({ page }) => {
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
 
       if (isMobile) {
         // On mobile, verify menu toggle exists and we can reach landmark content
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         const mainHeading = page.getByRole('heading', { level: 1 });
         await expect(mainHeading).toBeVisible();
@@ -553,12 +529,9 @@ test.describe('Navigation System', () => {
       await page.reload();
       await waitForStablePage(page);
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
       if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         try {
           await mobileMenuButton.tap();
@@ -594,8 +567,7 @@ test.describe('Navigation System', () => {
         }
       }
 
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
       if (isMobile) {
         // Navigation perf budget validated elsewhere; avoid flaky timing checks on mobile here
         await expect(page.getByRole('heading', { level: 1 })).toBeVisible();

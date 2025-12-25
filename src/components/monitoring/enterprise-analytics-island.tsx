@@ -22,8 +22,10 @@ export function EnterpriseAnalyticsIsland() {
   const cookieConsent = useCookieConsentOptional();
 
   // Check if analytics consent is granted (default to true if no consent system)
-  const analyticsAllowed = cookieConsent?.ready
-    ? cookieConsent.consent.analytics
+  const analyticsAllowed = cookieConsent
+    ? cookieConsent.ready
+      ? cookieConsent.consent.analytics
+      : false
     : true;
 
   useEffect(() => {

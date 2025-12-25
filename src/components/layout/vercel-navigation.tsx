@@ -157,7 +157,7 @@ export function VercelNavigation({ className }: VercelNavigationProps) {
 
   return (
     <nav
-      className={cn('hidden md:flex', className)}
+      className={cn('header-desktop-only', className)}
       aria-label={NAVIGATION_ARIA.mainNav}
     >
       <NavigationMenu>

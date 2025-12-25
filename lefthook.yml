@@ -6,7 +6,10 @@ pre-commit:
   commands:
     # 代码格式检查 (Prettier)
     format-check:
-      run: pnpm format:check
+      run: |
+        FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(js|jsx|ts|tsx|json|md|mdx|yml|yaml|css|scss|html)$' || true)
+        if [ -z "$FILES" ]; then echo "✅ 格式检查通过 (无可格式化变更)"; exit 0; fi
+        pnpm exec prettier --check $FILES
       fail_text: '代码格式检查失败 - 请运行 pnpm format:write 修复格式问题'
       stage_fixed: true
 
@@ -133,6 +136,17 @@ pre-push:
           pnpm circular:check
         fi
       fail_text: '架构检查失败 - 发现循环依赖或架构违规'
+
+    # E2E 布局回归检查（默认跳过；设置 RUN_E2E_LAYOUT=1 启用）
+    e2e-layout-check:
+      run: |
+        if [ -n "$RUN_E2E_LAYOUT" ]; then
+          echo "🧭 RUN_E2E_LAYOUT=1: 运行 header bbox 布局回归用例";
+          pnpm test:e2e -- tests/e2e/header-layout.bbox.spec.ts
+        else
+          echo "⏭️  跳过 E2E 布局回归 (设置 RUN_E2E_LAYOUT=1 启用)"
+        fi
+      fail_text: 'E2E 布局回归失败 - header 布局发生重叠/溢出'
 
     # 性能测试 (仅 CI 环境运行,避免本地 headless Chrome 卡住)
     performance-test:

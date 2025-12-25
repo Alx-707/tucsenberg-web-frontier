@@ -127,9 +127,9 @@ describe('Mobile Navigation - Main Tests', () => {
     it('applies default styling classes', () => {
       render(<MobileNavigation />);
 
-      // The md:hidden class is on the container div, not the button
+      // The header-mobile-only class is on the container div, not the button
       const container = screen.getByRole('button').closest('div');
-      expect(container).toHaveClass('md:hidden');
+      expect(container).toHaveClass('header-mobile-only');
     });
 
     it('supports custom className', () => {

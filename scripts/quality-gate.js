@@ -13,6 +13,10 @@
  *   仅执行快速检查：代码质量、安全（跳过覆盖率和性能测试）
  *   适用于本地 pre-push hook，保持 <2 分钟的快速反馈
  *
+ * - CI 模式: node scripts/quality-gate.js --mode=ci
+ *   仅执行 CI 所需的阻断检查：代码质量、覆盖率（跳过性能计时）
+ *   用于在 CI 中消费 tests job 产出的覆盖率报告，避免重复 build/test
+ *
  * 覆盖率检查行为：
  * - CI 环境（CI=true）或 --skip-test-run 参数：
  *   仅读取已有覆盖率报告（reports/coverage/coverage-summary.json）
@@ -30,7 +34,8 @@ const { execSync, spawnSync } = require('child_process');
 // 解析命令行参数
 const args = process.argv.slice(2);
 const isFastMode = args.includes('--mode=fast');
-const isFullMode = args.includes('--mode=full') || !isFastMode;
+const isCiMode = args.includes('--mode=ci');
+const isFullMode = args.includes('--mode=full') || (!isFastMode && !isCiMode);
 const isJsonOutput = args.includes('--output=json') || args.includes('--json');
 const isSilent = args.includes('--silent');
 
@@ -99,18 +104,63 @@ function log(...args) {
   }
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function matchesGlob(pattern, value) {
+  // Minimal glob matcher for repo-local paths.
+  // Supports: **, *, and literal path separators (/).
+  const normalizedPattern = pattern.split(path.sep).join('/');
+  const normalizedValue = value.split(path.sep).join('/');
+
+  const regexText = `^${normalizedPattern
+    .split('/')
+    .map((part) => {
+      if (part === '**') return '(?:.+/)?';
+      const segment = escapeRegExp(part).replace(/\\\*/g, '[^/]*');
+      return `${segment}/`;
+    })
+    .join('')
+    .replace(/\/$/, '')}$`;
+
+  try {
+    return new RegExp(regexText).test(normalizedValue);
+  } catch {
+    return false;
+  }
+}
+
 class QualityGate {
   constructor() {
+    const coverageEnabledByMode =
+      isFullMode || isCiMode || process.env.QUALITY_ENABLE_COVERAGE === 'true';
+    const coverageDisabledByEnv =
+      process.env.QUALITY_DISABLE_COVERAGE === 'true';
+    const performanceEnabledByMode =
+      (isFullMode || process.env.QUALITY_ENABLE_PERFORMANCE === 'true') &&
+      !isCiMode;
+    const performanceDisabledByEnv =
+      process.env.QUALITY_DISABLE_PERFORMANCE === 'true';
+
+    const diffCoverageThreshold = Number(
+      process.env.QUALITY_DIFF_COVERAGE_THRESHOLD,
+    );
+    const diffWarningThreshold = Number(
+      process.env.QUALITY_DIFF_COVERAGE_DROP_WARNING_THRESHOLD,
+    );
+
     this.config = {
       // 运行模式
       fastMode: isFastMode,
+      ciGateMode: isCiMode,
       fullMode: isFullMode,
       jsonOutput: isJsonOutput,
       silent: isSilent,
       // 质量门禁标准
       gates: {
         coverage: {
-          enabled: isFullMode, // 快速模式下禁用覆盖率检查
+          enabled: coverageEnabledByMode && !coverageDisabledByEnv,
           // Phase 1 渐进式覆盖率目标（≥65%），与 .augment/rules 规范对齐
           // 当前实际覆盖率 ~72%，目标路线：Phase 2 (75%) → Phase 3 (80%)
           thresholds: {
@@ -120,8 +170,14 @@ class QualityGate {
             statements: 65,
           },
           blocking: true, // 启用阻断模式：覆盖率不达标时阻塞构建
-          diffCoverageThreshold: 90, // 增量覆盖率阈值：变更代码需达到90%覆盖率
-          diffWarningThreshold: 1.5, // 变更覆盖率较全量下降超过该阈值触发 warning（目标 1-2% 区间）
+          diffCoverageThreshold:
+            Number.isFinite(diffCoverageThreshold) && diffCoverageThreshold > 0
+              ? diffCoverageThreshold
+              : 90, // 增量覆盖率阈值：变更代码需达到90%覆盖率
+          diffWarningThreshold:
+            Number.isFinite(diffWarningThreshold) && diffWarningThreshold >= 0
+              ? diffWarningThreshold
+              : 1.5, // 变更覆盖率较全量下降超过该阈值触发 warning（目标 1-2% 区间）
           // 增量覆盖率排除列表：这些文件的格式化变更不计入增量覆盖率计算
           // 用于排除仅有 Prettier 格式化变更但原有覆盖率较低的文件
           diffCoverageExclude: [
@@ -134,6 +190,16 @@ class QualityGate {
             'src/types/whatsapp-api-requests/api-types.ts',
             'src/types/whatsapp-webhook-utils/functions.ts',
           ],
+          // 增量覆盖率排除（glob）：生成文件/声明文件默认不纳入 diff-line coverage
+          diffCoverageExcludeGlobs: [
+            '**/*.generated.*',
+            '**/*.d.ts',
+            '**/*.test.*',
+            '**/*.spec.*',
+            '**/__tests__/**',
+            'src/test/**',
+            'src/testing/**',
+          ],
         },
         codeQuality: {
           enabled: true, // 始终启用代码质量检查
@@ -145,7 +211,7 @@ class QualityGate {
           blocking: false, // 渐进式改进：代码质量问题警告但不阻塞
         },
         performance: {
-          enabled: isFullMode, // 快速模式下禁用性能检查（避免重复构建和测试）
+          enabled: performanceEnabledByMode && !performanceDisabledByEnv,
           thresholds: {
             buildTime: 120000, // 2分钟
             testTime: 180000, // 3分钟
@@ -243,6 +309,16 @@ class QualityGate {
     return candidates.find((p) => fs.existsSync(p));
   }
 
+  findCoverageDetailsPath() {
+    const candidates = [
+      path.join(process.cwd(), 'reports', 'coverage', 'coverage-final.json'),
+      path.join(process.cwd(), 'reports', 'coverage', 'coverage.json'),
+      path.join(process.cwd(), 'coverage', 'coverage-final.json'),
+      path.join(process.cwd(), 'coverage', 'coverage.json'),
+    ];
+    return candidates.find((p) => fs.existsSync(p));
+  }
+
   normalizeCoverageEntries(coverageData) {
     const entries = new Map();
     Object.keys(coverageData || {})
@@ -255,8 +331,228 @@ class QualityGate {
     return entries;
   }
 
-  calculateDiffCoverage(coverageData) {
+  normalizeIstanbulCoverageEntries(istanbulCoverageMap) {
+    const entries = new Map();
+    Object.keys(istanbulCoverageMap || {}).forEach((key) => {
+      const rel = path.relative(process.cwd(), key);
+      entries.set(rel, istanbulCoverageMap[key]);
+      entries.set(key, istanbulCoverageMap[key]);
+    });
+    return entries;
+  }
+
+  getLineHitsFromIstanbulEntry(entry) {
+    const lineHits = new Map();
+    if (!entry || typeof entry !== 'object') return lineHits;
+
+    // Istanbul format typically provides a "l" map { [lineNumber]: hits }
+    if (entry.l && typeof entry.l === 'object') {
+      Object.entries(entry.l).forEach(([line, hits]) => {
+        const lineNumber = Number(line);
+        if (!Number.isFinite(lineNumber)) return;
+        const hitCount = Number(hits);
+        lineHits.set(lineNumber, Number.isFinite(hitCount) ? hitCount : 0);
+      });
+      return lineHits;
+    }
+
+    // Fallback: approximate line hits from statement map
+    if (
+      entry.statementMap &&
+      entry.s &&
+      typeof entry.statementMap === 'object' &&
+      typeof entry.s === 'object'
+    ) {
+      Object.entries(entry.statementMap).forEach(([id, loc]) => {
+        const startLine = loc?.start?.line;
+        const hitCount = Number(entry.s[id] ?? 0);
+        if (!Number.isFinite(startLine)) return;
+        const prev = lineHits.get(startLine) ?? 0;
+        lineHits.set(startLine, Math.max(prev, hitCount));
+      });
+    }
+
+    return lineHits;
+  }
+
+  getChangedLinesByFile() {
+    const base = this.getMergeBase();
+    const range = base ? `${base}...HEAD` : '';
+    const cmd = base
+      ? `git diff --unified=0 --no-color ${range} -- '*.ts' '*.tsx' '*.js' '*.jsx'`
+      : `git diff --unified=0 --no-color -- '*.ts' '*.tsx' '*.js' '*.jsx'`;
+
+    const output = execSync(cmd, {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+      maxBuffer: 50 * 1024 * 1024,
+    })
+      .toString()
+      .split('\n');
+
+    const changedLinesByFile = new Map();
+    let currentFile = '';
+    let newLineNumber = 0;
+    let inHunk = false;
+
+    for (const rawLine of output) {
+      const line = rawLine || '';
+
+      if (line.startsWith('diff --git ')) {
+        inHunk = false;
+        newLineNumber = 0;
+        currentFile = '';
+        const match = line.match(/^diff --git a\/(.+?) b\/(.+?)$/);
+        if (match && match[2] && match[2] !== '/dev/null') {
+          const nextFile = match[2];
+          // Diff-line coverage only applies to production sources covered by Vitest.
+          if (!nextFile.startsWith('src/')) {
+            continue;
+          }
+          if (this.shouldExcludeFromDiffCoverage(nextFile)) {
+            continue;
+          }
+          currentFile = nextFile;
+          if (!changedLinesByFile.has(currentFile)) {
+            changedLinesByFile.set(currentFile, new Set());
+          }
+        }
+        continue;
+      }
+
+      if (!currentFile) continue;
+
+      if (line.startsWith('@@')) {
+        const match = line.match(/^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/);
+        if (!match) {
+          inHunk = false;
+          continue;
+        }
+        inHunk = true;
+        newLineNumber = Number(match[1] || 0);
+        continue;
+      }
+
+      if (!inHunk) continue;
+
+      if (line.startsWith('+++') || line.startsWith('---')) {
+        continue;
+      }
+
+      if (line.startsWith('+')) {
+        const set = changedLinesByFile.get(currentFile);
+        if (set && Number.isFinite(newLineNumber) && newLineNumber > 0) {
+          set.add(newLineNumber);
+        }
+        newLineNumber += 1;
+        continue;
+      }
+
+      if (line.startsWith('-')) {
+        // deletion: does not advance new line counter
+        continue;
+      }
+
+      // context line (rare with --unified=0 but possible)
+      newLineNumber += 1;
+    }
+
+    return changedLinesByFile;
+  }
+
+  shouldExcludeFromDiffCoverage(file) {
     const excludeList = this.config.gates.coverage.diffCoverageExclude || [];
+    if (excludeList.includes(file)) return true;
+
+    const globPatterns =
+      this.config.gates.coverage.diffCoverageExcludeGlobs || [];
+    return globPatterns.some((pattern) => matchesGlob(pattern, file));
+  }
+
+  calculateDiffCoverage(coverageSummaryData, istanbulCoverageMap) {
+    const excludeList = this.config.gates.coverage.diffCoverageExclude || [];
+
+    // Prefer diff-line coverage when detailed coverage is available.
+    if (istanbulCoverageMap && typeof istanbulCoverageMap === 'object') {
+      const changedLinesByFile = this.getChangedLinesByFile();
+      const excludedFiles = [...changedLinesByFile.keys()].filter((file) =>
+        this.shouldExcludeFromDiffCoverage(file),
+      );
+      if (excludedFiles.length > 0) {
+        log(`⏭️  增量覆盖率排除文件: ${excludedFiles.join(', ')}`);
+      }
+
+      const entries =
+        this.normalizeIstanbulCoverageEntries(istanbulCoverageMap);
+      const fileMetrics = [];
+      let totalCovered = 0;
+      let totalLines = 0;
+
+      for (const [file, changedLines] of changedLinesByFile.entries()) {
+        if (this.shouldExcludeFromDiffCoverage(file)) continue;
+
+        const entry = entries.get(file);
+        const lineHits = this.getLineHitsFromIstanbulEntry(entry);
+
+        let fileCovered = 0;
+        let fileTotal = 0;
+
+        // Only count executable lines that exist in coverage data.
+        // If a file is missing coverage data, conservatively count all changed lines.
+        if (lineHits.size === 0) {
+          fileTotal = changedLines.size;
+          fileCovered = 0;
+        } else {
+          for (const lineNumber of changedLines) {
+            if (!lineHits.has(lineNumber)) continue;
+            fileTotal += 1;
+            if ((lineHits.get(lineNumber) ?? 0) > 0) {
+              fileCovered += 1;
+            }
+          }
+        }
+
+        if (fileTotal === 0) {
+          fileMetrics.push({
+            file,
+            covered: 0,
+            total: 0,
+            pct: 100,
+            skippedNonExecutable: true,
+          });
+          continue;
+        }
+
+        const filePct = (fileCovered / fileTotal) * 100;
+        fileMetrics.push({
+          file,
+          covered: fileCovered,
+          total: fileTotal,
+          pct: filePct,
+        });
+
+        totalCovered += fileCovered;
+        totalLines += fileTotal;
+      }
+
+      if (totalLines === 0) return null;
+
+      const pct = (totalCovered / totalLines) * 100;
+      const overall = coverageSummaryData?.total?.lines?.pct || pct;
+
+      return {
+        pct,
+        drop: overall - pct,
+        fileMetrics,
+        totalCovered,
+        totalLines,
+        changedFilesCount: [...changedLinesByFile.keys()].filter(
+          (file) => !this.shouldExcludeFromDiffCoverage(file),
+        ).length,
+      };
+    }
+
+    // Fallback: file-level diff coverage based on summary only (legacy behavior).
     const changedFilesWithCode = this.getChangedFiles('ACM').filter((file) =>
       file.match(/\.(js|jsx|ts|tsx)$/),
     );
@@ -271,7 +567,7 @@ class QualityGate {
     );
     if (changedFiles.length === 0) return null;
 
-    const entries = this.normalizeCoverageEntries(coverageData);
+    const entries = this.normalizeCoverageEntries(coverageSummaryData);
     const fileMetrics = [];
     let totalCovered = 0;
     let totalLines = 0;
@@ -295,19 +591,10 @@ class QualityGate {
       }
     });
 
-    if (totalLines === 0) {
-      return {
-        pct: 0,
-        drop: 0,
-        fileMetrics,
-        totalCovered,
-        totalLines,
-        changedFilesCount: changedFiles.length,
-      };
-    }
+    if (totalLines === 0) return null;
 
     const pct = (totalCovered / totalLines) * 100;
-    const overall = coverageData?.total?.lines?.pct || pct;
+    const overall = coverageSummaryData?.total?.lines?.pct || pct;
 
     return {
       pct,
@@ -361,9 +648,17 @@ class QualityGate {
     log(`🌿 分支: ${this.config.branch}`);
     log(`🏗️  环境: ${this.config.environment}`);
     log(`🤖 CI模式: ${this.config.ciMode ? '是' : '否'}`);
-    log(`⚡ 运行模式: ${this.config.fastMode ? '快速 (--mode=fast)' : '完整'}`);
+    const modeLabel = this.config.fastMode
+      ? '快速 (--mode=fast)'
+      : this.config.ciGateMode
+        ? 'CI (--mode=ci)'
+        : '完整';
+    log(`⚡ 运行模式: ${modeLabel}`);
     if (this.config.fastMode) {
       log('   跳过: 覆盖率检查、性能测试（将在 CI 中执行）');
+    }
+    if (this.config.ciGateMode) {
+      log('   跳过: 性能计时（建议由 CI performance job 负责）');
     }
     log('');
 
@@ -380,7 +675,7 @@ class QualityGate {
         status: 'skipped',
         checks: {},
         blocking: false,
-        issues: ['快速模式下跳过覆盖率检查'],
+        issues: ['覆盖率门禁已禁用（fast 模式或显式禁用）'],
       };
     }
 
@@ -392,7 +687,13 @@ class QualityGate {
         status: 'skipped',
         checks: {},
         blocking: false,
-        issues: ['快速模式下跳过性能测试'],
+        issues: [
+          this.config.fastMode
+            ? '快速模式下跳过性能计时'
+            : this.config.ciGateMode
+              ? 'CI 模式下跳过性能计时'
+              : '性能门禁已禁用',
+        ],
       };
     }
 
@@ -519,6 +820,18 @@ class QualityGate {
         const coverageData = JSON.parse(rawData);
         gate.checks.coverage = coverageData.total;
 
+        // Optional: detailed coverage for diff-line coverage
+        let istanbulCoverageMap = null;
+        const coverageDetailsPath = this.findCoverageDetailsPath();
+        if (coverageDetailsPath && fs.existsSync(coverageDetailsPath)) {
+          try {
+            const rawDetails = fs.readFileSync(coverageDetailsPath, 'utf8');
+            istanbulCoverageMap = JSON.parse(rawDetails);
+          } catch {
+            istanbulCoverageMap = null;
+          }
+        }
+
         // 检查覆盖率阈值
         const { thresholds } = this.config.gates.coverage;
         const failedMetrics = [];
@@ -540,7 +853,10 @@ class QualityGate {
         }
 
         // 增量覆盖率检查（diff coverage）
-        const diffCoverage = this.calculateDiffCoverage(coverageData);
+        const diffCoverage = this.calculateDiffCoverage(
+          coverageData,
+          istanbulCoverageMap,
+        );
         if (diffCoverage) {
           const threshold = this.config.gates.coverage.diffCoverageThreshold;
           const warningThreshold =
@@ -927,7 +1243,11 @@ class QualityGate {
     const report = {
       timestamp: new Date().toISOString(),
       version: '1.0.0',
-      mode: this.config.fastMode ? 'fast' : 'full',
+      mode: this.config.fastMode
+        ? 'fast'
+        : this.config.ciGateMode
+          ? 'ci'
+          : 'full',
       branch: this.config.branch,
       environment: this.config.environment,
       ci: this.config.ciMode,
@@ -990,13 +1310,24 @@ class QualityGate {
       });
     }
 
-    // 设置输出变量
-    console.log(
-      `::set-output name=quality-gate-passed::${!this.results.summary.blocked}`,
-    );
-    console.log(
-      `::set-output name=quality-gate-score::${this.calculateQualityScore()}`,
-    );
+    // GitHub Actions outputs: use Environment Files (set-output is deprecated)
+    const outputPath = process.env.GITHUB_OUTPUT;
+    if (outputPath) {
+      try {
+        fs.appendFileSync(
+          outputPath,
+          `quality-gate-passed=${String(!this.results.summary.blocked)}\n`,
+          'utf8',
+        );
+        fs.appendFileSync(
+          outputPath,
+          `quality-gate-score=${String(this.calculateQualityScore())}\n`,
+          'utf8',
+        );
+      } catch {
+        // Ignore output write failures to avoid blocking the gate itself.
+      }
+    }
   }
 
   /**

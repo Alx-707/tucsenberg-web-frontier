@@ -20,7 +20,7 @@ import dynamic from 'next/dynamic';
 function NavSkeleton() {
   return (
     <div
-      className='hidden items-center space-x-1 md:flex'
+      className='header-desktop-only items-center space-x-1'
       aria-hidden='true'
     >
       <div className='h-9 w-16 animate-pulse rounded-xl bg-muted' />

@@ -68,10 +68,10 @@ export async function Header({
       {/* Scroll detection client island */}
       {isVercelNav && <HeaderScrollChrome />}
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-        <div className='relative flex h-16 items-center justify-between'>
+        <div className='header-nav-layout'>
           {/* Left section: Logo + Mobile Menu */}
           <div
-            className='flex items-center gap-4'
+            className='header-nav-left'
             {...(!locale ? { 'data-testid': 'mobile-navigation' } : {})}
           >
             {/* 客户端：移动端导航按钮（可见性触发加载）；预留空间避免 CLS */}
@@ -88,7 +88,7 @@ export async function Header({
             <Logo />
           </div>
 
-          {/* Center section: Main Navigation (Desktop) - Absolutely centered */}
+          {/* Center section: Main Navigation (Desktop) */}
           <CenterNav
             isMinimal={isMinimal}
             locale={locale}
@@ -97,7 +97,7 @@ export async function Header({
 
           {/* Right section: Utility Controls */}
           <div
-            className='flex items-center gap-2'
+            className='header-nav-right'
             {...(!locale ? { 'data-testid': 'language-toggle-button' } : {})}
           >
             {/* 客户端：语言切换（可见性触发加载）；预留空间避免 CLS */}
@@ -117,9 +117,12 @@ export async function Header({
                 variant='default'
                 size='sm'
                 asChild
-                className='hidden md:inline-flex'
+                className='header-cta-desktop-only'
               >
-                <Link href={`/${locale}/contact?source=header_cta`}>
+                <Link
+                  href={`/${locale}/contact?source=header_cta`}
+                  data-testid='header-cta'
+                >
                   {t('contactSales')}
                 </Link>
               </Button>
@@ -143,7 +146,7 @@ function CenterNav({
   if (isMinimal) return null;
   return (
     <div
-      className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
+      className='header-nav-center'
       {...(!locale ? { 'data-testid': 'nav-switcher' } : {})}
     >
       {/* 客户端：导航切换器（更晚加载，避免首屏竞争） */}

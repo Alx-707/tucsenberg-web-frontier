@@ -502,3 +502,61 @@
     }
   }
 }
+
+/**
+ * Header Responsive Contract
+ *
+ * Single source of truth for header responsive behavior.
+ * Avoid scattering breakpoint-specific classes across components.
+ */
+@layer utilities {
+  /* Visibility helpers */
+  .header-mobile-only {
+    /* Tailwind v4: avoid applying responsive variants directly via @apply */
+    @apply block;
+    @media (min-width: 1280px) {
+      @apply hidden;
+    }
+  }
+
+  .header-desktop-only {
+    /* Tailwind v4: avoid applying responsive variants directly via @apply */
+    @apply hidden;
+    @media (min-width: 1280px) {
+      @apply flex;
+    }
+  }
+
+  .header-cta-desktop-only {
+    /* Tailwind v4: avoid applying responsive variants directly via @apply */
+    @apply hidden;
+    @media (min-width: 1280px) {
+      @apply inline-flex;
+    }
+  }
+
+  .header-logo-text-desktop-only {
+    /* Tailwind v4: avoid applying responsive variants directly via @apply */
+    @apply hidden;
+    @media (min-width: 1280px) {
+      @apply block;
+    }
+  }
+
+  /* Layout helpers */
+  .header-nav-layout {
+    @apply grid h-16 grid-cols-[1fr_auto_1fr] items-center;
+  }
+
+  .header-nav-left {
+    @apply col-start-1 flex min-w-0 items-center gap-4;
+  }
+
+  .header-nav-center {
+    @apply col-start-2 flex min-w-0 items-center justify-center;
+  }
+
+  .header-nav-right {
+    @apply col-start-3 flex min-w-0 items-center justify-end gap-2;
+  }
+}

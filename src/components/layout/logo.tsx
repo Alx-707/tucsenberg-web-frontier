@@ -91,7 +91,7 @@ export function Logo({
       {showText && (
         <span
           className={cn(
-            'hidden font-bold text-foreground sm:block',
+            'header-logo-text-desktop-only font-bold text-foreground',
             getTextSizeClass(size),
           )}
         >

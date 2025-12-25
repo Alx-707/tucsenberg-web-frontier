@@ -2,7 +2,9 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { checkA11y, injectAxe } from './helpers/axe';
 import {
   clickNavLinkByName,
+  getHeaderMobileMenuButton,
   getNav,
+  isHeaderInMobileMode,
   waitForHtmlLang,
 } from './helpers/navigation';
 import {
@@ -57,13 +59,9 @@ test.describe('Internationalization (i18n)', () => {
     await expect(heroSection).toBeVisible();
 
     // Check navigation per form factor
-    const viewport = page.viewportSize();
-    const isMobile = viewport ? viewport.width < 768 : false;
-    if (isMobile) {
+    if (await isHeaderInMobileMode(page)) {
       // On mobile, verify menu toggle instead of desktop nav links
-      const mobileMenuButton = page.getByRole('button', {
-        name: 'Toggle mobile menu',
-      });
+      const mobileMenuButton = getHeaderMobileMenuButton(page);
       await expect(mobileMenuButton).toBeVisible();
     } else {
       const nav = getNav(page);
@@ -117,12 +115,9 @@ test.describe('Internationalization (i18n)', () => {
 
       // Verify Chinese navigation is displayed (per form factor)
       {
-        const viewport = page.viewportSize();
-        const isMobile = viewport ? viewport.width < 768 : false;
+        const isMobile = await isHeaderInMobileMode(page);
         if (isMobile) {
-          const mobileMenuButton = page.getByRole('button', {
-            name: 'Toggle mobile menu',
-          });
+          const mobileMenuButton = getHeaderMobileMenuButton(page);
           await expect(mobileMenuButton).toBeVisible();
           // Open mobile menu to inspect links
           try {
@@ -210,12 +205,9 @@ test.describe('Internationalization (i18n)', () => {
       }
 
       {
-        const viewport = page.viewportSize();
-        const isMobile = viewport ? viewport.width < 768 : false;
+        const isMobile = await isHeaderInMobileMode(page);
         if (isMobile) {
-          const mobileMenuButton = page.getByRole('button', {
-            name: 'Toggle mobile menu',
-          });
+          const mobileMenuButton = getHeaderMobileMenuButton(page);
           await expect(mobileMenuButton).toBeVisible();
           try {
             await mobileMenuButton.tap();
@@ -287,12 +279,9 @@ test.describe('Internationalization (i18n)', () => {
     }) => {
       // Navigate to About page first (per form factor)
       {
-        const viewport = page.viewportSize();
-        const isMobile = viewport ? viewport.width < 768 : false;
+        const isMobile = await isHeaderInMobileMode(page);
         if (isMobile) {
-          const mobileMenuButton = page.getByRole('button', {
-            name: 'Toggle mobile menu',
-          });
+          const mobileMenuButton = getHeaderMobileMenuButton(page);
           await expect(mobileMenuButton).toBeVisible();
           try {
             await mobileMenuButton.tap();
@@ -440,14 +429,11 @@ test.describe('Internationalization (i18n)', () => {
       page,
     }) => {
       // Test English navigation per form factor
-      const viewport = page.viewportSize();
-      const isMobile = viewport ? viewport.width < 768 : false;
+      const isMobile = await isHeaderInMobileMode(page);
       const nav = getNav(page);
-      let container = nav as any;
+      let container: Locator = nav;
       if (isMobile) {
-        const mobileMenuButton = page.getByRole('button', {
-          name: 'Toggle mobile menu',
-        });
+        const mobileMenuButton = getHeaderMobileMenuButton(page);
         await expect(mobileMenuButton).toBeVisible();
         try {
           await mobileMenuButton.tap();
@@ -458,6 +444,8 @@ test.describe('Internationalization (i18n)', () => {
           name: /mobile navigation/i,
         });
         await expect(container).toBeVisible();
+      } else {
+        await expect(nav).toBeVisible();
       }
       const englishNavItems = ['Home', 'Products', 'Blog', 'About'];
 
@@ -510,12 +498,9 @@ test.describe('Internationalization (i18n)', () => {
 
       // Recompute container after navigation to zh (dialog/nav may have re-rendered)
       {
-        const viewport2 = page.viewportSize();
-        const isMobile2 = viewport2 ? viewport2.width < 768 : false;
+        const isMobile2 = await isHeaderInMobileMode(page);
         if (isMobile2) {
-          const mobileMenuButton2 = page.getByRole('button', {
-            name: 'Toggle mobile menu',
-          });
+          const mobileMenuButton2 = getHeaderMobileMenuButton(page);
           await expect(mobileMenuButton2).toBeVisible();
           try {
             await mobileMenuButton2.tap();
@@ -747,12 +732,9 @@ test.describe('Internationalization (i18n)', () => {
 
       // Navigate to About page (per form factor)
       {
-        const viewport = page.viewportSize();
-        const isMobile = viewport ? viewport.width < 768 : false;
+        const isMobile = await isHeaderInMobileMode(page);
         if (isMobile) {
-          const mobileMenuButton = page.getByRole('button', {
-            name: 'Toggle mobile menu',
-          });
+          const mobileMenuButton = getHeaderMobileMenuButton(page);
           await expect(mobileMenuButton).toBeVisible();
           try {
             await mobileMenuButton.tap();

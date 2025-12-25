@@ -221,12 +221,11 @@ describe('Logo', () => {
       expect(text).toHaveClass('text-foreground');
     });
 
-    it('text is hidden on small screens', () => {
+    it('text uses desktop-only visibility contract', () => {
       render(<Logo />);
 
       const text = screen.getByText('Tucsenberg');
-      expect(text).toHaveClass('hidden');
-      expect(text).toHaveClass('sm:block');
+      expect(text).toHaveClass('header-logo-text-desktop-only');
     });
   });
 
