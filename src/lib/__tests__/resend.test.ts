@@ -157,7 +157,7 @@ describe('resend - Email Operations', () => {
           to: ['reply@example.com'],
           replyTo: 'john.doe@example.com',
           subject: expect.stringContaining('John Doe'),
-          html: expect.any(String),
+          react: expect.anything(),
           text: expect.any(String),
           tags: expect.arrayContaining([
             { name: 'type', value: 'contact-form' },
@@ -278,7 +278,7 @@ describe('resend - Confirmation and Validation', () => {
           to: ['john.doe@example.com'],
           replyTo: 'reply@example.com',
           subject: 'Thank you for contacting us - Tucsenberg',
-          html: expect.any(String),
+          react: expect.anything(),
           text: expect.any(String),
           tags: expect.arrayContaining([
             { name: 'type', value: 'confirmation' },
@@ -352,13 +352,12 @@ describe('resend - Confirmation and Validation', () => {
       await service.sendContactFormEmail(emailData);
 
       const callArgs = mockResendSend.mock.calls[0]?.[0];
-      expect(callArgs.html).toBeDefined();
+      expect(callArgs.react).toBeDefined();
       expect(callArgs.text).toBeDefined();
-      expect(typeof callArgs.html).toBe('string');
       expect(typeof callArgs.text).toBe('string');
     });
 
-    it('should generate HTML and text content for confirmation emails', async () => {
+    it('should generate react and text content for confirmation emails', async () => {
       const service = new ResendServiceClass();
       const emailData = {
         firstName: 'John',
@@ -378,9 +377,8 @@ describe('resend - Confirmation and Validation', () => {
       await service.sendConfirmationEmail(emailData);
 
       const callArgs = mockResendSend.mock.calls[0]?.[0];
-      expect(callArgs.html).toBeDefined();
+      expect(callArgs.react).toBeDefined();
       expect(callArgs.text).toBeDefined();
-      expect(typeof callArgs.html).toBe('string');
       expect(typeof callArgs.text).toBe('string');
     });
   });

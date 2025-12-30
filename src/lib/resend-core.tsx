@@ -3,15 +3,20 @@
  * Resend email service core class
  */
 
+import { render } from '@react-email/render';
 import { Resend } from 'resend';
 import { env } from '@/lib/env';
 import { logger } from '@/lib/logger';
-import { ResendTemplates } from '@/lib/resend-templates';
 import { EMAIL_CONFIG, ResendUtils } from '@/lib/resend-utils';
 import type {
   EmailTemplateData,
   ProductInquiryEmailData,
 } from '@/lib/validations';
+import {
+  ConfirmationEmail,
+  ContactFormEmail,
+  ProductInquiryEmail,
+} from '@/components/emails';
 import { ZERO } from '@/constants';
 
 /**
@@ -80,24 +85,19 @@ export class ResendService {
     }
 
     try {
-      // 验证和清理邮件数据
       const validatedData = ResendUtils.validateEmailData(data);
       const sanitizedData = ResendUtils.sanitizeEmailData(validatedData);
 
-      // 构建邮件内容
       const subject = ResendUtils.generateContactSubject(sanitizedData);
-      const htmlContent =
-        ResendTemplates.generateContactEmailHtml(sanitizedData);
-      const textContent =
-        ResendTemplates.generateContactEmailText(sanitizedData);
+      const reactEmail = <ContactFormEmail {...sanitizedData} />;
+      const textContent = await render(reactEmail, { plainText: true });
 
-      // 发送邮件
       const result = await this.resend!.emails.send({
         from: this.emailConfig.from,
         to: [this.emailConfig.replyTo],
         replyTo: sanitizedData.email,
         subject,
-        html: htmlContent,
+        react: reactEmail,
         text: textContent,
         tags: ResendUtils.getContactFormTags(),
       });
@@ -137,17 +137,15 @@ export class ResendService {
       const sanitizedData = ResendUtils.sanitizeEmailData(validatedData);
 
       const subject = ResendUtils.generateConfirmationSubject();
-      const htmlContent =
-        ResendTemplates.generateConfirmationEmailHtml(sanitizedData);
-      const textContent =
-        ResendTemplates.generateConfirmationEmailText(sanitizedData);
+      const reactEmail = <ConfirmationEmail {...sanitizedData} />;
+      const textContent = await render(reactEmail, { plainText: true });
 
       const result = await this.resend!.emails.send({
         from: this.emailConfig.from,
         to: [sanitizedData.email],
         replyTo: this.emailConfig.supportEmail,
         subject,
-        html: htmlContent,
+        react: reactEmail,
         text: textContent,
         tags: ResendUtils.getConfirmationTags(),
       });
@@ -188,17 +186,15 @@ export class ResendService {
         ResendUtils.sanitizeProductInquiryData(validatedData);
 
       const subject = ResendUtils.generateProductInquirySubject(sanitizedData);
-      const htmlContent =
-        ResendTemplates.generateProductInquiryEmailHtml(sanitizedData);
-      const textContent =
-        ResendTemplates.generateProductInquiryEmailText(sanitizedData);
+      const reactEmail = <ProductInquiryEmail {...sanitizedData} />;
+      const textContent = await render(reactEmail, { plainText: true });
 
       const result = await this.resend!.emails.send({
         from: this.emailConfig.from,
         to: [this.emailConfig.replyTo],
         replyTo: sanitizedData.email,
         subject,
-        html: htmlContent,
+        react: reactEmail,
         text: textContent,
         tags: ResendUtils.getProductInquiryTags(),
       });
@@ -236,8 +232,6 @@ export class ResendService {
     bounced: number;
     complained: number;
   } {
-    // Note: Resend doesn't provide built-in analytics API
-    // This would need to be implemented with webhook tracking
     return {
       sent: ZERO,
       delivered: ZERO,
@@ -269,8 +263,6 @@ export class ResendService {
 
     let ok = true;
     try {
-      // 尝试获取域名信息来测试连接
-      // Note: This is a placeholder - Resend doesn't have a ping endpoint
       ok = true;
     } catch {
       ok = false;
