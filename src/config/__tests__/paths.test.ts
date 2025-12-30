@@ -14,6 +14,13 @@ import {
   type PageType,
 } from '../paths';
 
+const PLACEHOLDER_PATTERN = /\[[A-Z0-9_]+\]/;
+const isPlaceholder = (value: string) => PLACEHOLDER_PATTERN.test(value);
+const isHttpUrl = (value: string) => /^https?:\/\/.+/.test(value);
+const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const isPhone = (value: string) =>
+  /^\+\d{1,3}[-\s]?\(?[\d]{1,4}\)?[-\s]?\d{1,4}[-\s]?\d{1,9}$/.test(value);
+
 describe('paths configuration', () => {
   describe('type definitions', () => {
     it('should have valid Locale type', () => {
@@ -149,7 +156,7 @@ describe('paths configuration', () => {
     });
 
     it('should have basic site information', () => {
-      expect(SITE_CONFIG.name).toBe('Tucsenberg Web Frontier');
+      expect(SITE_CONFIG.name).toBe('[PROJECT_NAME]');
       expect(SITE_CONFIG.description).toContain('Modern B2B Enterprise');
     });
 
@@ -168,14 +175,24 @@ describe('paths configuration', () => {
     });
 
     it('should have social media links', () => {
-      expect(SITE_CONFIG.social.twitter).toMatch(/^https:\/\/twitter\.com/);
-      expect(SITE_CONFIG.social.linkedin).toMatch(/^https:\/\/linkedin\.com/);
-      expect(SITE_CONFIG.social.github).toMatch(/^https:\/\/github\.com/);
+      const { social } = SITE_CONFIG;
+
+      expect(isPlaceholder(social.twitter) || isHttpUrl(social.twitter)).toBe(
+        true,
+      );
+      expect(isPlaceholder(social.linkedin) || isHttpUrl(social.linkedin)).toBe(
+        true,
+      );
+      expect(isPlaceholder(social.github) || isHttpUrl(social.github)).toBe(
+        true,
+      );
     });
 
     it('should have contact information', () => {
-      expect(SITE_CONFIG.contact.phone).toMatch(/^\+\d/);
-      expect(SITE_CONFIG.contact.email).toMatch(/^.+@.+\..+$/);
+      const { contact } = SITE_CONFIG;
+
+      expect(isPlaceholder(contact.phone) || isPhone(contact.phone)).toBe(true);
+      expect(isPlaceholder(contact.email) || isEmail(contact.email)).toBe(true);
     });
   });
 
@@ -418,7 +435,7 @@ describe('paths configuration', () => {
       const socialLinks = Object.values(SITE_CONFIG.social);
 
       socialLinks.forEach((link) => {
-        expect(link).toMatch(/^https:\/\/.+/);
+        expect(isPlaceholder(link) || isHttpUrl(link)).toBe(true);
       });
     });
 
@@ -434,13 +451,17 @@ describe('paths configuration', () => {
     });
 
     it('should have valid email format in contact', () => {
-      expect(SITE_CONFIG.contact.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+      expect(
+        isPlaceholder(SITE_CONFIG.contact.email) ||
+          isEmail(SITE_CONFIG.contact.email),
+      ).toBe(true);
     });
 
     it('should have valid phone format in contact', () => {
-      expect(SITE_CONFIG.contact.phone).toMatch(
-        /^\+\d{1,3}[-\s]?\d{1,4}[-\s]?\d{1,4}[-\s]?\d{1,9}$/,
-      );
+      expect(
+        isPlaceholder(SITE_CONFIG.contact.phone) ||
+          isPhone(SITE_CONFIG.contact.phone),
+      ).toBe(true);
     });
   });
 

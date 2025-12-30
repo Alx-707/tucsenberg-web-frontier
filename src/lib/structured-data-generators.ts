@@ -20,8 +20,7 @@ export function generateOrganizationData(
     '@context': 'https://schema.org',
     '@type': 'Organization',
     'name':
-      data.name ||
-      t('organization.name', { defaultValue: 'Tucsenberg Web Frontier' }),
+      data.name || t('organization.name', { defaultValue: '[PROJECT_NAME]' }),
     'description':
       data.description ||
       t('organization.description', {
@@ -31,10 +30,10 @@ export function generateOrganizationData(
       data.url ||
       process.env['NEXT_PUBLIC_BASE_URL'] ||
       process.env['NEXT_PUBLIC_SITE_URL'] ||
-      'https://tucsenberg.com',
+      'https://example.com',
     'logo':
       data.logo ||
-      `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/logo.png`,
+      `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://example.com'}/logo.png`,
     'contactPoint': {
       '@type': 'ContactPoint',
       'telephone':
@@ -44,13 +43,13 @@ export function generateOrganizationData(
     },
     'sameAs': [
       t('organization.social.twitter', {
-        defaultValue: 'https://twitter.com/tucsenberg',
+        defaultValue: '[TWITTER_URL]',
       }),
       t('organization.social.linkedin', {
-        defaultValue: 'https://linkedin.com/company/tucsenberg',
+        defaultValue: '[LINKEDIN_URL]',
       }),
       t('organization.social.github', {
-        defaultValue: 'https://github.com/tucsenberg',
+        defaultValue: '[GITHUB_URL]',
       }),
     ],
     // 移除 ...data 扩展运算符，只使用已验证的属性
@@ -67,9 +66,7 @@ export function generateWebSiteData(
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    'name':
-      data.name ||
-      t('website.name', { defaultValue: 'Tucsenberg Web Frontier' }),
+    'name': data.name || t('website.name', { defaultValue: '[PROJECT_NAME]' }),
     'description':
       data.description ||
       t('website.description', {
@@ -79,12 +76,12 @@ export function generateWebSiteData(
       data.url ||
       process.env['NEXT_PUBLIC_BASE_URL'] ||
       process.env['NEXT_PUBLIC_SITE_URL'] ||
-      'https://tucsenberg.com',
+      'https://example.com',
     'potentialAction': {
       '@type': 'SearchAction',
       'target':
         data.searchUrl ||
-        `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/search?q={search_term_string}`,
+        `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://example.com'}/search?q={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
     'inLanguage': routing.locales,
@@ -109,16 +106,16 @@ export function generateArticleData(
       '@type': 'Person',
       'name':
         data.author ||
-        t('article.defaultAuthor', { defaultValue: 'Tucsenberg Team' }),
+        t('article.defaultAuthor', { defaultValue: '[PROJECT_NAME] Team' }),
     },
     'publisher': {
       '@type': 'Organization',
       'name': t('organization.name', {
-        defaultValue: 'Tucsenberg Web Frontier',
+        defaultValue: '[PROJECT_NAME]',
       }),
       'logo': {
         '@type': 'ImageObject',
-        'url': `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://tucsenberg.com'}/logo.png`,
+        'url': `${process.env['NEXT_PUBLIC_BASE_URL'] || process.env['NEXT_PUBLIC_SITE_URL'] || 'https://example.com'}/logo.png`,
       },
     },
     'datePublished': data.publishedTime,
@@ -156,7 +153,7 @@ export function generateProductData(
       'name':
         data.brand ||
         t('organization.name', {
-          defaultValue: 'Tucsenberg Web Frontier',
+          defaultValue: '[PROJECT_NAME]',
         }),
     },
     'manufacturer': {
@@ -164,7 +161,7 @@ export function generateProductData(
       'name':
         data.manufacturer ||
         t('organization.name', {
-          defaultValue: 'Tucsenberg Web Frontier',
+          defaultValue: '[PROJECT_NAME]',
         }),
     },
     'image': data.image ? [data.image] : undefined,

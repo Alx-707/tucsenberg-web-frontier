@@ -34,10 +34,10 @@ export const PROJECT_STATS = {
 
 // 项目链接
 export const PROJECT_LINKS = {
-  github: 'https://github.com/tucsenberg/web-frontier',
+  github: '[GITHUB_REPO_URL]',
   documentation: '/docs',
   demo: '/demo',
-  discussions: 'https://github.com/tucsenberg/web-frontier/discussions',
+  discussions: '[GITHUB_DISCUSSIONS_URL]',
 } as const;
 
 // 技术架构配置

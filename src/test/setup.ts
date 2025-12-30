@@ -1625,8 +1625,8 @@ globalThis.PerformanceObserver =
 
 // Mock environment variables - 使用vi.stubEnv而不是直接修改process.env
 vi.stubEnv('NODE_ENV', 'test');
-vi.stubEnv('NEXT_PUBLIC_BASE_URL', 'https://tucsenberg.com');
-vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', 'tucsenberg.vercel.app');
+vi.stubEnv('NEXT_PUBLIC_BASE_URL', 'https://example.com');
+vi.stubEnv('NEXT_PUBLIC_VERCEL_URL', 'example.vercel.app');
 
 // Mock server-side environment variables for API testing
 vi.stubEnv('TURNSTILE_SECRET_KEY', 'test-secret-key');
@@ -1652,8 +1652,8 @@ vi.mock('@t3-oss/env-nextjs', () => ({
     EMAIL_REPLY_TO: 'reply@example.com',
     CSP_REPORT_URI: 'https://example.com/csp-report',
     ADMIN_TOKEN: 'test-admin-token',
-    NEXT_PUBLIC_BASE_URL: 'https://tucsenberg.com',
-    NEXT_PUBLIC_VERCEL_URL: 'tucsenberg.vercel.app',
+    NEXT_PUBLIC_BASE_URL: 'https://example.com',
+    NEXT_PUBLIC_VERCEL_URL: 'example.vercel.app',
     WHATSAPP_ACCESS_TOKEN: 'test-whatsapp-token',
     WHATSAPP_PHONE_NUMBER_ID: 'test-phone-id',
     WHATSAPP_BUSINESS_ACCOUNT_ID: 'test-business-id',
@@ -1674,8 +1674,8 @@ vi.mock('@/lib/env', () => {
     EMAIL_REPLY_TO: 'reply@example.com',
     CSP_REPORT_URI: 'https://example.com/csp-report',
     ADMIN_TOKEN: 'test-admin-token',
-    NEXT_PUBLIC_BASE_URL: 'https://tucsenberg.com',
-    NEXT_PUBLIC_VERCEL_URL: 'tucsenberg.vercel.app',
+    NEXT_PUBLIC_BASE_URL: 'https://example.com',
+    NEXT_PUBLIC_VERCEL_URL: 'example.vercel.app',
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: 'test-site-key-12345',
     NEXT_PUBLIC_TEST_MODE: false,
     WHATSAPP_ACCESS_TOKEN: 'test-whatsapp-token',

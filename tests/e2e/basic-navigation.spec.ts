@@ -15,7 +15,7 @@ test.describe('Basic Navigation', () => {
     await page.waitForLoadState('networkidle');
 
     // Check if the page title is correct
-    await expect(page).toHaveTitle(/Tucsenberg/);
+    await expect(page).toHaveTitle(/\[PROJECT_NAME\]/);
 
     // Check if main navigation is present - use first() to avoid strict mode violation
     const navigation = page.locator('nav').first();

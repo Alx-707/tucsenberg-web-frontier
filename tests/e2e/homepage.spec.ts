@@ -27,7 +27,7 @@ test.describe('Homepage Core Functionality', () => {
 
   test('should load homepage with all core sections', async ({ page }) => {
     // Verify page title
-    await expect(page).toHaveTitle(/Tucsenberg/);
+    await expect(page).toHaveTitle(/\[PROJECT_NAME\]/);
 
     // Verify all 5 core sections are present and visible using semantic selectors
     const heroSection = page.getByTestId('hero-section');
