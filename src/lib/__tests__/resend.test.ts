@@ -157,7 +157,7 @@ describe('resend - Email Operations', () => {
           to: ['reply@example.com'],
           replyTo: 'john.doe@example.com',
           subject: expect.stringContaining('John Doe'),
-          html: expect.any(String),
+          react: expect.anything(),
           text: expect.any(String),
           tags: expect.arrayContaining([
             { name: 'type', value: 'contact-form' },
@@ -278,7 +278,7 @@ describe('resend - Confirmation and Validation', () => {
           to: ['john.doe@example.com'],
           replyTo: 'reply@example.com',
           subject: 'Thank you for contacting us - Tucsenberg',
-          html: expect.any(String),
+          react: expect.anything(),
           text: expect.any(String),
           tags: expect.arrayContaining([
             { name: 'type', value: 'confirmation' },
@@ -352,13 +352,12 @@ describe('resend - Confirmation and Validation', () => {
       await service.sendContactFormEmail(emailData);
 
       const callArgs = mockResendSend.mock.calls[0]?.[0];
-      expect(callArgs.html).toBeDefined();
+      expect(callArgs.react).toBeDefined();
       expect(callArgs.text).toBeDefined();
-      expect(typeof callArgs.html).toBe('string');
       expect(typeof callArgs.text).toBe('string');
     });
 
-    it('should generate HTML and text content for confirmation emails', async () => {
+    it('should generate react and text content for confirmation emails', async () => {
       const service = new ResendServiceClass();
       const emailData = {
         firstName: 'John',
@@ -378,9 +377,8 @@ describe('resend - Confirmation and Validation', () => {
       await service.sendConfirmationEmail(emailData);
 
       const callArgs = mockResendSend.mock.calls[0]?.[0];
-      expect(callArgs.html).toBeDefined();
+      expect(callArgs.react).toBeDefined();
       expect(callArgs.text).toBeDefined();
-      expect(typeof callArgs.html).toBe('string');
       expect(typeof callArgs.text).toBe('string');
     });
   });
@@ -440,6 +438,144 @@ describe('resend - Confirmation and Validation', () => {
       await expect(service.sendContactFormEmail(emailData)).rejects.toThrow(
         'Failed to send email',
       );
+    });
+  });
+});
+
+describe('resend - Product Inquiry and Utility Methods', () => {
+  let ResendServiceClass: ResendServiceConstructor;
+
+  beforeEach(async () => {
+    ResendServiceClass = await setupResendTest();
+  });
+
+  afterEach(() => {
+    cleanupResendTest();
+  });
+
+  describe('sendProductInquiryEmail', () => {
+    const validProductInquiryData = {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      email: 'jane.smith@example.com',
+      productName: 'Enterprise Widget',
+      productSlug: 'enterprise-widget',
+      quantity: 100,
+      company: 'Acme Corp',
+      requirements: 'Need bulk pricing',
+      marketingConsent: true,
+    };
+
+    it('should send product inquiry email successfully', async () => {
+      const service = new ResendServiceClass();
+
+      mockResendSend.mockClear();
+      mockResendSend.mockResolvedValue({
+        data: { id: 'product-inquiry-id' },
+        error: null,
+      });
+
+      const result = await service.sendProductInquiryEmail(
+        validProductInquiryData,
+      );
+
+      expect(result).toBe('product-inquiry-id');
+      expect(mockResendSend).toHaveBeenCalledWith(
+        expect.objectContaining({
+          from: 'test@example.com',
+          to: ['reply@example.com'],
+          replyTo: 'jane.smith@example.com',
+          subject: expect.stringContaining('Enterprise Widget'),
+          react: expect.anything(),
+          text: expect.any(String),
+          tags: expect.arrayContaining([
+            { name: 'type', value: 'product-inquiry' },
+          ]),
+        }),
+      );
+    });
+
+    it('should throw error when service is not configured', async () => {
+      const service = new ResendServiceClass();
+
+      mockResendSend.mockResolvedValue({
+        data: null,
+        error: { message: 'API key not configured' },
+      });
+
+      await expect(
+        service.sendProductInquiryEmail(validProductInquiryData),
+      ).rejects.toThrow('Failed to send product inquiry email');
+    });
+
+    it('should handle API errors for product inquiry', async () => {
+      const service = new ResendServiceClass();
+      mockResendSend.mockResolvedValue({
+        data: null,
+        error: { message: 'Product Inquiry API Error' },
+      });
+
+      await expect(
+        service.sendProductInquiryEmail(validProductInquiryData),
+      ).rejects.toThrow('Failed to send product inquiry email');
+    });
+
+    it('should handle network errors for product inquiry', async () => {
+      const service = new ResendServiceClass();
+      mockResendSend.mockRejectedValue(new Error('Network error'));
+
+      await expect(
+        service.sendProductInquiryEmail(validProductInquiryData),
+      ).rejects.toThrow('Failed to send product inquiry email');
+    });
+
+    it('should return unknown when message ID is not available', async () => {
+      const service = new ResendServiceClass();
+
+      mockResendSend.mockClear();
+      mockResendSend.mockResolvedValue({
+        data: null,
+        error: null,
+      });
+
+      const result = await service.sendProductInquiryEmail(
+        validProductInquiryData,
+      );
+      expect(result).toBe('unknown');
+    });
+  });
+
+  describe('getEmailStats', () => {
+    it('should return email statistics with zero values', () => {
+      const service = new ResendServiceClass();
+      const stats = service.getEmailStats();
+
+      expect(stats).toEqual({
+        sent: 0,
+        delivered: 0,
+        bounced: 0,
+        complained: 0,
+      });
+    });
+  });
+
+  describe('getEmailConfig', () => {
+    it('should return email configuration', () => {
+      const service = new ResendServiceClass();
+      const config = service.getEmailConfig();
+
+      expect(config).toEqual({
+        from: 'test@example.com',
+        replyTo: 'reply@example.com',
+        supportEmail: 'reply@example.com',
+      });
+    });
+  });
+
+  describe('checkConnection', () => {
+    it('should return true when service is ready', () => {
+      const service = new ResendServiceClass();
+      expect(service.checkConnection()).toBe(true);
     });
   });
 });

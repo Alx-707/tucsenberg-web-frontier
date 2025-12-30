@@ -51,11 +51,11 @@ const PATHS_CONFIG = {
  * 获取本地化路径
  */
 function getLocalizedPath(pageType, locale) {
-	// nosemgrep: object-injection-sink-dynamic-property -- PATHS_CONFIG 是静态内部配置对象，pageType 仅来自受控调用方并在此处进行存在性检查，键空间是受限且不可由用户直接控制的。
-	if (!PATHS_CONFIG[pageType]) {
+  // nosemgrep: object-injection-sink-dynamic-property -- PATHS_CONFIG 是静态内部配置对象，pageType 仅来自受控调用方并在此处进行存在性检查，键空间是受限且不可由用户直接控制的。
+  if (!PATHS_CONFIG[pageType]) {
     throw new Error(`Unknown page type: ${pageType}`);
   }
-	// nosemgrep: object-injection-sink-dynamic-property -- PATHS_CONFIG is a static internal configuration object and pageType is validated above, so keys are constrained and not user-controlled.
+  // nosemgrep: object-injection-sink-dynamic-property -- PATHS_CONFIG is a static internal configuration object and pageType is validated above, so keys are constrained and not user-controlled.
   return PATHS_CONFIG[pageType][locale];
 }
 
@@ -138,11 +138,11 @@ function generateAllSitemapEntries() {
  * 获取本地化路径配置
  */
 function getLocalizedPaths() {
-	  const entries = Object.entries(PATHS_CONFIG)
-	    .filter(([pageType]) => pageType !== 'home')
-	    .map(([, paths]) => [paths.en, paths]);
+  const entries = Object.entries(PATHS_CONFIG)
+    .filter(([pageType]) => pageType !== 'home')
+    .map(([, paths]) => [paths.en, paths]);
 
-	  return Object.fromEntries(entries);
+  return Object.fromEntries(entries);
 }
 
 module.exports = {

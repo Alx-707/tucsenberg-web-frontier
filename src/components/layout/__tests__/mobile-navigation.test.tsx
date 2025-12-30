@@ -202,6 +202,8 @@ vi.mock('@/components/ui/separator', () => ({
 vi.mock('lucide-react', () => ({
   Menu: () => <span data-testid='menu-icon'>☰</span>,
   X: () => <span data-testid='close-icon'>✕</span>,
+  Globe: () => <span data-testid='globe-icon'>🌐</span>,
+  Check: () => <span data-testid='check-icon'>✓</span>,
 }));
 
 describe('MobileNavigation Component', () => {
@@ -544,6 +546,104 @@ describe('MobileNavigation Component', () => {
       await user.click(button);
       expect(mockOnClick).toHaveBeenCalledTimes(1);
     });
+  });
+});
+
+describe('MobileLanguageSwitcher Integration', () => {
+  const user = userEvent.setup();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('renders language options in mobile menu', async () => {
+    renderWithIntl(<MobileNavigation />);
+
+    const trigger = screen.getByRole('button', { name: /menu/i });
+    await user.click(trigger);
+
+    // Should show language section
+    expect(screen.getByText('Language')).toBeInTheDocument();
+    expect(screen.getByText('English')).toBeInTheDocument();
+    expect(screen.getByText('简体中文')).toBeInTheDocument();
+  });
+
+  it('detects current locale from document.documentElement.lang', async () => {
+    // Mock document.documentElement.lang as 'zh'
+    Object.defineProperty(document.documentElement, 'lang', {
+      value: 'zh',
+      writable: true,
+      configurable: true,
+    });
+
+    renderWithIntl(<MobileNavigation />);
+
+    const trigger = screen.getByRole('button', { name: /menu/i });
+    await user.click(trigger);
+
+    // Chinese should be marked as active (has check icon)
+    const chineseLink = screen.getByText('简体中文').closest('a');
+    expect(chineseLink).toHaveClass('bg-accent');
+
+    // Reset
+    Object.defineProperty(document.documentElement, 'lang', {
+      value: 'en',
+      writable: true,
+      configurable: true,
+    });
+  });
+
+  it('defaults to English when document.documentElement.lang is not zh', async () => {
+    Object.defineProperty(document.documentElement, 'lang', {
+      value: 'en',
+      writable: true,
+      configurable: true,
+    });
+
+    renderWithIntl(<MobileNavigation />);
+
+    const trigger = screen.getByRole('button', { name: /menu/i });
+    await user.click(trigger);
+
+    // English should be marked as active
+    const englishLink = screen.getByText('English').closest('a');
+    expect(englishLink).toHaveClass('bg-accent');
+  });
+
+  it('closes menu when language link is clicked', async () => {
+    renderWithIntl(<MobileNavigation />);
+
+    const trigger = screen.getByRole('button', { name: /menu/i });
+    await user.click(trigger);
+
+    // Click on a language link
+    const chineseLink = screen.getByText('简体中文');
+    await user.click(chineseLink);
+
+    // Menu should close
+    await waitFor(() => {
+      const sheet = screen.getByTestId('sheet');
+      expect(sheet).toHaveAttribute('data-open', 'false');
+    });
+  });
+
+  it('shows check icon for active language', async () => {
+    Object.defineProperty(document.documentElement, 'lang', {
+      value: 'en',
+      writable: true,
+      configurable: true,
+    });
+
+    renderWithIntl(<MobileNavigation />);
+
+    const trigger = screen.getByRole('button', { name: /menu/i });
+    await user.click(trigger);
+
+    // Check icon should be visible for English
+    const englishLink = screen.getByText('English').closest('a');
+    expect(
+      englishLink?.querySelector('[data-testid="check-icon"]'),
+    ).toBeInTheDocument();
   });
 });
 

@@ -60,6 +60,8 @@ vi.mock('lucide-react', () => ({
   Menu: () => <span data-testid='menu-icon'>☰</span>,
   X: () => <span data-testid='close-icon'>✕</span>,
   XIcon: () => <span data-testid='x-icon'>✕</span>,
+  Globe: () => <span data-testid='globe-icon'>🌐</span>,
+  Check: () => <span data-testid='check-icon'>✓</span>,
 }));
 
 describe('Mobile Navigation - Core Tests', () => {
@@ -319,8 +321,9 @@ describe('Mobile Navigation - Core Tests', () => {
 
       // Should still render navigation items
       expect(screen.getByRole('navigation')).toBeInTheDocument();
+      // +3 = CTA button + 2 language links (English, 简体中文)
       expect(screen.getAllByRole('link')).toHaveLength(
-        mobileNavigation.length + 1,
+        mobileNavigation.length + 3,
       );
     });
 

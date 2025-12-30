@@ -90,7 +90,9 @@ test.describe('Header layout (bbox regression)', () => {
         await expect(nav).toBeVisible({ timeout: 10_000 });
         await expect(mobileMenuButton).not.toBeVisible({ timeout: 10_000 });
 
-        const logoLink = page.getByRole('link', { name: 'Tucsenberg' }).first();
+        const logoLink = page
+          .getByRole('link', { name: /\[PROJECT_NAME\]/ })
+          .first();
         const cta = page.getByTestId('header-cta').first();
 
         const logoBox = await expectBoundingBox(logoLink, 'Logo link');

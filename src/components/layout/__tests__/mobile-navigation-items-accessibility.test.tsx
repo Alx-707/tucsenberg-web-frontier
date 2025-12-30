@@ -59,6 +59,8 @@ vi.mock('lucide-react', () => ({
   Menu: () => <span data-testid='menu-icon'>☰</span>,
   X: () => <span data-testid='close-icon'>✕</span>,
   XIcon: () => <span data-testid='x-icon'>✕</span>,
+  Globe: () => <span data-testid='globe-icon'>🌐</span>,
+  Check: () => <span data-testid='check-icon'>✓</span>,
 }));
 
 describe('Mobile Navigation - Advanced Integration Tests', () => {
@@ -209,6 +211,7 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
       const links = screen.getAllByRole('link');
       const linkTexts = links.map((link) => link.textContent?.trim());
 
+      // Navigation items + CTA + language switcher links
       expect(linkTexts).toEqual([
         'Home',
         'Products',
@@ -217,6 +220,8 @@ describe('Mobile Navigation - Advanced Integration Tests', () => {
         'About',
         'Privacy Policy',
         'Contact Sales',
+        'English✓',
+        '简体中文',
       ]);
     });
 

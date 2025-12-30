@@ -69,22 +69,11 @@ export async function Header({
       {isVercelNav && <HeaderScrollChrome />}
       <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
         <div className='header-nav-layout'>
-          {/* Left section: Logo + Mobile Menu */}
+          {/* Left section: Logo */}
           <div
             className='header-nav-left'
             {...(!locale ? { 'data-testid': 'mobile-navigation' } : {})}
           >
-            {/* 客户端：移动端导航按钮（可见性触发加载）；预留空间避免 CLS */}
-            {locale ? (
-              <div className='h-10 w-10'>
-                <Idle
-                  strategy='visible'
-                  rootMargin={VISIBLE_MARGIN}
-                >
-                  <MobileNavigationIsland />
-                </Idle>
-              </div>
-            ) : null}
             <Logo />
           </div>
 
@@ -100,9 +89,9 @@ export async function Header({
             className='header-nav-right'
             {...(!locale ? { 'data-testid': 'language-toggle-button' } : {})}
           >
-            {/* 客户端：语言切换（可见性触发加载）；预留空间避免 CLS */}
+            {/* Desktop: Language toggle */}
             {locale ? (
-              <div className='flex h-10 w-28 items-center justify-end'>
+              <div className='header-desktop-only h-10 w-28 items-center justify-end'>
                 <Idle
                   strategy='visible'
                   rootMargin={VISIBLE_MARGIN}
@@ -111,7 +100,7 @@ export async function Header({
                 </Idle>
               </div>
             ) : null}
-            {/* Desktop CTA Button - Hidden on mobile */}
+            {/* Desktop CTA Button */}
             {locale && (
               <Button
                 variant='default'
@@ -127,6 +116,17 @@ export async function Header({
                 </Link>
               </Button>
             )}
+            {/* Mobile: Hamburger menu (right side per UX best practices) */}
+            {locale ? (
+              <div className='header-mobile-only h-10 w-10'>
+                <Idle
+                  strategy='visible'
+                  rootMargin={VISIBLE_MARGIN}
+                >
+                  <MobileNavigationIsland />
+                </Idle>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

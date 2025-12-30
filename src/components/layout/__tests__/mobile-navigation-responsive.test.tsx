@@ -71,6 +71,8 @@ vi.mock('lucide-react', () => ({
   Menu: () => <span data-testid='menu-icon'>☰</span>,
   X: () => <span data-testid='close-icon'>✕</span>,
   XIcon: () => <span data-testid='x-icon'>✕</span>,
+  Globe: () => <span data-testid='globe-icon'>🌐</span>,
+  Check: () => <span data-testid='check-icon'>✓</span>,
 }));
 
 describe('Mobile Navigation Responsive - Main Tests', () => {

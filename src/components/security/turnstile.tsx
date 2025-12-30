@@ -29,19 +29,6 @@ interface TurnstileProps {
 
 /**
  * Cloudflare Turnstile CAPTCHA component
- *
- * This component provides bot protection using Cloudflare's Turnstile service.
- * It's a privacy-focused alternative to reCAPTCHA that doesn't track users.
- *
- * @param onSuccess - Callback when CAPTCHA is successfully verified
- * @param onError - Callback when CAPTCHA encounters an error
- * @param onExpire - Callback when CAPTCHA token expires
- * @param onLoad - Callback when CAPTCHA widget loads
- * @param className - Additional CSS classes
- * @param theme - Visual theme (light, dark, auto)
- * @param size - Widget size (normal, compact)
- * @param tabIndex - Tab index for accessibility
- * @param id - HTML id attribute
  */
 export function TurnstileWidget({
   onVerify,
@@ -58,12 +45,11 @@ export function TurnstileWidget({
   cData,
 }: TurnstileProps) {
   const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  // Bypass ONLY works in development mode AND when flag is set
   const isBypassMode =
     process.env.NODE_ENV === 'development' && env.NEXT_PUBLIC_TURNSTILE_BYPASS;
   const bypassTriggeredRef = useRef(false);
 
-  // Development bypass mode - auto-verify with mock token (via useEffect to avoid StrictMode double-invoke)
+  // All hooks must be called before any conditional returns
   useEffect(() => {
     if (!isBypassMode || bypassTriggeredRef.current) return;
     bypassTriggeredRef.current = true;
@@ -74,6 +60,18 @@ export function TurnstileWidget({
     }
   }, [isBypassMode, onSuccess, onVerify]);
 
+  useEffect(() => {
+    if (!siteKey && !isBypassMode) {
+      logger.warn(
+        'Turnstile site key not configured. Bot protection is disabled.',
+      );
+      if (onError) {
+        onError('Turnstile site key not configured');
+      }
+    }
+  }, [siteKey, isBypassMode, onError]);
+
+  // Conditional returns after all hooks
   if (isBypassMode) {
     return (
       <div
@@ -89,14 +87,7 @@ export function TurnstileWidget({
     );
   }
 
-  // Don't render if no site key is configured
   if (!siteKey) {
-    logger.warn(
-      'Turnstile site key not configured. Bot protection is disabled.',
-    );
-    if (onError) {
-      onError('Turnstile site key not configured');
-    }
     return (
       <div
         className={`turnstile-fallback ${className ?? ''}`}
@@ -110,7 +101,6 @@ export function TurnstileWidget({
     );
   }
 
-  // Don't render in test environment
   if (env.NEXT_PUBLIC_TEST_MODE) {
     return (
       <div

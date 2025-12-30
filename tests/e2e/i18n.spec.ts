@@ -564,32 +564,28 @@ test.describe('Internationalization (i18n)', () => {
     // as configured in playwright.config.ts projects. No need to use test.use() here.
 
     test('should work correctly on mobile devices', async ({ page }) => {
-      // Wait for lazy-loaded language toggle to be available and enabled
-      // The button may be disabled during transition (isPending state)
-      await page.waitForSelector(
-        'button[data-testid="language-toggle-button"]:not(:disabled)',
-        { state: 'visible', timeout: 10000 },
-      );
+      // On mobile, language switching is done through the mobile menu
+      // (language-toggle-button is header-desktop-only, hidden below 1280px)
+      const mobileMenuButton = getHeaderMobileMenuButton(page);
+      await expect(mobileMenuButton).toBeVisible({ timeout: 10000 });
 
-      const languageToggleButton = page.getByTestId('language-toggle-button');
-      await expect(languageToggleButton).toBeVisible();
-
-      // Test touch interaction (fallback to click if touch unsupported)
+      // Open mobile menu
       try {
-        await languageToggleButton.tap();
+        await mobileMenuButton.tap();
       } catch {
-        await languageToggleButton.click();
+        await mobileMenuButton.click();
       }
 
-      const dropdownContent = getOpenLanguageDropdown(page);
-      await expect(page.getByTestId('language-toggle-button')).toHaveAttribute(
-        'aria-expanded',
-        'true',
-      );
-      await expect(dropdownContent).toHaveAttribute('data-state', 'open');
+      const mobileNavSheet = page.getByRole('dialog', {
+        name: /mobile navigation/i,
+      });
+      await expect(mobileNavSheet).toBeVisible();
 
-      // Switch to Chinese with touch
-      const chineseLink = getLanguageLinkInOpenDropdown(page, 'zh');
+      // Find and click Chinese language link in mobile menu
+      const chineseLink = mobileNavSheet.getByRole('link', {
+        name: '简体中文',
+      });
+      await expect(chineseLink).toBeVisible();
       try {
         await chineseLink.tap();
       } catch {
@@ -605,9 +601,6 @@ test.describe('Internationalization (i18n)', () => {
       expect(currentLang).toBe('zh');
 
       // Verify mobile navigation works in Chinese
-      const mobileMenuButton = page.getByRole('button', {
-        name: 'Toggle mobile menu',
-      });
       await expect(mobileMenuButton).toBeVisible();
       // Prefer tap on mobile, fallback to click
       try {
@@ -616,14 +609,14 @@ test.describe('Internationalization (i18n)', () => {
         await mobileMenuButton.click();
       }
 
-      const mobileNavSheet = page.getByRole('dialog', {
+      const mobileNavSheetZh = page.getByRole('dialog', {
         name: /mobile navigation/i,
       });
-      await expect(mobileNavSheet).toBeVisible();
+      await expect(mobileNavSheetZh).toBeVisible();
 
       // Verify Chinese navigation items in mobile menu
       await expect(
-        mobileNavSheet.getByRole('link', { name: '首页' }),
+        mobileNavSheetZh.getByRole('link', { name: '首页' }),
       ).toBeVisible();
     });
   });

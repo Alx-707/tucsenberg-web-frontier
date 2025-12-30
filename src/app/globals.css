@@ -513,6 +513,7 @@
   /* Visibility helpers */
   .header-mobile-only {
     /* Tailwind v4: avoid applying responsive variants directly via @apply */
+    /* Breakpoint at 1280px to prevent nav overlap at 1024px (see header-layout.bbox.spec.ts) */
     @apply block;
     @media (min-width: 1280px) {
       @apply hidden;

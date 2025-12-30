@@ -20,6 +20,10 @@ const TEST_STATS = {
   ANIMATION_DURATION: 2000,
 } as const;
 
+const PLACEHOLDER_PATTERN = /\[[A-Z0-9_]+\]/;
+const isPlaceholder = (value: string) => PLACEHOLDER_PATTERN.test(value);
+const isGithubUrl = (value: string) => /^https:\/\/github\.com\/.+/.test(value);
+
 describe('Site Configuration', () => {
   describe('PROJECT_STATS', () => {
     it('should have valid tech stack statistics', () => {
@@ -65,10 +69,10 @@ describe('Site Configuration', () => {
 
   describe('PROJECT_LINKS', () => {
     it('should have valid GitHub link', () => {
-      expect(PROJECT_LINKS.github).toBe(
-        'https://github.com/tucsenberg/web-frontier',
-      );
-      expect(PROJECT_LINKS.github).toMatch(/^https:\/\/github\.com\//);
+      expect(
+        isPlaceholder(PROJECT_LINKS.github) ||
+          isGithubUrl(PROJECT_LINKS.github),
+      ).toBe(true);
     });
 
     it('should have valid internal links', () => {
@@ -77,12 +81,12 @@ describe('Site Configuration', () => {
     });
 
     it('should have valid discussions link', () => {
-      expect(PROJECT_LINKS.discussions).toBe(
-        'https://github.com/tucsenberg/web-frontier/discussions',
-      );
-      expect(PROJECT_LINKS.discussions).toMatch(
-        /^https:\/\/github\.com\/.*\/discussions$/,
-      );
+      expect(
+        isPlaceholder(PROJECT_LINKS.discussions) ||
+          /^https:\/\/github\.com\/.+\/discussions$/.test(
+            PROJECT_LINKS.discussions,
+          ),
+      ).toBe(true);
     });
   });
 

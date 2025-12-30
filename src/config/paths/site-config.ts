@@ -7,29 +7,29 @@ export const SITE_CONFIG = {
   baseUrl:
     process.env['NEXT_PUBLIC_BASE_URL'] ||
     process.env['NEXT_PUBLIC_SITE_URL'] ||
-    'https://tucsenberg.com',
-  name: 'Tucsenberg Web Frontier',
+    'https://example.com',
+  name: '[PROJECT_NAME]',
   description: 'Modern B2B Enterprise Web Platform with Next.js 15',
 
   // SEO配置
   seo: {
-    titleTemplate: '%s | Tucsenberg Web Frontier',
-    defaultTitle: 'Tucsenberg Web Frontier',
+    titleTemplate: '%s | [PROJECT_NAME]',
+    defaultTitle: '[PROJECT_NAME]',
     defaultDescription: 'Modern B2B Enterprise Web Platform with Next.js 15',
     keywords: ['Next.js', 'React', 'TypeScript', 'B2B', 'Enterprise'],
   },
 
   // 社交媒体链接
   social: {
-    twitter: 'https://twitter.com/tucsenberg',
-    linkedin: 'https://linkedin.com/company/tucsenberg',
-    github: 'https://github.com/tucsenberg',
+    twitter: '[TWITTER_URL]',
+    linkedin: '[LINKEDIN_URL]',
+    github: '[GITHUB_URL]',
   },
 
   // 联系信息
   contact: {
     phone: '+1-555-0123',
-    email: 'contact@tucsenberg.com',
+    email: '[CONTACT_EMAIL]',
     whatsappNumber: process.env['NEXT_PUBLIC_WHATSAPP_NUMBER'] ?? '+1-555-0123',
   },
 } as const;
