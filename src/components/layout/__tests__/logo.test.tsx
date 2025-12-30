@@ -74,20 +74,20 @@ describe('Logo', () => {
 
       const image = screen.getByTestId('logo-image');
       expect(image).toBeInTheDocument();
-      expect(image).toHaveAttribute('alt', 'Tucsenberg Logo');
+      expect(image).toHaveAttribute('alt', '[PROJECT_NAME] Logo');
     });
 
     it('renders logo text by default', () => {
       render(<Logo />);
 
-      expect(screen.getByText('Tucsenberg')).toBeInTheDocument();
+      expect(screen.getByText('[PROJECT_NAME]')).toBeInTheDocument();
     });
 
     it('has default aria-label', () => {
       render(<Logo />);
 
       const link = screen.getByTestId('logo-link');
-      expect(link).toHaveAttribute('aria-label', 'Tucsenberg');
+      expect(link).toHaveAttribute('aria-label', '[PROJECT_NAME]');
     });
 
     it('has priority attribute on image', () => {
@@ -102,13 +102,13 @@ describe('Logo', () => {
     it('hides text when showText is false', () => {
       render(<Logo showText={false} />);
 
-      expect(screen.queryByText('Tucsenberg')).not.toBeInTheDocument();
+      expect(screen.queryByText('[PROJECT_NAME]')).not.toBeInTheDocument();
     });
 
     it('shows text when showText is true', () => {
       render(<Logo showText={true} />);
 
-      expect(screen.getByText('Tucsenberg')).toBeInTheDocument();
+      expect(screen.getByText('[PROJECT_NAME]')).toBeInTheDocument();
     });
   });
 
@@ -137,21 +137,21 @@ describe('Logo', () => {
     it('applies sm text size class', () => {
       render(<Logo size='sm' />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('text-lg');
     });
 
     it('applies md text size class (default)', () => {
       render(<Logo size='md' />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('text-xl');
     });
 
     it('applies lg text size class', () => {
       render(<Logo size='lg' />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('text-2xl');
     });
   });
@@ -210,21 +210,21 @@ describe('Logo', () => {
     it('text has font-bold class', () => {
       render(<Logo />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('font-bold');
     });
 
     it('text has text-foreground class', () => {
       render(<Logo />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('text-foreground');
     });
 
     it('text uses desktop-only visibility contract', () => {
       render(<Logo />);
 
-      const text = screen.getByText('Tucsenberg');
+      const text = screen.getByText('[PROJECT_NAME]');
       expect(text).toHaveClass('header-logo-text-desktop-only');
     });
   });
@@ -251,7 +251,7 @@ describe('LogoCompact', () => {
     render(<LogoCompact />);
 
     expect(screen.getByTestId('logo-image')).toBeInTheDocument();
-    expect(screen.queryByText('Tucsenberg')).not.toBeInTheDocument();
+    expect(screen.queryByText('[PROJECT_NAME]')).not.toBeInTheDocument();
   });
 
   it('uses sm size', () => {
@@ -274,7 +274,7 @@ describe('LogoLarge', () => {
     render(<LogoLarge />);
 
     expect(screen.getByTestId('logo-image')).toBeInTheDocument();
-    expect(screen.getByText('Tucsenberg')).toBeInTheDocument();
+    expect(screen.getByText('[PROJECT_NAME]')).toBeInTheDocument();
   });
 
   it('uses lg size', () => {
@@ -287,7 +287,7 @@ describe('LogoLarge', () => {
   it('uses lg text size', () => {
     render(<LogoLarge />);
 
-    const text = screen.getByText('Tucsenberg');
+    const text = screen.getByText('[PROJECT_NAME]');
     expect(text).toHaveClass('text-2xl');
   });
 

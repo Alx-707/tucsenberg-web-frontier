@@ -95,12 +95,11 @@ test.describe('Basic Navigation', () => {
     // Check if mobile menu opens - wait for menu animation
     // 移动菜单可能是 sheet, dialog, 或带有特定 data-state 的元素
     const mobileMenu = page
-      .locator('[data-testid="mobile-menu"]')
+      .locator('[data-testid="mobile-menu-content"]')
+      .or(page.locator('[data-testid="mobile-menu"]'))
       .or(page.locator('.mobile-menu'))
-      .or(page.locator('[data-state="open"]'))
-      .or(page.getByRole('dialog'))
-      .or(page.locator('[role="menu"]'))
-      .or(page.locator('nav[aria-label="Main"]'));
+      .or(page.locator('[data-state="open"][role="dialog"]'))
+      .or(page.getByRole('dialog'));
     await expect(mobileMenu.first()).toBeVisible({ timeout: 5000 });
   });
 });

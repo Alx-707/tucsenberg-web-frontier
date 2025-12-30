@@ -37,7 +37,7 @@ export function Logo({
   className,
   showText = true,
   size = 'md',
-  ariaLabel = 'Tucsenberg',
+  ariaLabel = '[PROJECT_NAME]',
 }: LogoProps) {
   const getSizeClass = (sizeValue: 'sm' | 'md' | 'lg'): string => {
     switch (sizeValue) {
@@ -77,7 +77,7 @@ export function Logo({
       {/* Logo Image - Using Next.js logo as placeholder */}
       <Image
         src='/next.svg'
-        alt='Tucsenberg Logo'
+        alt='[PROJECT_NAME] Logo'
         width={COUNT_120}
         height={HOURS_PER_DAY}
         className={cn(
@@ -95,7 +95,7 @@ export function Logo({
             getTextSizeClass(size),
           )}
         >
-          Tucsenberg
+          [PROJECT_NAME]
         </span>
       )}
     </Link>
