@@ -1,5 +1,9 @@
 import type { MetadataRoute } from 'next';
-import type { Locale, PostSummary, ProductSummary } from '@/types/content';
+import type {
+  Locale,
+  PostSummary,
+  ProductSummary,
+} from '@/types/content.types';
 import { getAllPostsCached } from '@/lib/content/blog';
 import { getAllProductsCached } from '@/lib/content/products';
 import {
