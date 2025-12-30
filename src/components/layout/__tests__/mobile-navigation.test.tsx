@@ -202,6 +202,8 @@ vi.mock('@/components/ui/separator', () => ({
 vi.mock('lucide-react', () => ({
   Menu: () => <span data-testid='menu-icon'>☰</span>,
   X: () => <span data-testid='close-icon'>✕</span>,
+  Globe: () => <span data-testid='globe-icon'>🌐</span>,
+  Check: () => <span data-testid='check-icon'>✓</span>,
 }));
 
 describe('MobileNavigation Component', () => {
