@@ -29,6 +29,8 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --config eslint.config.mjs --fix --cache --cache-location .eslintcache",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
+    "test:visual:update": "playwright test tests/e2e/visual-regression.spec.ts --update-snapshots",
     "perf:lighthouse": "pnpm exec lhci autorun --config=lighthouserc.js",
     "analyze:size": "du -sh .next/static && echo '=== Top 5 Largest JS Files ===' && find .next/static -type f -name '*.js' -exec ls -lh {} \\; | sort -k5 -hr | head -5",
     "analyze:stats": "npx @statoscope/cli@latest generate --input .next/server/webpack-stats.json --output stats.html --open",
@@ -194,7 +196,8 @@
       "tmp": "0.2.4",
       "js-yaml": "4.1.1",
       "mdast-util-to-hast": ">=13.2.1",
-      "express": ">=4.22.0"
+      "express": ">=4.22.0",
+      "qs": ">=6.14.1"
     },
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
