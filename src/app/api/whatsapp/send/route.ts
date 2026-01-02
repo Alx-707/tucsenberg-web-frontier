@@ -7,6 +7,7 @@ import {
   type RateLimitContext,
 } from '@/lib/api/with-rate-limit';
 import { logger } from '@/lib/logger';
+import { constantTimeCompare } from '@/lib/security-crypto';
 import {
   getClientEnvironmentInfo,
   sendWhatsAppMessage,
@@ -20,17 +21,22 @@ import {
 
 // HTTP status codes
 const HTTP_UNAUTHORIZED = 401;
+const HTTP_SERVICE_UNAVAILABLE = 503;
 
 /**
- * Validate API key authentication when WHATSAPP_API_KEY is configured.
+ * Validate API key authentication. WHATSAPP_API_KEY is mandatory.
  * Returns null if validation passes, or NextResponse if it fails.
  */
 function validateApiKey(request: NextRequest): NextResponse | null {
   const configuredApiKey = process.env.WHATSAPP_API_KEY;
 
-  // If no API key is configured, skip authentication (rate limiting still applies)
+  // API key is mandatory - return 503 if not configured
   if (!configuredApiKey) {
-    return null;
+    logger.warn('WhatsApp API: WHATSAPP_API_KEY not configured');
+    return NextResponse.json(
+      { error: 'WhatsApp API service not configured' },
+      { status: HTTP_SERVICE_UNAVAILABLE },
+    );
   }
 
   const authHeader = request.headers.get('Authorization');
@@ -52,8 +58,9 @@ function validateApiKey(request: NextRequest): NextResponse | null {
     );
   }
 
-  const providedKey = bearerMatch[1];
-  if (providedKey !== configuredApiKey) {
+  const providedKey = (bearerMatch[1] ?? '').trim();
+  // Use constant-time comparison to prevent timing attacks
+  if (!providedKey || !constantTimeCompare(providedKey, configuredApiKey)) {
     logger.warn('WhatsApp API: Invalid API key provided');
     return NextResponse.json(
       { error: 'Invalid credentials' },
@@ -385,7 +392,7 @@ async function handlePost(
   request: NextRequest,
   _ctx: RateLimitContext,
 ): Promise<NextResponse> {
-  // Check optional API key authentication
+  // Check API key authentication (mandatory)
   const authError = validateApiKey(request);
   if (authError) {
     return authError;
@@ -417,8 +424,14 @@ async function handlePost(
  */
 export const POST = withRateLimit('whatsapp', handlePost);
 
-// GET: Return API usage info
-export function GET() {
+// GET: Return API usage info (requires authentication)
+export function GET(request: NextRequest) {
+  // Check API key authentication
+  const authError = validateApiKey(request);
+  if (authError) {
+    return authError;
+  }
+
   const clientInfo = getClientEnvironmentInfo();
 
   return NextResponse.json({

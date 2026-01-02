@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCachedResponse } from '@/lib/api-cache-utils';
 import { logger } from '@/lib/logger';
+import { validateAdminAccess } from '@/app/api/contact/contact-api-validation';
 import {
   HOURS_2_IN_MS,
   HOURS_24_IN_MS,
@@ -36,6 +37,21 @@ import {
  */
 export function handleGetRequest(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    if (!validateAdminAccess(authHeader)) {
+      logger.warn('Unauthorized access attempt to monitoring dashboard');
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        {
+          status: 401,
+          headers: {
+            'Cache-Control': 'no-store',
+            'WWW-Authenticate': 'Bearer',
+          },
+        },
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const source = searchParams.get('source');
     const timeRange = searchParams.get('timeRange') || '1h';
@@ -119,7 +135,7 @@ export function handleGetRequest(request: NextRequest) {
             summary: mockDashboardData.summary,
           },
         },
-        { maxAge: 60 },
+        { maxAge: 60, isPrivate: true },
       );
     }
 
@@ -128,7 +144,7 @@ export function handleGetRequest(request: NextRequest) {
         success: true,
         data: mockDashboardData,
       },
-      { maxAge: 60 },
+      { maxAge: 60, isPrivate: true },
     );
   } catch (_error) {
     // 忽略错误变量
@@ -142,7 +158,7 @@ export function handleGetRequest(request: NextRequest) {
         success: false,
         errorCode: API_ERROR_CODES.MONITORING_RETRIEVE_FAILED,
       },
-      { status: 500 },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } },
     );
   }
 }

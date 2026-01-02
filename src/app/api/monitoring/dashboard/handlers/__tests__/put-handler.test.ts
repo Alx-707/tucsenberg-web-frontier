@@ -12,9 +12,37 @@ vi.mock('@/lib/logger', () => ({
   },
 }));
 
+// Mock validateAdminAccess to return true by default
+vi.mock('@/app/api/contact/contact-api-validation', () => ({
+  validateAdminAccess: vi.fn(() => true),
+}));
+
 describe('handlePutRequest', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe('authorization', () => {
+    it('should return 401 when authorization fails', async () => {
+      const { validateAdminAccess } =
+        await import('@/app/api/contact/contact-api-validation');
+      vi.mocked(validateAdminAccess).mockReturnValueOnce(false);
+
+      const request = new NextRequest(
+        'http://localhost:3000/api/monitoring/dashboard',
+        {
+          method: 'PUT',
+          body: JSON.stringify({ config: { test: true } }),
+        },
+      );
+
+      const response = await handlePutRequest(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Unauthorized');
+    });
   });
 
   describe('valid configuration updates', () => {

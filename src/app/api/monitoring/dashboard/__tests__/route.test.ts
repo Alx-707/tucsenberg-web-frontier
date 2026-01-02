@@ -13,6 +13,11 @@ vi.mock('@/lib/logger', () => ({
   logger: mockLogger,
 }));
 
+// Mock validateAdminAccess to return true by default
+vi.mock('@/app/api/contact/contact-api-validation', () => ({
+  validateAdminAccess: vi.fn(() => true),
+}));
+
 // 注意：基础功能测试已移至 route-core.test.ts
 // 注意：高级功能测试已移至 route-advanced.test.ts
 

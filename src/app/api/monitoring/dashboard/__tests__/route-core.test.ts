@@ -25,6 +25,11 @@ vi.mock('@/lib/logger', () => ({
   logger: mockLogger,
 }));
 
+// Mock validateAdminAccess to return true by default
+vi.mock('@/app/api/contact/contact-api-validation', () => ({
+  validateAdminAccess: vi.fn(() => true),
+}));
+
 describe('Monitoring Dashboard API Route - 核心功能测试', () => {
   beforeEach(() => {
     vi.clearAllMocks();

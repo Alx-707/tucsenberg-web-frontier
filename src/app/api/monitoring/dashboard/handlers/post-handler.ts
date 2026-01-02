@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { safeParseJson } from '@/lib/api/safe-parse-json';
 import { logger } from '@/lib/logger';
+import { validateAdminAccess } from '@/app/api/contact/contact-api-validation';
 import { validateMonitoringData } from '@/app/api/monitoring/dashboard/types';
 import { HTTP_BAD_REQUEST } from '@/constants';
 import { API_ERROR_CODES } from '@/constants/api-error-codes';
@@ -11,6 +12,15 @@ import { API_ERROR_CODES } from '@/constants/api-error-codes';
  */
 export async function handlePostRequest(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    if (!validateAdminAccess(authHeader)) {
+      logger.warn('Unauthorized access attempt to monitoring dashboard POST');
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 },
+      );
+    }
+
     const parsedBody = await safeParseJson<unknown>(request, {
       route: '/api/monitoring/dashboard',
     });

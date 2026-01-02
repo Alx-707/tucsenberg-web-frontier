@@ -11,6 +11,7 @@ import { contactFieldValidators } from '@/lib/form-schema/contact-field-validato
 import { processLead } from '@/lib/lead-pipeline';
 import { CONTACT_SUBJECTS, LEAD_TYPES } from '@/lib/lead-pipeline/lead-schema';
 import { logger } from '@/lib/logger';
+import { constantTimeCompare } from '@/lib/security-crypto';
 import { verifyTurnstile } from '@/app/api/contact/contact-api-utils';
 import { mapZodIssueToErrorKey } from '@/app/api/contact/contact-form-error-utils';
 import {
@@ -243,7 +244,8 @@ export function validateAdminAccess(authHeader: string | null): boolean {
   }
 
   const token = authHeader.substring(7); // Remove 'Bearer ' prefix
-  return token === adminToken;
+  // Use constant-time comparison to prevent timing attacks
+  return token.length > 0 && constantTimeCompare(token, adminToken);
 }
 
 /**

@@ -44,7 +44,10 @@
     "content/**/*.mdx",
 
     // 生成的导入器文件
-    "src/lib/mdx-importers.generated.ts"
+    "src/lib/mdx-importers.generated.ts",
+
+    // 全局类型声明
+    "src/lib/analytics/gtag.d.ts"
   ],
   "exclude": [
     "node_modules",

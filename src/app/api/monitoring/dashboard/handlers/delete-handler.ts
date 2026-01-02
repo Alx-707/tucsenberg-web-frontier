@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { logger } from '@/lib/logger';
+import { validateAdminAccess } from '@/app/api/contact/contact-api-validation';
 import { HTTP_BAD_REQUEST } from '@/constants';
 import { API_ERROR_CODES } from '@/constants/api-error-codes';
 
@@ -9,6 +10,15 @@ import { API_ERROR_CODES } from '@/constants/api-error-codes';
  */
 export function handleDeleteRequest(request: NextRequest) {
   try {
+    const authHeader = request.headers.get('authorization');
+    if (!validateAdminAccess(authHeader)) {
+      logger.warn('Unauthorized access attempt to monitoring dashboard DELETE');
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 },
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const timeRange = searchParams.get('timeRange');
     const source = searchParams.get('source');
