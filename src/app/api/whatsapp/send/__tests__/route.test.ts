@@ -90,7 +90,8 @@ describe('WhatsApp Send Route', () => {
 
   describe('GET', () => {
     it('should return API usage documentation', async () => {
-      const response = GET();
+      const request = createMockRequest('GET');
+      const response = GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -101,12 +102,20 @@ describe('WhatsApp Send Route', () => {
     });
 
     it('should include example messages in documentation', async () => {
-      const response = GET();
+      const request = createMockRequest('GET');
+      const response = GET(request);
       const data = await response.json();
 
       expect(data.examples).toBeDefined();
       expect(data.examples.textMessage).toBeDefined();
       expect(data.examples.templateMessage).toBeDefined();
+    });
+
+    it('should require authentication', async () => {
+      const request = createMockRequest('GET', undefined, { skipAuth: true });
+      const response = GET(request);
+
+      expect(response.status).toBe(401);
     });
   });
 

@@ -42,7 +42,13 @@ export function handleGetRequest(request: NextRequest) {
       logger.warn('Unauthorized access attempt to monitoring dashboard');
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
-        { status: 401 },
+        {
+          status: 401,
+          headers: {
+            'Cache-Control': 'no-store',
+            'WWW-Authenticate': 'Bearer',
+          },
+        },
       );
     }
 
@@ -129,7 +135,7 @@ export function handleGetRequest(request: NextRequest) {
             summary: mockDashboardData.summary,
           },
         },
-        { maxAge: 60 },
+        { maxAge: 60, isPrivate: true },
       );
     }
 
@@ -138,7 +144,7 @@ export function handleGetRequest(request: NextRequest) {
         success: true,
         data: mockDashboardData,
       },
-      { maxAge: 60 },
+      { maxAge: 60, isPrivate: true },
     );
   } catch (_error) {
     // 忽略错误变量
@@ -152,7 +158,7 @@ export function handleGetRequest(request: NextRequest) {
         success: false,
         errorCode: API_ERROR_CODES.MONITORING_RETRIEVE_FAILED,
       },
-      { status: 500 },
+      { status: 500, headers: { 'Cache-Control': 'no-store' } },
     );
   }
 }

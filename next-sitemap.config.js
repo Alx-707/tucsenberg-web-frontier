@@ -32,9 +32,7 @@ module.exports = {
             contact: { en: '/contact', zh: '/lianxi' },
             blog: { en: '/blog', zh: '/boke' },
             products: { en: '/products', zh: '/chanpin' },
-            services: { en: '/services', zh: '/fuwu' },
-            pricing: { en: '/pricing', zh: '/jiage' },
-            support: { en: '/support', zh: '/zhichi' },
+            faq: { en: '/faq', zh: '/changjianwenti' },
             privacy: { en: '/privacy', zh: '/yinsi' },
             terms: { en: '/terms', zh: '/tiaokuan' },
           })) {

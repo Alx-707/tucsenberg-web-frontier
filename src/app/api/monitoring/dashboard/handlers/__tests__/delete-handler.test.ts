@@ -22,6 +22,25 @@ describe('handleDeleteRequest', () => {
     vi.clearAllMocks();
   });
 
+  describe('authorization', () => {
+    it('should return 401 when authorization fails', async () => {
+      const { validateAdminAccess } =
+        await import('@/app/api/contact/contact-api-validation');
+      vi.mocked(validateAdminAccess).mockReturnValueOnce(false);
+
+      const request = new NextRequest(
+        'http://localhost:3000/api/monitoring/dashboard?confirm=true',
+      );
+
+      const response = handleDeleteRequest(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Unauthorized');
+    });
+  });
+
   describe('confirmation required', () => {
     it('should require confirmation parameter', async () => {
       const request = new NextRequest(

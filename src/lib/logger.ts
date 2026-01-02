@@ -23,9 +23,15 @@ function isDev(): boolean {
   );
 }
 
+function isValidLogLevel(value: string): value is LogLevel {
+  return Object.prototype.hasOwnProperty.call(LOG_LEVELS, value);
+}
+
 function getLogLevel(): LogLevel {
-  const level = process.env.LOG_LEVEL as LogLevel | undefined;
-  if (level && level in LOG_LEVELS) {
+  const rawLevel = process.env.LOG_LEVEL;
+  // Normalize to lowercase for case-insensitive matching
+  const level = rawLevel?.toLowerCase() as LogLevel | undefined;
+  if (level && isValidLogLevel(level)) {
     return level;
   }
   // Default: warn in production, debug in development

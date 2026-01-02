@@ -22,6 +22,29 @@ describe('handlePostRequest', () => {
     vi.clearAllMocks();
   });
 
+  describe('authorization', () => {
+    it('should return 401 when authorization fails', async () => {
+      const { validateAdminAccess } =
+        await import('@/app/api/contact/contact-api-validation');
+      vi.mocked(validateAdminAccess).mockReturnValueOnce(false);
+
+      const request = new NextRequest(
+        'http://localhost:3000/api/monitoring/dashboard',
+        {
+          method: 'POST',
+          body: JSON.stringify({ metrics: { test: 1 } }),
+        },
+      );
+
+      const response = await handlePostRequest(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Unauthorized');
+    });
+  });
+
   describe('valid monitoring data', () => {
     it('should process valid monitoring data', async () => {
       const request = new NextRequest(

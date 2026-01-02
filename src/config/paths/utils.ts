@@ -50,12 +50,9 @@ export function getPathnames(): Record<string, string> {
     '/blog/[slug]': '/blog/[slug]',
     '/products': '/products',
     '/products/[slug]': '/products/[slug]',
-    '/services': '/services',
-    '/pricing': '/pricing',
-    '/support': '/support',
+    '/faq': '/faq',
     '/privacy': '/privacy',
     '/terms': '/terms',
-    '/faq': '/faq',
   };
 }
 

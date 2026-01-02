@@ -368,16 +368,21 @@ export function importKey(keyHex: string): Promise<CryptoKey> {
 }
 
 /**
- * Constant-time string comparison to prevent timing attacks
+ * Constant-time string comparison to prevent timing attacks.
+ * Compares strings without leaking length information through timing.
  */
 export function constantTimeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
+  // Use the longer length to prevent length-based timing attacks
+  const maxLength = Math.max(a.length, b.length);
 
-  let result = ZERO;
-  for (let i = ZERO; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  // Track both XOR result and length mismatch
+  let result = a.length ^ b.length;
+
+  for (let i = ZERO; i < maxLength; i++) {
+    // Use 0 as fallback for out-of-bounds access to maintain constant time
+    const charA = i < a.length ? a.charCodeAt(i) : ZERO;
+    const charB = i < b.length ? b.charCodeAt(i) : ZERO;
+    result |= charA ^ charB;
   }
 
   return result === ZERO;

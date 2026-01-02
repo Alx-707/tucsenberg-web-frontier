@@ -58,7 +58,7 @@ function validateApiKey(request: NextRequest): NextResponse | null {
     );
   }
 
-  const providedKey = bearerMatch[1] ?? '';
+  const providedKey = (bearerMatch[1] ?? '').trim();
   // Use constant-time comparison to prevent timing attacks
   if (!providedKey || !constantTimeCompare(providedKey, configuredApiKey)) {
     logger.warn('WhatsApp API: Invalid API key provided');
@@ -392,7 +392,7 @@ async function handlePost(
   request: NextRequest,
   _ctx: RateLimitContext,
 ): Promise<NextResponse> {
-  // Check optional API key authentication
+  // Check API key authentication (mandatory)
   const authError = validateApiKey(request);
   if (authError) {
     return authError;
@@ -424,8 +424,14 @@ async function handlePost(
  */
 export const POST = withRateLimit('whatsapp', handlePost);
 
-// GET: Return API usage info
-export function GET() {
+// GET: Return API usage info (requires authentication)
+export function GET(request: NextRequest) {
+  // Check API key authentication
+  const authError = validateApiKey(request);
+  if (authError) {
+    return authError;
+  }
+
   const clientInfo = getClientEnvironmentInfo();
 
   return NextResponse.json({
