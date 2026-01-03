@@ -20,11 +20,7 @@
 - [x] 1.3.2 Add code comment in `layout.tsx` explaining why JSON-LD doesn't need nonce (DONE)
 - [ ] 1.3.3 Verify CSP report endpoint doesn't show JSON-LD violations in production
 - [x] 1.3.4 Ensure `style-src` allows Tailwind (`'unsafe-inline'`) in production (DONE: `src/config/security.ts`)
-- [ ] 1.3.5 **Fix GA4 inline script nonce**: `src/components/monitoring/enterprise-analytics-island.tsx:61-75` uses `dangerouslySetInnerHTML` without nonce, will be blocked by strict CSP in production
-  - Recommended: Remove inline init script and perform GA4 initialization in bundled client code (`useEffect`) so no nonce is required
-  - Alternative A: Propagate middleware nonce to React tree (higher complexity)
-  - Alternative B: Migrate to GTM container (functional change)
-  - Not recommended: Add `'unsafe-inline'` to `script-src`
+- [x] 1.3.5 **Fix GA4 inline script nonce**: ~~`src/components/monitoring/enterprise-analytics-island.tsx:61-75` uses `dangerouslySetInnerHTML` without nonce~~ (DONE: moved GA4 initialization to bundled client code via `useEffect`, no inline script needed)
 
 ### 1.4 Server Action Security
 - [ ] 1.4.1 Fix `src/app/actions.ts:93-96`: Extract real client IP from headers instead of passing `'server-action'`
