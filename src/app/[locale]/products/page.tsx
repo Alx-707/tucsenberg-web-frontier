@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@/types/content.types';
@@ -46,20 +47,42 @@ export async function generateMetadata({
   });
 }
 
-export default async function ProductsPage({
-  params,
-  searchParams,
-}: ProductsPageProps) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+function ProductsLoadingSkeleton() {
+  return (
+    <div className='animate-pulse'>
+      <div className='mb-8 flex gap-2'>
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className='h-10 w-24 rounded-md bg-muted'
+          />
+        ))}
+      </div>
+      <div className='grid grid-cols-1 gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div
+            key={i}
+            className='h-64 rounded-lg bg-muted'
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
+async function ProductsContent({
+  locale,
+  searchParams,
+}: {
+  locale: string;
+  searchParams: Promise<{ category?: string }>;
+}) {
   const { category } = await searchParams;
   const t = await getTranslations({
     locale,
     namespace: 'products',
   });
 
-  // Fetch products and categories
   const productOptions = category !== undefined ? { category } : {};
   const [products, categories] = await Promise.all([
     getAllProductsCached(locale as Locale, productOptions),
@@ -76,16 +99,7 @@ export default async function ProductsPage({
   };
 
   return (
-    <main className='container mx-auto px-4 py-8 md:py-12'>
-      {/* Page Header */}
-      <header className='mb-8 md:mb-12'>
-        <h1 className='text-heading mb-4'>{t('pageTitle')}</h1>
-        <p className='text-body max-w-2xl text-muted-foreground'>
-          {t('pageDescription')}
-        </p>
-      </header>
-
-      {/* Category Filter */}
+    <>
       {categories.length > 0 && (
         <ProductCategoryFilter
           categories={categories}
@@ -95,7 +109,6 @@ export default async function ProductsPage({
         />
       )}
 
-      {/* Product Grid */}
       {products.length > 0 ? (
         <ProductGrid
           products={products}
@@ -111,6 +124,39 @@ export default async function ProductsPage({
           <p className='text-muted-foreground'>{t('emptyState')}</p>
         </div>
       )}
+    </>
+  );
+}
+
+export default async function ProductsPage({
+  params,
+  searchParams,
+}: ProductsPageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({
+    locale,
+    namespace: 'products',
+  });
+
+  return (
+    <main className='container mx-auto px-4 py-8 md:py-12'>
+      {/* Page Header */}
+      <header className='mb-8 md:mb-12'>
+        <h1 className='text-heading mb-4'>{t('pageTitle')}</h1>
+        <p className='text-body max-w-2xl text-muted-foreground'>
+          {t('pageDescription')}
+        </p>
+      </header>
+
+      {/* Dynamic Content - wrapped in Suspense for Cache Components */}
+      <Suspense fallback={<ProductsLoadingSkeleton />}>
+        <ProductsContent
+          locale={locale}
+          searchParams={searchParams}
+        />
+      </Suspense>
     </main>
   );
 }
