@@ -1,18 +1,8 @@
 import { cn } from '@/lib/utils';
 import { AnimatedStatItem } from '@/components/trust/animated-stat-item';
+import type { TrustStat } from '@/components/trust/trust-types';
 
-export interface TrustStat {
-  /** Unique identifier */
-  id: string;
-  /** Display value (e.g., "15+", "98%", "10M+") */
-  value: string;
-  /** Label text */
-  label: string;
-  /** Optional numeric value for animation */
-  numericValue: number | undefined;
-  /** Optional suffix (e.g., "+", "%", "M+") */
-  suffix: string | undefined;
-}
+export type { TrustStat } from '@/components/trust/trust-types';
 
 export interface TrustStatsProps {
   /** Section title */

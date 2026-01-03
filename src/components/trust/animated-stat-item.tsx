@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { TrustStat } from '@/components/trust/trust-stats';
+import type { TrustStat } from '@/components/trust/trust-types';
 
 function useAnimatedCounter(
   target: number,
