@@ -437,8 +437,19 @@
         "community": "Vercel Community",
         "vercel": "Vercel"
       },
+      "navigation": {
+        "title": "Navigation",
+        "home": "Home",
+        "about": "About",
+        "products": "Products",
+        "blog": "Blog",
+        "contact": "Contact"
+      },
       "social": {
-        "title": "Social"
+        "title": "Social",
+        "twitter": "Twitter",
+        "linkedin": "LinkedIn",
+        "github": "GitHub"
       },
       "support": {
         "title": "Support",
