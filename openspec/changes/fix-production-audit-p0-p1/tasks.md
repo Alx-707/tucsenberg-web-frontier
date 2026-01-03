@@ -6,7 +6,7 @@
 - [x] 1.1.1 Add translation keys to `messages/en/critical.json` and `messages/zh/critical.json` for monitoring fallback messages (DONE: keys already present)
 - [x] 1.1.2 Remove hardcoded monitoring fallback strings from `src/app/[locale]/layout.tsx` (DONE: monitoring components removed)
 - [x] 1.1.3 Remove hardcoded footer system status from `src/app/[locale]/layout.tsx` (DONE: uses translation key)
-- [ ] 1.1.4 Run `pnpm validate:translations` to verify sync
+- [x] 1.1.4 Run `pnpm validate:translations` to verify sync (DONE: passed)
 
 ### 1.2 Cookie Security Attributes
 - [x] 1.2.1 Set `httpOnly: true` for NEXT_LOCALE cookie in `middleware.ts` (DONE)
@@ -23,23 +23,23 @@
 - [x] 1.3.5 **Fix GA4 inline script nonce**: ~~`src/components/monitoring/enterprise-analytics-island.tsx:61-75` uses `dangerouslySetInnerHTML` without nonce~~ (DONE: moved GA4 initialization to bundled client code via `useEffect`, no inline script needed)
 
 ### 1.4 Server Action Security
-- [ ] 1.4.1 Fix `src/app/actions.ts:93-96`: Extract real client IP from headers instead of passing `'server-action'`
-- [ ] 1.4.2 Add honeypot field (`website`) extraction and validation in `actions.ts:158-172`
-- [ ] 1.4.3 Add distributed rate limiting to Server Action using `checkDistributedRateLimit`
-- [ ] 1.4.4 Add tests for Server Action security measures
+- [x] 1.4.1 Fix `src/app/actions.ts:93-96`: Extract real client IP from headers instead of passing `'server-action'` (DONE: already implemented with `getClientIP()`)
+- [x] 1.4.2 Add honeypot field (`website`) extraction and validation in `actions.ts:158-172` (DONE: already implemented)
+- [x] 1.4.3 Add distributed rate limiting to Server Action using `checkDistributedRateLimit` (DONE: already implemented)
+- [x] 1.4.4 Add tests for Server Action security measures (DONE: 9 tests added in `src/app/__tests__/actions.test.ts`)
 
 ### 1.5 PII Logging Cleanup
-- [ ] 1.5.1 Update `src/app/actions.ts:198-206` to remove `email` and `company` from log context
-- [ ] 1.5.2 Update `src/lib/airtable/service.ts:198-202` to use `sanitizeEmail()` or remove email from logs
-- [ ] 1.5.3 Update `src/lib/airtable/service.ts:321-327` to remove email from log context
-- [ ] 1.5.4 Update `src/app/api/verify-turnstile/route.ts:74-77` to use `sanitizeIP()` for clientIP logging
-- [ ] 1.5.5 Add lint rule or grep check in CI to detect PII in logs
+- [x] 1.5.1 Update `src/app/actions.ts:198-206` to remove `email` and `company` from log context (DONE: already uses `sanitizeEmail()`)
+- [x] 1.5.2 Update `src/lib/airtable/service.ts:198-202` to use `sanitizeEmail()` or remove email from logs (DONE: already uses `sanitizeEmail()`)
+- [x] 1.5.3 Update `src/lib/airtable/service.ts:321-327` to remove email from log context (DONE: already uses `sanitizeEmail()`)
+- [x] 1.5.4 Update `src/app/api/verify-turnstile/route.ts:74-77` to use `sanitizeIP()` for clientIP logging (DONE: already uses `sanitizeIP()`)
+- [x] 1.5.5 Add lint rule or grep check in CI to detect PII in logs (DONE: `scripts/check-pii-in-logs.js` + CI integration)
 
 ### 1.6 Production Config Gate
-- [ ] 1.6.1 Create `scripts/validate-production-config.ts` that calls `validateSiteConfig()` and exits non-zero on errors
-- [ ] 1.6.2 Add `pnpm validate:config` script to `package.json`
-- [ ] 1.6.3 Add `validateSiteConfig()` call to `pnpm build` or CI pipeline for production builds
-- [ ] 1.6.4 Update `.env.example` with clear instructions for replacing placeholders
+- [x] 1.6.1 Create `scripts/validate-production-config.ts` that calls `validateSiteConfig()` and exits non-zero on errors (DONE: already exists)
+- [x] 1.6.2 Add `pnpm validate:config` script to `package.json` (DONE: already exists)
+- [x] 1.6.3 Add `validateSiteConfig()` call to `pnpm build` or CI pipeline for production builds (DONE: added to prebuild script)
+- [x] 1.6.4 Update `.env.example` with clear instructions for replacing placeholders (DONE: already documented)
 
 ## 2. P1 - Important Improvements
 
