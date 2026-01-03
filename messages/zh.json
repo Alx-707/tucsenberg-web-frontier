@@ -2,6 +2,9 @@
   "_comment": "⚠️ 此文件仅用于 VITEST 测试 Mock - 请勿在生产代码中使用",
   "_usage": "由 vi.mock() 在 Vitest 测试中引用。运行时翻译从 messages/[locale]/critical.json 和 messages/[locale]/deferred.json 加载。",
   "_last_updated": "2025-11-26",
+  "monitoring": {
+    "loadError": "监控组件加载失败"
+  },
   "common": {
     "loading": "加载中…",
     "error": "发生错误",
@@ -416,6 +419,7 @@
     "testingReadyDesc": "完整的端到端测试配置"
   },
   "footer": {
+    "systemStatus": "系统运行正常。",
     "sections": {
       "product": {
         "title": "产品",

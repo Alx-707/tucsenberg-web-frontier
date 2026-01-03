@@ -2,6 +2,9 @@
   "_comment": "⚠️ THIS FILE IS ONLY USED FOR VITEST MOCKS - DO NOT USE IN PRODUCTION CODE",
   "_usage": "Referenced by vi.mock() in Vitest tests. Runtime translations are loaded from messages/[locale]/critical.json and messages/[locale]/deferred.json.",
   "_last_updated": "2025-11-26",
+  "monitoring": {
+    "loadError": "Monitoring component failed to load"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
@@ -416,6 +419,7 @@
     "testingReadyDesc": "Comprehensive E2E testing setup"
   },
   "footer": {
+    "systemStatus": "All systems normal.",
     "sections": {
       "product": {
         "title": "Product",
