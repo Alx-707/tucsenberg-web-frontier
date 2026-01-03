@@ -11,12 +11,10 @@ import {
   type Locale as SeoLocale,
 } from '@/lib/seo-metadata';
 import { ProductGrid } from '@/components/products';
-import { generateLocaleStaticParams } from '@/app/[locale]/generate-static-params';
 import { ProductCategoryFilter } from '@/app/[locale]/products/product-category-filter';
 
-export function generateStaticParams() {
-  return generateLocaleStaticParams();
-}
+// Note: generateStaticParams removed - this page uses searchParams (dynamic)
+// which is incompatible with static generation under Cache Components mode
 
 interface ProductsPageProps {
   params: Promise<{

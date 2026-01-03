@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import ProductsPage, { generateMetadata, generateStaticParams } from '../page';
+import ProductsPage, { generateMetadata } from '../page';
 
 // Mock dependencies using vi.hoisted
 const {
@@ -82,10 +82,6 @@ vi.mock('react', async () => {
 vi.mock('next-intl/server', () => ({
   getTranslations: mockGetTranslations,
   setRequestLocale: mockSetRequestLocale,
-}));
-
-vi.mock('@/app/[locale]/generate-static-params', () => ({
-  generateLocaleStaticParams: () => [{ locale: 'en' }, { locale: 'zh' }],
 }));
 
 vi.mock('@/lib/content/products', () => ({
@@ -196,14 +192,6 @@ describe('ProductsPage', () => {
     mockSuspenseState.categories = mockCategories;
     mockSuspenseState.locale = 'en';
     mockSuspenseState.currentCategory = undefined;
-  });
-
-  describe('generateStaticParams', () => {
-    it('should return params for all locales', () => {
-      const params = generateStaticParams();
-
-      expect(params).toEqual([{ locale: 'en' }, { locale: 'zh' }]);
-    });
   });
 
   describe('generateMetadata', () => {
