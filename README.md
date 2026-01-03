@@ -392,6 +392,20 @@ npx vercel
 # 3. 自动部署和CI/CD
 ```
 
+### 生产环境 Rate Limiting
+
+生产环境需要配置 Upstash Redis 或 Vercel KV 以实现跨 serverless 实例的分布式限流。未配置时将回退到内存存储（仅适用于开发环境）。
+
+```bash
+# Upstash Redis (推荐)
+UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_token
+
+# 或 Vercel KV
+KV_REST_API_URL=https://your-kv.vercel-storage.com
+KV_REST_API_TOKEN=your_token
+```
+
 查看
 [Next.js部署文档](https://nextjs.org/docs/app/building-your-application/deploying)
 了解更多部署选项。

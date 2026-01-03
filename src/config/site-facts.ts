@@ -36,11 +36,18 @@ export interface CompanyInfo {
   };
 }
 
+export interface BusinessHours {
+  weekdays: string;
+  saturday: string;
+  sundayClosed: boolean;
+}
+
 export interface ContactInfo {
   phone: string;
   email: string;
   whatsapp?: string;
   wechat?: string;
+  businessHours?: BusinessHours;
 }
 
 export interface Certification {
@@ -92,6 +99,11 @@ export const siteFacts: SiteFacts = {
   contact: {
     phone: '[PHONE]',
     email: '[EMAIL]',
+    businessHours: {
+      weekdays: '9:00 - 18:00',
+      saturday: '10:00 - 16:00',
+      sundayClosed: true,
+    },
   },
   certifications: [
     { name: 'ISO 9001', file: '/certs/iso9001.pdf' },

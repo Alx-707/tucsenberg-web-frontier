@@ -27,14 +27,16 @@ function extractLocaleCandidate(pathname: string): string | undefined {
 
 function setLocaleCookie(resp: NextResponse, locale: string): void {
   try {
+    const isProduction = process.env.NODE_ENV === 'production';
     resp.cookies.set('NEXT_LOCALE', locale, {
       path: '/',
-      httpOnly: false,
+      httpOnly: true,
       sameSite: 'lax',
+      secure: isProduction,
     });
     resp.headers.append(
       'set-cookie',
-      `NEXT_LOCALE=${locale}; Path=/; SameSite=Lax`,
+      `NEXT_LOCALE=${locale}; Path=/; SameSite=Lax; HttpOnly${isProduction ? '; Secure' : ''}`,
     );
   } catch {
     // ignore cookie errors to keep middleware resilient

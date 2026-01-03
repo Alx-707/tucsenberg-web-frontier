@@ -350,7 +350,11 @@
       }
     }
   },
+  "monitoring": {
+    "loadError": "Monitoring component failed to load"
+  },
   "footer": {
+    "systemStatus": "All systems normal.",
     "sections": {
       "product": {
         "title": "Product",

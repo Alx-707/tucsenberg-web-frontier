@@ -6,11 +6,17 @@ import { GET, POST } from '../route';
 const mockVerifyWebhook = vi.hoisted(() => vi.fn());
 const mockHandleIncomingMessage = vi.hoisted(() => vi.fn());
 const mockVerifyWebhookSignature = vi.hoisted(() => vi.fn());
+const mockCheckDistributedRateLimit = vi.hoisted(() => vi.fn());
 
 vi.mock('@/lib/whatsapp-service', () => ({
   verifyWebhook: mockVerifyWebhook,
   handleIncomingMessage: mockHandleIncomingMessage,
   verifyWebhookSignature: mockVerifyWebhookSignature,
+}));
+
+vi.mock('@/lib/security/distributed-rate-limit', () => ({
+  checkDistributedRateLimit: mockCheckDistributedRateLimit,
+  createRateLimitHeaders: vi.fn(() => new Headers()),
 }));
 
 vi.mock('@/lib/logger', () => ({
@@ -53,6 +59,12 @@ describe('WhatsApp Webhook Route', () => {
     mockVerifyWebhook.mockReturnValue(null);
     mockHandleIncomingMessage.mockResolvedValue(undefined);
     mockVerifyWebhookSignature.mockReturnValue(true);
+    mockCheckDistributedRateLimit.mockResolvedValue({
+      allowed: true,
+      remaining: 10,
+      resetTime: Date.now() + 60000,
+      retryAfter: null,
+    });
   });
 
   afterEach(() => {

@@ -350,7 +350,11 @@
       }
     }
   },
+  "monitoring": {
+    "loadError": "监控组件加载失败"
+  },
   "footer": {
+    "systemStatus": "系统运行正常。",
     "sections": {
       "product": {
         "title": "产品",

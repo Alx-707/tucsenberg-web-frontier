@@ -11,6 +11,27 @@ vi.mock('@/lib/logger', () => ({
   },
 }));
 
+vi.mock('next/headers', () => ({
+  headers: vi.fn(() =>
+    Promise.resolve({
+      get: vi.fn((key: string) => {
+        if (key === 'x-forwarded-for') return '127.0.0.1';
+        return null;
+      }),
+    }),
+  ),
+}));
+
+vi.mock('@/lib/security/distributed-rate-limit', () => ({
+  checkDistributedRateLimit: vi.fn(() =>
+    Promise.resolve({
+      allowed: true,
+      remaining: 10,
+      resetTime: Date.now() + 60000,
+    }),
+  ),
+}));
+
 vi.mock('@/app/api/contact/contact-api-utils', () => ({
   verifyTurnstile: vi.fn(() => Promise.resolve(true)),
 }));
