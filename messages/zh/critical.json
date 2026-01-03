@@ -372,8 +372,19 @@
         "community": "Vercel社区",
         "vercel": "Vercel"
       },
+      "navigation": {
+        "title": "导航",
+        "home": "首页",
+        "about": "关于",
+        "products": "产品",
+        "blog": "博客",
+        "contact": "联系"
+      },
       "social": {
-        "title": "社交"
+        "title": "社交",
+        "twitter": "Twitter",
+        "linkedin": "LinkedIn",
+        "github": "GitHub"
       },
       "support": {
         "title": "支持",
