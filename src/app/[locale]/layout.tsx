@@ -9,23 +9,18 @@ import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { loadCriticalMessages } from '@/lib/load-messages';
 import { generateJSONLD } from '@/lib/structured-data';
 import { LazyCookieBanner } from '@/components/cookie/lazy-cookie-banner';
-import { ErrorBoundary } from '@/components/error-boundary';
 import { Footer } from '@/components/footer';
 import { LangUpdater } from '@/components/i18n/lang-updater';
 import { Header } from '@/components/layout/header';
 import { LazyToaster } from '@/components/lazy/lazy-toaster';
 import { LazyTopLoader } from '@/components/lazy/lazy-top-loader';
-import { LazyWebVitalsReporter } from '@/components/lazy/lazy-web-vitals-reporter';
 import { EnterpriseAnalyticsIsland } from '@/components/monitoring/enterprise-analytics-island';
-import { WebVitalsIndicator } from '@/components/performance/web-vitals-indicator';
 import { ThemeProvider } from '@/components/theme-provider';
-import { ThemePerformanceMonitor } from '@/components/theme/theme-performance-monitor';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { LazyWhatsAppButton } from '@/components/whatsapp/lazy-whatsapp-button';
 import { getAppConfig } from '@/config/app';
 import { FOOTER_COLUMNS, FOOTER_STYLE_TOKENS } from '@/config/footer-links';
 import { SITE_CONFIG } from '@/config/paths/site-config';
-import { MAGIC_0_1 } from '@/constants/decimal';
 import { routing } from '@/i18n/routing';
 
 // Client analytics are rendered as an island to avoid impacting LCP
@@ -49,19 +44,12 @@ async function AsyncLocaleLayoutContent({
   // Set request locale inside Suspense boundary
   setRequestLocale(locale);
 
-  const isDevelopment = process.env.NODE_ENV === 'development';
-
   // Load translations for layout-level strings inside Suspense boundary
-  const tMonitoring = await getTranslations({
-    locale,
-    namespace: 'monitoring',
-  });
   const tFooter = await getTranslations({
     locale,
     namespace: 'footer',
   });
 
-  const monitoringLoadError = tMonitoring('loadError');
   const footerSystemStatus = tFooter('systemStatus');
 
   const appConfig = getAppConfig();
@@ -115,31 +103,8 @@ async function AsyncLocaleLayoutContent({
           enableSystem
         >
           <CookieConsentProvider>
-            {/* Web Vitals 监控 - 开发环境启用以便测试 */}
-            <LazyWebVitalsReporter
-              enabled={isDevelopment}
-              debug={isDevelopment}
-              sampleRate={isDevelopment ? 1.0 : MAGIC_0_1}
-            />
-
             {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
             <LazyTopLoader />
-
-            {isDevelopment && (
-              <Suspense fallback={null}>
-                <ErrorBoundary
-                  fallback={
-                    <div className='fixed right-4 bottom-4 z-[1100] rounded-md bg-destructive/80 px-3 py-2 text-xs text-white shadow-lg'>
-                      {monitoringLoadError}
-                    </div>
-                  }
-                >
-                  {/* i18n preloader depends on next-intl context; disable here now that provider is scoped */}
-                  <ThemePerformanceMonitor />
-                  <WebVitalsIndicator />
-                </ErrorBoundary>
-              </Suspense>
-            )}
 
             {/* 导航栏 */}
             <Header locale={locale} />

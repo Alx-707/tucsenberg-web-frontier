@@ -23,7 +23,6 @@ export const RATE_LIMIT_PRESETS = {
   inquiry: { maxRequests: COUNT_TEN, windowMs: MINUTE_MS },
   subscribe: { maxRequests: COUNT_THREE, windowMs: MINUTE_MS },
   whatsapp: { maxRequests: COUNT_FIVE, windowMs: MINUTE_MS },
-  analytics: { maxRequests: 100, windowMs: MINUTE_MS },
   csp: { maxRequests: 100, windowMs: MINUTE_MS },
   cacheInvalidate: { maxRequests: COUNT_TEN, windowMs: MINUTE_MS },
   // Pre-auth rate limit for brute force protection (more aggressive)
@@ -347,8 +346,6 @@ function getRateLimitConfig(preset: RateLimitPreset): {
       return RATE_LIMIT_PRESETS.subscribe;
     case 'whatsapp':
       return RATE_LIMIT_PRESETS.whatsapp;
-    case 'analytics':
-      return RATE_LIMIT_PRESETS.analytics;
     case 'csp':
       return RATE_LIMIT_PRESETS.csp;
     case 'cacheInvalidate':

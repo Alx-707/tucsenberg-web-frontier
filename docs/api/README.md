@@ -14,7 +14,6 @@ All endpoints are located under `/api/`. Rate limits use a sliding window (1 min
 | `/api/verify-turnstile` | POST | Standalone Turnstile verification | None | None |
 | `/api/whatsapp/webhook` | GET | Meta webhook verification | Verify Token | 5/min |
 | `/api/whatsapp/webhook` | POST | Incoming WhatsApp messages | HMAC Signature | 5/min |
-| `/api/analytics/web-vitals` | POST | Core Web Vitals reporting | None | 100/min |
 | `/api/csp-report` | POST | CSP violation reports | None | 100/min |
 | `/api/cache/invalidate` | POST | Cache invalidation (dev/admin) | Bearer Token | 10/min |
 
@@ -36,7 +35,6 @@ contact: 5/min      // Form submissions
 inquiry: 10/min     // Product inquiries
 subscribe: 3/min    // Newsletter (stricter)
 whatsapp: 5/min     // Webhook calls
-analytics: 100/min  // High-volume telemetry
 csp: 100/min        // High-volume reports
 cacheInvalidate: 10/min  // Admin operations
 ```

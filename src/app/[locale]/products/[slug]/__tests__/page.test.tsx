@@ -25,7 +25,20 @@ const {
   mockSuspenseState: {
     locale: 'en',
     slug: 'test-product',
-    product: null as unknown,
+    product: null as {
+      slug: string;
+      title: string;
+      category: string;
+      coverImage: string;
+      description?: string;
+      content?: string;
+      moq?: string;
+      leadTime?: string;
+      pdfUrl?: string;
+      images?: string[];
+      specs?: Record<string, string>;
+      certifications?: string[];
+    } | null,
     translations: {} as Record<string, string>,
   },
 }));
@@ -115,7 +128,7 @@ vi.mock('react', async () => {
                   data-testid='product-certifications'
                   data-title={t('detail.certifications')}
                 >
-                  {product.certifications.map((cert: string) => (
+                  {product.certifications!.map((cert: string) => (
                     <span
                       key={cert}
                       data-testid={`cert-${cert}`}
@@ -152,7 +165,7 @@ vi.mock('react', async () => {
                 data-testid='product-specs'
                 data-title={t('detail.specifications')}
               >
-                {Object.entries(product.specs).map(
+                {Object.entries(product.specs!).map(
                   ([key, value]: [string, string]) => (
                     <div
                       key={key}
@@ -669,10 +682,9 @@ describe('ProductDetailPage', () => {
 
     it('should not render certifications when not available', async () => {
       // Update mockSuspenseState with no certifications
-      mockSuspenseState.product = {
-        ...mockProduct,
-        certifications: undefined,
-      };
+      const { certifications: _certifications, ...productWithoutCerts } =
+        mockProduct;
+      mockSuspenseState.product = productWithoutCerts;
 
       const PageComponent = await ProductDetailPage({
         params: Promise.resolve(mockParams),

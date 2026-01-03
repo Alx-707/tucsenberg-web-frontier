@@ -44,9 +44,7 @@ export interface DevToolConfig {
 /**
  * 开发工具定位配置
  *
- * 布局策略：简洁双角分布
- * - 左下角：Web Vitals (主要性能监控)
- * - 右下角：React Scan Indicator (渲染性能)
+ * 布局策略：简洁布局
  *
  * z-index 策略：
  * - 使用最大 z-index (2147483647) 确保开发工具始终在最上层
@@ -55,19 +53,7 @@ export interface DevToolConfig {
  *
  * 注意：仅保留实际使用的开发工具配置
  */
-export const DEV_TOOLS_CONFIG: Record<string, DevToolConfig> = {
-  // Web Vitals - 左下角，性能监控工具
-  webVitalsIndicator: {
-    id: 'web-vitals-indicator',
-    name: 'Web Vitals',
-    position: 'bottom-left',
-    size: 'medium',
-    priority: 10,
-    zIndex: 2147483647, // 最大 z-index 值 (2^31 - 1)，确保始终在最上层
-    collapsible: true,
-    defaultCollapsed: false,
-  },
-};
+export const DEV_TOOLS_CONFIG: Record<string, DevToolConfig> = {};
 
 /**
  * 位置到 CSS 类的映射

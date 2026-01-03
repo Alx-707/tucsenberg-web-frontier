@@ -25,18 +25,12 @@ vi.mock('@/i18n/routing-config', () => ({
 }));
 
 describe('Middleware Cookie Security', () => {
-  let originalEnv: string | undefined;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    originalEnv = process.env.NODE_ENV;
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    if (originalEnv !== undefined) {
-      process.env.NODE_ENV = originalEnv;
-    }
   });
 
   describe('setLocaleCookie security attributes', () => {

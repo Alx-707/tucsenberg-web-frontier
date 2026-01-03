@@ -24,7 +24,17 @@ const {
   mockSuspenseState: {
     locale: 'en',
     slug: 'test-post',
-    post: null as unknown,
+    post: null as {
+      slug: string;
+      title: string;
+      excerpt?: string;
+      content: string;
+      publishedAt: string;
+      readingTime?: number;
+      coverImage?: string;
+      tags?: string[];
+      categories?: string[];
+    } | null,
     translations: {} as Record<string, string>,
   },
 }));
@@ -60,7 +70,7 @@ vi.mock('react', async () => {
             <header className='mb-8 space-y-4'>
               <div className='flex flex-wrap gap-2'>
                 {hasCategories &&
-                  post.categories.map((category: string) => (
+                  post.categories!.map((category: string) => (
                     <span
                       key={category}
                       data-testid='badge'
@@ -70,7 +80,7 @@ vi.mock('react', async () => {
                     </span>
                   ))}
                 {hasTags &&
-                  post.tags.map((tag: string) => (
+                  post.tags!.map((tag: string) => (
                     <span
                       key={tag}
                       data-testid='badge'

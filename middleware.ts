@@ -71,7 +71,7 @@ function tryHandleInvalidLocalePrefix(
   const [first, ...rest] = segments;
 
   // 已知 locale 前缀交由默认逻辑处理
-  if (SUPPORTED_LOCALES.has(first)) {
+  if (first && SUPPORTED_LOCALES.has(first)) {
     return null;
   }
 
