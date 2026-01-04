@@ -36,9 +36,9 @@ vi.mock('next/image', () => ({
   ),
 }));
 
-// Mock i18n Link
-vi.mock('@/i18n/routing', () => ({
-  Link: ({
+// Mock next/link (P0-2: Logo converted to Server Component using next/link)
+vi.mock('next/link', () => ({
+  default: ({
     href,
     children,
     className,

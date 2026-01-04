@@ -5,16 +5,15 @@ import { Suspense, type ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { CookieConsentProvider } from '@/lib/cookie-consent';
 import { loadCompleteMessages } from '@/lib/load-messages';
 import { generateJSONLD } from '@/lib/structured-data';
-import { LazyCookieBanner } from '@/components/cookie/lazy-cookie-banner';
+import { AttributionBootstrap } from '@/components/attribution-bootstrap';
+import { CookieConsentIsland } from '@/components/cookie/cookie-consent-island';
 import { Footer } from '@/components/footer';
 import { LangUpdater } from '@/components/i18n/lang-updater';
 import { Header } from '@/components/layout/header';
 import { LazyToaster } from '@/components/lazy/lazy-toaster';
 import { LazyTopLoader } from '@/components/lazy/lazy-top-loader';
-import { EnterpriseAnalyticsIsland } from '@/components/monitoring/enterprise-analytics-island';
 import { ThemeProvider } from '@/components/theme-provider';
 import { ThemeSwitcher } from '@/components/ui/theme-switcher';
 import { LazyWhatsAppButton } from '@/components/whatsapp/lazy-whatsapp-button';
@@ -102,47 +101,41 @@ async function AsyncLocaleLayoutContent({
           defaultTheme='system'
           enableSystem
         >
-          <CookieConsentProvider>
-            {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyTopLoader />
+          {/* P1-1 Fix: Single attribution initialization for UTM tracking */}
+          <AttributionBootstrap />
 
-            {/* 导航栏 */}
-            <Header locale={locale} />
+          {/* 页面导航进度条 - P1 优化：懒加载，减少 vendors chunk */}
+          <LazyTopLoader />
 
-            {/* 主要内容 */}
-            <main className='flex-1'>{children}</main>
+          {/* 导航栏 */}
+          <Header locale={locale} />
 
-            {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
-            <Footer
-              columns={FOOTER_COLUMNS}
-              tokens={FOOTER_STYLE_TOKENS}
-              statusSlot={
-                <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
-                  {footerSystemStatus}
-                </span>
-              }
-              themeToggleSlot={
-                <ThemeSwitcher data-testid='footer-theme-toggle' />
-              }
-            />
+          {/* 主要内容 */}
+          <main className='flex-1'>{children}</main>
 
-            {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
-            <LazyToaster />
+          {/* 页脚：使用新 Footer 组件与配置数据，附加主题切换与状态插槽 */}
+          <Footer
+            columns={FOOTER_COLUMNS}
+            tokens={FOOTER_STYLE_TOKENS}
+            statusSlot={
+              <span className='text-xs font-medium text-muted-foreground sm:text-sm'>
+                {footerSystemStatus}
+              </span>
+            }
+            themeToggleSlot={
+              <ThemeSwitcher data-testid='footer-theme-toggle' />
+            }
+          />
 
-            {showWhatsAppButton && (
-              <LazyWhatsAppButton number={SITE_CONFIG.contact.whatsappNumber} />
-            )}
+          {/* Toast 消息容器 - P1 优化：懒加载，减少 vendors chunk */}
+          <LazyToaster />
 
-            {/* Cookie Consent Banner - 懒加载，仅在未同意时显示 */}
-            <Suspense fallback={null}>
-              <LazyCookieBanner />
-            </Suspense>
+          {showWhatsAppButton && (
+            <LazyWhatsAppButton number={SITE_CONFIG.contact.whatsappNumber} />
+          )}
 
-            {/* 企业级监控组件：延迟加载的客户端岛，避免阻塞首屏 */}
-            {process.env.NODE_ENV === 'production' ? (
-              <EnterpriseAnalyticsIsland />
-            ) : null}
-          </CookieConsentProvider>
+          {/* P0-3 Fix: Cookie Consent Island - scoped provider for consent consumers only */}
+          <CookieConsentIsland />
         </ThemeProvider>
       </NextIntlClientProvider>
     </>

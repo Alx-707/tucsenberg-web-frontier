@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { useCookieConsentOptional } from '@/lib/cookie-consent';
-import { storeAttributionData } from '@/lib/utm';
 
 const Analytics = dynamic(
   () => import('@vercel/analytics/next').then((mod) => mod.Analytics),
@@ -49,10 +48,6 @@ export function EnterpriseAnalyticsIsland() {
 
   const gaEnabled = Boolean(GA_MEASUREMENT_ID) && analyticsAllowed && isProd;
   const gaInitRef = useRef(false);
-
-  useEffect(() => {
-    storeAttributionData();
-  }, []);
 
   useEffect(() => {
     if (!gaEnabled || gaInitRef.current) return;

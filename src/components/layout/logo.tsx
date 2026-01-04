@@ -3,34 +3,21 @@
  *
  * Responsive logo component with proper accessibility and theming support.
  * Supports both text and image logos with automatic dark mode handling.
+ * P0-2 Fix: Converted to Server Component (no interactivity needed)
  */
-'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { HOURS_PER_DAY } from '@/constants';
 import { COUNT_120 } from '@/constants/count';
-import { Link } from '@/i18n/routing';
-
-/**
- * Logo Component
- *
- * Responsive logo component with proper accessibility and theming support.
- * Supports both text and image logos with automatic dark mode handling.
- */
-
-/**
- * Logo Component
- *
- * Responsive logo component with proper accessibility and theming support.
- * Supports both text and image logos with automatic dark mode handling.
- */
 
 interface LogoProps {
   className?: string;
   showText?: boolean;
   size?: 'sm' | 'md' | 'lg';
   ariaLabel?: string;
+  locale?: string | undefined;
 }
 
 export function Logo({
@@ -38,6 +25,7 @@ export function Logo({
   showText = true,
   size = 'md',
   ariaLabel = '[PROJECT_NAME]',
+  locale,
 }: LogoProps) {
   const getSizeClass = (sizeValue: 'sm' | 'md' | 'lg'): string => {
     switch (sizeValue) {
@@ -67,7 +55,7 @@ export function Logo({
 
   return (
     <Link
-      href='/'
+      href={locale ? `/${locale}` : '/'}
       className={cn(
         'flex items-center gap-2 transition-opacity hover:opacity-80',
         className,
@@ -103,23 +91,37 @@ export function Logo({
 }
 
 // Compact logo for mobile/small spaces
-export function LogoCompact({ className }: { className?: string }) {
+export function LogoCompact({
+  className,
+  locale,
+}: {
+  className?: string;
+  locale?: string;
+}) {
   return (
     <Logo
       showText={false}
       size='sm'
       className={className ?? ''}
+      locale={locale}
     />
   );
 }
 
 // Large logo for headers/hero sections
-export function LogoLarge({ className }: { className?: string }) {
+export function LogoLarge({
+  className,
+  locale,
+}: {
+  className?: string;
+  locale?: string;
+}) {
   return (
     <Logo
       showText={true}
       size='lg'
       className={className ?? ''}
+      locale={locale}
     />
   );
 }

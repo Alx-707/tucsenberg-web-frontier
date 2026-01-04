@@ -74,7 +74,7 @@ export async function Header({
             className='header-nav-left'
             {...(!locale ? { 'data-testid': 'mobile-navigation' } : {})}
           >
-            <Logo />
+            <Logo locale={locale} />
           </div>
 
           {/* Center section: Main Navigation (Desktop) */}

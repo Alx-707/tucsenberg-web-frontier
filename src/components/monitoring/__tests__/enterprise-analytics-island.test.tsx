@@ -10,14 +10,6 @@ const { mockUseLocale, mockUseCookieConsentOptional } = vi.hoisted(() => ({
   mockUseCookieConsentOptional: vi.fn<() => CookieConsentContextValue | null>(),
 }));
 
-const { mockStoreAttributionData } = vi.hoisted(() => ({
-  mockStoreAttributionData: vi.fn(),
-}));
-
-vi.mock('@/lib/utm', () => ({
-  storeAttributionData: mockStoreAttributionData,
-}));
-
 vi.mock('next-intl', () => ({
   useLocale: mockUseLocale,
 }));
@@ -119,16 +111,6 @@ describe('EnterpriseAnalyticsIsland', () => {
     expect(window.dataLayer).toBeDefined();
     expect(Array.isArray(window.dataLayer)).toBe(true);
     expect(typeof window.gtag).toBe('function');
-  });
-
-  it('calls storeAttributionData on mount', async () => {
-    mockUseCookieConsentOptional.mockReturnValue(null);
-
-    const { EnterpriseAnalyticsIsland } =
-      await import('../enterprise-analytics-island');
-    render(<EnterpriseAnalyticsIsland />);
-
-    expect(mockStoreAttributionData).toHaveBeenCalledTimes(1);
   });
 
   it('renders nothing when analytics consent is denied', async () => {

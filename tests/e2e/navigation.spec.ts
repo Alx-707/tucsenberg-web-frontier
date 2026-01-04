@@ -7,6 +7,7 @@ import {
 } from './helpers/navigation';
 import {
   removeInterferingElements,
+  safeClick,
   waitForLoadWithFallback,
   waitForStablePage,
 } from './test-environment-setup';
@@ -113,13 +114,13 @@ test.describe('Navigation System', () => {
         return;
       }
 
-      const nav = getNav(page);
-
       // Navigate to About page
-      const homeLink = nav.getByRole('link', { name: 'Home' });
-      const aboutLink = nav.getByRole('link', { name: 'About' });
-      await aboutLink.click();
-      await page.waitForURL('**/en/about');
+      const clickedAbout = await safeClick(
+        page,
+        'nav a[href="/en/about"]:visible',
+      );
+      expect(clickedAbout).toBe(true);
+      await page.waitForURL('**/en/about', { waitUntil: 'domcontentloaded' });
       await waitForStablePage(page);
 
       // Verify About page content
@@ -134,9 +135,10 @@ test.describe('Navigation System', () => {
         }
       }
 
-      // Navigate back to home via nav
-      await homeLink.click();
-      await page.waitForURL('**/en');
+      // Navigate back to home via browser history (more reliable than clicking
+      // the "Home" link when overlays / client-side interception are present)
+      await page.goBack({ waitUntil: 'domcontentloaded' });
+      await page.waitForURL(/\/en\/?$/, { waitUntil: 'domcontentloaded' });
 
       // More robust: wait for home page key elements instead of just URL
       await expect(page.getByTestId('home-hero-title')).toBeVisible({

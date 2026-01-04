@@ -12,7 +12,7 @@ import { useTranslations } from 'next-intl';
 import { useFormStatus } from 'react-dom';
 import { logger } from '@/lib/logger';
 import { type ServerActionResult } from '@/lib/server-action-utils';
-import { appendAttributionToFormData, storeAttributionData } from '@/lib/utm';
+import { appendAttributionToFormData } from '@/lib/utm';
 import { type FormSubmissionStatus } from '@/lib/validations';
 import { LazyTurnstile } from '@/components/forms/lazy-turnstile';
 import { useOptimisticFormState } from '@/components/forms/use-optimistic-form-state';
@@ -128,11 +128,6 @@ function useContactForm() {
     useRateLimit();
   const { optimisticState, setOptimisticState, optimisticMessage } =
     useOptimisticFormState();
-
-  // Capture UTM parameters on mount (first-touch attribution)
-  useEffect(() => {
-    storeAttributionData();
-  }, []);
 
   // 从Server Action状态中提取提交状态
   const submitStatus = computeSubmitStatus({

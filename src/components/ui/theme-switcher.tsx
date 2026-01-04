@@ -6,6 +6,13 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 
+// P0-1 Fix: Move dynamic import to module scope (was inside render causing new component type per render)
+const MotionHighlight = dynamic(
+  () =>
+    import('./theme-switcher-highlight').then((m) => m.ThemeSwitcherHighlight),
+  { ssr: false },
+);
+
 const themes = [
   {
     key: 'system',
@@ -45,6 +52,7 @@ export const ThemeSwitcher = ({ className, ...rest }: ThemeSwitcherProps) => {
   // 使用 useEffect 确保只在客户端渲染后才显示组件
   // 这是 next-themes 推荐的模式，用于避免 SSR 水合不匹配
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- next-themes official pattern for SSR hydration safety
     setMounted(true);
   }, []);
 
@@ -73,14 +81,6 @@ export const ThemeSwitcher = ({ className, ...rest }: ThemeSwitcherProps) => {
       </div>
     );
   }
-
-  const MotionHighlight = dynamic(
-    () =>
-      import('./theme-switcher-highlight').then(
-        (m) => m.ThemeSwitcherHighlight,
-      ),
-    { ssr: false },
-  );
 
   return (
     <div
