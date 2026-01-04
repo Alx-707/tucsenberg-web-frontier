@@ -1,17 +1,11 @@
 'use client';
 
-import {
-  useActionState,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useActionState, useCallback, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { CheckCircle, Loader2, Mail, XCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
-import { getAttributionAsObject, storeAttributionData } from '@/lib/utm';
+import { getAttributionAsObject } from '@/lib/utm';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -230,11 +224,6 @@ export function BlogNewsletter({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const turnstileTokenRef = useRef<string | null>(null);
-
-  // Capture UTM parameters on mount (first-touch attribution)
-  useEffect(() => {
-    storeAttributionData();
-  }, []);
 
   const handleTurnstileSuccess = useCallback((token: string) => {
     turnstileTokenRef.current = token;
