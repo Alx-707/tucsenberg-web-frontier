@@ -1,17 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { generateNonce, getSecurityHeaders } from '@/config/security';
-// Use routing-config instead of routing to avoid importing React Server Component code
-// which is not compatible with Edge Runtime
 import { routing } from '@/i18n/routing-config';
 
-// 创建 next-intl 中间件
 const intlMiddleware = createMiddleware(routing);
-
-// 支持的本地化前缀
 const SUPPORTED_LOCALES = new Set(['en', 'zh']);
 
-// 辅助函数：添加安全头到响应
 function addSecurityHeaders(response: NextResponse, nonce: string): void {
   const securityHeaders = getSecurityHeaders(nonce);
   securityHeaders.forEach(({ key, value }) => {
@@ -39,7 +33,7 @@ function setLocaleCookie(resp: NextResponse, locale: string): void {
       `NEXT_LOCALE=${locale}; Path=/; SameSite=Lax; HttpOnly${isProduction ? '; Secure' : ''}`,
     );
   } catch {
-    // ignore cookie errors to keep middleware resilient
+    // ignore cookie errors
   }
 }
 
@@ -71,12 +65,10 @@ function tryHandleInvalidLocalePrefix(
 
   const [first, ...rest] = segments;
 
-  // 已知 locale 前缀交由默认逻辑处理
   if (first && SUPPORTED_LOCALES.has(first)) {
     return null;
   }
 
-  // 尝试将余下路径解析为已知业务路径，例如 /invalid-lang/about -> /about
   const candidatePath = `/${rest.join('/')}`;
   const pathnames = routing.pathnames as Record<string, unknown> | undefined;
   const isKnownPath = Boolean(
@@ -87,8 +79,6 @@ function tryHandleInvalidLocalePrefix(
     return null;
   }
 
-  // 对于形如 /invalid-lang/about 但 about 为已知路径的情况，
-  // 将请求安全重定向到默认语言版本，例如 /en/about
   const targetUrl = request.nextUrl.clone();
   targetUrl.pathname = `/${routing.defaultLocale}${candidatePath}`;
 
@@ -101,6 +91,7 @@ function tryHandleInvalidLocalePrefix(
 
 export default function middleware(request: NextRequest) {
   const nonce = generateNonce();
+
   const invalidLocaleHandled = tryHandleInvalidLocalePrefix(request, nonce);
   if (invalidLocaleHandled) return invalidLocaleHandled;
 
@@ -117,10 +108,6 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all pathnames except for
-  // - … if they start with `/api`, `/_next` or `/_vercel`
-  // - … the ones containing a dot (e.g. `favicon.ico`)
-  // - … the `/admin` path (TinaCMS admin interface)
-  // Root path `/` is now handled by middleware for proper locale detection
-  matcher: ['/', '/((?!api|_next|_vercel|admin|.*\\..*).*)', '/(en|zh)/:path*'],
+  // Root path (/) is handled by src/app/page.tsx due to Turbopack matcher inconsistency
+  matcher: ['/((?!api|_next|_vercel|admin|.*\\..*).*)', '/(en|zh)/:path*'],
 };
